@@ -8,6 +8,11 @@ import { Authentication } from './authentication.js';
 import { DatacenterPool } from './datacenters.js';
 import { UpdateManager } from './updates.js';
 import { objectRequest, requestOf } from './requests.js';
+import {
+  readResponseBytes,
+  validateByteLimit,
+  validateTimeout,
+} from './http.js';
 
 const hosts = ['pluto', 'venus', 'aurora', 'vesta', 'flora'];
 
@@ -23,6 +28,8 @@ export class HttpTransport {
     if (!hosts[dc - 1]) {
       throw new RangeError('Unknown Telegram data center');
     }
+    validateTimeout(timeout);
+    validateByteLimit(maxBytes);
     this.url =
       url ??
       `https://${hosts[dc - 1]}.web.telegram.org/${test ? 'apiw_test1' : 'apiw1'}`;
@@ -32,40 +39,34 @@ export class HttpTransport {
     this.controllers = new Set();
   }
 
-  async request(packet, { signal } = {}) {
+  async request(packet, { signal, timeout = this.timeout } = {}) {
+    validateTimeout(timeout);
     const controller = new globalThis.AbortController();
+    const combined = signal
+      ? globalThis.AbortSignal.any([signal, controller.signal])
+      : controller.signal;
     this.controllers.add(controller);
-    const timer = globalThis.setTimeout(() => controller.abort(), this.timeout);
+    const timer = globalThis.setTimeout(() => controller.abort(), timeout);
     try {
+      combined.throwIfAborted();
       const response = await this.fetch(this.url, {
         method: 'POST',
         headers: { 'content-type': 'application/octet-stream' },
         body: packet,
-        signal: signal
-          ? globalThis.AbortSignal.any([signal, controller.signal])
-          : controller.signal,
+        signal: combined,
       });
       if (!response.ok) {
+        response.body?.cancel().catch(() => {});
         throw new TelegramError('MTProto HTTP request failed', {
           code: response.status,
         });
       }
-      const reader = response.body.getReader();
-      const chunks = [];
-      let length = 0;
-      for (;;) {
-        const { value, done } = await reader.read();
-        if (done) {
-          break;
-        }
-        length += value.length;
-        if (length > this.maxBytes) {
-          await reader.cancel();
-          throw new RangeError('MTProto transport response exceeds byte limit');
-        }
-        chunks.push(value);
-      }
-      const bytes = Buffer.concat(chunks);
+      const bytes = Buffer.from(
+        await readResponseBytes(response, {
+          maxBytes: this.maxBytes,
+          signal: combined,
+        })
+      );
       if (bytes.length === 4) {
         throw new TelegramError('MTProto transport rejected packet', {
           code: bytes.readInt32LE(),

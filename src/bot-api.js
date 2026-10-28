@@ -1,6 +1,11 @@
 import { TelegramError } from './errors.js';
 import { methodProxy } from './requests.js';
 import { botTextParams } from './formatting.js';
+import {
+  readResponseBytes,
+  validateByteLimit,
+  validateTimeout,
+} from './http.js';
 
 export const stringify = (value) =>
   JSON.stringify(value, (key, entry) =>
@@ -66,17 +71,18 @@ export class BotApi {
     baseUrl = 'https://api.telegram.org',
     fetch: fetcher = globalThis.fetch,
     timeout = 30000,
+    maxResponseBytes = 8 * 1024 * 1024,
   } = {}) {
     if (typeof token !== 'string' || !token || /[\s/?#]/.test(token)) {
       throw new TypeError('A bot token without URL delimiters is required');
     }
-    if (!Number.isFinite(timeout) || timeout <= 0) {
-      throw new TypeError('timeout must be a positive finite number');
-    }
+    validateTimeout(timeout);
+    validateByteLimit(maxResponseBytes);
     this.#token = token;
     this.baseUrl = baseUrl.replace(/\/$/, '');
     this.fetch = fetcher;
     this.timeout = timeout;
+    this.maxResponseBytes = maxResponseBytes;
     this.api = methodProxy(this.callApi.bind(this));
   }
 
@@ -86,16 +92,19 @@ export class BotApi {
     { signal, timeout = this.timeout } = {},
     consume
   ) {
+    validateTimeout(timeout);
     const controller = new globalThis.AbortController();
+    const combined = signal
+      ? globalThis.AbortSignal.any([signal, controller.signal])
+      : controller.signal;
     const timer = globalThis.setTimeout(() => controller.abort(), timeout);
     try {
+      combined.throwIfAborted();
       const response = await this.fetch(`${this.baseUrl}/${path}`, {
         ...options,
-        signal: signal
-          ? globalThis.AbortSignal.any([signal, controller.signal])
-          : controller.signal,
+        signal: combined,
       });
-      return await consume(response, controller.signal);
+      return await consume(response, combined);
     } catch (error) {
       if (error instanceof TelegramError) {
         throw error;
@@ -122,14 +131,15 @@ export class BotApi {
       `bot${this.#token}/${method}`,
       { method: 'POST', ...uploadBody(botTextParams(params)) },
       options,
-      async (response, timeoutSignal) => {
+      async (response, signal) => {
+        const bytes = await readResponseBytes(response, {
+          maxBytes: this.maxResponseBytes,
+          signal,
+        });
         let envelope;
         try {
-          envelope = await response.json();
-        } catch (error) {
-          if (timeoutSignal.aborted || options?.signal?.aborted) {
-            throw error;
-          }
+          envelope = JSON.parse(new globalThis.TextDecoder().decode(bytes));
+        } catch {
           throw new TelegramError('Bot API returned invalid JSON', {
             code: response.status,
             type: 'INVALID_RESPONSE',
@@ -138,6 +148,12 @@ export class BotApi {
         return { response, envelope };
       }
     );
+    if (!envelope || typeof envelope.ok !== 'boolean') {
+      throw new TelegramError('Bot API returned an invalid envelope', {
+        code: response.status,
+        type: 'INVALID_RESPONSE',
+      });
+    }
     if (envelope.ok !== true) {
       throw new TelegramError(
         String(envelope.description ?? 'Bot API request failed').replaceAll(
@@ -149,6 +165,15 @@ export class BotApi {
           type: 'BOT_API_ERROR',
           retryAfter: envelope.parameters?.retry_after,
           migrateTo: envelope.parameters?.migrate_to_chat_id,
+        }
+      );
+    }
+    if (!response.ok) {
+      throw new TelegramError(
+        'Bot API returned success with a failed HTTP status',
+        {
+          code: response.status,
+          type: 'INVALID_RESPONSE',
         }
       );
     }
@@ -194,7 +219,9 @@ export class BotApi {
     });
   }
 
-  async downloadMedia(fileId, options) {
+  async downloadMedia(fileId, options = {}) {
+    const maxBytes = options.maxBytes ?? 64 * 1024 * 1024;
+    validateByteLimit(maxBytes);
     const file = await this.callApi('getFile', { file_id: fileId }, options);
     if (
       !file.file_path ||
@@ -209,13 +236,14 @@ export class BotApi {
       `file/bot${this.#token}/${file.file_path}`,
       {},
       options,
-      async (response) => {
+      (response, signal) => {
         if (!response.ok) {
+          response.body?.cancel().catch(() => {});
           throw new TelegramError('Bot API file download failed', {
             code: response.status,
           });
         }
-        return new Uint8Array(await response.arrayBuffer());
+        return readResponseBytes(response, { maxBytes, signal });
       }
     );
   }

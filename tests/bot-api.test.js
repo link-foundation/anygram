@@ -12,17 +12,8 @@ describe('native Bot API', () => {
     const api = new BotApi({
       token: '123:secret',
       timeout: 10,
-      fetch: async (url, { signal }) => ({
-        status: 200,
-        json: () =>
-          new Promise((resolve, reject) => {
-            signal.addEventListener(
-              'abort',
-              () => reject(new Error('secret URL')),
-              { once: true }
-            );
-          }),
-      }),
+      fetch: async () =>
+        new Response(new globalThis.ReadableStream({ start() {} })),
     });
     let watchdog;
     const result = Promise.race([

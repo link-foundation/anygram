@@ -246,6 +246,7 @@ export interface BotApiOptions {
   baseUrl?: string;
   fetch?: typeof fetch;
   timeout?: number;
+  maxResponseBytes?: number;
 }
 export declare class BotApi {
   constructor(options: BotApiOptions);
@@ -265,7 +266,10 @@ export declare class BotApi {
   deleteMessages(chat: unknown, ids: number[]): Promise<unknown>;
   forwardMessages(chat: unknown, options: Parameters): Promise<unknown>;
   sendFile(chat: unknown, options: Parameters): Promise<unknown>;
-  downloadMedia(fileId: string, options?: RequestOptions): Promise<Uint8Array>;
+  downloadMedia(
+    fileId: string,
+    options?: RequestOptions & { maxBytes?: number }
+  ): Promise<Uint8Array>;
 }
 
 export interface SessionOptions {
