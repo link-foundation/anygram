@@ -15,5 +15,6 @@ and message-origin downloads, peer/contact helpers, bot middleware/events,
 polling ownership, formatted runtime templates and shared bot session middleware
 with grammY/Telegraf storage semantics. Share nested composers, persistent
 scenes/wizards and Telegraf command/launch dispatch. Bound HTTP response bodies,
-release readers, and enforce cancellation and per-request deadlines. Preserve
+release readers, enforce cancellation and per-request deadlines, and await
+all DC transport closures while retaining cleanup failures. Preserve
 exact IDs and expose typed failures without retrying ambiguous side effects.

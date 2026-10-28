@@ -103,6 +103,9 @@ and `transportFactory(dc)` supplies custom per-DC transports. `TcpTransport`
 and `TransportFraming` are also exported from `anygram/mtproto`. Socket reads
 have deadlines and bounded packet/byte queues. Persistent streams receive
 updates directly and send acknowledgements without awaiting an HTTP response.
+`await client.disconnect()` awaits asynchronous transport cleanup on every DC.
+Cleanup failures are reported after all DCs have been attempted; multiple
+failures are retained in an `AggregateError`.
 Use `proxy: { host: '127.0.0.1', port: 1080 }` for SOCKS5 CONNECT; this selects
 TCP when no transport is specified. Optional `username` and `password` must be
 provided together. Domain destinations are resolved by the proxy, IPv4/IPv6

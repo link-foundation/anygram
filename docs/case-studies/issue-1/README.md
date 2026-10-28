@@ -352,5 +352,16 @@ example checks pass. The npm package contains 47 permitted entries, 829,947 byte
 unpacked, with no test fixtures, research or optional clients bundled. Obfuscation
 head 2b3db71 passed all nine runtime/OS jobs and release gates in
 [run 40787510801](https://github.com/link-foundation/anygram/actions/runs/40787510801).
-WebSocket changes require fresh CI evidence. Browser/Worker runtime support,
+The WebSocket head d301af6 subsequently passed all jobs in
+[run 40789627439](https://github.com/link-foundation/anygram/actions/runs/40789627439). Browser/Worker runtime support,
 fake TLS, SOCKS4, secret chats, calls and complete compatibility/scenarios remain open.
+
+## Shutdown checkpoint
+
+Three failing regressions showed that native disconnect resolved before an
+asynchronous transport closed, lost rejected cleanup promises and skipped later
+DCs after a synchronous failure. Disconnect now waits for every DC, resets local
+initialization before cleanup, preserves a single failure and aggregates multiple
+failures. Tests control promise completion directly instead of relying on timing.
+All 153 tests pass locally on Node, Bun and Deno. Main was refreshed and remains
+an ancestor of this branch at 5b8ebdd.

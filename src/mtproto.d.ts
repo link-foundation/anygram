@@ -11,7 +11,7 @@ export interface Transport {
   request(packet: Uint8Array, options?: RequestOptions): Promise<Uint8Array>;
   send?(packet: Uint8Array, options?: RequestOptions): Promise<void>;
   receive?(options?: RequestOptions): Promise<Uint8Array>;
-  close?(): void;
+  close?(): void | Promise<void>;
 }
 export type FramingMode = 'abridged' | 'intermediate' | 'padded' | 'full';
 export interface FramingOptions {

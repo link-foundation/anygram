@@ -91,8 +91,22 @@ export class DatacenterPool {
     throw new TelegramError('Telegram data center migration limit exceeded');
   }
   async close() {
-    for (const client of this.clients.values()) {
-      await client.closeTransport();
+    const results = await Promise.allSettled(
+      [...this.clients.values()].map((client) =>
+        Promise.resolve().then(() => client.closeTransport())
+      )
+    );
+    const failures = results
+      .filter((result) => result.status === 'rejected')
+      .map((result) => result.reason);
+    if (failures.length === 1) {
+      throw failures[0];
+    }
+    if (failures.length > 1) {
+      throw new globalThis.AggregateError(
+        failures,
+        'Telegram DC cleanup failed'
+      );
     }
   }
 }

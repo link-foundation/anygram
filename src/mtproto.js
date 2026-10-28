@@ -236,10 +236,9 @@ export class Mtproto {
     return this.datacenters.close();
   }
 
-  closeTransport() {
-    this.transport.close?.();
+  async closeTransport() {
     this.initialized = false;
-    return Promise.resolve();
+    await this.transport.close?.();
   }
 
   call(method, params = {}, options) {

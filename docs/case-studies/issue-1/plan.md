@@ -68,12 +68,14 @@ examples/. No live credentials or sessions may be included in research data.
 - Native binary WebSocket validates upgrades, masking, continuation/control
   frames and TLS trust/hostnames, including SOCKS5 tunnels. An independent server
   and a live anonymous production key exchange verify interoperability.
+- Disconnect awaits asynchronous cleanup on every DC, including after failures,
+  and retains multiple failures without unhandled rejections.
 - In-process polling ownership and explicit membership subscriptions are tested.
-- After WebSocket regressions, Node/Bun/Deno each pass 150 tests; lint, format, duplication and
+- After shutdown regressions, Node/Bun/Deno each pass 153 tests; lint, format, duplication and
   four declaration entry points pass. Each later code change requires fresh checks.
 - Refreshed issue/sub-issue and all three PR feedback streams are empty. Main is
-  an ancestor of the branch. CI for 2b3db71 passed all nine runtime/OS jobs and
-  release gates in run 40787510801, including obfuscation/MTProxy. Later heads
+  an ancestor of the branch. CI for d301af6 passed all nine runtime/OS jobs and
+  release gates in run 40789627439, including WebSocket and TLS. Later heads
   require fresh CI evidence.
 - Research includes 32 complete discussions, 26 inspected images, nineteen pinned
   test-path inventories and all 333 Telegram-related meta-sovereign JS files.
