@@ -13,7 +13,7 @@
     "npm:jscpd@^4.0.5": "4.3.0",
     "npm:lint-staged@^16.2.6": "16.4.0",
     "npm:node-telegram-bot-api@2.1.0": "2.1.0",
-    "npm:prettier@^3.6.2": "3.9.10",
+    "npm:prettier@3.7.4": "3.7.4",
     "npm:telegraf@4.16.3": "4.16.3",
     "npm:telegram@2.26.22": "2.26.22",
     "npm:teleproto@1.232.0": "1.232.0",
@@ -1848,6 +1848,10 @@
       "integrity": "sha512-tdN8qQGvNjw4CHbY+XXk0JgCXn9QiF21a55rBe5LJAU+kDyC4WQn4+awm2Xfk2lQMk5fKup9XgzTZtGkjBdP9Q==",
       "bin": true
     },
+    "prettier@3.7.4": {
+      "integrity": "sha512-v6UNi1+3hSlVvv8fSaoUbggEM5VErKmmpGA7Pl3HF8V6uKY7rvClBOJlH6yNwQtfTueNkGVpOv/mtWL9L4bgRA==",
+      "bin": true
+    },
     "prettier@3.9.10": {
       "integrity": "sha512-skGHTH1Yb9QvaTC4hWnRTzEYtCpApF0UMBPz+t/0ZPzP8ihefo/btKd+QA7pUE0fEwA1SbS/NmhyEcstdXOIdA==",
       "bin": true
@@ -2399,7 +2403,7 @@
         "npm:jscpd@^4.0.5",
         "npm:lint-staged@^16.2.6",
         "npm:node-telegram-bot-api@2.1.0",
-        "npm:prettier@^3.6.2",
+        "npm:prettier@3.7.4",
         "npm:telegraf@4.16.3",
         "npm:telegram@2.26.22",
         "npm:teleproto@1.232.0",

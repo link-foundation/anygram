@@ -512,7 +512,8 @@ export interface BotOptions extends Partial<BotApiOptions> {
   polling?: boolean | PollingOptions;
 }
 export type MiddlewareLike<C extends Omit<Context, 'me'> = Context> =
-  Middleware<C> | { middleware(): Middleware<C> };
+  | Middleware<C>
+  | { middleware(): Middleware<C> };
 export declare class Composer<C extends Omit<Context, 'me'> = Context> {
   constructor(...middleware: MiddlewareLike<C>[]);
   use(...middleware: MiddlewareLike<C>[]): this;
