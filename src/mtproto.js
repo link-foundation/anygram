@@ -3,6 +3,8 @@ import { TlCodec, TlReader } from './tl.js';
 import { createAuthKey } from './auth-key.js';
 import { MtprotoCipher } from './crypto.js';
 import { TelegramError } from './errors.js';
+import { Session } from './session.js';
+import { Authentication } from './authentication.js';
 import { objectRequest, requestOf } from './requests.js';
 
 const hosts = ['pluto', 'venus', 'aurora', 'vesta', 'flora'];
@@ -94,6 +96,7 @@ export class Mtproto {
     timeOffset = 0,
     codec = new TlCodec(),
     onUpdate,
+    onSession,
     timeout = 30000,
     ...transportOptions
   } = {}) {
@@ -104,6 +107,7 @@ export class Mtproto {
       test,
       codec,
       onUpdate,
+      onSession,
       timeout,
       timeOffset,
     });
@@ -163,16 +167,34 @@ export class Mtproto {
       test: this.test,
       codec: this.codec,
       exchange: this.plainExchange.bind(this),
-    }).then(({ authKey, salt, timeOffset }) => {
+    }).then(async ({ authKey, salt, timeOffset }) => {
       this.cipher = new MtprotoCipher(authKey);
       this.salt = salt;
       this.timeOffset = timeOffset;
+      await this.onSession?.(this.saveSession());
     });
     try {
       await this.connecting;
     } finally {
       this.connecting = null;
     }
+  }
+
+  start(options) {
+    return new Authentication(this).start(options);
+  }
+  sendCode(phoneNumber, settings) {
+    return new Authentication(this).sendCode(phoneNumber, settings);
+  }
+  signIn(options) {
+    return new Authentication(this).signIn(options);
+  }
+  checkPassword(password) {
+    return new Authentication(this).checkPassword(password);
+  }
+
+  saveSession() {
+    return Session.fromClient(this).save();
   }
 
   disconnect() {

@@ -1,6 +1,7 @@
 import { UnsupportedError } from './errors.js';
 import { gramRequest, objectRequest } from './requests.js';
 import { mtcuteRequest } from './mtcute.js';
+import { RpcOperations } from './operations.js';
 
 const styles = {
   gramjs: {
@@ -42,7 +43,7 @@ export function createAdapter(name, client, { Api, kind = name } = {}) {
   const api = client.api ?? client.telegram ?? client;
   const methods = styles[style] ?? {};
   const raw = style === 'mtproto' ? 'call' : 'invoke';
-  return {
+  const adapter = {
     name,
     kind,
     client,
@@ -58,7 +59,11 @@ export function createAdapter(name, client, { Api, kind = name } = {}) {
           typeof client[style === 'mtcute' ? 'call' : raw] === 'function'
         );
       }
-      return typeof client[methods[operation] ?? operation] === 'function';
+      return (
+        typeof client[methods[operation] ?? operation] === 'function' ||
+        (adapter.supports('invoke') &&
+          typeof operations[operation] === 'function')
+      );
     },
     async invoke(request, options) {
       if (style === 'gramjs') {
@@ -103,6 +108,13 @@ export function createAdapter(name, client, { Api, kind = name } = {}) {
     },
     execute(operation, args) {
       const method = methods[operation] ?? operation;
+      if (
+        adapter.supports('invoke') &&
+        typeof operations[operation] === 'function' &&
+        (style !== 'gramjs' || typeof client[method] !== 'function')
+      ) {
+        return operations[operation](...args);
+      }
       if (operation === 'sendMessage' && style === 'gramjs') {
         return client[method](args[0], { ...args[2], message: args[1] });
       }
@@ -115,4 +127,6 @@ export function createAdapter(name, client, { Api, kind = name } = {}) {
       },
     }),
   };
+  const operations = new RpcOperations(adapter.invoke.bind(adapter));
+  return adapter;
 }

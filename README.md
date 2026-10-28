@@ -1,197 +1,127 @@
-# js-ai-driven-development-pipeline-template
+# Anygram
 
-A comprehensive template for AI-driven JavaScript/TypeScript development with full CI/CD pipeline support.
+A public-domain Telegram client with selectable backends, a shared operation
+pipeline, a native Bot API transport, and an independent MTProto implementation.
+This is active development toward [issue #1](https://github.com/link-foundation/anygram/issues/1).
+Full ecosystem compatibility, secret chats, calls, and all downstream application
+requirements are **not yet implemented or verified**. See the
+[acceptance ledger](docs/case-studies/issue-1/requirements.md).
 
-## Features
+## Native Bot API
 
-- **Multi-runtime support**: Works with Bun, Node.js, and Deno
-- **Universal testing**: Uses [test-anywhere](https://github.com/link-foundation/test-anywhere) for cross-runtime tests
-- **Automated releases**: Changesets-based versioning with GitHub Actions
-- **Code quality**: ESLint + Prettier with pre-commit hooks via Husky
-- **Package manager agnostic**: Works with bun, npm, yarn, pnpm, and deno
+```js
+import { createClient, Bot } from 'anygram';
 
-## Quick Start
+const client = await createClient({ token: process.env.BOT_TOKEN });
+await client.sendMessage(123456, 'Hello');
+// Every Bot API method is available, without a hard-coded method whitelist.
+await client.api.sendChatAction({ chat_id: 123456, action: 'typing' });
 
-### Using This Template
+const bot = new Bot(process.env.BOT_TOKEN);
+bot.command('start', (ctx) => ctx.reply('Ready'));
+bot.on('message:text', (ctx) => ctx.reply(ctx.message.text));
+await bot.start(); // Long polling; bot.stop() cancels an active request.
+```
 
-1. Click "Use this template" on GitHub to create a new repository
-2. Clone your new repository
-3. Update `package.json` with your package name and description
-4. Update the `PACKAGE_NAME` constant in these scripts:
-   - `scripts/validate-changeset.mjs`
-   - `scripts/merge-changesets.mjs`
-   - `scripts/publish-to-npm.mjs`
-   - `scripts/format-release-notes.mjs`
-   - `scripts/create-manual-changeset.mjs`
-5. Install dependencies: `bun install`
-6. Start developing!
+`TelegramBot` provides `on`, `once`, `onText`, and common positional methods for
+legacy node-telegram-bot-api applications. `Bot` provides shared middleware,
+commands, filters, context replies, and callback actions. These cover a documented
+subset of those frameworks; they are not complete drop-in replacements.
+`webhookCallback(bot, { secretToken })` accepts a Web Request and returns a Web
+Response. Configure the same secret in Telegram's `setWebhook` request.
 
-### Development
+## User accounts and independent MTProto
 
-```bash
-# Install dependencies
-bun install
+```js
+import { createClient } from 'anygram';
+import { FileSessionStore } from 'anygram/storage';
 
-# Run tests
-bun test
+const client = await createClient({
+  apiId: Number(process.env.TELEGRAM_API_ID),
+  apiHash: process.env.TELEGRAM_API_HASH,
+  libraries: [], // Independent implementation; no Telegram client dependency.
+  sessionStore: new FileSessionStore('./private/account.session'),
+});
+await client.start({
+  phoneNumber: async () => '+1234567890',
+  phoneCode: async () => readCode(), // Supply your application's input function.
+  password: async () => readPassword(),
+});
+await client.sendMessage('me', 'Hello from MTProto');
+await client.disconnect();
+```
 
-# Or with other runtimes:
+The native implementation includes RSA/DH authorization-key exchange, validated
+MTProto 2.0 encrypted envelopes, HTTPS transport, layer 232 TL serialization,
+phone/bot authorization and SRP 2FA, and a shared set of account operations.
+An anonymous live handshake has been verified; live account authorization needs
+application credentials and an account. Additional login challenges, DC migration,
+and reliable updates recovery remain under development.
+
+`Session` can import Anygram, GramJS/teleproto, and Telethon string sessions.
+Session strings contain authorization keys that grant account access. Keep them
+private. `FileSessionStore` writes atomically with restrictive permissions on
+systems supporting Unix file modes; it does not encrypt files at rest.
+
+## Select existing clients
+
+```js
+import { Anygram, createAdapter } from 'anygram';
+import { Api } from 'telegram';
+
+const client = new Anygram({
+  adapters: [createAdapter('gramjs', initializedGramJsClient, { Api })],
+  backend: 'gramjs',
+});
+await client.sendMessage('me', 'Unified call');
+await client.invoke('messages.getHistory', {
+  peer: new Api.InputPeerSelf(),
+  offset_id: 0,
+  offset_date: 0,
+  add_offset: 0,
+  limit: 10,
+  max_id: 0,
+  min_id: 0,
+  hash: 0n,
+});
+// Bound access to the complete installed backend's original API.
+await client.backend().getMe();
+```
+
+Adapters support GramJS, teleproto, mtcute, @mtproto/core, grammY, Telegraf, and
+legacy node-telegram-bot-api invocation styles. TDLib uses a different schema;
+its original client is accessible through `backend()`, but cannot execute MTProto
+requests. Install optional backends yourself; they are not runtime dependencies.
+For automatic lazy construction, use `createClient({ libraries: ['gramjs'], ... })`.
+Select explicitly with `backend` or `withBackend(name)`; failures never silently
+replay side effects against another backend. Native fallback is enabled by default
+and can be disabled with `native: false`.
+
+Use string RPCs, TL objects (`{ _: 'users.getUsers', id: [...] }`), class requests,
+or `client.raw.users.getUsers({ id: [...] })`. Integers outside the safe Number
+range require bigint or decimal strings. Original-library return objects can
+differ; full cross-library return-model compatibility is not claimed.
+
+## Development and evidence
+
+Node >=20.18.3 is required. Tests also run on Bun and Deno.
+
+```sh
+npm install
 npm test
-deno test --allow-read
-
-# Lint code
-bun run lint
-
-# Format code
-bun run format
-
-# Check all (lint + format + file size)
-bun run check
+npm run check
+bun test
+deno test --allow-read --allow-write --allow-env
 ```
 
-## Project Structure
+The pinned schema corpus exercises all 869 methods and 1,758 non-boolean
+constructors, comparing compatible layouts against actual GramJS and teleproto
+serializers. Other tests cover real mtcute serialization, session import, SRP,
+encrypted fake-peer exchanges, routing, Bot API requests, and bot dispatch.
+Research, source snapshots, limitations, and the execution plan are in
+[docs/case-studies/issue-1](docs/case-studies/issue-1).
+Regenerate the schema with `npm run schema:update` and review its pinned provenance.
 
-```
-.
-├── .changeset/           # Changeset configuration
-├── .github/workflows/    # GitHub Actions CI/CD
-├── .husky/               # Git hooks (pre-commit)
-├── examples/             # Usage examples
-├── scripts/              # Build and release scripts
-├── src/                  # Source code
-│   ├── index.js          # Main entry point
-│   └── index.d.ts        # TypeScript definitions
-├── tests/                # Test files
-├── .eslintrc.js          # ESLint configuration
-├── .prettierrc           # Prettier configuration
-├── bunfig.toml           # Bun configuration
-├── deno.json             # Deno configuration
-└── package.json          # Node.js package manifest
-```
-
-## Design Choices
-
-### Multi-Runtime Support
-
-This template is designed to work seamlessly with all major JavaScript runtimes:
-
-- **Bun**: Primary runtime with highest performance, uses native test support (`bun test`)
-- **Node.js**: Alternative runtime, uses built-in test runner (`node --test`)
-- **Deno**: Secure runtime with built-in TypeScript support (`deno test`)
-
-The [test-anywhere](https://github.com/link-foundation/test-anywhere) framework provides a unified testing API that works identically across all runtimes.
-
-### Package Manager Agnostic
-
-While `package.json` is the source of truth for dependencies, the template supports:
-
-- **bun**: Primary choice, uses `bun.lockb`
-- **npm**: Uses `package-lock.json`
-- **yarn**: Uses `yarn.lock`
-- **pnpm**: Uses `pnpm-lock.yaml`
-- **deno**: Uses `deno.json` for configuration
-
-Note: `package-lock.json` is not committed by default to allow any package manager.
-
-### Code Quality
-
-- **ESLint**: Configured with recommended rules + Prettier integration
-- **Prettier**: Consistent code formatting
-- **Husky + lint-staged**: Pre-commit hooks ensure code quality
-- **File size limit**: Scripts must stay under 1000 lines for maintainability
-
-### Release Workflow
-
-The release workflow uses [Changesets](https://github.com/changesets/changesets) for version management:
-
-1. **Creating a changeset**: Run `bun run changeset` to document changes
-2. **PR validation**: CI checks for valid changeset in each PR
-3. **Automated versioning**: Merging to `main` triggers version bump
-4. **npm publishing**: Automated via OIDC trusted publishing (no tokens needed)
-5. **GitHub releases**: Auto-created with formatted release notes
-
-#### Manual Releases
-
-Two manual release modes are available via GitHub Actions:
-
-- **Instant release**: Immediately bump version and publish
-- **Changeset PR**: Create a PR with changeset for review
-
-### CI/CD Pipeline
-
-The GitHub Actions workflow (`.github/workflows/release.yml`) provides:
-
-1. **Changeset check**: Validates PR has exactly one changeset (added by that PR)
-2. **Lint & format**: Ensures code quality standards
-3. **Test matrix**: 3 runtimes × 3 OS = 9 test combinations
-4. **Changeset merge**: Combines multiple pending changesets at release time
-5. **Release**: Automated versioning and npm publishing
-
-#### Robust Changeset Handling
-
-The CI/CD pipeline is designed to handle concurrent PRs gracefully:
-
-- **PR Validation**: Only validates changesets **added by the current PR**, not pre-existing ones from other merged PRs. This prevents false failures when multiple PRs merge before a release cycle completes.
-
-- **Release-time Merging**: If multiple changesets exist when releasing, they are automatically merged into a single changeset with:
-  - The highest version bump type (major > minor > patch)
-  - All descriptions preserved in chronological order
-
-This design decouples PR validation from the need to pull changes from the default branch, reducing conflicts and ensuring that even if CI/CD fails, all unpublished changesets will still get published when the error is resolved.
-
-## Configuration
-
-### Updating Package Name
-
-After creating a repository from this template, update the package name in:
-
-1. `package.json`: `"name": "your-package-name"`
-2. `.changeset/config.json`: Package references
-3. Scripts that reference the package name (see Quick Start)
-
-### ESLint Rules
-
-Customize ESLint in `eslint.config.js`. Current configuration:
-
-- ES Modules support
-- Prettier integration
-- No console restrictions (common in CLI tools)
-- Strict equality enforcement
-- Async/await best practices
-- **Strict unused variables rule**: No exceptions - all unused variables, arguments, and caught errors must be removed (no `_` prefix exceptions)
-
-### Prettier Options
-
-Configured in `.prettierrc`:
-
-- Single quotes
-- Semicolons
-- 2-space indentation
-- 80-character line width
-- ES5 trailing commas
-- LF line endings
-
-## Scripts Reference
-
-| Script                 | Description                             |
-| ---------------------- | --------------------------------------- |
-| `bun test`             | Run tests with Bun                      |
-| `bun run lint`         | Check code with ESLint                  |
-| `bun run lint:fix`     | Fix ESLint issues automatically         |
-| `bun run format`       | Format code with Prettier               |
-| `bun run format:check` | Check formatting without changing files |
-| `bun run check`        | Run all checks (lint + format)          |
-| `bun run changeset`    | Create a new changeset                  |
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/my-feature`
-3. Make your changes
-4. Create a changeset: `bun run changeset`
-5. Commit your changes (pre-commit hooks will run automatically)
-6. Push and create a Pull Request
-
-## License
-
-[Unlicense](LICENSE) - Public Domain
+Original code is released under the Unlicense. Optional libraries retain their
+own licenses; @mtproto/core is GPL-3.0 and is not bundled. The template's `add`,
+`multiply`, and `delay` exports are retained for compatibility.

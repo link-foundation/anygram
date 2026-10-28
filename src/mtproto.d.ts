@@ -1,4 +1,9 @@
-import type { Parameters, RequestOptions, TlRequest } from './index.js';
+import type {
+  Parameters,
+  RequestOptions,
+  TlRequest,
+  LoginOptions,
+} from './index.js';
 import type { TlCodec } from './tl.js';
 export interface Transport {
   request(packet: Uint8Array, options?: RequestOptions): Promise<Uint8Array>;
@@ -15,6 +20,7 @@ export interface MtprotoOptions {
   timeOffset?: number;
   codec?: TlCodec;
   onUpdate?: (update: TlRequest) => void | Promise<void>;
+  onSession?: (session: string) => void | Promise<void>;
   timeout?: number;
   url?: string;
   fetch?: typeof fetch;
@@ -34,6 +40,16 @@ export declare class Mtproto {
   timeOffset: number;
   connect(): Promise<void>;
   disconnect(): Promise<void>;
+  start(options?: LoginOptions): Promise<unknown>;
+  sendCode(phoneNumber: string, settings?: TlRequest): Promise<TlRequest>;
+  signIn(options: {
+    phoneNumber: string;
+    phoneCodeHash: string;
+    phoneCode: string;
+    emailVerification?: TlRequest;
+  }): Promise<TlRequest>;
+  checkPassword(password: string): Promise<TlRequest>;
+  saveSession(): string;
   call<T = unknown>(
     method: string,
     params?: Parameters,

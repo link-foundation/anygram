@@ -153,6 +153,19 @@ export declare class Anygram {
   editMessage(peer: unknown, options: Parameters): Promise<unknown>;
   deleteMessages(peer: unknown, ids: number[]): Promise<unknown>;
   forwardMessages(peer: unknown, options: Parameters): Promise<unknown>;
+  iterMessages(peer: unknown, options?: Parameters): AsyncIterable<Parameters>;
+  searchMessages(
+    peer: unknown,
+    query: string,
+    options?: Parameters
+  ): Promise<Parameters[]>;
+  resolvePeer(peer: unknown): Promise<TlRequest>;
+  joinChat(peer: unknown): Promise<unknown>;
+  leaveChat(peer: unknown): Promise<unknown>;
+  archiveChat(peer: unknown, options?: Parameters): Promise<unknown>;
+  muteChat(peer: unknown, options?: Parameters): Promise<unknown>;
+  addContact(peer: unknown, options?: Parameters): Promise<unknown>;
+  saveSession(): Promise<string>;
 }
 export interface BotApiOptions {
   token: string;
@@ -180,3 +193,185 @@ export declare class BotApi {
   sendFile(chat: unknown, options: Parameters): Promise<unknown>;
   downloadMedia(fileId: string, options?: RequestOptions): Promise<Uint8Array>;
 }
+
+export interface SessionOptions {
+  dc?: number;
+  authKey?: Uint8Array;
+  salt?: bigint;
+  timeOffset?: number;
+  test?: boolean;
+}
+/** save() contains account credentials; never log or publish its result. */
+export declare class Session {
+  constructor(value?: SessionOptions | string | Session);
+  options(): SessionOptions;
+  save(): string;
+  toJSON(): string;
+  static fromClient(client: import('./mtproto.js').Mtproto): Session;
+}
+export interface LoginOptions {
+  phoneNumber?: string | (() => string | Promise<string>);
+  phoneCode?: string | (() => string | Promise<string>);
+  password?: string | (() => string | Promise<string>);
+  botAuthToken?: string | (() => string | Promise<string>);
+  firstName?: string | (() => string | Promise<string>);
+  lastName?: string;
+  codeSettings?: TlRequest;
+  acceptTerms?: (terms: TlRequest) => boolean | Promise<boolean>;
+}
+export interface FactoryOptions extends ClientOptions {
+  libraries?: string[];
+  native?: boolean;
+  apiId?: number;
+  apiHash?: string;
+  token?: string;
+  session?: Session | string;
+  sessionStore?: import('./storage.js').SessionStore;
+  onSession?: (session: string) => void | Promise<void>;
+  clientOptions?: Parameters;
+  transport?: import('./mtproto.js').Transport;
+  fetch?: typeof fetch;
+  timeout?: number;
+}
+export declare function createClient(
+  options?: FactoryOptions
+): Promise<Anygram>;
+
+export interface BotMessage extends Parameters {
+  message_id: number;
+  chat: { id: number; [key: string]: unknown };
+  from?: { id: number; [key: string]: unknown };
+  text?: string;
+}
+export interface BotUpdate extends Parameters {
+  update_id: number;
+  message?: BotMessage;
+  edited_message?: BotMessage;
+  channel_post?: BotMessage;
+  callback_query?: {
+    id: string;
+    data?: string;
+    message?: BotMessage;
+    inline_message_id?: string;
+    from?: Parameters;
+  };
+}
+export interface ContextApi {
+  raw: BotMethods;
+  callApi: BotApi['callApi'];
+  getMe(): Promise<Parameters>;
+  sendMessage(
+    chat: unknown,
+    text: string,
+    options?: Parameters
+  ): Promise<BotMessage>;
+  editMessageText(
+    chat: unknown,
+    id: number | undefined,
+    inlineId: string | undefined,
+    text: string,
+    options?: Parameters
+  ): Promise<unknown>;
+  deleteMessage(chat: unknown, id: number): Promise<unknown>;
+  answerCallbackQuery(id: string, options?: Parameters): Promise<unknown>;
+  [key: string]: unknown;
+}
+export declare class Context {
+  constructor(update: BotUpdate, api: ContextApi, me?: Parameters);
+  update: BotUpdate;
+  api: ContextApi;
+  telegram: ContextApi;
+  me?: Parameters;
+  state: Parameters;
+  match?: string | RegExpExecArray;
+  readonly message?: BotMessage;
+  readonly editedMessage?: BotMessage;
+  readonly channelPost?: BotMessage;
+  readonly callbackQuery?: BotUpdate['callback_query'];
+  readonly msg?: BotMessage;
+  readonly chat?: BotMessage['chat'];
+  readonly from?: Parameters;
+  reply(text: string, options?: Parameters): Promise<BotMessage>;
+  editMessageText(text: string, options?: Parameters): Promise<unknown>;
+  answerCallbackQuery(options?: string | Parameters): Promise<unknown>;
+  deleteMessage(id?: number): Promise<unknown>;
+  replyWithPhoto(file: unknown, options?: Parameters): Promise<unknown>;
+  replyWithAnimation(file: unknown, options?: Parameters): Promise<unknown>;
+  replyWithDocument(file: unknown, options?: Parameters): Promise<unknown>;
+  replyWithVideo(file: unknown, options?: Parameters): Promise<unknown>;
+  replyWithAudio(file: unknown, options?: Parameters): Promise<unknown>;
+  replyWithVoice(file: unknown, options?: Parameters): Promise<unknown>;
+  replyWithSticker(file: unknown, options?: Parameters): Promise<unknown>;
+}
+export type Middleware = (
+  ctx: Context,
+  next: () => Promise<void>
+) => unknown | Promise<unknown>;
+export interface PollingOptions {
+  maxPolls?: number;
+  timeout?: number;
+  allowed_updates?: string[];
+  onStart?: (me?: Parameters) => unknown | Promise<unknown>;
+}
+export interface BotOptions extends Partial<BotApiOptions> {
+  api?: BotApi | Anygram;
+  botInfo?: Parameters;
+  offset?: number;
+  Context?: typeof Context;
+  polling?: boolean | PollingOptions;
+}
+export declare class Bot {
+  constructor(token: string, options?: BotOptions);
+  api: ContextApi;
+  telegram: ContextApi;
+  botInfo?: Parameters;
+  offset: number;
+  use(...middleware: Middleware[]): this;
+  on(filters: string | string[], ...middleware: Middleware[]): this;
+  command(commands: string | string[], ...middleware: Middleware[]): this;
+  hears(pattern: string | RegExp, ...middleware: Middleware[]): this;
+  action(pattern: string | RegExp, ...middleware: Middleware[]): this;
+  catch(
+    handler: (
+      error: Error & { error: unknown; ctx: Context }
+    ) => unknown | Promise<unknown>
+  ): this;
+  init(): Promise<Parameters>;
+  handleUpdate(update: BotUpdate): Promise<void>;
+  isRunning(): boolean;
+  stop(): void;
+  start(options?: PollingOptions): Promise<void>;
+  launch(options?: PollingOptions): Promise<void>;
+}
+export declare class TelegramBot {
+  constructor(token: string, options?: BotOptions);
+  api: ContextApi;
+  telegram: ContextApi;
+  handleUpdate(update: BotUpdate): Promise<void>;
+  stop(): void;
+  isRunning(): boolean;
+  on(event: string, callback: (value: any) => unknown): this;
+  once(event: string, callback: (value: any) => unknown): this;
+  onText(
+    pattern: RegExp,
+    callback: (message: BotMessage, match: RegExpExecArray) => unknown
+  ): this;
+  removeListener(event: string, callback: Function): this;
+  removeAllListeners(event?: string): this;
+  startPolling(options?: PollingOptions): Promise<void>;
+  stopPolling(): Promise<void>;
+  processUpdate(update: BotUpdate): Promise<void>;
+  sendMessage(
+    chat: unknown,
+    text: string,
+    options?: Parameters
+  ): Promise<BotMessage>;
+  editMessageText(text: string, options: Parameters): Promise<unknown>;
+  getChat(chat: unknown): Promise<unknown>;
+  deleteMessage(chat: unknown, message: number): Promise<unknown>;
+  answerCallbackQuery(id: string, options?: Parameters): Promise<unknown>;
+}
+export declare function webhookCallback(
+  bot: Pick<Bot, 'handleUpdate'>,
+  options?: { secretToken?: string; maxBytes?: number }
+): (request: Request) => Promise<Response>;

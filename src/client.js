@@ -1,5 +1,6 @@
 import { TelegramError, UnsupportedError } from './errors.js';
 import { methodProxy, requestOf } from './requests.js';
+import { iterateHistory } from './operations.js';
 
 export class Anygram {
   constructor({ adapters = [], backend, debug } = {}) {
@@ -68,6 +69,9 @@ export class Anygram {
   }
 
   invoke(method, params, options) {
+    if (method && typeof method === 'object') {
+      options ??= params;
+    }
     const request = requestOf(method, params);
     return this.route('invoke', (adapter) => adapter.invoke(request, options));
   }
@@ -90,6 +94,10 @@ export class Anygram {
     }
     return this.execute('sendMessage', peer, text, options);
   }
+
+  iterMessages(peer, options) {
+    return iterateHistory((page) => this.getMessages(peer, page), options);
+  }
 }
 
 for (const operation of [
@@ -106,6 +114,14 @@ for (const operation of [
   'editMessage',
   'deleteMessages',
   'forwardMessages',
+  'searchMessages',
+  'resolvePeer',
+  'joinChat',
+  'leaveChat',
+  'archiveChat',
+  'muteChat',
+  'addContact',
+  'saveSession',
 ]) {
   Anygram.prototype[operation] = function (...args) {
     return this.execute(operation, ...args);

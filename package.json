@@ -17,6 +17,10 @@
     "./tl": {
       "types": "./src/tl.d.ts",
       "import": "./src/tl.js"
+    },
+    "./storage": {
+      "types": "./src/storage.d.ts",
+      "import": "./src/storage.js"
     }
   },
   "scripts": {
@@ -54,7 +58,6 @@
   "devDependencies": {
     "@changesets/cli": "^2.29.7",
     "@mtcute/core": "0.32.7",
-    "@mtcute/node": "0.32.7",
     "@mtcute/tl-runtime": "0.32.6",
     "@mtproto/core": "6.3.0",
     "eslint": "^9.38.0",
