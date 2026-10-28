@@ -89,12 +89,23 @@ await client.disconnect();
 ```
 
 The native implementation includes RSA/DH authorization-key exchange, validated
-MTProto 2.0 encrypted envelopes, HTTPS transport, layer 232 TL serialization,
+MTProto 2.0 encrypted envelopes, HTTPS/TCP transports, layer 232 TL serialization,
 phone/bot authorization and SRP 2FA, and a shared set of account operations.
 An anonymous live handshake has been verified; live account authorization needs
 application credentials and an account. DC migration, chunked media transfers,
 and common/channel update recovery are covered by deterministic tests. Additional
 login challenges, secret chats, call media, and live account validation remain open.
+
+Select native TCP with `createClient({ transport: 'tcp', mode: 'intermediate' })`.
+Modes are `abridged`, `intermediate`, `padded`, and `full`; the latter validates
+CRC32 and packet sequence numbers. `host`/`port` override bootstrap endpoints,
+and `transportFactory(dc)` supplies custom per-DC transports. `TcpTransport`
+and `TransportFraming` are also exported from `anygram/mtproto`. Socket reads
+have deadlines and bounded packet/byte queues. Persistent streams receive
+updates directly and send acknowledgements without awaiting an HTTP response.
+Plain padded framing does not provide MTProxy obfuscation. WebSocket, SOCKS
+and MTProxy transports remain unfinished. The [typed transport example](examples/typed-transports.ts)
+shows the supported construction options.
 
 `Session` can import Anygram, GramJS/teleproto, and Telethon string sessions.
 Use `session.save('gramjs')` to export an authorized portable session for
@@ -216,7 +227,7 @@ npm install
 npm test
 npm run check
 bun test
-deno test --allow-read --allow-write --allow-env
+deno test --allow-read --allow-write --allow-env --allow-net=127.0.0.1
 ```
 
 The pinned schema corpus exercises all 869 methods and 1,758 non-boolean

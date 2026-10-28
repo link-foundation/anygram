@@ -1,3 +1,5 @@
+import type { TcpTransportOptions } from './mtproto.js';
+
 /**
  * Adds two numbers
  * @param a - First number
@@ -309,7 +311,7 @@ export interface LoginOptions {
   codeSettings?: TlRequest;
   acceptTerms?: (terms: TlRequest) => boolean | Promise<boolean>;
 }
-export interface FactoryOptions extends ClientOptions {
+export interface FactoryOptions extends ClientOptions, TcpTransportOptions {
   libraries?: string[];
   native?: boolean;
   apiId?: number;
@@ -319,7 +321,7 @@ export interface FactoryOptions extends ClientOptions {
   sessionStore?: import('./storage.js').SessionStore;
   onSession?: (session: string) => void | Promise<void>;
   clientOptions?: Parameters;
-  transport?: import('./mtproto.js').Transport;
+  transport?: import('./mtproto.js').Transport | 'http' | 'tcp';
   transportFactory?: (dc: number) => import('./mtproto.js').Transport;
   fetch?: typeof fetch;
   timeout?: number;

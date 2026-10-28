@@ -34,8 +34,9 @@ conversion, fixed-width integer conversion and case-sensitive SRP field names.
 
 ## Transport and cryptography
 
-`anygram/mtproto` exports Mtproto and HttpTransport. The default transport uses
-Telegram's HTTPS binary endpoint, with an injectable transport for other network
+`anygram/mtproto` exports Mtproto, HttpTransport, TcpTransport and TransportFraming.
+The default transport uses Telegram's HTTPS binary endpoint, with native TCP
+and injectable transports for other network
 environments. It implements RSA_PAD with pinned official production/test RSA
 trust anchors, bounded 64-bit pq factorization, SHA-1 handshake hashes, safe-prime
 and DH generator/public-value validation, AES-IGE and MTProto 2.0 key derivation.
@@ -64,9 +65,30 @@ message delivery or any other authenticated feature.
 ## Remaining acceptance work
 
 Raw schema coverage does not establish complete Telegram protocol support.
-Independent login/2FA, DC migration, durable sessions, ordered update recovery,
-media transfer, secret-chat state and voice/video media need implementation and
-scenario verification. The requirements ledger remains open for these criteria.
-The HTTPS transport does not provide TCP, WebSocket, MTProxy or SOCKS support.
+Independent login/2FA, DC migration, session storage, ordered update recovery and
+media primitives have deterministic tests; complete application/live-account
+scenarios remain unverified. Secret-chat state and voice/video media still need
+implementation and verification. The requirements ledger stays open.
+WebSocket, MTProxy and SOCKS support remain unfinished.
 The unified TDLib adapter must preserve TDLib's separate JSON API; it must never
 claim that an MTProto method string is a valid TDLib request.
+
+## Persistent TCP verification
+
+Telegram's [framing specification](https://core.telegram.org/mtproto/mtproto-transports)
+and [transport rules](https://core.telegram.org/mtproto/transports) were captured
+in `data/telegram-transport-{framing,protocols}.md` on 2026-10-28.
+The independent stream parser implements abridged, intermediate, padded and full
+framing, size limits, CRC32/sequence validation, quick-ack separation and typed
+transport errors. TCP tests fragment and coalesce packets, compare bytes with
+actual GramJS encoders, exercise every padding length and bound pending queues.
+Encrypted local-socket tests verify multi-packet RPC correlation and send-only
+acknowledgements. Persistent update reads never send HTTP-only `http_wait`,
+and an idle read timeout permits the recovery scheduler to tick again.
+
+`node --max-old-space-size=128 experiments/tcp-handshake.mjs` completed a live
+production DC2 key exchange over full TCP framing and decoded an encrypted
+CONNECTION_NOT_INITED response on 2026-10-28. It prints no keys or sessions and
+does not authenticate an account. Plain padded framing alone does not implement
+obfuscation, MTProxy secrets or fake TLS. The local Node/Bun/Deno suites each
+pass 133 tests. Deno grants network access only to 127.0.0.1 for local fixtures.

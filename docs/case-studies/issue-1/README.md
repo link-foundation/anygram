@@ -302,3 +302,16 @@ locked version 3.7.4. Formatting the committed declaration through the latter
 reproduced its different union layout. Both lockfiles now select pinned 3.7.4,
 and the commit hook checks TypeScript as well as JavaScript and Markdown.
 The corrected head still requires its own CI evidence.
+
+## Native TCP checkpoint
+
+The scene/formatter head 35a7b3a passed all nine runtime/OS test jobs and release
+checks in [run 40784060541](https://github.com/link-foundation/anygram/actions/runs/40784060541).
+The next transport checkpoint passes 133 tests locally on Node, Bun and Deno,
+including real local encrypted sockets, four framing modes and actual GramJS
+encoder comparisons. A bounded anonymous live full-TCP handshake also succeeded;
+[protocol.md](protocol.md#persistent-tcp-verification) records its exact limits.
+Typed transport constructors/factories compile without requiring Node type
+packages in consumers. The package dry run contains 43 permitted entries and
+excludes research, fixtures and optional client dependencies. WebSocket, proxies,
+secret chats, calls and full application/backend parity remain unfinished.

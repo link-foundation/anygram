@@ -1,3 +1,5 @@
+import { dcAddress } from './endpoints.js';
+
 /** Portable secrets-bearing session. Persistence is always explicitly requested. */
 export class Session {
   #state;
@@ -111,18 +113,7 @@ function encodeGramjs({ dc, authKey, serverAddress, port = 443, test }) {
   if (!authKey) {
     return '';
   }
-  // Official bootstrap endpoints, not a substitute for help.getConfig:
-  // https://github.com/telegramdesktop/tdesktop/blob/f985723b552b30fe1c17d377d57f44e61a15a8c4/Telegram/SourceFiles/mtproto/mtproto_dc_options.cpp
-  const addresses = test
-    ? ['149.154.175.10', '149.154.167.40', '149.154.175.117']
-    : [
-        '149.154.175.50',
-        '149.154.167.51',
-        '149.154.175.100',
-        '149.154.167.91',
-        '149.154.171.5',
-      ];
-  serverAddress ??= addresses[dc - 1];
+  serverAddress ??= dcAddress(dc, test);
   if (
     !serverAddress ||
     Buffer.byteLength(serverAddress) > 100 ||

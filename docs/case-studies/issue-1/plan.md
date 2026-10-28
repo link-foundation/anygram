@@ -57,17 +57,19 @@ examples/. No live credentials or sessions may be included in research data.
   Telegraf username/context aliases remain distinct from grammY user aliases.
 - Telegraf scene/wizard entry, persisted steps/state, expiry, reentry and leave
   match actual middleware; a finite per-update transition guard bounds loops.
+- Native TCP implements four framing modes, bounded streams and send-only ACKs.
+  Real local encrypted sockets, actual GramJS framing and a live anonymous
+  production handshake verify the transport path.
 - In-process polling ownership and explicit membership subscriptions are tested.
-- After scene regressions, Node/Bun/Deno each pass 120 tests; lint, format, duplication and
+- After native TCP regressions, Node/Bun/Deno each pass 133 tests; lint, format, duplication and
   four declaration entry points pass. Each later code change requires fresh checks.
 - Refreshed issue/sub-issue and all three PR feedback streams are empty. Main is
-  an ancestor of the branch. CI for 73b71b0 passed. Run 40782863152 passed all
-  nine test jobs but failed formatting at log line 963: Deno's Prettier 3.9.10
-  executable differed from npm's locked 3.7.4. Pinning 3.7.4 and checking staged
-  TypeScript fixes the reproduced discrepancy; the new head needs fresh CI.
+  an ancestor of the branch. CI for 35a7b3a passed all nine runtime/OS jobs and
+  release gates in run 40784060541, verifying the formatter fix. Later heads
+  require fresh CI evidence.
 - Research includes 32 complete discussions, 26 inspected images, nineteen pinned
   test-path inventories and all 333 Telegram-related meta-sovereign JS files.
-- The npm dry run contains only 35 source/package/README/LICENSE entries and
+- The npm dry run contains only 43 source/package/README/LICENSE entries (800559 bytes unpacked) and
   excludes research, screenshots, experiments and optional client dependencies.
 
 ## Next steps

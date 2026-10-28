@@ -8,11 +8,14 @@ import { Authentication } from './authentication.js';
 import { DatacenterPool } from './datacenters.js';
 import { UpdateManager } from './updates.js';
 import { objectRequest, requestOf } from './requests.js';
+import { TcpTransport } from './tcp-transport.js';
 import {
   readResponseBytes,
   validateByteLimit,
   validateTimeout,
 } from './http.js';
+export { TransportFraming } from './transport-framing.js';
+export { TcpTransport };
 
 const hosts = ['pluto', 'venus', 'aurora', 'vesta', 'flora'];
 
@@ -115,9 +118,12 @@ export class Mtproto {
       timeout,
       timeOffset,
     });
-    this.transport =
-      transport ??
-      new HttpTransport({ dc, test, timeout, ...transportOptions });
+    this.transport = createTransport(transport, {
+      dc,
+      test,
+      timeout,
+      ...transportOptions,
+    });
     this.cipher = authKey ? new MtprotoCipher(authKey) : null;
     this.salt = salt;
     this.sequence = 0;
@@ -139,7 +145,9 @@ export class Mtproto {
           codec,
           timeout,
           ...transportOptions,
-          transport: transportFactory?.(dc),
+          transport:
+            transportFactory?.(dc) ??
+            (typeof transport === 'string' ? transport : undefined),
           transportFactory,
           onUpdate: (value) => this.onUpdate?.(value),
         }),
@@ -261,15 +269,10 @@ export class Mtproto {
     const task = this.queue.then(async () => {
       const active = this.datacenters.home;
       await active.connect(options);
-      const { response } = await active.exchange(
-        this.codec.encode({
-          _: 'http_wait',
-          max_delay: 0,
-          wait_after: 0,
-          max_wait: options.maxWait ?? 25000,
-        }),
-        { ...deadlineOptions(options, this.timeout), content: false }
-      );
+      const response = await active.receiveUpdatePacket(options);
+      if (response === undefined) {
+        return;
+      }
       await active.processEnvelope(response, {});
       await active.flushAcknowledgements(options);
     });
@@ -379,6 +382,46 @@ export class Mtproto {
     };
   }
 
+  async receivePacket(options, maxWait = 1000) {
+    if (this.transport.receive) {
+      return this.transport.receive(options);
+    }
+    return (
+      await this.exchange(
+        this.codec.encode({
+          _: 'http_wait',
+          max_delay: 0,
+          wait_after: 0,
+          max_wait: maxWait,
+        }),
+        { ...options, content: false }
+      )
+    ).response;
+  }
+
+  async receiveUpdatePacket(options) {
+    const maxWait = options.maxWait ?? 25000;
+    if (!this.transport.receive) {
+      return this.receivePacket(
+        deadlineOptions(options, this.timeout),
+        maxWait
+      );
+    }
+    const timeout = Math.min(
+      Math.max(1, maxWait),
+      options.timeout ?? this.timeout
+    );
+    validateTimeout(timeout);
+    try {
+      return await this.transport.receive({ ...options, timeout });
+    } catch (error) {
+      if (error.type === 'TRANSPORT_TIMEOUT' && !options.signal?.aborted) {
+        return;
+      }
+      throw error;
+    }
+  }
+
   acceptId(id) {
     const timestamp = Number(id >> 32n);
     const now = Date.now() / 1000 + this.timeOffset;
@@ -475,11 +518,22 @@ export class Mtproto {
       return;
     }
     try {
-      const { response } = await this.exchange(
-        this.codec.encode({ _: 'msgs_ack', msg_ids: ids }),
-        { ...options, content: false }
-      );
-      await this.processEnvelope(response, {});
+      const body = this.codec.encode({ _: 'msgs_ack', msg_ids: ids });
+      if (this.transport.send) {
+        const messageId = this.messageId();
+        const packet = this.cipher.encrypt(body, {
+          messageId,
+          sequence: this.sequence * 2,
+          salt: this.salt,
+        });
+        await this.transport.send(packet, options);
+      } else {
+        const { response } = await this.exchange(body, {
+          ...options,
+          content: false,
+        });
+        await this.processEnvelope(response, {});
+      }
     } catch {
       // Acknowledgements can be retried safely. Do not turn a completed RPC
       // into an apparent failure that could make an application resend it.
@@ -573,19 +627,7 @@ export class Mtproto {
       };
       for (let polls = 0; polls < 100; polls++) {
         await this.processEnvelope(
-          polls === 0
-            ? response
-            : (
-                await this.exchange(
-                  this.codec.encode({
-                    _: 'http_wait',
-                    max_delay: 0,
-                    wait_after: 0,
-                    max_wait: 1000,
-                  }),
-                  { ...options, content: false }
-                )
-              ).response,
+          polls === 0 ? response : await this.receivePacket(options),
           pending
         );
         if (pending.done) {
@@ -627,6 +669,19 @@ function deadlineOptions(options, defaultTimeout) {
   options.signal.throwIfAborted();
 
   return options;
+}
+
+function createTransport(transport, options) {
+  if (transport === 'tcp') {
+    return new TcpTransport(options);
+  }
+  if (transport === undefined || transport === 'http') {
+    return new HttpTransport(options);
+  }
+  if (typeof transport?.request !== 'function') {
+    throw new TypeError('Unsupported MTProto transport');
+  }
+  return transport;
 }
 
 async function readUpdateState(state, store) {
