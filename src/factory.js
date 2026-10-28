@@ -8,10 +8,21 @@ async function optionalLibrary(name, options) {
   const { apiId, apiHash, token, session, clientOptions = {} } = options;
   if (name === 'gramjs' || name === 'teleproto') {
     const module = await import(name === 'gramjs' ? 'telegram' : 'teleproto');
+    const backendSession =
+      session instanceof module.sessions.Session
+        ? session
+        : new module.sessions.StringSession(
+            new Session(session ?? {}).save('gramjs')
+          );
+    await backendSession.load();
     return createAdapter(
       name,
-      new module.TelegramClient(session ?? '', apiId, apiHash, clientOptions),
-      { Api: module.Api }
+      new module.TelegramClient(backendSession, apiId, apiHash, {
+        deviceModel: 'Anygram',
+        systemVersion: 'JavaScript',
+        ...clientOptions,
+      }),
+      { Api: module.Api, onSession: options.onSession }
     );
   }
   if (name === 'mtcute') {
@@ -59,7 +70,12 @@ export async function createClient(options = {}) {
   const available = [...adapters];
   for (const library of libraries) {
     try {
-      available.push(await optionalLibrary(library, options));
+      available.push(
+        await optionalLibrary(library, {
+          ...nativeOptions,
+          session: savedSession,
+        })
+      );
     } catch (error) {
       const missing = ['ERR_MODULE_NOT_FOUND', 'MODULE_NOT_FOUND'].includes(
         error.code

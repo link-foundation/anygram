@@ -60,6 +60,9 @@ and common/channel update recovery are covered by deterministic tests. Additiona
 login challenges, secret chats, call media, and live account validation remain open.
 
 `Session` can import Anygram, GramJS/teleproto, and Telethon string sessions.
+Use `session.save('gramjs')` to export an authorized portable session for
+GramJS/teleproto. The optional client factory uses in-memory string sessions,
+loads the configured session store, and saves after a successful login.
 Session strings contain authorization keys that grant account access. Keep them
 private. `FileSessionStore` writes atomically with restrictive permissions on
 systems supporting Unix file modes; it does not encrypt files at rest.

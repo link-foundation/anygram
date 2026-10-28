@@ -1,6 +1,9 @@
 import { it } from 'test-anywhere';
 import assert from 'node:assert/strict';
 import { createClient } from '../src/index.js';
+import { Logger, sessions } from 'telegram';
+import { randomBytes } from 'node:crypto';
+import { Session } from '../src/session.js';
 it('creates a native Bot API client without loading Telegram dependencies', async () => {
   const client = await createClient({
     token: '123:test',
@@ -30,4 +33,48 @@ it('does not pretend that all backends can be disabled without a transport', asy
     createClient({ native: false, libraries: [] }),
     /unavailable/
   );
+});
+it('constructs an actual GramJS client with an empty in-memory session', async () => {
+  const client = await createClient({
+    native: false,
+    libraries: ['gramjs'],
+    apiId: 12345,
+    apiHash: 'example',
+    clientOptions: { baseLogger: new Logger('none') },
+  });
+  assert.ok(client.backend().session instanceof sessions.StringSession);
+  assert.equal(client.backend().disconnected, true);
+});
+it('loads a portable session into GramJS and persists it after successful login', async () => {
+  const original = new Session({ dc: 4, authKey: randomBytes(256) });
+  const saved = [];
+  const client = await createClient({
+    native: false,
+    libraries: ['gramjs'],
+    apiId: 12345,
+    apiHash: 'example',
+    clientOptions: { baseLogger: new Logger('none') },
+    sessionStore: {
+      load: async () => original.save(),
+      save: async (value) => saved.push(value),
+    },
+  });
+  const backend = client.backend();
+  assert.equal(backend.session.dcId, 4);
+  assert.deepEqual(
+    backend.session.authKey.getKey(),
+    original.options().authKey
+  );
+  backend.start = async () => ({ id: 7n });
+  assert.deepEqual(await client.start({}), { id: 7n });
+  assert.equal(saved.length, 1);
+  assert.deepEqual(
+    new Session(saved[0]).options().authKey,
+    original.options().authKey
+  );
+  backend.start = async () => {
+    throw new Error('login failed');
+  };
+  await assert.rejects(client.start({}), /login failed/);
+  assert.equal(saved.length, 1);
 });

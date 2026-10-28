@@ -42,4 +42,19 @@ describe('portable account sessions', () => {
       /key/i
     );
   });
+  it('exports portable keys to the real GramJS session format and preserves imported endpoints', async () => {
+    const original = new Session({ dc: 5, authKey: randomBytes(256) });
+    const legacy = new StringSession(original.save('gramjs'));
+    await legacy.load();
+    assert.equal(legacy.dcId, 5);
+    assert.equal(legacy.serverAddress, '149.154.171.5');
+    assert.deepEqual(legacy.authKey.getKey(), original.options().authKey);
+    legacy.setDC(5, '2001:0b28:f23f:f005::a', 443);
+    const roundtrip = new StringSession(
+      new Session(legacy.save()).save('gramjs')
+    );
+    assert.equal(roundtrip.serverAddress, legacy.serverAddress);
+    assert.equal(roundtrip.port, 443);
+    assert.throws(() => original.save('unknown'), /format/i);
+  });
 });

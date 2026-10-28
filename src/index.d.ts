@@ -63,7 +63,11 @@ export interface ClientOptions {
 export declare function createAdapter(
   name: string,
   client: object,
-  options?: { Api?: object; kind?: string }
+  options?: {
+    Api?: object;
+    kind?: string;
+    onSession?: (session: string) => void | Promise<void>;
+  }
 ): Adapter;
 export declare class UnsupportedError extends Error {
   operation: string;
@@ -206,12 +210,14 @@ export interface SessionOptions {
   salt?: bigint;
   timeOffset?: number;
   test?: boolean;
+  serverAddress?: string;
+  port?: number;
 }
 /** save() contains account credentials; never log or publish its result. */
 export declare class Session {
   constructor(value?: SessionOptions | string | Session);
   options(): SessionOptions;
-  save(): string;
+  save(format?: 'anygram' | 'gramjs'): string;
   toJSON(): string;
   static fromClient(client: import('./mtproto.js').Mtproto): Session;
 }

@@ -32,7 +32,11 @@ const styles = {
   },
 };
 
-export function createAdapter(name, client, { Api, kind = name } = {}) {
+export function createAdapter(
+  name,
+  client,
+  { Api, kind = name, onSession } = {}
+) {
   if (!client || typeof client !== 'object') {
     throw new TypeError('An initialized backend client is required');
   }
@@ -106,7 +110,7 @@ export function createAdapter(name, client, { Api, kind = name } = {}) {
       }
       throw new UnsupportedError(method, name);
     },
-    execute(operation, args) {
+    async execute(operation, args) {
       const method = methods[operation] ?? operation;
       if (
         adapter.supports('invoke') &&
@@ -118,7 +122,11 @@ export function createAdapter(name, client, { Api, kind = name } = {}) {
       if (operation === 'sendMessage' && style === 'gramjs') {
         return client[method](args[0], { ...args[2], message: args[1] });
       }
-      return client[method](...args);
+      const result = await client[method](...args);
+      if (operation === 'start' && onSession && client.session?.save) {
+        await onSession(client.session.save());
+      }
+      return result;
     },
     extended: new Proxy(client, {
       get(target, key) {
