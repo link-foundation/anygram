@@ -1,5 +1,6 @@
 import { UnsupportedError } from './errors.js';
 import { gramRequest, objectRequest } from './requests.js';
+import { mtcuteRequest } from './mtcute.js';
 
 const styles = {
   gramjs: {
@@ -45,7 +46,7 @@ export function createAdapter(name, client, { Api, kind = name } = {}) {
     name,
     kind,
     client,
-    protocol: bot ? 'bot' : 'mtproto',
+    protocol: bot ? 'bot' : style === 'tdl' ? 'tdlib' : 'mtproto',
     supports(operation) {
       if (operation === 'bot') {
         return bot;
@@ -53,12 +54,13 @@ export function createAdapter(name, client, { Api, kind = name } = {}) {
       if (operation === 'invoke') {
         return (
           !bot &&
+          style !== 'tdl' &&
           typeof client[style === 'mtcute' ? 'call' : raw] === 'function'
         );
       }
       return typeof client[methods[operation] ?? operation] === 'function';
     },
-    invoke(request, options) {
+    async invoke(request, options) {
       if (style === 'gramjs') {
         if (!Api && !request.original?.getBytes) {
           throw new UnsupportedError(
@@ -69,10 +71,13 @@ export function createAdapter(name, client, { Api, kind = name } = {}) {
         return client.invoke(gramRequest(Api, request));
       }
       if (style === 'mtcute') {
-        return client.call(objectRequest(request), options);
+        return client.call(await mtcuteRequest(request), options);
       }
       if (style === 'tdl') {
-        return client.invoke({ '@type': request.method, ...request.params });
+        throw new UnsupportedError(
+          'MTProto RPCs require an MTProto backend; TDLib has a separate schema',
+          name
+        );
       }
       const { _: tag, ...params } = objectRequest(request);
       void tag;

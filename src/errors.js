@@ -23,11 +23,7 @@ export class TelegramError extends Error {
     if (error instanceof TelegramError || error instanceof UnsupportedError) {
       return error;
     }
-    const type =
-      error.errorMessage ??
-      error.error_message ??
-      error.message ??
-      String(error);
+    const type = errorText(error);
     const wait = /(?:FLOOD|SLOWMODE|FLOOD_PREMIUM)_WAIT_(\d+)/.exec(type);
     const migrate = /(?:PHONE|NETWORK|USER|FILE)_MIGRATE_(\d+)/.exec(type);
     return new TelegramError(type, {
@@ -39,9 +35,20 @@ export class TelegramError extends Error {
         error.parameters?.retry_after ??
         (wait ? Number(wait[1]) : undefined),
       migrateTo:
+        error.newDc ??
         error.parameters?.migrate_to_chat_id ??
         (migrate ? Number(migrate[1]) : undefined),
       cause: error,
     });
   }
+}
+
+function errorText(error) {
+  return (
+    error.errorMessage ??
+    error.error_message ??
+    error.text ??
+    error.message ??
+    String(error)
+  );
 }

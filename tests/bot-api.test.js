@@ -8,6 +8,38 @@ const response = (result) =>
   });
 
 describe('native Bot API', () => {
+  it('keeps timeouts active until the response body has been consumed', async () => {
+    const api = new BotApi({
+      token: '123:secret',
+      timeout: 10,
+      fetch: async (url, { signal }) => ({
+        status: 200,
+        json: () =>
+          new Promise((resolve, reject) => {
+            signal.addEventListener(
+              'abort',
+              () => reject(new Error('secret URL')),
+              { once: true }
+            );
+          }),
+      }),
+    });
+    let watchdog;
+    const result = Promise.race([
+      api.getMe(),
+      new Promise((resolve, reject) => {
+        watchdog = globalThis.setTimeout(
+          () => reject(new Error('Body timeout was not enforced')),
+          100
+        );
+      }),
+    ]);
+    try {
+      await assert.rejects(result, /timed out/);
+    } finally {
+      globalThis.clearTimeout(watchdog);
+    }
+  });
   it('calls arbitrary methods without competitor packages and preserves IDs', async () => {
     const requests = [];
     const native = new BotApi({

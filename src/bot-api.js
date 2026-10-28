@@ -79,17 +79,26 @@ export class BotApi {
     this.api = methodProxy(this.callApi.bind(this));
   }
 
-  async request(path, options = {}, { signal, timeout = this.timeout } = {}) {
+  async request(
+    path,
+    options = {},
+    { signal, timeout = this.timeout } = {},
+    consume
+  ) {
     const controller = new globalThis.AbortController();
     const timer = globalThis.setTimeout(() => controller.abort(), timeout);
     try {
-      return await this.fetch(`${this.baseUrl}/${path}`, {
+      const response = await this.fetch(`${this.baseUrl}/${path}`, {
         ...options,
         signal: signal
           ? globalThis.AbortSignal.any([signal, controller.signal])
           : controller.signal,
       });
-    } catch {
+      return await consume(response, controller.signal);
+    } catch (error) {
+      if (error instanceof TelegramError) {
+        throw error;
+      }
       // Fetch error messages often contain the entire credential-bearing URL.
       throw new TelegramError(
         signal?.aborted
@@ -108,20 +117,26 @@ export class BotApi {
     if (!/^[a-zA-Z][a-zA-Z0-9]*$/.test(method)) {
       throw new TypeError('Invalid Bot API method');
     }
-    const response = await this.request(
+    const { response, envelope } = await this.request(
       `bot${this.#token}/${method}`,
       { method: 'POST', ...uploadBody(params) },
-      options
+      options,
+      async (response, timeoutSignal) => {
+        let envelope;
+        try {
+          envelope = await response.json();
+        } catch (error) {
+          if (timeoutSignal.aborted || options?.signal?.aborted) {
+            throw error;
+          }
+          throw new TelegramError('Bot API returned invalid JSON', {
+            code: response.status,
+            type: 'INVALID_RESPONSE',
+          });
+        }
+        return { response, envelope };
+      }
     );
-    let envelope;
-    try {
-      envelope = await response.json();
-    } catch {
-      throw new TelegramError('Bot API returned invalid JSON', {
-        code: response.status,
-        type: 'INVALID_RESPONSE',
-      });
-    }
     if (envelope.ok !== true) {
       throw new TelegramError(
         String(envelope.description ?? 'Bot API request failed').replaceAll(
@@ -189,16 +204,18 @@ export class BotApi {
         type: 'INVALID_RESPONSE',
       });
     }
-    const response = await this.request(
+    return this.request(
       `file/bot${this.#token}/${file.file_path}`,
       {},
-      options
+      options,
+      async (response) => {
+        if (!response.ok) {
+          throw new TelegramError('Bot API file download failed', {
+            code: response.status,
+          });
+        }
+        return new Uint8Array(await response.arrayBuffer());
+      }
     );
-    if (!response.ok) {
-      throw new TelegramError('Bot API file download failed', {
-        code: response.status,
-      });
-    }
-    return new Uint8Array(await response.arrayBuffer());
   }
 }

@@ -1,3 +1,10 @@
+import schema from './schema/telegram.json' with { type: 'json' };
+const definitions = new Map(
+  [...schema.methods, ...schema.constructors].map((item) => [
+    item.method ?? item.predicate,
+    item,
+  ])
+);
 const lowerFirst = (text) => text[0].toLowerCase() + text.slice(1);
 export const camel = (text) =>
   text.replace(/_([a-z])/g, (match, letter) => letter.toUpperCase());
@@ -43,6 +50,9 @@ export function gramRequest(Api, request) {
     if (Array.isArray(value)) {
       return value.map(convert);
     }
+    if (value instanceof Uint8Array) {
+      return Buffer.from(value);
+    }
     if (
       !value ||
       typeof value !== 'object' ||
@@ -67,30 +77,50 @@ export function gramRequest(Api, request) {
     if (!Constructor) {
       throw new TypeError(`The backend schema has no constructor ${name}`);
     }
+    const definition = definitions.get(requestOf(name).method);
+    for (const field of definition?.params ?? []) {
+      if (
+        /^int(128|256)$/.test(field.type) &&
+        fields[camel(field.name)] instanceof Uint8Array
+      ) {
+        const bytes = fields[camel(field.name)];
+        fields[camel(field.name)] = BigInt(
+          `0x${Buffer.from(bytes).reverse().toString('hex')}`
+        );
+      }
+    }
     return new Constructor(fields);
   }
   return construct(request.method, convert(request.params));
 }
 
 export function objectRequest(request) {
-  function convert(value) {
+  function convert(value, name) {
     if (Array.isArray(value)) {
-      return value.map(convert);
+      return value.map((item) => convert(item));
     }
     if (!value || typeof value !== 'object' || value instanceof Uint8Array) {
       return value;
     }
+    if (typeof value.toJSNumber === 'function' || value.__isLong__) {
+      return BigInt(value.toString());
+    }
+    const tag =
+      name ?? value._ ?? (value.className && requestOf(value.className).method);
+    const fields = new Set(
+      definitions.get(tag)?.params.map((field) => field.name)
+    );
     const result = {};
     for (const [key, entry] of Object.entries(value)) {
       if (key === 'className') {
         result._ = requestOf(entry).method;
       } else {
-        result[snake(key)] = convert(entry);
+        result[fields.has(key) ? key : snake(key)] = convert(entry);
       }
     }
     return result;
   }
-  return { _: request.method, ...convert(request.params) };
+  return { _: request.method, ...convert(request.params, request.method) };
 }
 
 export function methodProxy(invoke, path = []) {

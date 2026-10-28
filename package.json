@@ -9,6 +9,14 @@
     ".": {
       "types": "./src/index.d.ts",
       "import": "./src/index.js"
+    },
+    "./mtproto": {
+      "types": "./src/mtproto.d.ts",
+      "import": "./src/mtproto.js"
+    },
+    "./tl": {
+      "types": "./src/tl.d.ts",
+      "import": "./src/tl.js"
     }
   },
   "scripts": {
@@ -23,7 +31,8 @@
     "changeset": "changeset",
     "changeset:version": "node scripts/changeset-version.mjs",
     "changeset:publish": "changeset publish",
-    "changeset:status": "changeset status --since=origin/main"
+    "changeset:status": "changeset status --since=origin/main",
+    "schema:update": "node scripts/update-schema.mjs"
   },
   "keywords": [
     "telegram",
@@ -40,11 +49,13 @@
     "url": "https://github.com/link-foundation/anygram.git"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=20.18.3"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.7",
+    "@mtcute/core": "0.32.7",
     "@mtcute/node": "0.32.7",
+    "@mtcute/tl-runtime": "0.32.6",
     "@mtproto/core": "6.3.0",
     "eslint": "^9.38.0",
     "eslint-config-prettier": "^10.1.8",
@@ -71,5 +82,10 @@
       "prettier --write",
       "prettier --check"
     ]
-  }
+  },
+  "files": [
+    "src/",
+    "README.md",
+    "LICENSE"
+  ]
 }
