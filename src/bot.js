@@ -7,6 +7,7 @@ import {
   matchText,
 } from './bot-context.js';
 import { TelegramError } from './errors.js';
+import { pollingKey, acquirePolling, validatePolling } from './polling.js';
 
 /** Shared middleware runner usable with a native or adapted Bot API transport. */
 export class Bot {
@@ -20,6 +21,7 @@ export class Bot {
     this.queue = Promise.resolve();
     this.running = false;
     this.Context = options.Context ?? Context;
+    this.pollingKey = pollingKey(token, options);
   }
   use(...middleware) {
     for (const entry of middleware) {
@@ -153,6 +155,8 @@ export class Bot {
     if (this.running) {
       throw new Error('Bot is already running');
     }
+    validatePolling(maxPolls, timeout);
+    const release = acquirePolling(this.pollingKey);
     this.running = true;
     this.controller = new globalThis.AbortController();
     try {
@@ -170,6 +174,7 @@ export class Bot {
       }
     } finally {
       this.running = false;
+      release();
     }
   }
   launch(options) {

@@ -159,6 +159,13 @@ entities fail locally. Bot requests use explicit entities; shared MTProto
 operations translate them to TL constructors. See
 [the runnable localized greeting example](examples/formatted-greetings.js).
 
+Bot polling permits one active instance per token/server in a process. Stop and
+await the existing poller before replacing it. HTTP 409 from another process is
+surfaced to the application; deployments need a single polling owner or a shared
+lease. For membership changes, explicitly subscribe with
+`allowed_updates: ['chat_member']` and grant the bot the required administration
+rights; large groups do not reliably supply join service messages.
+
 Account operations also expose `getInputEntity`, `getContacts`,
 `getGreetingStickers`, `downloadFile`, and `downloadProfilePhoto`. Downloads of
 message documents use the advertised size and can refresh expired file references

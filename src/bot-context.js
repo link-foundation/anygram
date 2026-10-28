@@ -91,7 +91,14 @@ export class Context {
     );
   }
   get from() {
-    return this.callbackQuery?.from ?? this.inlineQuery?.from ?? this.msg?.from;
+    return (
+      this.callbackQuery?.from ??
+      this.inlineQuery?.from ??
+      this.msg?.from ??
+      this.update.chat_member?.from ??
+      this.update.my_chat_member?.from ??
+      this.update.chat_join_request?.from
+    );
   }
   reply(text, options) {
     return this.api.sendMessage(this.chat.id, text, options);

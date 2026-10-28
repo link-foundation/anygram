@@ -13,6 +13,91 @@ const update = (id, text = '/start') => ({
 });
 const fakeFetch = async () =>
   new Response(JSON.stringify({ ok: true, result: { message_id: 1 } }));
+
+it('rejects competing in-process pollers for the same bot and releases ownership on stop (node bot #550)', async () => {
+  let started;
+  const ready = new Promise((resolve) => {
+    started = resolve;
+  });
+  const options = {
+    botInfo: { id: 123 },
+    fetch: async (url, options) => {
+      started();
+      await new Promise((resolve) => {
+        if (options.signal.aborted) {
+          resolve();
+        } else {
+          options.signal.addEventListener('abort', resolve, { once: true });
+        }
+      });
+      throw new Error('cancelled');
+    },
+  };
+  const first = new Bot('550:shared', options);
+  const second = new Bot('550:shared', {
+    botInfo: { id: 123 },
+    fetch: () => assert.fail('duplicate poll reached network'),
+  });
+  const polling = first.start({ maxPolls: 1 });
+  await ready;
+  try {
+    await assert.rejects(
+      second.start({ maxPolls: 1 }),
+      (error) => error.type === 'POLLING_CONFLICT'
+    );
+  } finally {
+    first.stop();
+    await polling;
+  }
+  await second.start({ maxPolls: 0 });
+  assert.equal(second.isRunning(), false);
+});
+
+it('subscribes to explicit membership updates independently of join service messages (node bot #1161)', async () => {
+  const member = {
+    chat: { id: -1001 },
+    from: { id: 10 },
+    old_chat_member: { status: 'left' },
+    new_chat_member: { status: 'member' },
+  };
+  const bot = new Bot('1161:membership', {
+    botInfo: { id: 123 },
+    fetch: async (url, options) => {
+      assert.deepEqual(JSON.parse(options.body).allowed_updates, [
+        'chat_member',
+      ]);
+      return new Response(
+        JSON.stringify({
+          ok: true,
+          result: [{ update_id: 1, chat_member: member }],
+        })
+      );
+    },
+  });
+  let observed;
+  bot.on('chat_member', (ctx) => {
+    assert.equal(ctx.from.id, 10);
+    assert.equal(ctx.chat.id, -1001);
+    observed = ctx.update.chat_member;
+  });
+  await bot.start({ maxPolls: 1, allowed_updates: ['chat_member'] });
+  assert.deepEqual(observed, member);
+});
+
+it('validates finite polling controls before connecting', async () => {
+  const bot = new Bot('123:invalid', {
+    fetch: () => assert.fail('invalid polling reached network'),
+  });
+  for (const options of [
+    { maxPolls: -1 },
+    { maxPolls: 0.5 },
+    { maxPolls: NaN },
+    { timeout: -1 },
+    { timeout: 0.5 },
+  ]) {
+    await assert.rejects(bot.start(options), /polling/i);
+  }
+});
 describe('shared bot dispatch', () => {
   it('runs grammY middleware, commands and context replies exactly once', async () => {
     const calls = [];
