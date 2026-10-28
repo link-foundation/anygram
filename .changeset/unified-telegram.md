@@ -16,5 +16,6 @@ polling ownership, formatted runtime templates and shared bot session middleware
 with grammY/Telegraf storage semantics. Share nested composers, persistent
 scenes/wizards and Telegraf command/launch dispatch. Bound HTTP response bodies,
 release readers, enforce cancellation and per-request deadlines, and await
-all DC transport closures while retaining cleanup failures. Preserve
+all DC transport closures while retaining cleanup failures. Use shared receive
+buffers to bound assembly copies for fragmented TCP/WebSocket streams. Preserve
 exact IDs and expose typed failures without retrying ambiguous side effects.

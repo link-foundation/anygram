@@ -1,5 +1,6 @@
 import { randomBytes } from 'node:crypto';
 import { TelegramError } from './errors.js';
+import { ByteBuffer } from './byte-buffer.js';
 
 const modes = new Set(['abridged', 'intermediate', 'padded', 'full']);
 const crcTable = Array.from({ length: 256 }, (_, value) => {
@@ -40,7 +41,7 @@ export class TransportFraming {
       throw new RangeError('Invalid transport packet limit');
     }
     Object.assign(this, { mode, maxBytes, maxPackets, onQuickAck, random });
-    this.buffer = Buffer.alloc(0);
+    this.pending = new ByteBuffer(maxBytes * 2 + 24);
     this.outgoing = 0;
     this.incoming = 0;
   }
@@ -52,6 +53,9 @@ export class TransportFraming {
       return Buffer.alloc(0);
     }
     return Buffer.alloc(4, this.mode === 'padded' ? 0xdd : 0xee);
+  }
+  get buffer() {
+    return this.pending.bytes;
   }
   encode(bytes) {
     this.validatePayload(bytes);
@@ -95,7 +99,7 @@ export class TransportFraming {
     if (this.buffer.length + bytes.length > this.maxBytes * 2 + 24) {
       throw new RangeError('MTProto buffered byte limit exceeded');
     }
-    this.buffer = Buffer.concat([this.buffer, bytes]);
+    this.pending.append(bytes);
     const packets = [];
     for (let count = 0; this.buffer.length; count++) {
       if (count >= this.maxPackets) {
@@ -106,7 +110,7 @@ export class TransportFraming {
         break;
       }
       const frame = this.buffer.subarray(0, envelope.total);
-      this.buffer = this.buffer.subarray(envelope.total);
+      this.pending.discard(envelope.total);
       if (envelope.ack !== undefined) {
         this.onQuickAck?.(envelope.ack);
         continue;

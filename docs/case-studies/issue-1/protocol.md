@@ -163,3 +163,9 @@ completed an anonymous production DC2 key exchange and decoded an encrypted
 CONNECTION_NOT_INITED RPC error on 2026-10-28. It prints no keys or sessions.
 Node, Bun and Deno each pass 150 tests. This verifies the native network path;
 browser/Worker runtime support and authenticated application scenarios remain open.
+
+Both stream parsers share a bounded geometrically growing receive buffer rather
+than concatenating the entire incomplete packet on every network chunk. Delivered
+packets own their bytes. `tests/framing-resources.test.js` checks a finite copy
+budget, compaction, caller mutation and storage reuse. Large empty buffers release
+their allocations instead of retaining maximum capacity on idle connections.

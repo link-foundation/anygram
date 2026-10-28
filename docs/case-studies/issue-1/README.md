@@ -365,3 +365,21 @@ initialization before cleanup, preserves a single failure and aggregates multipl
 failures. Tests control promise completion directly instead of relying on timing.
 All 153 tests pass locally on Node, Bun and Deno. Main was refreshed and remains
 an ancestor of this branch at 5b8ebdd.
+
+## Fragmented-read resource checkpoint
+
+The finite `experiments/framing-resources.mjs` probe reproduces quadratic copying
+in both receive parsers: a 262,144-byte payload arriving in 128-byte pieces copied
+268,828,676 bytes for TCP and 268,828,682 for WebSocket through instrumented
+Buffer/TypedArray operations. These are copy counts for this probe, not total
+process memory or a production benchmark. Run it with a 128 MiB V8 heap limit;
+its payload/chunk validation bounds deliberate stress inputs.
+
+A shared contiguous buffer now grows geometrically, compacts consumed prefixes
+and releases allocations over 64 KiB when empty. The same probe records 785,412
+and 785,418 copied bytes respectively. Two failing-before/passing-after regressions
+enforce an eight-times-payload assembly-copy budget without timing assertions.
+A third verifies that compaction, caller input mutation and later buffer reuse
+cannot change delivered packets or incomplete data. All 156 tests pass on Node,
+Bun and Deno. Shutdown head 15dd3b6 passed all CI jobs in
+[run 40789930055](https://github.com/link-foundation/anygram/actions/runs/40789930055).

@@ -1,5 +1,6 @@
 import { randomBytes } from 'node:crypto';
 import { TelegramError } from './errors.js';
+import { ByteBuffer } from './byte-buffer.js';
 
 export const websocketError = (message, code) =>
   new TelegramError(`WebSocket ${message}`, { type: 'TRANSPORT_ERROR', code });
@@ -22,9 +23,12 @@ export class WebSocketFraming {
       throw new RangeError('Invalid WebSocket byte/frame limit');
     }
     Object.assign(this, { client, maxBytes, maxFrames, random });
-    this.buffer = Buffer.alloc(0);
+    this.pending = new ByteBuffer(maxBytes * 2 + 28);
     this.fragmented = false;
     this.messageBytes = 0;
+  }
+  get buffer() {
+    return this.pending.bytes;
   }
   encode(bytes, { opcode = 2, final = true } = {}) {
     validateFlags(opcode, final, bytes.byteLength);
@@ -55,7 +59,7 @@ export class WebSocketFraming {
     if (this.buffer.length + bytes.byteLength > this.maxBytes * 2 + 28) {
       throw new RangeError('WebSocket buffered byte limit exceeded');
     }
-    this.buffer = Buffer.concat([this.buffer, bytes]);
+    this.pending.append(bytes);
     const frames = [];
     while (this.buffer.length) {
       if (frames.length >= this.maxFrames) {
@@ -72,7 +76,7 @@ export class WebSocketFraming {
         final,
         payload: masked(this.buffer.subarray(start, start + length), mask),
       });
-      this.buffer = this.buffer.subarray(start + length);
+      this.pending.discard(start + length);
     }
     return frames;
   }
