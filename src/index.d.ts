@@ -176,6 +176,8 @@ export declare class Anygram {
   saveSession(): Promise<string>;
   runUpdates(options?: RunUpdatesOptions): Promise<UpdateState | undefined>;
   stopUpdates(): Promise<void>;
+  watchChannel(id: bigint | string | number): Promise<void>;
+  unwatchChannel(id: bigint | string | number): Promise<void>;
 }
 export interface BotApiOptions {
   token: string;
@@ -279,18 +281,23 @@ export interface UpdateManagerOptions {
   onReset?: (event: Parameters) => void | Promise<void>;
   resolveChannel?: (id: bigint) => TlRequest | Promise<TlRequest>;
   maxPages?: number;
+  clock?: () => number;
 }
 export interface RunUpdatesOptions
   extends Omit<UpdateManagerOptions, 'invoke'>, RequestOptions {
   stateStore?: import('./storage.js').SessionStore;
   maxPolls?: number;
   maxWait?: number;
+  watchedChannels?: (bigint | string | number)[];
 }
 export declare class UpdateManager {
   constructor(options: UpdateManagerOptions);
   state: UpdateState;
   initialize(): Promise<void>;
   feed(update: TlRequest): Promise<void>;
+  watchChannel(id: bigint | string | number): void;
+  unwatchChannel(id: bigint | string | number): void;
+  tick(): Promise<void>;
   recover(): Promise<void>;
   recoverChannel(id: bigint): Promise<number | undefined>;
 }

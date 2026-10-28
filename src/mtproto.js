@@ -284,12 +284,23 @@ export class Mtproto {
     this.updatesController?.abort();
   }
 
+  watchChannel(id) {
+    if (!this.updateManager) {
+      throw new Error('Start update recovery before watching channels');
+    }
+    this.updateManager.watchChannel(id);
+  }
+  unwatchChannel(id) {
+    this.updateManager?.unwatchChannel(id);
+  }
+
   async runUpdates({
     state,
     stateStore,
     onUpdate,
     onState,
     maxPolls = Infinity,
+    watchedChannels = [],
     ...options
   } = {}) {
     if (this.updatesController) {
@@ -318,9 +329,14 @@ export class Mtproto {
           await onState?.(value);
         },
       });
+      this.updateManager = manager;
+      for (const id of watchedChannels) {
+        manager.watchChannel(id);
+      }
       this.onUpdate = (value) => manager.feed(value);
       await manager.initialize();
       for (let count = 0; count < maxPolls && !signal.aborted; count++) {
+        await manager.tick();
         if (!(await pollUntilStopped(this, { ...options, signal }))) {
           break;
         }
@@ -335,6 +351,7 @@ export class Mtproto {
     } finally {
       this.onUpdate = previous;
       this.updatesController = undefined;
+      this.updateManager = undefined;
     }
   }
 

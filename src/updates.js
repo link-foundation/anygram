@@ -1,5 +1,6 @@
 import { TelegramError } from './errors.js';
 import { normalize } from './operations.js';
+import { UpdateScheduler } from './update-scheduler.js';
 
 function initialState(value = {}) {
   const { pts = 0, qts = 0, seq = 0, date = 0, channels = {} } = value;
@@ -36,6 +37,7 @@ export class UpdateManager {
     onReset,
     resolveChannel,
     maxPages = 1000,
+    clock,
   } = {}) {
     if (typeof invoke !== 'function') {
       throw new TypeError('UpdateManager requires an invoke function');
@@ -55,14 +57,30 @@ export class UpdateManager {
     this.queue = Promise.resolve();
     this.recoveringChannels = new Set();
     this.persisted = globalThis.structuredClone(this.state);
+    this.scheduler = new UpdateScheduler(this, clock);
   }
   async call(method, params) {
     return normalize(await this.invoke(method, params));
   }
   feed(value) {
-    const task = this.queue.then(() => this.handle(normalize(value)));
+    return this.enqueue(async () => {
+      await this.handle(normalize(value));
+      this.scheduler.touch();
+    });
+  }
+  enqueue(work) {
+    const task = this.queue.then(work);
     this.queue = task.catch(() => {});
     return task;
+  }
+  watchChannel(id) {
+    this.scheduler.watch(id);
+  }
+  unwatchChannel(id) {
+    this.scheduler.unwatch(id);
+  }
+  tick() {
+    return this.enqueue(() => this.scheduler.tick());
   }
   async save() {
     try {
@@ -74,9 +92,7 @@ export class UpdateManager {
     }
   }
   initialize() {
-    const task = this.queue.then(() => this.initializeState());
-    this.queue = task.catch(() => {});
-    return task;
+    return this.enqueue(() => this.initializeState());
   }
   async initializeState() {
     if (!this.state.date) {

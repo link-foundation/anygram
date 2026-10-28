@@ -130,6 +130,8 @@ for (const operation of [
   'saveSession',
   'runUpdates',
   'stopUpdates',
+  'watchChannel',
+  'unwatchChannel',
 ]) {
   Anygram.prototype[operation] = function (...args) {
     return this.execute(operation, ...args);

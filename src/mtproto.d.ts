@@ -56,6 +56,8 @@ export declare class Mtproto {
   pollUpdates(options?: RequestOptions & { maxWait?: number }): Promise<void>;
   runUpdates(options?: RunUpdatesOptions): Promise<UpdateState | undefined>;
   stopUpdates(): void;
+  watchChannel(id: bigint | string | number): void;
+  unwatchChannel(id: bigint | string | number): void;
   call<T = unknown>(
     method: string,
     params?: Parameters,

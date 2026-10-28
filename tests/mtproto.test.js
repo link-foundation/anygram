@@ -229,3 +229,35 @@ it('runs a finite updates loop and stops only after its handler finishes', async
   assert.equal(state.pts, 2);
   assert.equal(client.updatesController, undefined);
 });
+it('runs scheduled differences inside the update loop and releases watched-channel state on exit', async () => {
+  const client = new Mtproto({ authKey: randomBytes(256) });
+  const calls = [];
+  client.call = async (method, params) => {
+    calls.push(method);
+    if (method === 'updates.getDifference') {
+      return { _: 'updates.differenceEmpty', date: 2, seq: 0 };
+    }
+    assert.equal(method, 'updates.getChannelDifference');
+    assert.equal(params.channel.channel_id, 42n);
+    return {
+      _: 'updates.channelDifferenceEmpty',
+      pts: 1,
+      final: true,
+      timeout: 30,
+    };
+  };
+  client.pollUpdates = async () => {
+    client.unwatchChannel(42n);
+  };
+  assert.throws(() => client.watchChannel(42n), /Start update recovery/);
+  await client.runUpdates({
+    maxPolls: 1,
+    watchedChannels: [42n],
+    state: { date: 1, channels: { 42: { pts: 1, access_hash: 7n } } },
+  });
+  assert.deepEqual(calls, [
+    'updates.getDifference',
+    'updates.getChannelDifference',
+  ]);
+  assert.equal(client.updateManager, undefined);
+});

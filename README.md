@@ -88,7 +88,13 @@ await updates;
 Update handlers finish before their cursors are saved. Delivery can repeat after
 handler or persistence failures; application side effects should be idempotent.
 `onReset` reports a missing initial channel cursor or a difference too old for
-server recovery. `uploadFile`, `iterDownload`, `downloadMedia`, `sendFile`, and `sendAlbum`
+server recovery. `watchedChannels` takes IDs of up to ten currently open channels;
+provide `resolveChannel` when their access hashes are absent from saved state.
+`watchChannel` and `unwatchChannel` change that set while recovery runs. One
+polling-loop clock follows server timeouts and recovers common state after
+fifteen minutes without pushes. A standalone `UpdateManager` needs periodic
+`tick()` calls from the application's existing loop.
+`uploadFile`, `iterDownload`, `downloadMedia`, `sendFile`, and `sendAlbum`
 share chunking and bounds across raw MTProto backends. Downloads accept
 `refreshFileReference` to refetch an expired reference from its original message.
 
