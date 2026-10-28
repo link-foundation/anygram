@@ -17,6 +17,7 @@ import {
 export { TransportFraming } from './transport-framing.js';
 export { TcpTransport };
 export { createSocks5Connector } from './socks5.js';
+export { ObfuscatedFraming } from './obfuscated-framing.js';
 
 const hosts = ['pluto', 'venus', 'aurora', 'vesta', 'flora'];
 
@@ -673,12 +674,15 @@ function deadlineOptions(options, defaultTimeout) {
 }
 
 function createTransport(transport, options) {
+  if (options.obfuscate && transport === 'http') {
+    throw new TypeError('MTProto stream obfuscation requires TCP');
+  }
   if (options.proxy && transport === 'http') {
     throw new TypeError(
       'HTTP proxy requires an injected Fetch implementation; use TCP for SOCKS5'
     );
   }
-  if (transport === undefined && options.proxy) {
+  if (transport === undefined && (options.proxy || options.obfuscate)) {
     return new TcpTransport(options);
   }
   if (transport === 'tcp') {

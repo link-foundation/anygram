@@ -3,6 +3,7 @@ import {
   Mtproto,
   TcpTransport,
   TransportFraming,
+  ObfuscatedFraming,
   createSocks5Connector,
 } from '../src/mtproto.js';
 
@@ -27,4 +28,22 @@ const connector = createSocks5Connector({
   username: 'example',
   password: 'example',
 });
-void [client, custom, framing, factory, proxied, connector];
+const obfuscated = new ObfuscatedFraming({ mode: 'padded' });
+const mtproxy = createClient({
+  proxy: {
+    type: 'mtproxy',
+    host: '127.0.0.1',
+    port: 443,
+    secret: '91919191919191919191919191919191',
+  },
+});
+void [
+  client,
+  custom,
+  framing,
+  factory,
+  proxied,
+  connector,
+  obfuscated,
+  mtproxy,
+];

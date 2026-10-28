@@ -4,15 +4,17 @@ import { dcAddress } from './endpoints.js';
 import { validateTimeout } from './http.js';
 import { TelegramError } from './errors.js';
 import { createSocks5Connector } from './socks5.js';
+import { ObfuscatedFraming } from './obfuscated-framing.js';
 
 /** Persistent packet stream. It never retries a possibly transmitted packet. */
 export class TcpTransport {
+  #framingOptions;
   constructor({
     dc = 2,
     test = false,
-    host = dcAddress(dc, test),
+    host,
     port = 443,
-    mode = 'intermediate',
+    mode,
     timeout = 30000,
     maxBytes = 16 * 1024 * 1024,
     maxPackets = 1000,
@@ -20,20 +22,32 @@ export class TcpTransport {
     onQuickAck,
     connectSocket,
     proxy,
+    obfuscate,
+    media,
   } = {}) {
+    const route = proxyRoute({ host, port, mode, proxy, obfuscate });
+    route.host ??= dcAddress(dc, test);
     validateTimeout(timeout);
-    validateEndpoint(host, port, maxQueuedBytes);
+    validateEndpoint(route.host, route.port, maxQueuedBytes);
     connectSocket = socketConnector(connectSocket, proxy);
     Object.assign(this, {
-      host,
-      port,
+      host: route.host,
+      port: route.port,
       timeout,
       maxPackets,
       maxQueuedBytes,
       connectSocket,
     });
-    this.framingOptions = { mode, maxBytes, maxPackets, onQuickAck };
-    this.framing = new TransportFraming(this.framingOptions);
+    this.#framingOptions = {
+      ...route,
+      maxBytes,
+      maxPackets,
+      onQuickAck,
+      dc,
+      test,
+      media,
+    };
+    this.framing = createFraming(this.#framingOptions);
     this.packets = [];
     this.queuedBytes = 0;
     this.closed = false;
@@ -53,7 +67,7 @@ export class TcpTransport {
         return;
       }
       this.failure = undefined;
-      this.framing = new TransportFraming(this.framingOptions);
+      this.framing = createFraming(this.#framingOptions);
       const socket = this.connectSocket({ host: this.host, port: this.port });
       this.socket = socket;
       ownsConnection = true;
@@ -277,9 +291,42 @@ function socketConnector(connectSocket, proxy) {
   if (proxy && connectSocket) {
     throw new TypeError('Choose either a proxy or a custom socket connector');
   }
-  return (
-    connectSocket ?? (proxy ? createSocks5Connector(proxy) : createConnection)
-  );
+  if (connectSocket) {
+    return connectSocket;
+  }
+  if (!proxy || proxy.MTProxy === true || proxy.type === 'mtproxy') {
+    return createConnection;
+  }
+  return createSocks5Connector(proxy);
+}
+
+function createFraming(options) {
+  return options.obfuscate
+    ? new ObfuscatedFraming(options)
+    : new TransportFraming(options);
+}
+
+function proxyRoute({ host, port, mode, proxy, obfuscate }) {
+  const mtproxy = proxy?.MTProxy === true || proxy?.type === 'mtproxy';
+  let secret;
+  if (mtproxy) {
+    host = proxy.host ?? proxy.ip;
+    port = proxy.port ?? 443;
+    secret = proxy.secret;
+    if (!secret) {
+      throw new TypeError('MTProxy secret is required');
+    }
+    if (secret instanceof Uint8Array) {
+      secret = Buffer.from(secret);
+    }
+  }
+  return {
+    host,
+    port,
+    mode: mode ?? (mtproxy ? 'padded' : 'intermediate'),
+    obfuscate: obfuscate || mtproxy,
+    secret,
+  };
 }
 
 function abortable(promise, signal) {

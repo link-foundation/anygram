@@ -62,12 +62,15 @@ examples/. No live credentials or sessions may be included in research data.
   production handshake verify the transport path.
 - SOCKS5 CONNECT resolves domains at the proxy, supports IPv4/IPv6 and optional
   authentication, rejects downgrade/malformed replies and bounds negotiation.
+- Direct obfuscation and MTProxy compare headers/stream bytes with actual GramJS;
+  fragmented sockets verify signed test/media DC routing. A live anonymous
+  obfuscated padded handshake succeeds. Fake TLS remains open.
 - In-process polling ownership and explicit membership subscriptions are tested.
-- After SOCKS5 regressions, Node/Bun/Deno each pass 137 tests; lint, format, duplication and
+- After obfuscation regressions, Node/Bun/Deno each pass 142 tests; lint, format, duplication and
   four declaration entry points pass. Each later code change requires fresh checks.
 - Refreshed issue/sub-issue and all three PR feedback streams are empty. Main is
-  an ancestor of the branch. CI for f4c6de9 passed all nine runtime/OS jobs and
-  release gates in run 40785578378, including native TCP. Later heads
+  an ancestor of the branch. CI for 1c1fb1c passed all nine runtime/OS jobs and
+  release gates in run 40786580384, including SOCKS5. Later heads
   require fresh CI evidence.
 - Research includes 32 complete discussions, 26 inspected images, nineteen pinned
   test-path inventories and all 333 Telegram-related meta-sovereign JS files.

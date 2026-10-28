@@ -1,23 +1,31 @@
 // Finite credential-free probe. Never print authorization keys or sessions.
 import { Mtproto } from '../src/mtproto.js';
 
-const client = new Mtproto({ transport: 'tcp', mode: 'full', timeout: 15000 });
+const mode = process.argv[2] ?? 'full';
+const obfuscate = process.argv.includes('--obfuscated');
+const transport = `tcp/${mode}${obfuscate ? '/obfuscated' : ''}`;
+const client = new Mtproto({
+  transport: 'tcp',
+  mode,
+  obfuscate,
+  timeout: 15000,
+});
 try {
   await client.connect();
-  console.log({ transport: 'tcp/full', keyExchange: 'verified' });
+  console.log({ transport, keyExchange: 'verified' });
   await client.call('help.getConfig');
   console.log({ encryptedRpc: 'verified' });
 } catch (error) {
   if (client.cipher && error.type === 'CONNECTION_NOT_INITED') {
     console.log({
-      transport: 'tcp/full',
+      transport,
       encryptedRpcError: error.type,
       verified: true,
       accountAuthorization: 'unverified: application credentials required',
     });
   } else {
     console.error({
-      transport: 'tcp/full',
+      transport,
       error: error.message,
       type: error.type,
     });

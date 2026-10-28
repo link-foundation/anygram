@@ -69,7 +69,7 @@ Independent login/2FA, DC migration, session storage, ordered update recovery an
 media primitives have deterministic tests; complete application/live-account
 scenarios remain unverified. Secret-chat state and voice/video media still need
 implementation and verification. The requirements ledger stays open.
-WebSocket, MTProxy and SOCKS4 support remain unfinished.
+WebSocket, fake TLS, obfuscated full framing and SOCKS4 remain unfinished.
 The unified TDLib adapter must preserve TDLib's separate JSON API; it must never
 claim that an MTProto method string is a valid TDLib request.
 
@@ -109,3 +109,27 @@ settings were ignored and the destination was resolved directly (ENOTFOUND).
 The fixed tests use bounded real loopback sockets with fragmented responses,
 credential rejection, malformed replies and coalesced tunnel bytes. All 137
 tests now pass on Node, Bun and Deno; typed proxy construction compiles.
+
+## Obfuscated TCP and MTProxy verification
+
+`ObfuscatedFraming` follows Telegram's captured transport specification for
+64-byte initialization, forbidden prefixes, independent continuous AES-256-CTR
+directions and optional SHA-256 secret-derived keys. Initialization makes at
+most 64 attempts. Native TCP supports direct obfuscation and MTProxy endpoints,
+signed media/test DC routing and 16/17-byte secrets with validated hex/base64
+encodings. Secret options and cipher objects remain private fields.
+
+The initial four regressions failed with missing obfuscated framing and a
+bounded TCP timeout. An additional regression showed that the obfuscation option
+was ignored by the default HTTP selection. These now pass, alongside an explicit
+error for an undiscriminated proxy secret. Tests compare actual GramJS headers
+and three consecutive packets byte for byte, then verify both directions over
+fragmented real loopback sockets. They exercise forbidden initialization
+prefixes and invalid secret encodings. Fake TLS and obfuscated full framing
+remain explicit unsupported modes.
+
+`node --max-old-space-size=128 experiments/tcp-handshake.mjs padded --obfuscated`
+completed a production DC2 authorization-key exchange and decoded an encrypted
+CONNECTION_NOT_INITED RPC error on 2026-10-28. This verifies anonymous direct
+obfuscated transport, without establishing authenticated account or public
+MTProxy availability.

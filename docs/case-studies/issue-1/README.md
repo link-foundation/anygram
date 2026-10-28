@@ -324,3 +324,12 @@ regressions now cover fragmented responses, authentication downgrade/failure,
 malformed replies, deadlines and preservation of coalesced tunnel bytes.
 Node/Bun/Deno each pass 137 tests. See [protocol.md](protocol.md#socks5-connect-verification)
 for the precise protocol scope; other proxy protocols remain open.
+
+The obfuscation checkpoint independently implements Telegram's 64-byte
+initialization and continuous AES-CTR streams, plus MTProxy secret and signed
+test/media DC routing. Actual GramJS headers and successive packets match
+byte for byte; loopback peers verify fragmented traffic in both directions.
+A live anonymous padded/obfuscated TCP key exchange and encrypted RPC error
+decoding succeed. Node/Bun/Deno each pass 142 tests, with strict lint, format,
+duplication and TypeScript checks passing. WebSocket, fake TLS, SOCKS4,
+secret chats, calls and complete downstream/backend parity remain unfinished.

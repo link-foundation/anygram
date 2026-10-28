@@ -16,6 +16,7 @@ export function createSocks5Connector(options = {}) {
     !Number.isInteger(port) ||
     port < 1 ||
     port > 65535 ||
+    options.secret !== undefined ||
     ![undefined, 5].includes(options.socksType) ||
     ![undefined, 'socks5'].includes(options.type)
   ) {

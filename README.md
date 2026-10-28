@@ -110,8 +110,14 @@ destinations are encoded directly, and negotiation shares the request deadline.
 An explicit HTTP transport requires an injected Fetch implementation configured
 for its proxy instead of the `proxy` option. `connectSocket` accepts a custom
 connector and cannot be combined with `proxy`.
-Plain padded framing does not provide MTProxy obfuscation. WebSocket, SOCKS4
-and MTProxy transports remain unfinished. The [typed transport example](examples/typed-transports.ts)
+Use `obfuscate: true` for direct TCP obfuscation, or
+`proxy: { type: 'mtproxy', host, port, secret }` for MTProxy. Secrets accept
+16 bytes as hexadecimal, base64/base64url or Uint8Array; a 17-byte transport
+prefix selects padded framing by default. MTProxy defaults to padded framing
+and supports `dc`, `test` and `media` routing. Obfuscation supports abridged,
+intermediate and padded framing. Plain padded framing alone is not obfuscation.
+WebSocket, SOCKS4, fake TLS and obfuscated full framing remain unfinished.
+The [typed transport example](examples/typed-transports.ts)
 shows the supported construction options.
 
 `Session` can import Anygram, GramJS/teleproto, and Telethon string sessions.

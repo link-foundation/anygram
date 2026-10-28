@@ -28,6 +28,15 @@ export declare class TransportFraming {
   encode(packet: Uint8Array): Uint8Array;
   push(bytes: Uint8Array): Uint8Array[];
 }
+export interface ObfuscationOptions extends FramingOptions {
+  secret?: string | Uint8Array;
+  dc?: number;
+  test?: boolean;
+  media?: boolean;
+}
+export declare class ObfuscatedFraming extends TransportFraming {
+  constructor(options?: ObfuscationOptions);
+}
 export interface Socks5ProxyOptions {
   host?: string;
   ip?: string;
@@ -40,6 +49,14 @@ export interface Socks5ProxyOptions {
 export declare function createSocks5Connector(
   options: Socks5ProxyOptions
 ): (destination: { host: string; port: number }) => TransportSocket;
+export interface MtproxyEndpoint {
+  host?: string;
+  ip?: string;
+  port?: number;
+  secret: string | Uint8Array;
+}
+export type MtproxyOptions = MtproxyEndpoint &
+  ({ MTProxy: true; type?: 'mtproxy' } | { type: 'mtproxy'; MTProxy?: true });
 export interface TcpTransportOptions extends Omit<FramingOptions, 'random'> {
   dc?: number;
   test?: boolean;
@@ -47,7 +64,9 @@ export interface TcpTransportOptions extends Omit<FramingOptions, 'random'> {
   port?: number;
   timeout?: number;
   maxQueuedBytes?: number;
-  proxy?: Socks5ProxyOptions;
+  proxy?: Socks5ProxyOptions | MtproxyOptions;
+  obfuscate?: boolean;
+  media?: boolean;
   connectSocket?: (options: { host: string; port: number }) => TransportSocket;
 }
 export interface TransportSocket {
