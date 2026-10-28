@@ -270,3 +270,14 @@ it does not claim durable storage without a persistent adapter. Typed middleware
 flavors retain the application's session type. Lazy/multi sessions, full scenes
 and distributed coordination remain open. The local suite now passes 113 tests
 on Node, Bun and Deno, with clean lint/format/duplication and declaration checks.
+
+The same composer now drives nested middleware, bot registration, commands, text
+matching and callback actions. Tests compare the resulting trace with both real
+frameworks. A Telegraf facade registers `/start` handlers separately from polling
+launch; its context exposes the username through `me` and the user through
+`botInfo`. The extra context regression failed before introducing the variant.
+The typed bot examples compile with application session flavors. All 116 tests
+pass locally on Node/Bun/Deno, and strict lint, formatting, duplication and the
+four declaration entry points pass. CI for the preceding session commit 73b71b0
+is [40782326161](https://github.com/link-foundation/anygram/actions/runs/40782326161);
+the composer commit still needs its own run.

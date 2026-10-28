@@ -9,5 +9,6 @@ ordered update recovery, bounded watched-channel scheduling, media upload/albums
 and message-origin downloads, peer/contact helpers, bot middleware/events,
 polling ownership, formatted runtime templates and shared bot session middleware
 with grammY/Telegraf storage semantics. Bound HTTP response bodies,
+share nested composers and Telegraf command/launch dispatch,
 release readers, and enforce cancellation and per-request deadlines. Preserve
 exact IDs and expose typed failures without retrying ambiguous side effects.

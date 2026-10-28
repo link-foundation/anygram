@@ -1,90 +1,22 @@
 import { BotApi } from './bot-api.js';
-import {
-  Context,
-  botApi,
-  compose,
-  matchesFilter,
-  matchText,
-} from './bot-context.js';
+import { Context, TelegrafContext, botApi, matchText } from './bot-context.js';
+import { Composer } from './composer.js';
 import { TelegramError } from './errors.js';
 import { pollingKey, acquirePolling, validatePolling } from './polling.js';
 
 /** Shared middleware runner usable with a native or adapted Bot API transport. */
-export class Bot {
+export class Bot extends Composer {
   constructor(token, options = {}) {
+    super();
     this.api = botApi(options.api ?? new BotApi({ ...options, token }));
     this.telegram = this.api;
     this.botInfo = options.botInfo;
-    this.middleware = [];
     this.offset = options.offset ?? 0;
     this.seen = new Set();
     this.queue = Promise.resolve();
     this.running = false;
     this.Context = options.Context ?? Context;
     this.pollingKey = pollingKey(token, options);
-  }
-  use(...middleware) {
-    for (const entry of middleware) {
-      this.middleware.push(
-        typeof entry === 'function' ? entry : entry.middleware()
-      );
-    }
-    return this;
-  }
-  on(filters, ...middleware) {
-    const values = Array.isArray(filters) ? filters : [filters];
-    const run = compose(middleware);
-    return this.use((ctx, next) =>
-      values.some((filter) => matchesFilter(ctx, filter))
-        ? run(ctx, next)
-        : next()
-    );
-  }
-  command(commands, ...middleware) {
-    const names = Array.isArray(commands) ? commands : [commands];
-    const run = compose(middleware);
-    return this.use((ctx, next) => {
-      const message = ctx.message;
-      const entity = message?.entities?.find(
-        (entry) => entry.type === 'bot_command' && entry.offset === 0
-      );
-      if (!entity) {
-        return next();
-      }
-      const [command, username] = message.text
-        .slice(1, entity.length)
-        .split('@');
-      if (
-        !names.includes(command) ||
-        (username && username.toLowerCase() !== ctx.me?.username?.toLowerCase())
-      ) {
-        return next();
-      }
-      ctx.match = message.text.slice(entity.length).trimStart();
-      return run(ctx, next);
-    });
-  }
-  hears(pattern, ...middleware) {
-    const run = compose(middleware);
-    return this.use((ctx, next) => {
-      const match = matchText(pattern, ctx.msg?.text);
-      if (!match) {
-        return next();
-      }
-      ctx.match = match;
-      return run(ctx, next);
-    });
-  }
-  action(pattern, ...middleware) {
-    const run = compose(middleware);
-    return this.use((ctx, next) => {
-      const match = matchText(pattern, ctx.callbackQuery?.data);
-      if (!match) {
-        return next();
-      }
-      ctx.match = match;
-      return run(ctx, next);
-    });
   }
   catch(handler) {
     this.errorHandler = handler;
@@ -108,7 +40,7 @@ export class Bot {
     }
     const ctx = new this.Context(update, this.api, this.botInfo);
     try {
-      await compose(this.middleware)(ctx);
+      await this.middleware()(ctx);
     } catch (error) {
       if (!this.errorHandler) {
         throw error;
@@ -179,6 +111,19 @@ export class Bot {
   }
   launch(options) {
     return this.start(options);
+  }
+}
+
+/** Telegraf command registration and launch style over the shared bot runner. */
+export class Telegraf extends Bot {
+  constructor(token, options = {}) {
+    super(token, { ...options, Context: options.Context ?? TelegrafContext });
+  }
+  start(...middleware) {
+    return this.command('start', ...middleware);
+  }
+  launch(options) {
+    return super.start(options);
   }
 }
 

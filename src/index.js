@@ -33,8 +33,9 @@ export { TelegramError, UnsupportedError } from './errors.js';
 export { BotApi } from './bot-api.js';
 export { createClient } from './factory.js';
 export { Session } from './session.js';
-export { Bot, TelegramBot, webhookCallback } from './bot.js';
-export { Context } from './bot-context.js';
+export { Bot, Telegraf, TelegramBot, webhookCallback } from './bot.js';
+export { Composer } from './composer.js';
+export { Context, TelegrafContext } from './bot-context.js';
 export {
   session,
   grammySession,

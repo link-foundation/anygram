@@ -54,6 +54,11 @@ instance serializes updates per key, snapshots values before handlers mutate
 them and awaits persistence before dispatch completes. See the executable
 [session example](examples/bot-sessions.js) and [typed bot](examples/typed-bot-session.ts).
 
+`Composer` nests middleware, commands, text handlers and callback actions through
+the same dispatch path as `Bot`. `Telegraf` provides `start(handler)` for the
+`/start` command and `launch(options)` for polling. The grammY-style `Bot` uses
+`command('start', handler)` and `start(options)` respectively.
+
 ## User accounts and independent MTProto
 
 ```js

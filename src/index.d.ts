@@ -413,6 +413,7 @@ export declare class Context {
   api: ContextApi;
   telegram: ContextApi;
   me?: Parameters;
+  readonly botInfo?: Parameters;
   state: Parameters;
   match?: string | RegExpExecArray;
   readonly message?: BotMessage;
@@ -441,7 +442,13 @@ export declare class Context {
   replyWithVoice(file: unknown, options?: Parameters): Promise<unknown>;
   replyWithSticker(file: unknown, options?: Parameters): Promise<unknown>;
 }
-export type Middleware<C extends Context = Context> = (
+export interface TelegrafContext extends Omit<Context, 'me'> {
+  readonly me?: string;
+}
+export declare const TelegrafContext: {
+  new (update: BotUpdate, api: ContextApi, me?: Parameters): TelegrafContext;
+};
+export type Middleware<C extends Omit<Context, 'me'> = Context> = (
   ctx: C,
   next: () => Promise<void>
 ) => unknown | Promise<unknown>;
@@ -458,7 +465,7 @@ export interface BotSessionStore<S> {
   set(key: string, value: S): void | Promise<void>;
   delete(key: string): void | Promise<void>;
 }
-export interface BotSessionOptions<S, C extends Context = Context> {
+export interface BotSessionOptions<S, C extends Omit<Context, 'me'> = Context> {
   initial?: (ctx: C) => S | Promise<S>;
   defaultSession?: (ctx: C) => S | Promise<S>;
   storage?: BotSessionStorage<S>;
@@ -482,7 +489,7 @@ export declare class MemorySessionStore<S = Parameters>
   delete(key: string): void;
 }
 export { MemorySessionStore as MemorySessionStorage };
-export declare function session<S, C extends Context = Context>(
+export declare function session<S, C extends Omit<Context, 'me'> = Context>(
   options?: BotSessionOptions<S, C>
 ): Middleware<C & SessionFlavor<S>>;
 export declare const grammySession: typeof session;
@@ -497,20 +504,32 @@ export interface BotOptions extends Partial<BotApiOptions> {
   api?: BotApi | Anygram;
   botInfo?: Parameters;
   offset?: number;
-  Context?: typeof Context;
+  Context?: new (
+    update: BotUpdate,
+    api: ContextApi,
+    me?: Parameters
+  ) => Omit<Context, 'me'>;
   polling?: boolean | PollingOptions;
 }
-export declare class Bot<C extends Context = Context> {
+export type MiddlewareLike<C extends Omit<Context, 'me'> = Context> =
+  Middleware<C> | { middleware(): Middleware<C> };
+export declare class Composer<C extends Omit<Context, 'me'> = Context> {
+  constructor(...middleware: MiddlewareLike<C>[]);
+  use(...middleware: MiddlewareLike<C>[]): this;
+  on(filters: string | string[], ...middleware: Middleware<C>[]): this;
+  command(commands: string | string[], ...middleware: Middleware<C>[]): this;
+  hears(pattern: string | RegExp, ...middleware: Middleware<C>[]): this;
+  action(pattern: string | RegExp, ...middleware: Middleware<C>[]): this;
+  middleware(): Middleware<C>;
+}
+export declare class Bot<
+  C extends Omit<Context, 'me'> = Context,
+> extends Composer<C> {
   constructor(token: string, options?: BotOptions);
   api: ContextApi;
   telegram: ContextApi;
   botInfo?: Parameters;
   offset: number;
-  use(...middleware: Middleware<C>[]): this;
-  on(filters: string | string[], ...middleware: Middleware<C>[]): this;
-  command(commands: string | string[], ...middleware: Middleware<C>[]): this;
-  hears(pattern: string | RegExp, ...middleware: Middleware<C>[]): this;
-  action(pattern: string | RegExp, ...middleware: Middleware<C>[]): this;
   catch(
     handler: (
       error: Error & { error: unknown; ctx: C }
@@ -523,6 +542,17 @@ export declare class Bot<C extends Context = Context> {
   start(options?: PollingOptions): Promise<void>;
   launch(options?: PollingOptions): Promise<void>;
 }
+export interface Telegraf<
+  C extends Omit<Context, 'me'> = TelegrafContext,
+> extends Omit<Bot<C>, 'start'> {
+  start(...middleware: Middleware<C>[]): this;
+}
+export declare const Telegraf: {
+  new <C extends Omit<Context, 'me'> = TelegrafContext>(
+    token: string,
+    options?: BotOptions
+  ): Telegraf<C>;
+};
 export declare class TelegramBot {
   constructor(token: string, options?: BotOptions);
   api: ContextApi;

@@ -53,11 +53,13 @@ examples/. No live credentials or sessions may be included in research data.
   and release readers on success, overflow and cancellation.
 - Shared bot sessions match actual grammY/Telegraf keys, initialization, deletion
   and failure-persistence policies; bounded LRU/TTL storage uses no key timers.
+- Nested composers and Telegraf start/launch registration share bot dispatch.
+  Telegraf username/context aliases remain distinct from grammY user aliases.
 - In-process polling ownership and explicit membership subscriptions are tested.
-- After HTTP and bot-session regressions, Node/Bun/Deno each pass 113 tests; lint, format, duplication and
+- After shared composer regressions, Node/Bun/Deno each pass 116 tests; lint, format, duplication and
   four declaration entry points pass. Each later code change requires fresh checks.
 - Refreshed issue/sub-issue and all three PR feedback streams are empty. Main is
-  an ancestor of the branch. CI for 8239dd9 passed; later heads need fresh evidence.
+  an ancestor of the branch. CI for 73b71b0 passed; later heads need fresh evidence.
 - Research includes 32 complete discussions, 26 inspected images, nineteen pinned
   test-path inventories and all 333 Telegram-related meta-sovereign JS files.
 - The npm dry run contains only 35 source/package/README/LICENSE entries and

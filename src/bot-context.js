@@ -103,6 +103,9 @@ export class Context {
   get chatId() {
     return this.chat?.id ?? this.update.business_connection?.user_chat_id;
   }
+  get botInfo() {
+    return this.me;
+  }
   reply(text, options) {
     return this.api.sendMessage(this.chat.id, text, options);
   }
@@ -123,6 +126,15 @@ export class Context {
   }
   deleteMessage(id = this.msg?.message_id) {
     return this.api.deleteMessage(this.chat.id, id);
+  }
+}
+
+/** Preserve Telegraf's username alias without changing grammY's user alias. */
+export class TelegrafContext extends Context {
+  constructor(update, api, me) {
+    super(update, api, me);
+    Object.defineProperty(this, 'me', { value: me?.username, writable: false });
+    Object.defineProperty(this, 'botInfo', { value: me });
   }
 }
 
