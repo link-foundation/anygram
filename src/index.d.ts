@@ -589,3 +589,4 @@ export declare function webhookCallback(
   bot: Pick<Bot, 'handleUpdate'>,
   options?: { secretToken?: string; maxBytes?: number }
 ): (request: Request) => Promise<Response>;
+export * from './scenes.js';

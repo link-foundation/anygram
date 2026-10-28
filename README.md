@@ -59,6 +59,14 @@ the same dispatch path as `Bot`. `Telegraf` provides `start(handler)` for the
 `/start` command and `launch(options)` for polling. The grammY-style `Bot` uses
 `command('start', handler)` and `start(options)` respectively.
 
+`Scenes.BaseScene`, `Scenes.WizardScene` and `Scenes.Stage` provide persisted
+conversation steps on that same middleware path. Install session middleware
+before a stage; the current scene, state, expiry and wizard cursor live in
+`ctx.session.__scenes`. Entry, reentry, silent entry, leave hooks, default scenes,
+TTL in seconds and middleware objects are supported. A stage limits scene
+transitions per update to 32 by default (`maxTransitions`), so a recursive entry
+handler fails predictably. See the [typed wizard example](examples/typed-wizard.ts).
+
 ## User accounts and independent MTProto
 
 ```js

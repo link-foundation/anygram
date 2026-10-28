@@ -161,7 +161,9 @@ export function compose(middleware) {
       }
       current = index;
       const handler = middleware[index] ?? last;
-      return await handler(ctx, () => dispatch(index + 1));
+      const run =
+        typeof handler === 'function' ? handler : handler.middleware();
+      return await run(ctx, () => dispatch(index + 1));
     };
     return dispatch(0);
   };

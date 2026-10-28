@@ -35,6 +35,14 @@ export { createClient } from './factory.js';
 export { Session } from './session.js';
 export { Bot, Telegraf, TelegramBot, webhookCallback } from './bot.js';
 export { Composer } from './composer.js';
+export {
+  Scenes,
+  BaseScene,
+  SceneContextScene,
+  Stage,
+  WizardScene,
+  WizardContextWizard,
+} from './scenes.js';
 export { Context, TelegrafContext } from './bot-context.js';
 export {
   session,

@@ -55,11 +55,16 @@ examples/. No live credentials or sessions may be included in research data.
   and failure-persistence policies; bounded LRU/TTL storage uses no key timers.
 - Nested composers and Telegraf start/launch registration share bot dispatch.
   Telegraf username/context aliases remain distinct from grammY user aliases.
+- Telegraf scene/wizard entry, persisted steps/state, expiry, reentry and leave
+  match actual middleware; a finite per-update transition guard bounds loops.
 - In-process polling ownership and explicit membership subscriptions are tested.
-- After shared composer regressions, Node/Bun/Deno each pass 116 tests; lint, format, duplication and
+- After scene regressions, Node/Bun/Deno each pass 120 tests; lint, format, duplication and
   four declaration entry points pass. Each later code change requires fresh checks.
 - Refreshed issue/sub-issue and all three PR feedback streams are empty. Main is
-  an ancestor of the branch. CI for 73b71b0 passed; later heads need fresh evidence.
+  an ancestor of the branch. CI for 73b71b0 passed. Run 40782863152 passed all
+  nine test jobs but failed formatting at log line 963: Deno's Prettier 3.9.10
+  executable differed from npm's locked 3.7.4. Pinning 3.7.4 and checking staged
+  TypeScript fixes the reproduced discrepancy; the new head needs fresh CI.
 - Research includes 32 complete discussions, 26 inspected images, nineteen pinned
   test-path inventories and all 333 Telegram-related meta-sovereign JS files.
 - The npm dry run contains only 35 source/package/README/LICENSE entries and
