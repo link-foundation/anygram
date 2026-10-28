@@ -65,6 +65,7 @@ export async function* iterateHistory(
 function validateHistoryOptions(limit, pageSize) {
   if (
     !(limit >= 0) ||
+    !(limit === Infinity || Number.isSafeInteger(limit)) ||
     !Number.isInteger(pageSize) ||
     pageSize < 1 ||
     pageSize > 100

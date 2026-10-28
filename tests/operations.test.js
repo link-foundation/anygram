@@ -90,4 +90,18 @@ describe('shared MTProto operations', () => {
     assert.deepEqual(messages, [2, 1]);
     assert.equal(calls, 2);
   });
+  it('rejects fractional pagination limits before invoking a backend', async () => {
+    const client = new Anygram({
+      adapters: [
+        createAdapter('mtproto', {
+          call: () => assert.fail('invalid limit reached backend'),
+        }),
+      ],
+    });
+    await assert.rejects(async () => {
+      for await (const value of client.iterMessages('me', { limit: 0.5 })) {
+        void value;
+      }
+    }, /Invalid history pagination/);
+  });
 });

@@ -72,6 +72,21 @@ describe('shared bot dispatch', () => {
     assert.equal(bot.offset, 2);
     assert.equal(bot.isRunning(), false);
   });
+  it('propagates a handler failure even when the handler requests shutdown', async () => {
+    const bot = new Bot('123:test', {
+      botInfo: { id: 123, username: 'testbot' },
+      fetch: async () =>
+        new Response(JSON.stringify({ ok: true, result: [update(1)] })),
+    });
+    bot.command('start', () => {
+      bot.stop();
+      throw new Error('database write failed');
+    });
+    await assert.rejects(bot.start({ maxPolls: 1 }), /database write failed/);
+    assert.equal(bot.offset, 0);
+    assert.equal(bot.seen.has(1), false);
+    assert.equal(bot.isRunning(), false);
+  });
   it('authenticates webhook requests and rejects invalid payloads', async () => {
     const bot = new Bot('123:test', { fetch: fakeFetch });
     const handle = webhookCallback(bot, { secretToken: 'secret' });

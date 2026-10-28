@@ -130,6 +130,20 @@ export class Bot {
     this.running = false;
     this.controller?.abort();
   }
+  async poll(timeout, allowed_updates) {
+    try {
+      return await this.api.callApi(
+        'getUpdates',
+        { offset: this.offset, timeout, allowed_updates },
+        { signal: this.controller.signal, timeout: (timeout + 10) * 1000 }
+      );
+    } catch (error) {
+      if (this.controller.signal.aborted) {
+        return [];
+      }
+      throw error;
+    }
+  }
   async start({
     maxPolls = Infinity,
     timeout = 30,
@@ -145,11 +159,7 @@ export class Bot {
       await this.init();
       await onStart?.(this.botInfo);
       for (let count = 0; this.running && count < maxPolls; count++) {
-        const updates = await this.api.callApi(
-          'getUpdates',
-          { offset: this.offset, timeout, allowed_updates },
-          { signal: this.controller.signal, timeout: (timeout + 10) * 1000 }
-        );
+        const updates = await this.poll(timeout, allowed_updates);
         for (const update of updates) {
           await this.handleUpdate(update);
           this.offset = Math.max(this.offset, update.update_id + 1);
@@ -157,10 +167,6 @@ export class Bot {
             break;
           }
         }
-      }
-    } catch (error) {
-      if (!this.controller.signal.aborted) {
-        throw error;
       }
     } finally {
       this.running = false;

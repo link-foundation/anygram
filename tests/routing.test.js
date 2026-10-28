@@ -92,4 +92,23 @@ describe('unified backend routing', () => {
       () => new Anygram({ adapters: [adapter], backend: 'missing' })
     );
   });
+  it('preserves arbitrary thrown values without masking them with a TypeError', async () => {
+    for (const failure of [null, undefined, 'lost connection', 17]) {
+      const client = new Anygram({
+        adapters: [
+          createAdapter('mtproto', {
+            call: async () => {
+              throw failure;
+            },
+          }),
+        ],
+      });
+      await assert.rejects(client.invoke('help.getConfig'), (error) => {
+        assert(error instanceof TelegramError);
+        assert.equal(error.message, String(failure));
+        assert.equal(error.cause, failure);
+        return true;
+      });
+    }
+  });
 });

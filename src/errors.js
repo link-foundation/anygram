@@ -24,19 +24,20 @@ export class TelegramError extends Error {
       return error;
     }
     const type = errorText(error);
+    const details = error ?? {};
     const wait = /(?:FLOOD|SLOWMODE|FLOOD_PREMIUM)_WAIT_(\d+)/.exec(type);
     const migrate = /(?:PHONE|NETWORK|USER|FILE)_MIGRATE_(\d+)/.exec(type);
     return new TelegramError(type, {
-      code: error.code ?? error.error_code,
+      code: details.code ?? details.error_code,
       type,
       backend,
       retryAfter:
-        error.seconds ??
-        error.parameters?.retry_after ??
+        details.seconds ??
+        details.parameters?.retry_after ??
         (wait ? Number(wait[1]) : undefined),
       migrateTo:
-        error.newDc ??
-        error.parameters?.migrate_to_chat_id ??
+        details.newDc ??
+        details.parameters?.migrate_to_chat_id ??
         (migrate ? Number(migrate[1]) : undefined),
       cause: error,
     });
@@ -45,10 +46,10 @@ export class TelegramError extends Error {
 
 function errorText(error) {
   return (
-    error.errorMessage ??
-    error.error_message ??
-    error.text ??
-    error.message ??
+    error?.errorMessage ??
+    error?.error_message ??
+    error?.text ??
+    error?.message ??
     String(error)
   );
 }
