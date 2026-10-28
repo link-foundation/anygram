@@ -16,6 +16,7 @@ import {
 } from './http.js';
 export { TransportFraming } from './transport-framing.js';
 export { TcpTransport };
+export { createSocks5Connector } from './socks5.js';
 
 const hosts = ['pluto', 'venus', 'aurora', 'vesta', 'flora'];
 
@@ -672,6 +673,14 @@ function deadlineOptions(options, defaultTimeout) {
 }
 
 function createTransport(transport, options) {
+  if (options.proxy && transport === 'http') {
+    throw new TypeError(
+      'HTTP proxy requires an injected Fetch implementation; use TCP for SOCKS5'
+    );
+  }
+  if (transport === undefined && options.proxy) {
+    return new TcpTransport(options);
+  }
   if (transport === 'tcp') {
     return new TcpTransport(options);
   }

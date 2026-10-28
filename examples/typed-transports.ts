@@ -1,5 +1,10 @@
 import { createClient } from '../src/index.js';
-import { Mtproto, TcpTransport, TransportFraming } from '../src/mtproto.js';
+import {
+  Mtproto,
+  TcpTransport,
+  TransportFraming,
+  createSocks5Connector,
+} from '../src/mtproto.js';
 
 // Construction is offline; calls connect only when an operation is requested.
 const client = new Mtproto({
@@ -15,4 +20,11 @@ const factory = createClient({
   mode: 'intermediate',
   transportFactory: (dc) => new TcpTransport({ dc }),
 });
-void [client, custom, framing, factory];
+const proxied = createClient({ proxy: { host: '127.0.0.1', port: 1080 } });
+const connector = createSocks5Connector({
+  host: '127.0.0.1',
+  port: 1080,
+  username: 'example',
+  password: 'example',
+});
+void [client, custom, framing, factory, proxied, connector];

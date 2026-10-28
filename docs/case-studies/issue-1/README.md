@@ -301,7 +301,8 @@ setup had replaced the local Prettier executable with 3.9.10, while npm CI used
 locked version 3.7.4. Formatting the committed declaration through the latter
 reproduced its different union layout. Both lockfiles now select pinned 3.7.4,
 and the commit hook checks TypeScript as well as JavaScript and Markdown.
-The corrected head still requires its own CI evidence.
+The corrected scene head passed run 40784060541; native TCP subsequently passed
+run 40785578378 across all nine runtime/OS combinations.
 
 ## Native TCP checkpoint
 
@@ -313,5 +314,13 @@ encoder comparisons. A bounded anonymous live full-TCP handshake also succeeded;
 [protocol.md](protocol.md#persistent-tcp-verification) records its exact limits.
 Typed transport constructors/factories compile without requiring Node type
 packages in consumers. The package dry run contains 43 permitted entries and
-excludes research, fixtures and optional client dependencies. WebSocket, proxies,
+excludes research, fixtures and optional client dependencies. WebSocket, other proxies,
 secret chats, calls and full application/backend parity remain unfinished.
+
+The SOCKS5 checkpoint adds proxy-side DNS, IPv4/IPv6, optional RFC 1929
+authentication and bounded negotiation. Before implementation, proxy options
+were ignored and the domain fixture failed with ENOTFOUND. Four loopback
+regressions now cover fragmented responses, authentication downgrade/failure,
+malformed replies, deadlines and preservation of coalesced tunnel bytes.
+Node/Bun/Deno each pass 137 tests. See [protocol.md](protocol.md#socks5-connect-verification)
+for the precise protocol scope; other proxy protocols remain open.

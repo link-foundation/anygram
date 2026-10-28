@@ -69,7 +69,7 @@ Independent login/2FA, DC migration, session storage, ordered update recovery an
 media primitives have deterministic tests; complete application/live-account
 scenarios remain unverified. Secret-chat state and voice/video media still need
 implementation and verification. The requirements ledger stays open.
-WebSocket, MTProxy and SOCKS support remain unfinished.
+WebSocket, MTProxy and SOCKS4 support remain unfinished.
 The unified TDLib adapter must preserve TDLib's separate JSON API; it must never
 claim that an MTProto method string is a valid TDLib request.
 
@@ -92,3 +92,20 @@ CONNECTION_NOT_INITED response on 2026-10-28. It prints no keys or sessions and
 does not authenticate an account. Plain padded framing alone does not implement
 obfuscation, MTProxy secrets or fake TLS. The local Node/Bun/Deno suites each
 pass 133 tests. Deno grants network access only to 127.0.0.1 for local fixtures.
+
+## SOCKS5 CONNECT verification
+
+The connector independently implements [RFC 1928 CONNECT](https://www.rfc-editor.org/rfc/rfc1928.html)
+and [RFC 1929 authentication](https://www.rfc-editor.org/rfc/rfc1929.html), with
+proxy-side domain resolution, IPv4/IPv6 addresses and UTF-8 credentials. It
+rejects authentication downgrade, invalid versions/address types, empty domain
+replies and CONNECT failure codes before sending Telegram data. The TCP request
+deadline includes negotiation; cancellation closes the negotiating socket.
+This implements CONNECT with no authentication or username/password, without
+claiming GSSAPI, BIND, UDP ASSOCIATE or SOCKS4 support.
+
+The initial three regressions in `tests/socks5.test.js` failed because proxy
+settings were ignored and the destination was resolved directly (ENOTFOUND).
+The fixed tests use bounded real loopback sockets with fragmented responses,
+credential rejection, malformed replies and coalesced tunnel bytes. All 137
+tests now pass on Node, Bun and Deno; typed proxy construction compiles.

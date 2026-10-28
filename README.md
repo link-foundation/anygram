@@ -103,7 +103,14 @@ and `transportFactory(dc)` supplies custom per-DC transports. `TcpTransport`
 and `TransportFraming` are also exported from `anygram/mtproto`. Socket reads
 have deadlines and bounded packet/byte queues. Persistent streams receive
 updates directly and send acknowledgements without awaiting an HTTP response.
-Plain padded framing does not provide MTProxy obfuscation. WebSocket, SOCKS
+Use `proxy: { host: '127.0.0.1', port: 1080 }` for SOCKS5 CONNECT; this selects
+TCP when no transport is specified. Optional `username` and `password` must be
+provided together. Domain destinations are resolved by the proxy, IPv4/IPv6
+destinations are encoded directly, and negotiation shares the request deadline.
+An explicit HTTP transport requires an injected Fetch implementation configured
+for its proxy instead of the `proxy` option. `connectSocket` accepts a custom
+connector and cannot be combined with `proxy`.
+Plain padded framing does not provide MTProxy obfuscation. WebSocket, SOCKS4
 and MTProxy transports remain unfinished. The [typed transport example](examples/typed-transports.ts)
 shows the supported construction options.
 

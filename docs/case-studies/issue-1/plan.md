@@ -60,16 +60,18 @@ examples/. No live credentials or sessions may be included in research data.
 - Native TCP implements four framing modes, bounded streams and send-only ACKs.
   Real local encrypted sockets, actual GramJS framing and a live anonymous
   production handshake verify the transport path.
+- SOCKS5 CONNECT resolves domains at the proxy, supports IPv4/IPv6 and optional
+  authentication, rejects downgrade/malformed replies and bounds negotiation.
 - In-process polling ownership and explicit membership subscriptions are tested.
-- After native TCP regressions, Node/Bun/Deno each pass 133 tests; lint, format, duplication and
+- After SOCKS5 regressions, Node/Bun/Deno each pass 137 tests; lint, format, duplication and
   four declaration entry points pass. Each later code change requires fresh checks.
 - Refreshed issue/sub-issue and all three PR feedback streams are empty. Main is
-  an ancestor of the branch. CI for 35a7b3a passed all nine runtime/OS jobs and
-  release gates in run 40784060541, verifying the formatter fix. Later heads
+  an ancestor of the branch. CI for f4c6de9 passed all nine runtime/OS jobs and
+  release gates in run 40785578378, including native TCP. Later heads
   require fresh CI evidence.
 - Research includes 32 complete discussions, 26 inspected images, nineteen pinned
   test-path inventories and all 333 Telegram-related meta-sovereign JS files.
-- The npm dry run contains only 43 source/package/README/LICENSE entries (800559 bytes unpacked) and
+- The npm dry run contains only source/package/README/LICENSE entries and
   excludes research, screenshots, experiments and optional client dependencies.
 
 ## Next steps

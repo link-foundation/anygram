@@ -3,6 +3,7 @@ import { TransportFraming } from './transport-framing.js';
 import { dcAddress } from './endpoints.js';
 import { validateTimeout } from './http.js';
 import { TelegramError } from './errors.js';
+import { createSocks5Connector } from './socks5.js';
 
 /** Persistent packet stream. It never retries a possibly transmitted packet. */
 export class TcpTransport {
@@ -17,10 +18,12 @@ export class TcpTransport {
     maxPackets = 1000,
     maxQueuedBytes = 32 * 1024 * 1024,
     onQuickAck,
-    connectSocket = createConnection,
+    connectSocket,
+    proxy,
   } = {}) {
     validateTimeout(timeout);
     validateEndpoint(host, port, maxQueuedBytes);
+    connectSocket = socketConnector(connectSocket, proxy);
     Object.assign(this, {
       host,
       port,
@@ -268,6 +271,15 @@ function validateEndpoint(host, port, maxQueuedBytes) {
   if (!Number.isSafeInteger(maxQueuedBytes) || maxQueuedBytes < 4) {
     throw new RangeError('Invalid TCP queued byte limit');
   }
+}
+
+function socketConnector(connectSocket, proxy) {
+  if (proxy && connectSocket) {
+    throw new TypeError('Choose either a proxy or a custom socket connector');
+  }
+  return (
+    connectSocket ?? (proxy ? createSocks5Connector(proxy) : createConnection)
+  );
 }
 
 function abortable(promise, signal) {
