@@ -38,6 +38,22 @@ default to 16 MiB (`maxBytes` in transport options). Exceeding a limit raises
 `TelegramError` with type `RESPONSE_TOO_LARGE` and releases the body reader.
 Bot API servers and custom networking can be selected with `baseUrl` and `fetch`.
 
+Use `bot.use(session({ initial: () => ({ count: 0 }), storage }))` to persist
+`ctx.session`. Storage accepts grammY's `read/write/delete` interface or Telegraf's
+`get/set/delete` interface through `store`. `grammySession` keys by chat and saves
+after a successful handler; `telegrafSession` keys by sender and chat and saves
+touched state even when the handler throws. `session` selects the latter style
+when `defaultSession` or `store` is supplied, otherwise the former. A custom
+`getSessionKey` and `property` are supported. These sessions are bot application
+state, separate from account authorization sessions.
+
+The default `MemorySessionStore` holds at most 10,000 entries with LRU eviction;
+it accepts `{ maxEntries, ttl }` (TTL in milliseconds) and uses no per-key timers.
+Supply persistent storage to retain data across process restarts. One middleware
+instance serializes updates per key, snapshots values before handlers mutate
+them and awaits persistence before dispatch completes. See the executable
+[session example](examples/bot-sessions.js) and [typed bot](examples/typed-bot-session.ts).
+
 ## User accounts and independent MTProto
 
 ```js

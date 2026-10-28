@@ -100,6 +100,9 @@ export class Context {
       this.update.chat_join_request?.from
     );
   }
+  get chatId() {
+    return this.chat?.id ?? this.update.business_connection?.user_chat_id;
+  }
   reply(text, options) {
     return this.api.sendMessage(this.chat.id, text, options);
   }

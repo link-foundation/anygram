@@ -246,3 +246,27 @@ formatting, duplication and all four declaration entry points pass. CI at
 passed the runtime matrix and release gates. Subsequent commits need their own
 CI evidence. Archived research, upstream screenshots and source snapshots retain
 their original authors' rights; they are excluded from the npm payload.
+
+## HTTP and bot session regressions
+
+HTTP fixtures demonstrated six failures before the fix: pre-cancelled requests
+reached fetch, malformed/successful-on-HTTP-failure Bot API envelopes were
+accepted, JSON/file responses were unbounded, MTProto ignored per-call deadlines,
+and response readers remained locked. Both native HTTP transports now share a
+bounded reader with abort cancellation and guaranteed lock release. The test
+bodies contain at most nine bytes, and deadline probes have explicit watchdogs.
+All 108 tests passed on Node/Bun/Deno after this change; CI for 8239dd9 is
+[40781650319](https://github.com/link-foundation/anygram/actions/runs/40781650319).
+
+[grammY sessions](https://grammy.dev/plugins/session) and
+[Telegraf sessions](https://telegraf.js.org/functions/session.html) use different
+keys and failure persistence policies. One independent implementation now accepts
+both storage interfaces, awaits writes, clones stored values, and serializes
+updates sharing a key. Differential tests execute the pinned real middleware to
+compare keys, initialization, writes, deletion and behavior after handler errors.
+The default memory store has bounded LRU entries and a timer-free TTL. The
+executable bot reconstruction example demonstrates reuse of the storage adapter;
+it does not claim durable storage without a persistent adapter. Typed middleware
+flavors retain the application's session type. Lazy/multi sessions, full scenes
+and distributed coordination remain open. The local suite now passes 113 tests
+on Node, Bun and Deno, with clean lint/format/duplication and declaration checks.

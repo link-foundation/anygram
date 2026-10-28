@@ -421,6 +421,7 @@ export declare class Context {
   readonly callbackQuery?: BotUpdate['callback_query'];
   readonly msg?: BotMessage;
   readonly chat?: BotMessage['chat'];
+  readonly chatId?: string | number | bigint;
   readonly from?: Parameters;
   reply(
     text: string | TextWithEntities,
@@ -440,10 +441,52 @@ export declare class Context {
   replyWithVoice(file: unknown, options?: Parameters): Promise<unknown>;
   replyWithSticker(file: unknown, options?: Parameters): Promise<unknown>;
 }
-export type Middleware = (
-  ctx: Context,
+export type Middleware<C extends Context = Context> = (
+  ctx: C,
   next: () => Promise<void>
 ) => unknown | Promise<unknown>;
+export interface SessionFlavor<S> {
+  session: S;
+}
+export interface BotSessionStorage<S> {
+  read(key: string): S | undefined | Promise<S | undefined>;
+  write(key: string, value: S): void | Promise<void>;
+  delete(key: string): void | Promise<void>;
+}
+export interface BotSessionStore<S> {
+  get(key: string): S | undefined | Promise<S | undefined>;
+  set(key: string, value: S): void | Promise<void>;
+  delete(key: string): void | Promise<void>;
+}
+export interface BotSessionOptions<S, C extends Context = Context> {
+  initial?: (ctx: C) => S | Promise<S>;
+  defaultSession?: (ctx: C) => S | Promise<S>;
+  storage?: BotSessionStorage<S>;
+  store?: BotSessionStore<S>;
+  getSessionKey?: (ctx: C) => string | undefined | Promise<string | undefined>;
+  prefix?: string;
+  property?: string;
+  maxPending?: number;
+}
+export declare class MemorySessionStore<S = Parameters>
+  implements BotSessionStorage<S>, BotSessionStore<S>
+{
+  constructor(
+    options?: number | { ttl?: number; maxEntries?: number; now?: () => number }
+  );
+  readonly size: number;
+  get(key: string): S | undefined;
+  set(key: string, value: S): void;
+  read(key: string): S | undefined;
+  write(key: string, value: S): void;
+  delete(key: string): void;
+}
+export { MemorySessionStore as MemorySessionStorage };
+export declare function session<S, C extends Context = Context>(
+  options?: BotSessionOptions<S, C>
+): Middleware<C & SessionFlavor<S>>;
+export declare const grammySession: typeof session;
+export declare const telegrafSession: typeof session;
 export interface PollingOptions {
   maxPolls?: number;
   timeout?: number;
@@ -457,20 +500,20 @@ export interface BotOptions extends Partial<BotApiOptions> {
   Context?: typeof Context;
   polling?: boolean | PollingOptions;
 }
-export declare class Bot {
+export declare class Bot<C extends Context = Context> {
   constructor(token: string, options?: BotOptions);
   api: ContextApi;
   telegram: ContextApi;
   botInfo?: Parameters;
   offset: number;
-  use(...middleware: Middleware[]): this;
-  on(filters: string | string[], ...middleware: Middleware[]): this;
-  command(commands: string | string[], ...middleware: Middleware[]): this;
-  hears(pattern: string | RegExp, ...middleware: Middleware[]): this;
-  action(pattern: string | RegExp, ...middleware: Middleware[]): this;
+  use(...middleware: Middleware<C>[]): this;
+  on(filters: string | string[], ...middleware: Middleware<C>[]): this;
+  command(commands: string | string[], ...middleware: Middleware<C>[]): this;
+  hears(pattern: string | RegExp, ...middleware: Middleware<C>[]): this;
+  action(pattern: string | RegExp, ...middleware: Middleware<C>[]): this;
   catch(
     handler: (
-      error: Error & { error: unknown; ctx: Context }
+      error: Error & { error: unknown; ctx: C }
     ) => unknown | Promise<unknown>
   ): this;
   init(): Promise<Parameters>;
