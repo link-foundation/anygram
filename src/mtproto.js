@@ -9,6 +9,8 @@ import { DatacenterPool } from './datacenters.js';
 import { UpdateManager } from './updates.js';
 import { objectRequest, requestOf } from './requests.js';
 import { TcpTransport } from './tcp-transport.js';
+import { WebSocketTransport } from './websocket-transport.js';
+import { dcUrl } from './endpoints.js';
 import {
   readResponseBytes,
   validateByteLimit,
@@ -16,10 +18,10 @@ import {
 } from './http.js';
 export { TransportFraming } from './transport-framing.js';
 export { TcpTransport };
+export { WebSocketTransport };
+export { WebSocketFraming } from './websocket-framing.js';
 export { createSocks5Connector } from './socks5.js';
 export { ObfuscatedFraming } from './obfuscated-framing.js';
-
-const hosts = ['pluto', 'venus', 'aurora', 'vesta', 'flora'];
 
 export class HttpTransport {
   constructor({
@@ -30,14 +32,10 @@ export class HttpTransport {
     timeout = 30000,
     maxBytes = 16 * 1024 * 1024,
   } = {}) {
-    if (!hosts[dc - 1]) {
-      throw new RangeError('Unknown Telegram data center');
-    }
+    const defaultUrl = dcUrl(dc, test);
     validateTimeout(timeout);
     validateByteLimit(maxBytes);
-    this.url =
-      url ??
-      `https://${hosts[dc - 1]}.web.telegram.org/${test ? 'apiw_test1' : 'apiw1'}`;
+    this.url = url ?? defaultUrl;
     this.fetch = fetcher;
     this.timeout = timeout;
     this.maxBytes = maxBytes;
@@ -674,6 +672,9 @@ function deadlineOptions(options, defaultTimeout) {
 }
 
 function createTransport(transport, options) {
+  if (transport === 'websocket') {
+    return new WebSocketTransport(options);
+  }
   if (options.obfuscate && transport === 'http') {
     throw new TypeError('MTProto stream obfuscation requires TCP');
   }

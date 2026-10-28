@@ -1,9 +1,9 @@
 import { it } from 'test-anywhere';
 import assert from 'node:assert/strict';
-import { createCipheriv, createDecipheriv, createHash } from 'node:crypto';
 import { inspect } from 'node:util';
 import * as protocol from '../src/mtproto.js';
 import { serverFor } from './fixtures/tcp-server.js';
+import { peerFor } from './fixtures/obfuscated-peer.js';
 
 const secret = Buffer.alloc(16, 0x91);
 const tags = {
@@ -11,32 +11,6 @@ const tags = {
   intermediate: 0xeeeeeeee,
   padded: 0xdddddddd,
 };
-
-function peerFor(header, key) {
-  const derive = (bytes) =>
-    key
-      ? createHash('sha256')
-          .update(Buffer.concat([bytes, key]))
-          .digest()
-      : bytes;
-  const reversed = Buffer.from(header.subarray(8, 56)).reverse();
-  const incoming = createDecipheriv(
-    'aes-256-ctr',
-    derive(header.subarray(8, 40)),
-    header.subarray(40, 56)
-  );
-  const outgoing = createCipheriv(
-    'aes-256-ctr',
-    derive(reversed.subarray(0, 32)),
-    reversed.subarray(32)
-  );
-  const decoded = incoming.update(header);
-  return {
-    incoming,
-    outgoing,
-    plain: Buffer.concat([header.subarray(0, 56), decoded.subarray(56)]),
-  };
-}
 
 function packet(value = 42) {
   const bytes = Buffer.alloc(52, value);

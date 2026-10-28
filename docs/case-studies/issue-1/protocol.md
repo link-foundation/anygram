@@ -34,7 +34,8 @@ conversion, fixed-width integer conversion and case-sensitive SRP field names.
 
 ## Transport and cryptography
 
-`anygram/mtproto` exports Mtproto, HttpTransport, TcpTransport and TransportFraming.
+`anygram/mtproto` exports Mtproto, HttpTransport, TcpTransport, WebSocketTransport
+and the transport framing classes.
 The default transport uses Telegram's HTTPS binary endpoint, with native TCP
 and injectable transports for other network
 environments. It implements RSA_PAD with pinned official production/test RSA
@@ -69,7 +70,7 @@ Independent login/2FA, DC migration, session storage, ordered update recovery an
 media primitives have deterministic tests; complete application/live-account
 scenarios remain unverified. Secret-chat state and voice/video media still need
 implementation and verification. The requirements ledger stays open.
-WebSocket, fake TLS, obfuscated full framing and SOCKS4 remain unfinished.
+Fake TLS, obfuscated full framing and SOCKS4 remain unfinished.
 The unified TDLib adapter must preserve TDLib's separate JSON API; it must never
 claim that an MTProto method string is a valid TDLib request.
 
@@ -133,3 +134,32 @@ completed a production DC2 authorization-key exchange and decoded an encrypted
 CONNECTION_NOT_INITED RPC error on 2026-10-28. This verifies anonymous direct
 obfuscated transport, without establishing authenticated account or public
 MTProxy availability.
+
+## WebSocket verification
+
+The original implementation follows [RFC 6455](https://www.rfc-editor.org/rfc/rfc6455.html)
+sections 4.1, 5.2–5.5 and 7, alongside Telegram's captured transport rules.
+It uses Node-compatible HTTP/TLS primitives rather than a runtime WebSocket
+global or external runtime dependency. The binary subprotocol, HTTP status,
+upgrade headers and accept hash are validated; unsolicited extensions are
+rejected. Client frames use fresh masks. Incremental reads support binary
+continuations, interleaved ping/pong and bounded messages, frames and queues.
+Invalid masking, RSV bits, opcodes, noncanonical lengths and close payloads
+fail explicitly. Numeric Telegram close reasons preserve their error code.
+The request deadline includes DNS, SOCKS, TLS and the HTTP upgrade.
+
+The first five focused tests failed before the classes existed. Additional
+regressions reproduced a TLS-close race that hid certificate errors and an
+untyped invalid-UTF-8 close reason. The fixed suite checks fragmented real
+sockets, cancellation, invalid upgrades and close messages. A pinned independent
+`websocket` 1.0.35 development-only server verifies masks, large messages and
+fragmentation without using Anygram's WebSocket parser. Loopback TLS tests check
+default trust rejection, an explicit test CA and wrong-hostname rejection,
+both directly and through a SOCKS5 tunnel. The public test certificate/key is
+excluded from the published package.
+
+`node --max-old-space-size=128 experiments/tcp-handshake.mjs intermediate --websocket`
+completed an anonymous production DC2 key exchange and decoded an encrypted
+CONNECTION_NOT_INITED RPC error on 2026-10-28. It prints no keys or sessions.
+Node, Bun and Deno each pass 150 tests. This verifies the native network path;
+browser/Worker runtime support and authenticated application scenarios remain open.

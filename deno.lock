@@ -18,7 +18,8 @@
     "npm:telegram@2.26.22": "2.26.22",
     "npm:teleproto@1.232.0": "1.232.0",
     "npm:test-anywhere@~0.8.48": "0.8.50",
-    "npm:typescript@7.0.2": "7.0.2"
+    "npm:typescript@7.0.2": "7.0.2",
+    "npm:websocket@1.0.35": "1.0.35"
   },
   "npm": {
     "@babel/helper-string-parser@7.29.11": {
@@ -2408,7 +2409,8 @@
         "npm:telegram@2.26.22",
         "npm:teleproto@1.232.0",
         "npm:test-anywhere@~0.8.48",
-        "npm:typescript@7.0.2"
+        "npm:typescript@7.0.2",
+        "npm:websocket@1.0.35"
       ]
     }
   }

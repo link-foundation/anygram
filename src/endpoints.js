@@ -15,3 +15,14 @@ export function dcAddress(dc, test = false) {
   }
   return addresses[dc - 1];
 }
+
+export function dcUrl(dc, test = false, websocket = false) {
+  const hosts = ['pluto', 'venus', 'aurora', 'vesta', 'flora'];
+  if (!Number.isInteger(dc) || !hosts[dc - 1]) {
+    throw new RangeError('Unknown Telegram data center');
+  }
+  const path = websocket
+    ? `apiws${test ? '_test' : ''}`
+    : `apiw${test ? '_test1' : '1'}`;
+  return `${websocket ? 'wss' : 'https'}://${hosts[dc - 1]}.web.telegram.org/${path}`;
+}

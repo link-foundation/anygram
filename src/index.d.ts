@@ -321,7 +321,10 @@ export interface FactoryOptions extends ClientOptions, TcpTransportOptions {
   sessionStore?: import('./storage.js').SessionStore;
   onSession?: (session: string) => void | Promise<void>;
   clientOptions?: Parameters;
-  transport?: import('./mtproto.js').Transport | 'http' | 'tcp';
+  transport?: import('./mtproto.js').Transport | 'http' | 'tcp' | 'websocket';
+  url?: string;
+  ca?: string | Uint8Array;
+  maxWebSocketBytes?: number;
   transportFactory?: (dc: number) => import('./mtproto.js').Transport;
   fetch?: typeof fetch;
   timeout?: number;

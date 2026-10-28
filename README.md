@@ -89,7 +89,7 @@ await client.disconnect();
 ```
 
 The native implementation includes RSA/DH authorization-key exchange, validated
-MTProto 2.0 encrypted envelopes, HTTPS/TCP transports, layer 232 TL serialization,
+MTProto 2.0 encrypted envelopes, HTTPS/TCP/WebSocket transports, layer 232 TL serialization,
 phone/bot authorization and SRP 2FA, and a shared set of account operations.
 An anonymous live handshake has been verified; live account authorization needs
 application credentials and an account. DC migration, chunked media transfers,
@@ -116,7 +116,14 @@ Use `obfuscate: true` for direct TCP obfuscation, or
 prefix selects padded framing by default. MTProxy defaults to padded framing
 and supports `dc`, `test` and `media` routing. Obfuscation supports abridged,
 intermediate and padded framing. Plain padded framing alone is not obfuscation.
-WebSocket, SOCKS4, fake TLS and obfuscated full framing remain unfinished.
+Select `transport: 'websocket'` for Telegram's binary WebSocket endpoint. It uses
+native HTTP/TLS and obfuscation, masks outgoing frames, handles fragmented
+binary streams and ping/pong, and validates the upgrade and TLS certificates.
+`url` overrides the endpoint, `ca` adds a private test certificate authority,
+and SOCKS5 proxies remain available. `WebSocketTransport` and `WebSocketFraming`
+are exported from `anygram/mtproto`. This transport requires Node-compatible
+network APIs; browser/Worker support remains open.
+SOCKS4, fake TLS and obfuscated full framing remain unfinished.
 The [typed transport example](examples/typed-transports.ts)
 shows the supported construction options.
 

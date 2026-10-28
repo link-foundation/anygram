@@ -333,3 +333,24 @@ A live anonymous padded/obfuscated TCP key exchange and encrypted RPC error
 decoding succeed. Node/Bun/Deno each pass 142 tests, with strict lint, format,
 duplication and TypeScript checks passing. WebSocket, fake TLS, SOCKS4,
 secret chats, calls and complete downstream/backend parity remain unfinished.
+
+## WebSocket checkpoint
+
+Native binary WebSocket adds validated HTTP upgrades, client masks, bounded
+fragmentation/control frames, numeric Telegram close errors and TLS verification.
+The first five regressions failed before implementation. Further failing tests
+exposed a TLS-close event race that hid hostname errors and an untyped malformed
+UTF-8 close reason; both now preserve explicit failures. Independent `websocket`
+1.0.35 server tests verify large masked messages and fragmented replies. Loopback
+TLS tests cover trusted/untrusted certificates and hostname mismatch through
+SOCKS5. The fixture key is deliberately public and excluded from publication.
+
+The bounded live WebSocket probe completed a production authorization-key exchange
+and decrypted CONNECTION_NOT_INITED, without account authorization. Node, Bun and
+Deno each pass 150 tests; strict lint, formatting, duplication and declaration/
+example checks pass. The npm package contains 47 permitted entries, 829,947 bytes
+unpacked, with no test fixtures, research or optional clients bundled. Obfuscation
+head 2b3db71 passed all nine runtime/OS jobs and release gates in
+[run 40787510801](https://github.com/link-foundation/anygram/actions/runs/40787510801).
+WebSocket changes require fresh CI evidence. Browser/Worker runtime support,
+fake TLS, SOCKS4, secret chats, calls and complete compatibility/scenarios remain open.

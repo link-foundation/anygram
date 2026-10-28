@@ -1,11 +1,12 @@
-// Finite credential-free probe. Never print authorization keys or sessions.
+// Finite credential-free TCP/WebSocket probe. Never print keys or sessions.
 import { Mtproto } from '../src/mtproto.js';
 
 const mode = process.argv[2] ?? 'full';
-const obfuscate = process.argv.includes('--obfuscated');
-const transport = `tcp/${mode}${obfuscate ? '/obfuscated' : ''}`;
+const kind = process.argv.includes('--websocket') ? 'websocket' : 'tcp';
+const obfuscate = kind === 'websocket' || process.argv.includes('--obfuscated');
+const transport = `${kind}/${mode}${obfuscate ? '/obfuscated' : ''}`;
 const client = new Mtproto({
-  transport: 'tcp',
+  transport: kind,
   mode,
   obfuscate,
   timeout: 15000,

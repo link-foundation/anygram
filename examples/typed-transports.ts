@@ -4,6 +4,8 @@ import {
   TcpTransport,
   TransportFraming,
   ObfuscatedFraming,
+  WebSocketTransport,
+  WebSocketFraming,
   createSocks5Connector,
 } from '../src/mtproto.js';
 
@@ -29,6 +31,9 @@ const connector = createSocks5Connector({
   password: 'example',
 });
 const obfuscated = new ObfuscatedFraming({ mode: 'padded' });
+const websocket = new WebSocketTransport({ dc: 2 });
+const wsFraming = new WebSocketFraming({ maxBytes: 1024 * 1024 });
+const wsClient = createClient({ transport: 'websocket' });
 const mtproxy = createClient({
   proxy: {
     type: 'mtproxy',
@@ -45,5 +50,8 @@ void [
   proxied,
   connector,
   obfuscated,
+  websocket,
+  wsFraming,
+  wsClient,
   mtproxy,
 ];

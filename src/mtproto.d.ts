@@ -85,12 +85,43 @@ export declare class TcpTransport implements Transport {
   request(packet: Uint8Array, options?: RequestOptions): Promise<Uint8Array>;
   close(): void;
 }
+export interface WebSocketFrame {
+  opcode: 0 | 2 | 8 | 9 | 10;
+  final: boolean;
+  payload: Uint8Array;
+}
+export interface WebSocketFramingOptions {
+  client?: boolean;
+  maxBytes?: number;
+  maxFrames?: number;
+  random?: (length: number) => Uint8Array;
+}
+export declare class WebSocketFraming {
+  constructor(options?: WebSocketFramingOptions);
+  encode(
+    bytes: Uint8Array,
+    options?: { opcode?: WebSocketFrame['opcode']; final?: boolean }
+  ): Uint8Array;
+  push(bytes: Uint8Array): WebSocketFrame[];
+}
+export interface WebSocketTransportOptions extends Omit<
+  TcpTransportOptions,
+  'host' | 'port' | 'connectSocket' | 'proxy' | 'obfuscate'
+> {
+  url?: string;
+  ca?: string | Uint8Array;
+  proxy?: Socks5ProxyOptions;
+  maxWebSocketBytes?: number;
+}
+export declare class WebSocketTransport extends TcpTransport {
+  constructor(options?: WebSocketTransportOptions);
+}
 export interface MtprotoOptions extends TcpTransportOptions {
   apiId?: number;
   apiHash?: string;
   dc?: number;
   test?: boolean;
-  transport?: Transport | 'http' | 'tcp';
+  transport?: Transport | 'http' | 'tcp' | 'websocket';
   transportFactory?: (dc: number) => Transport;
   authKey?: Uint8Array;
   salt?: bigint;
@@ -100,6 +131,8 @@ export interface MtprotoOptions extends TcpTransportOptions {
   onSession?: (session: string) => void | Promise<void>;
   timeout?: number;
   url?: string;
+  ca?: string | Uint8Array;
+  maxWebSocketBytes?: number;
   fetch?: typeof fetch;
 }
 export declare class HttpTransport implements Transport {
