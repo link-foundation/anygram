@@ -138,16 +138,33 @@ export class RpcOperations extends MediaOperations {
     );
   }
 
+  resolveObjectPeer(peer) {
+    peer = normalize(peer);
+    if (peer._?.startsWith('inputPeer')) {
+      return peer;
+    }
+    if (peer._ === 'inputUserSelf') {
+      return { _: 'inputPeerSelf' };
+    }
+    if (['inputUser', 'inputChannel'].includes(peer._)) {
+      return { ...peer, _: peer._.replace('input', 'inputPeer') };
+    }
+    if (peer._?.startsWith('peer')) {
+      const type = peer._.slice(4).toLowerCase();
+      const id = peer[`${type}_id`];
+      return this.inputPeer(
+        type === 'chat' ? { _: 'chat', id } : this.peers.get(`${type}:${id}`)
+      );
+    }
+    return this.inputPeer(peer);
+  }
+
   async resolvePeer(peer) {
     if (peer === 'me' || peer === 'self') {
       return { _: 'inputPeerSelf' };
     }
     if (peer && typeof peer === 'object') {
-      peer = normalize(peer);
-      if (peer._?.startsWith('inputPeer')) {
-        return peer;
-      }
-      return this.inputPeer(peer);
+      return this.resolveObjectPeer(peer);
     }
     const text = String(peer);
     if (/^(?:@|https:\/\/t.me\/)?[a-zA-Z][\w]{2,}$/.test(text)) {
@@ -193,13 +210,71 @@ export class RpcOperations extends MediaOperations {
     )[0];
   }
 
-  async getEntity(peer) {
+  getInputEntity(peer) {
+    return this.resolvePeer(peer);
+  }
+
+  async getEntity(peer, options) {
     const resolved = await this.resolvePeer(peer);
     if (resolved._ === 'inputPeerSelf') {
       return this.getMe();
     }
     const type = resolved._.replace('inputPeer', '').toLowerCase();
-    return this.peers.get(`${type}:${resolved[`${type}_id`]}`) ?? resolved;
+    const id = resolved[`${type}_id`];
+    const cached = this.peers.get(`${type}:${id}`);
+    if (cached) {
+      return cached;
+    }
+    const request = {
+      user: ['users.getUsers', { id: [{ ...resolved, _: 'inputUser' }] }],
+      chat: ['messages.getChats', { id: [id] }],
+      channel: [
+        'channels.getChannels',
+        { id: [type === 'channel' ? this.channel(resolved) : null] },
+      ],
+    }[type];
+    if (!request) {
+      throw new TelegramError('Unknown peer type', { type: 'PEER_NOT_FOUND' });
+    }
+    await this.rpc(...request, options);
+    const entity = this.peers.get(`${type}:${id}`);
+    if (!entity) {
+      throw new TelegramError('Entity not found', { type: 'PEER_NOT_FOUND' });
+    }
+    return entity;
+  }
+
+  getContacts(options) {
+    return this.rpc('contacts.getContacts', { hash: 0n }, options);
+  }
+
+  async getGreetingStickers(options) {
+    const result = await this.rpc(
+      'messages.getStickers',
+      { emoticon: '👋⭐️', hash: 0n },
+      options
+    );
+    return result.stickers ?? [];
+  }
+
+  downloadFile(location, options) {
+    return this.downloadMedia(location, options);
+  }
+
+  async downloadProfilePhoto(peer, { big = true, ...options } = {}) {
+    const entity = await this.getEntity(peer, options);
+    if (!entity.photo?.photo_id) {
+      return new Uint8Array();
+    }
+    return this.downloadMedia(
+      {
+        _: 'inputPeerPhotoFileLocation',
+        big,
+        peer: await this.resolvePeer(entity),
+        photo_id: entity.photo.photo_id,
+      },
+      { dc: entity.photo.dc_id, ...options }
+    );
   }
 
   async sendMessage(peer, text, options = {}) {

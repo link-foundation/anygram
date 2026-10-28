@@ -4,6 +4,85 @@ import { createHash } from 'node:crypto';
 import { Anygram, createAdapter } from '../src/index.js';
 const clientFor = (call) =>
   new Anygram({ adapters: [createAdapter('mtproto', { call })] });
+
+it('refreshes expired document references from the origin message and uses its advertised size (mtcute #40)', async () => {
+  const document = {
+    _: 'document',
+    id: 8n,
+    access_hash: 9n,
+    file_reference: new Uint8Array([1]),
+    size: 3n,
+    dc_id: 4,
+  };
+  const origin = {
+    _: 'message',
+    id: 12,
+    peer_id: { _: 'peerChat', chat_id: 7n },
+    media: { _: 'messageMediaDocument', document },
+  };
+  const calls = [];
+  const client = clientFor(async (method, params) => {
+    calls.push(method);
+    if (method === 'messages.getMessages') {
+      assert.equal(params.id[0].id, 12);
+      return {
+        messages: [
+          {
+            ...origin,
+            media: {
+              ...origin.media,
+              document: { ...document, file_reference: new Uint8Array([2]) },
+            },
+          },
+        ],
+      };
+    }
+    assert.equal(method, 'upload.getFile');
+    if (params.location.file_reference[0] === 1) {
+      throw new Error('FILE_REFERENCE_EXPIRED');
+    }
+    return { _: 'upload.file', bytes: new Uint8Array([1, 2, 3]) };
+  });
+  assert.deepEqual([...(await client.downloadMedia(origin))], [1, 2, 3]);
+  assert.deepEqual(calls, [
+    'upload.getFile',
+    'messages.getMessages',
+    'upload.getFile',
+  ]);
+  const truncated = clientFor(async () => ({
+    _: 'upload.file',
+    bytes: new Uint8Array([1]),
+  }));
+  await assert.rejects(truncated.downloadMedia(origin), /advertised size/);
+});
+
+it('downloads profile photos through a shared InputPeerPhotoFileLocation', async () => {
+  const client = clientFor(async (method, params) => {
+    if (method === 'users.getUsers') {
+      return [
+        {
+          _: 'user',
+          id: 1n,
+          self: true,
+          photo: {
+            _: 'userProfilePhoto',
+            photo_id: 6n,
+            dc_id: 2,
+          },
+        },
+      ];
+    }
+    assert.equal(params.location._, 'inputPeerPhotoFileLocation');
+    assert.equal(params.location.photo_id, 6n);
+    assert.equal(params.location.peer._, 'inputPeerSelf');
+    assert.equal(params.location.big, false);
+    return { _: 'upload.file', bytes: new Uint8Array([4, 5]) };
+  });
+  assert.deepEqual(
+    [...(await client.downloadProfilePhoto('me', { big: false }))],
+    [4, 5]
+  );
+});
 describe('shared bounded media operations', () => {
   it('uploads numbered parts and sends one media RPC with a checksum', async () => {
     const data = new Uint8Array(1025).fill(42);

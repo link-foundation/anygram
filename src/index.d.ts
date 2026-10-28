@@ -148,6 +148,14 @@ export declare class Anygram {
   getMessages(peer: unknown, options?: Parameters): Promise<unknown>;
   getDialogs(options?: Parameters): Promise<unknown>;
   getEntity(peer: unknown): Promise<unknown>;
+  getInputEntity(peer: unknown): Promise<TlRequest>;
+  getContacts(options?: RequestOptions): Promise<Parameters>;
+  getGreetingStickers(options?: RequestOptions): Promise<Parameters[]>;
+  downloadFile(location: TlRequest, options?: Parameters): Promise<Uint8Array>;
+  downloadProfilePhoto(
+    peer: unknown,
+    options?: Parameters
+  ): Promise<Uint8Array>;
   getParticipants(peer: unknown, options?: Parameters): Promise<unknown>;
   sendFile(peer: unknown, options: Parameters): Promise<unknown>;
   sendAlbum(

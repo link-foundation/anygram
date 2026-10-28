@@ -108,9 +108,19 @@ async function sourceOf(file) {
   );
 }
 
-function locationOf(media) {
+function fileOf(media) {
   media = media.media ?? media;
-  media = media.document ?? media.photo ?? media;
+  return media.document ?? media.photo ?? media;
+}
+
+function advertisedSize(file, size) {
+  return size === undefined && file._ === 'document' && file.size !== undefined
+    ? Number(file.size)
+    : size;
+}
+
+function locationOf(media) {
+  media = fileOf(media);
   if (media._?.startsWith('input') && media._.endsWith('FileLocation')) {
     return media;
   }
@@ -141,6 +151,28 @@ function locationOf(media) {
 
 /** File operations shared by adapters with only raw MTProto support. */
 export class MediaOperations {
+  originRefresh(media, options) {
+    if (!media.peer_id || !media.id) {
+      return undefined;
+    }
+    return async (location) => {
+      const messages = await this.getMessages(media.peer_id, {
+        ...options,
+        ids: [media.id],
+      });
+      const fresh = messages.find((message) => message.id === media.id);
+      if (!fresh?.media || fileOf(fresh).id !== location.id) {
+        throw new TelegramError(
+          'The original message no longer contains this file',
+          {
+            type: 'FILE_REFERENCE_CHANGED',
+          }
+        );
+      }
+      return fresh;
+    };
+  }
+
   async uploadFile(
     file,
     {
@@ -322,7 +354,11 @@ export class MediaOperations {
       ...options
     } = {}
   ) {
+    const file = fileOf(media);
+    size = advertisedSize(file, size);
     const end = downloadEnd({ offset, size, maxBytes });
+    options = { dc: file.dc_id, ...options };
+    refreshFileReference ??= this.originRefresh(media, options);
     let location = locationOf(media);
     for (let position = offset; position < end; position += PART_SIZE) {
       options.signal?.throwIfAborted();

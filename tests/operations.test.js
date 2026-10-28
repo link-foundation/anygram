@@ -1,6 +1,79 @@
 import { describe, it } from 'test-anywhere';
 import assert from 'node:assert/strict';
 import { Anygram, createAdapter } from '../src/index.js';
+import { RpcOperations } from '../src/operations.js';
+
+it('resolves cached Peer constructors and fetches uncached InputPeer entities', async () => {
+  const calls = [];
+  const operations = new RpcOperations(async (request) => {
+    calls.push(request);
+    assert.equal(request.method, 'users.getUsers');
+    return [{ _: 'user', id: 7n, access_hash: 11n, first_name: 'Ada' }];
+  });
+  operations.remember({
+    users: [{ _: 'user', id: 42n, access_hash: 19n }],
+    chats: [{ _: 'channel', id: 9n, access_hash: 23n }],
+  });
+  assert.deepEqual(
+    await operations.resolvePeer({ _: 'peerUser', user_id: 42n }),
+    {
+      _: 'inputPeerUser',
+      user_id: 42n,
+      access_hash: 19n,
+    }
+  );
+  assert.deepEqual(
+    await operations.resolvePeer({ _: 'peerChannel', channel_id: 9n }),
+    {
+      _: 'inputPeerChannel',
+      channel_id: 9n,
+      access_hash: 23n,
+    }
+  );
+  assert.deepEqual(
+    await operations.resolvePeer({ _: 'peerChat', chat_id: 3n }),
+    {
+      _: 'inputPeerChat',
+      chat_id: 3n,
+    }
+  );
+  const entity = await operations.getEntity({
+    _: 'inputPeerUser',
+    user_id: 7n,
+    access_hash: 11n,
+  });
+  assert.equal(entity.first_name, 'Ada');
+  assert.equal(calls.length, 1);
+  assert.equal((await operations.getEntity(7n)).first_name, 'Ada');
+  await assert.rejects(
+    operations.resolvePeer({ _: 'peerUser', user_id: 8n }),
+    /access hash/i
+  );
+});
+
+it('lists contacts and empty-chat greeting stickers over a raw-only backend', async () => {
+  const calls = [];
+  const client = new Anygram({
+    adapters: [
+      createAdapter('mtproto', {
+        call: async (method, params) => {
+          calls.push({ method, params });
+          return method === 'contacts.getContacts'
+            ? { _: 'contacts.contacts', contacts: [], users: [] }
+            : {
+                _: 'messages.stickers',
+                stickers: [{ _: 'document', id: 17n }],
+              };
+        },
+      }),
+    ],
+  });
+  assert.deepEqual((await client.getContacts()).contacts, []);
+  assert.equal((await client.getGreetingStickers())[0].id, 17n);
+  assert.equal(calls[1].params.emoticon, '👋⭐️');
+  assert.equal(calls[1].params.hash, 0n);
+  assert.equal((await client.getInputEntity('me'))._, 'inputPeerSelf');
+});
 
 describe('shared MTProto operations', () => {
   it('resolves usernames and sends without losing IDs through a raw-only backend', async () => {
