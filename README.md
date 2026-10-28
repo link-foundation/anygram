@@ -64,6 +64,12 @@ Session strings contain authorization keys that grant account access. Keep them
 private. `FileSessionStore` writes atomically with restrictive permissions on
 systems supporting Unix file modes; it does not encrypt files at rest.
 
+For QR login, pass `qrCode: async ({ url, expires }) => displayQr(url, expires)`
+to `client.start`. Anygram refreshes tokens, imports the login on the requested
+data center, and requests `password` when Telegram requires 2FA. `signal`,
+`qrTimeout` (milliseconds, default five minutes), and `maxQrAttempts` bound the
+flow. Rendering the QR code is the application's responsibility.
+
 ```js
 // After authorization. Use a separate file for update cursors, not the session.
 const updates = client.runUpdates({

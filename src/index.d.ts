@@ -25,6 +25,8 @@ export type Parameters = Record<string, unknown>;
 export interface RequestOptions {
   signal?: AbortSignal;
   timeout?: number;
+  dc?: number;
+  migrate?: boolean;
   [key: string]: unknown;
 }
 export interface TlRequest extends Parameters {
@@ -214,6 +216,16 @@ export declare class Session {
   static fromClient(client: import('./mtproto.js').Mtproto): Session;
 }
 export interface LoginOptions {
+  signal?: AbortSignal;
+  timeout?: number;
+  qrCode?: (value: {
+    token: Uint8Array;
+    expires: number;
+    url: string;
+  }) => void | Promise<void>;
+  exceptIds?: bigint[];
+  maxQrAttempts?: number;
+  qrTimeout?: number;
   phoneNumber?: string | (() => string | Promise<string>);
   phoneCode?: string | (() => string | Promise<string>);
   password?: string | (() => string | Promise<string>);

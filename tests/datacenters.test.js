@@ -86,3 +86,31 @@ it('bounds migration cycles and never retries an ambiguous network error', async
   });
   await assert.rejects(pool.call({ _: 'auth.sendCode' }), /cycle/);
 });
+it('imports a QR login token on an explicit DC without exporting an unauthorized account', async () => {
+  const home = { dc: 2, rpc: () => assert.fail('wrong DC') };
+  let saved = false;
+  const target = {
+    dc: 4,
+    rpc: async (req) => {
+      assert.equal(req._, 'auth.importLoginToken');
+      return 'authorized';
+    },
+  };
+  const pool = new DatacenterPool(
+    home,
+    () => target,
+    () => {
+      saved = true;
+    }
+  );
+  assert.equal(
+    await pool.call({ _: 'auth.importLoginToken' }, { dc: 4, migrate: true }),
+    'authorized'
+  );
+  assert.equal(pool.home, target);
+  assert.equal(saved, true);
+  await assert.rejects(
+    pool.call({ _: 'auth.importLoginToken' }, { dc: 99 }),
+    /data center/
+  );
+});

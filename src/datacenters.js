@@ -8,6 +8,9 @@ export class DatacenterPool {
     this.authorized = new Set();
   }
   async client(dc) {
+    if (!Number.isInteger(dc) || dc < 1 || dc > 5) {
+      throw new RangeError('Unknown Telegram data center');
+    }
     if (!this.clients.has(dc)) {
       this.clients.set(dc, await this.create(dc));
     }
@@ -37,8 +40,24 @@ export class DatacenterPool {
       }
     }
   }
-  async call(request, options) {
-    let current = this.home;
+  async setHome(current, options) {
+    await current.connect?.(options);
+    this.home = current;
+    await this.onHomeChange?.(current);
+  }
+  async select(request, options) {
+    const current =
+      options.dc === undefined ? this.home : await this.client(options.dc);
+    if (current !== this.home && !request._.startsWith('auth.')) {
+      await this.transfer(current, request, options);
+    }
+    if (options.migrate) {
+      await this.setHome(current, options);
+    }
+    return current;
+  }
+  async call(request, options = {}) {
+    let current = await this.select(request, options);
     const visited = new Set([current.dc]);
     for (let attempt = 0; attempt < 5; attempt++) {
       try {
@@ -65,9 +84,7 @@ export class DatacenterPool {
           await this.transfer(current, request, options);
         }
         if (migration[1] !== 'FILE') {
-          this.home = current;
-          await current.connect?.();
-          await this.onHomeChange?.(current);
+          await this.setHome(current, options);
         }
       }
     }

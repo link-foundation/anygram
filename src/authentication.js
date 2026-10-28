@@ -12,27 +12,51 @@ export class Authentication {
   constructor(client) {
     this.client = client;
   }
-  sendCode(phoneNumber, settings = { _: 'codeSettings' }) {
-    return this.client.call('auth.sendCode', {
-      phone_number: phoneNumber,
-      api_id: this.client.apiId,
-      api_hash: this.client.apiHash,
-      settings,
+  call(method, params, options = {}) {
+    options.signal?.throwIfAborted();
+    return this.client.call(method, params, {
+      signal: options.signal,
+      timeout: options.timeout,
+      dc: options.dc,
+      migrate: options.migrate,
     });
   }
-  signIn({ phoneNumber, phoneCodeHash, phoneCode, emailVerification }) {
-    return this.client.call('auth.signIn', {
-      phone_number: phoneNumber,
-      phone_code_hash: phoneCodeHash,
-      phone_code: phoneCode,
-      email_verification: emailVerification,
-    });
+  sendCode(phoneNumber, settings = { _: 'codeSettings' }, options) {
+    return this.call(
+      'auth.sendCode',
+      {
+        phone_number: phoneNumber,
+        api_id: this.client.apiId,
+        api_hash: this.client.apiHash,
+        settings,
+      },
+      options
+    );
   }
-  async checkPassword(password) {
-    const parameters = await this.client.call('account.getPassword');
-    return this.client.call('auth.checkPassword', {
-      password: await passwordProof(parameters, password),
-    });
+  signIn(
+    { phoneNumber, phoneCodeHash, phoneCode, emailVerification },
+    options
+  ) {
+    return this.call(
+      'auth.signIn',
+      {
+        phone_number: phoneNumber,
+        phone_code_hash: phoneCodeHash,
+        phone_code: phoneCode,
+        email_verification: emailVerification,
+      },
+      options
+    );
+  }
+  async checkPassword(password, options) {
+    const parameters = await this.call('account.getPassword', {}, options);
+    return this.call(
+      'auth.checkPassword',
+      {
+        password: await passwordProof(parameters, password),
+      },
+      options
+    );
   }
   async start(options = {}) {
     if (!Number.isInteger(this.client.apiId) || !this.client.apiHash) {
@@ -42,9 +66,13 @@ export class Authentication {
     }
     try {
       return (
-        await this.client.call('users.getUsers', {
-          id: [{ _: 'inputUserSelf' }],
-        })
+        await this.call(
+          'users.getUsers',
+          {
+            id: [{ _: 'inputUserSelf' }],
+          },
+          options
+        )
       )[0];
     } catch (error) {
       if (error.code !== 401) {
@@ -53,15 +81,22 @@ export class Authentication {
     }
     let result;
     if (options.botAuthToken) {
-      result = await this.client.call('auth.importBotAuthorization', {
-        flags: 0,
-        api_id: this.client.apiId,
-        api_hash: this.client.apiHash,
-        bot_auth_token: await input(options.botAuthToken, 'botAuthToken'),
-      });
+      result = await this.call(
+        'auth.importBotAuthorization',
+        {
+          flags: 0,
+          api_id: this.client.apiId,
+          api_hash: this.client.apiHash,
+          bot_auth_token: await input(options.botAuthToken, 'botAuthToken'),
+        },
+        options
+      );
     } else {
       try {
-        result = await this.phoneLogin(options);
+        result =
+          options.qrCode === undefined
+            ? await this.phoneLogin(options)
+            : await this.qrLogin(options);
       } catch (error) {
         if (
           error.type !== 'SESSION_PASSWORD_NEEDED' &&
@@ -70,7 +105,8 @@ export class Authentication {
           throw error;
         }
         result = await this.checkPassword(
-          await input(options.password, 'password')
+          await input(options.password, 'password'),
+          options
         );
       }
     }
@@ -79,7 +115,11 @@ export class Authentication {
   }
   async phoneLogin(options) {
     const phoneNumber = await input(options.phoneNumber, 'phoneNumber');
-    const code = await this.sendCode(phoneNumber, options.codeSettings);
+    const code = await this.sendCode(
+      phoneNumber,
+      options.codeSettings,
+      options
+    );
     if (code._ === 'auth.sentCodeSuccess') {
       return code.authorization;
     }
@@ -88,11 +128,14 @@ export class Authentication {
         type: code._,
       });
     }
-    const result = await this.signIn({
-      phoneNumber,
-      phoneCodeHash: code.phone_code_hash,
-      phoneCode: await input(options.phoneCode, 'phoneCode'),
-    });
+    const result = await this.signIn(
+      {
+        phoneNumber,
+        phoneCodeHash: code.phone_code_hash,
+        phoneCode: await input(options.phoneCode, 'phoneCode'),
+      },
+      options
+    );
     if (result._ !== 'auth.authorizationSignUpRequired') {
       return result;
     }
@@ -105,11 +148,91 @@ export class Authentication {
         { type: 'TERMS_ACCEPTANCE_REQUIRED' }
       );
     }
-    return this.client.call('auth.signUp', {
-      phone_number: phoneNumber,
-      phone_code_hash: code.phone_code_hash,
-      first_name: await input(options.firstName, 'firstName'),
-      last_name: options.lastName ?? '',
-    });
+    return this.call(
+      'auth.signUp',
+      {
+        phone_number: phoneNumber,
+        phone_code_hash: code.phone_code_hash,
+        first_name: await input(options.firstName, 'firstName'),
+        last_name: options.lastName ?? '',
+      },
+      options
+    );
+  }
+
+  async qrToken(options) {
+    let result = await this.call(
+      'auth.exportLoginToken',
+      {
+        api_id: this.client.apiId,
+        api_hash: this.client.apiHash,
+        except_ids: options.exceptIds ?? [],
+      },
+      options
+    );
+    const visited = new Set();
+    while (result._ === 'auth.loginTokenMigrateTo') {
+      if (visited.has(result.dc_id) || visited.size >= 5) {
+        throw new TelegramError('QR login data center migration cycle');
+      }
+      visited.add(result.dc_id);
+      result = await this.call(
+        'auth.importLoginToken',
+        { token: result.token },
+        {
+          ...options,
+          dc: result.dc_id,
+          migrate: true,
+        }
+      );
+    }
+    return result;
+  }
+
+  async qrLogin(options) {
+    const { maxQrAttempts = 100, qrTimeout = 300000 } = options;
+    if (
+      typeof options.qrCode !== 'function' ||
+      !Number.isSafeInteger(maxQrAttempts) ||
+      maxQrAttempts < 1 ||
+      !Number.isSafeInteger(qrTimeout) ||
+      qrTimeout < 1
+    ) {
+      throw new TypeError('Invalid QR login callback or limits');
+    }
+    const deadline = globalThis.AbortSignal.timeout(qrTimeout);
+    options = {
+      ...options,
+      signal: options.signal
+        ? globalThis.AbortSignal.any([options.signal, deadline])
+        : deadline,
+    };
+    let displayed;
+    for (let attempt = 0; attempt < maxQrAttempts; attempt++) {
+      const result = await this.qrToken(options);
+      if (result._ === 'auth.loginTokenSuccess') {
+        return result.authorization;
+      }
+      if (result._ !== 'auth.loginToken') {
+        throw new TelegramError('Invalid QR login token response');
+      }
+      const url = `tg://login?token=${Buffer.from(result.token).toString('base64url')}`;
+      if (url !== displayed) {
+        await options.qrCode({
+          token: result.token,
+          expires: result.expires,
+          url,
+        });
+        displayed = url;
+      }
+      await this.client.pollUpdates({
+        signal: options.signal,
+        maxWait: Math.max(
+          0,
+          Math.min(25000, result.expires * 1000 - Date.now())
+        ),
+      });
+    }
+    throw new TelegramError('QR login attempt limit exceeded');
   }
 }
