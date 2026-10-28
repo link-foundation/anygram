@@ -98,6 +98,10 @@ export class Anygram {
   iterMessages(peer, options) {
     return iterateHistory((page) => this.getMessages(peer, page), options);
   }
+
+  async *iterDownload(media, options) {
+    yield* await this.execute('iterDownload', media, options);
+  }
 }
 
 for (const operation of [
@@ -110,6 +114,7 @@ for (const operation of [
   'getEntity',
   'getParticipants',
   'sendFile',
+  'uploadFile',
   'downloadMedia',
   'editMessage',
   'deleteMessages',
@@ -122,6 +127,8 @@ for (const operation of [
   'muteChat',
   'addContact',
   'saveSession',
+  'runUpdates',
+  'stopUpdates',
 ]) {
   Anygram.prototype[operation] = function (...args) {
     return this.execute(operation, ...args);

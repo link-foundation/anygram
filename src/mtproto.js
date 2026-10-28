@@ -5,6 +5,8 @@ import { MtprotoCipher } from './crypto.js';
 import { TelegramError } from './errors.js';
 import { Session } from './session.js';
 import { Authentication } from './authentication.js';
+import { DatacenterPool } from './datacenters.js';
+import { UpdateManager } from './updates.js';
 import { objectRequest, requestOf } from './requests.js';
 
 const hosts = ['pluto', 'venus', 'aurora', 'vesta', 'flora'];
@@ -98,6 +100,7 @@ export class Mtproto {
     onUpdate,
     onSession,
     timeout = 30000,
+    transportFactory,
     ...transportOptions
   } = {}) {
     Object.assign(this, {
@@ -121,7 +124,28 @@ export class Mtproto {
     this.received = new Set();
     this.acknowledgements = [];
     this.queue = Promise.resolve();
+    this.updateQueue = Promise.resolve();
+    this.pendingUpdates = [];
     this.initialized = false;
+    this.datacenters = new DatacenterPool(
+      this,
+      (dc) =>
+        new Mtproto({
+          apiId,
+          apiHash,
+          dc,
+          test,
+          codec,
+          timeout,
+          ...transportOptions,
+          transport: transportFactory?.(dc),
+          transportFactory,
+          onUpdate: (value) => this.onUpdate?.(value),
+        }),
+      async () => {
+        await this.onSession?.(this.saveSession());
+      }
+    );
   }
 
   messageId() {
@@ -137,13 +161,13 @@ export class Mtproto {
     return id;
   }
 
-  async plainExchange(request) {
+  async plainExchange(request, options) {
     const data = this.codec.encode(request);
     const packet = Buffer.alloc(20 + data.length);
     packet.writeBigInt64LE(this.messageId(), 8);
     packet.writeInt32LE(data.length, 16);
     packet.set(data, 20);
-    const response = await this.transport.request(packet);
+    const response = await this.transport.request(packet, options);
     if (
       response.length < 20 ||
       response.readBigInt64LE(0) !== 0n ||
@@ -155,7 +179,8 @@ export class Mtproto {
     return this.codec.decode(response.subarray(20));
   }
 
-  async connect() {
+  async connect(options = {}) {
+    options = deadlineOptions(options, this.timeout);
     if (this.connecting) {
       return this.connecting;
     }
@@ -166,7 +191,7 @@ export class Mtproto {
       dc: this.dc,
       test: this.test,
       codec: this.codec,
-      exchange: this.plainExchange.bind(this),
+      exchange: (request) => this.plainExchange(request, options),
     }).then(async ({ authKey, salt, timeOffset }) => {
       this.cipher = new MtprotoCipher(authKey);
       this.salt = salt;
@@ -194,10 +219,15 @@ export class Mtproto {
   }
 
   saveSession() {
-    return Session.fromClient(this).save();
+    return Session.fromClient(this.datacenters.home).save();
   }
 
   disconnect() {
+    this.stopUpdates();
+    return this.datacenters.close();
+  }
+
+  closeTransport() {
     this.transport.close?.();
     this.initialized = false;
     return Promise.resolve();
@@ -205,10 +235,107 @@ export class Mtproto {
 
   call(method, params = {}, options) {
     const request = objectRequest(requestOf(method, params));
-    const run = () => this.rpc(request, options);
+    const run = () => this.datacenters.call(request, options);
     const result = this.queue.then(run, run);
     this.queue = result.catch(() => {});
-    return result;
+    return result.finally(() => {
+      for (const client of this.datacenters.clients.values()) {
+        client.dispatchUpdates();
+      }
+    });
+  }
+
+  dispatchUpdates() {
+    const updates = this.pendingUpdates.splice(0);
+    for (const update of updates) {
+      this.updateQueue = this.updateQueue
+        .then(() => this.onUpdate?.(update))
+        .catch((error) => {
+          this.updateError = error;
+        });
+    }
+  }
+
+  pollUpdates(options = {}) {
+    const task = this.queue.then(async () => {
+      const active = this.datacenters.home;
+      await active.connect(options);
+      const { response } = await active.exchange(
+        this.codec.encode({
+          _: 'http_wait',
+          max_delay: 0,
+          wait_after: 0,
+          max_wait: options.maxWait ?? 25000,
+        }),
+        { ...deadlineOptions(options, this.timeout), content: false }
+      );
+      await active.processEnvelope(response, {});
+      await active.flushAcknowledgements(options);
+    });
+    this.queue = task.catch(() => {});
+    return task.finally(() => {
+      for (const client of this.datacenters.clients.values()) {
+        client.dispatchUpdates();
+      }
+    });
+  }
+
+  stopUpdates() {
+    this.updatesController?.abort();
+  }
+
+  async runUpdates({
+    state,
+    stateStore,
+    onUpdate,
+    onState,
+    maxPolls = Infinity,
+    ...options
+  } = {}) {
+    if (this.updatesController) {
+      throw new Error('Updates are already running');
+    }
+    const controller = new globalThis.AbortController();
+    this.updatesController = controller;
+    const signal = options.signal
+      ? globalThis.AbortSignal.any([options.signal, controller.signal])
+      : controller.signal;
+    const previous = this.onUpdate;
+    this.updateError = undefined;
+    try {
+      const stored = await readUpdateState(state, stateStore);
+      const manager = new UpdateManager({
+        ...options,
+        state: stored ?? undefined,
+        invoke: (method, params) => this.call(method, params, { signal }),
+        onUpdate,
+        onState: async (value) => {
+          await stateStore?.save(
+            JSON.stringify(value, (key, field) =>
+              typeof field === 'bigint' ? String(field) : field
+            )
+          );
+          await onState?.(value);
+        },
+      });
+      this.onUpdate = (value) => manager.feed(value);
+      await manager.initialize();
+      for (let count = 0; count < maxPolls && !signal.aborted; count++) {
+        if (!(await pollUntilStopped(this, { ...options, signal }))) {
+          break;
+        }
+        for (const client of this.datacenters.clients.values()) {
+          await client.updateQueue;
+          if (client.updateError) {
+            throw client.updateError;
+          }
+        }
+      }
+      return manager.state;
+    } finally {
+      this.onUpdate = previous;
+      this.updatesController = undefined;
+    }
   }
 
   invoke(request, options) {
@@ -342,7 +469,7 @@ export class Mtproto {
     }
   }
 
-  async processService(value, pending) {
+  processService(value, pending) {
     if (value._ === 'bad_server_salt' && value.bad_msg_id === pending.id) {
       this.salt = value.new_server_salt;
       pending.retry = true;
@@ -356,8 +483,12 @@ export class Mtproto {
       });
     } else if (value._ === 'new_session_created') {
       this.salt = value.server_salt;
+      this.pendingUpdates.push(value);
     } else if (!['msgs_ack', 'msgs_state_info', 'pong'].includes(value._)) {
-      await this.onUpdate?.(value);
+      if (this.pendingUpdates.length >= 1000) {
+        throw new RangeError('MTProto pending update limit exceeded');
+      }
+      this.pendingUpdates.push(value);
     }
   }
 
@@ -391,7 +522,7 @@ export class Mtproto {
       throw new TypeError(`Unknown Telegram RPC ${request._}`);
     }
     options = deadlineOptions(options, this.timeout);
-    await this.connect();
+    await this.connect(options);
     options.signal.throwIfAborted();
     await this.flushAcknowledgements(options);
     let body = request;
@@ -478,4 +609,23 @@ function deadlineOptions(options, defaultTimeout) {
   options.signal.throwIfAborted();
 
   return options;
+}
+
+async function readUpdateState(state, store) {
+  if (state) {
+    return state;
+  }
+  return store ? JSON.parse((await store.load()) || 'null') : undefined;
+}
+
+async function pollUntilStopped(client, options) {
+  try {
+    await client.pollUpdates(options);
+    return true;
+  } catch (error) {
+    if (options.signal.aborted && error === options.signal.reason) {
+      return false;
+    }
+    throw error;
+  }
 }

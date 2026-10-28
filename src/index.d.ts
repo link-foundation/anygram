@@ -1,9 +1,4 @@
 /**
- * Example module type definitions
- * Replace this with your actual type definitions
- */
-
-/**
  * Adds two numbers
  * @param a - First number
  * @param b - Second number
@@ -149,6 +144,8 @@ export declare class Anygram {
   getEntity(peer: unknown): Promise<unknown>;
   getParticipants(peer: unknown, options?: Parameters): Promise<unknown>;
   sendFile(peer: unknown, options: Parameters): Promise<unknown>;
+  uploadFile(file: unknown, options?: Parameters): Promise<TlRequest>;
+  iterDownload(media: unknown, options?: Parameters): AsyncIterable<Uint8Array>;
   downloadMedia(media: unknown, options?: Parameters): Promise<unknown>;
   editMessage(peer: unknown, options: Parameters): Promise<unknown>;
   deleteMessages(peer: unknown, ids: number[]): Promise<unknown>;
@@ -166,6 +163,8 @@ export declare class Anygram {
   muteChat(peer: unknown, options?: Parameters): Promise<unknown>;
   addContact(peer: unknown, options?: Parameters): Promise<unknown>;
   saveSession(): Promise<string>;
+  runUpdates(options?: RunUpdatesOptions): Promise<UpdateState | undefined>;
+  stopUpdates(): Promise<void>;
 }
 export interface BotApiOptions {
   token: string;
@@ -230,12 +229,48 @@ export interface FactoryOptions extends ClientOptions {
   onSession?: (session: string) => void | Promise<void>;
   clientOptions?: Parameters;
   transport?: import('./mtproto.js').Transport;
+  transportFactory?: (dc: number) => import('./mtproto.js').Transport;
   fetch?: typeof fetch;
   timeout?: number;
 }
 export declare function createClient(
   options?: FactoryOptions
 ): Promise<Anygram>;
+
+export interface ChannelState {
+  pts?: number;
+  access_hash: bigint | string;
+}
+export interface UpdateState {
+  pts: number;
+  qts: number;
+  seq: number;
+  date: number;
+  channels: Record<string, ChannelState>;
+}
+export interface UpdateManagerOptions {
+  invoke: (method: string, params?: Parameters) => Promise<unknown>;
+  state?: Partial<UpdateState>;
+  onUpdate?: (update: TlRequest) => void | Promise<void>;
+  onState?: (state: UpdateState) => void | Promise<void>;
+  onReset?: (event: Parameters) => void | Promise<void>;
+  resolveChannel?: (id: bigint) => TlRequest | Promise<TlRequest>;
+  maxPages?: number;
+}
+export interface RunUpdatesOptions
+  extends Omit<UpdateManagerOptions, 'invoke'>, RequestOptions {
+  stateStore?: import('./storage.js').SessionStore;
+  maxPolls?: number;
+  maxWait?: number;
+}
+export declare class UpdateManager {
+  constructor(options: UpdateManagerOptions);
+  state: UpdateState;
+  initialize(): Promise<void>;
+  feed(update: TlRequest): Promise<void>;
+  recover(): Promise<void>;
+  recoverChannel(id: bigint): Promise<number | undefined>;
+}
 
 export interface BotMessage extends Parameters {
   message_id: number;

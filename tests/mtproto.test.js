@@ -139,3 +139,93 @@ describe('native MTProto session', () => {
     assert.throws(() => client.readResult(bytes, 'Bool'), /depth/i);
   });
 });
+it('allows update handlers to make RPCs without holding the transport queue', async () => {
+  let calls = 0;
+  let originalId;
+  const client = serverFor((client, request) => {
+    calls++;
+    if (calls === 1) {
+      originalId = request.messageId;
+      return client.codec.encode({
+        _: 'new_session_created',
+        first_msg_id: request.messageId,
+        unique_id: 1n,
+        server_salt: 2n,
+      });
+    }
+    return rpcResult(
+      calls === 2 ? originalId : request.messageId,
+      client.codec.encode(true, 'Bool')
+    );
+  });
+  let replied = false;
+  client.onUpdate = async () => {
+    await client.call('account.updateStatus', { offline: false });
+    replied = true;
+  };
+  await client.call('account.updateStatus', { offline: true });
+  await client.updateQueue;
+  assert.equal(replied, true);
+  assert.equal(client.updateError, undefined);
+});
+it('follows an encrypted phone migration and exports the migrated session', async () => {
+  const home = serverFor((client, request) =>
+    rpcResult(
+      request.messageId,
+      client.codec.encode({
+        _: 'rpc_error',
+        error_code: 303,
+        error_message: 'PHONE_MIGRATE_4',
+      })
+    )
+  );
+  const next = serverFor((client, request) =>
+    rpcResult(
+      request.messageId,
+      client.codec.encode({
+        _: 'auth.sentCode',
+        type: { _: 'auth.sentCodeTypeApp', length: 5 },
+        phone_code_hash: 'hash',
+      })
+    )
+  );
+  next.dc = 4;
+  home.datacenters.create = () => next;
+  const code = await home.call('auth.sendCode', {
+    phone_number: '+123',
+    api_id: 1,
+    api_hash: 'hash',
+    settings: { _: 'codeSettings' },
+  });
+  assert.equal(code.phone_code_hash, 'hash');
+  assert.equal(home.datacenters.home.dc, 4);
+  const { Session } = await import('../src/session.js');
+  assert.equal(new Session(home.saveSession()).options().dc, 4);
+});
+it('runs a finite updates loop and stops only after its handler finishes', async () => {
+  const client = new Mtproto({ authKey: randomBytes(256) });
+  client.call = async () => ({ pts: 1, qts: 0, seq: 0, date: 1 });
+  client.pollUpdates = async () => {
+    client.pendingUpdates.push({
+      _: 'updateShort',
+      update: {
+        _: 'updateNewMessage',
+        message: { id: 2 },
+        pts: 2,
+        pts_count: 1,
+      },
+    });
+    client.dispatchUpdates();
+  };
+  let completed = false;
+  const state = await client.runUpdates({
+    maxPolls: 1,
+    onUpdate: async () => {
+      await Promise.resolve();
+      completed = true;
+    },
+  });
+  assert.equal(completed, true);
+  assert.equal(state.pts, 2);
+  assert.equal(client.updatesController, undefined);
+});

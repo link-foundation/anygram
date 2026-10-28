@@ -55,13 +55,33 @@ The native implementation includes RSA/DH authorization-key exchange, validated
 MTProto 2.0 encrypted envelopes, HTTPS transport, layer 232 TL serialization,
 phone/bot authorization and SRP 2FA, and a shared set of account operations.
 An anonymous live handshake has been verified; live account authorization needs
-application credentials and an account. Additional login challenges, DC migration,
-and reliable updates recovery remain under development.
+application credentials and an account. DC migration, chunked media transfers,
+and common/channel update recovery are covered by deterministic tests. Additional
+login challenges, secret chats, call media, and live account validation remain open.
 
 `Session` can import Anygram, GramJS/teleproto, and Telethon string sessions.
 Session strings contain authorization keys that grant account access. Keep them
 private. `FileSessionStore` writes atomically with restrictive permissions on
 systems supporting Unix file modes; it does not encrypt files at rest.
+
+```js
+// After authorization. Use a separate file for update cursors, not the session.
+const updates = client.runUpdates({
+  stateStore: new FileSessionStore('./private/updates.json'),
+  onUpdate: async (update) => handleUpdate(update),
+  onReset: async (reset) => rebuildHistory(reset),
+});
+// At shutdown:
+await client.stopUpdates();
+await updates;
+```
+
+Update handlers finish before their cursors are saved. Delivery can repeat after
+handler or persistence failures; application side effects should be idempotent.
+`onReset` reports a missing initial channel cursor or a difference too old for
+server recovery. `uploadFile`, `iterDownload`, `downloadMedia`, and `sendFile`
+share chunking and bounds across raw MTProto backends. Downloads accept
+`refreshFileReference` to refetch an expired reference from its original message.
 
 ## Select existing clients
 

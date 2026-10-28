@@ -3,6 +3,8 @@ import type {
   RequestOptions,
   TlRequest,
   LoginOptions,
+  RunUpdatesOptions,
+  UpdateState,
 } from './index.js';
 import type { TlCodec } from './tl.js';
 export interface Transport {
@@ -15,6 +17,7 @@ export interface MtprotoOptions {
   dc?: number;
   test?: boolean;
   transport?: Transport;
+  transportFactory?: (dc: number) => Transport;
   authKey?: Uint8Array;
   salt?: bigint;
   timeOffset?: number;
@@ -50,6 +53,9 @@ export declare class Mtproto {
   }): Promise<TlRequest>;
   checkPassword(password: string): Promise<TlRequest>;
   saveSession(): string;
+  pollUpdates(options?: RequestOptions & { maxWait?: number }): Promise<void>;
+  runUpdates(options?: RunUpdatesOptions): Promise<UpdateState | undefined>;
+  stopUpdates(): void;
   call<T = unknown>(
     method: string,
     params?: Parameters,

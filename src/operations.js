@@ -1,5 +1,6 @@
 import { TelegramError } from './errors.js';
 import { objectRequest, requestOf } from './requests.js';
+import { MediaOperations } from './media.js';
 
 export function randomId() {
   const bytes = globalThis.crypto.getRandomValues(new Uint8Array(8));
@@ -77,8 +78,9 @@ function validateHistoryOptions(limit, pageSize) {
 }
 
 /** Shared high-level operations over any MTProto raw invocation function. */
-export class RpcOperations {
+export class RpcOperations extends MediaOperations {
   constructor(invoke, { maxPeers = 10000 } = {}) {
+    super();
     this.invoke = invoke;
     this.maxPeers = maxPeers;
     this.peers = new Map();
