@@ -2,6 +2,7 @@ import { TelegramError } from './errors.js';
 import { objectRequest, requestOf } from './requests.js';
 import { MediaOperations } from './media.js';
 import { randomId } from './random.js';
+import { mtprotoTextParams } from './formatting.js';
 // Normalize raw client objects without changing exact IDs or byte buffers.
 export function normalize(value) {
   if (Array.isArray(value)) {
@@ -85,7 +86,7 @@ export class RpcOperations extends MediaOperations {
 
   async rpc(method, params = {}, options) {
     const result = normalize(
-      await this.invoke(requestOf(method, params), options)
+      await this.invoke(requestOf(method, mtprotoTextParams(params)), options)
     );
     this.remember(result);
     return result;

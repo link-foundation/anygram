@@ -1,8 +1,11 @@
 import { methodProxy } from './requests.js';
+import { botTextParams } from './formatting.js';
 
 export function botApi(transport) {
-  const call =
+  const invoke =
     transport.callApi?.bind(transport) ?? transport.callBotApi.bind(transport);
+  const call = (method, params, options) =>
+    invoke(method, botTextParams(params ?? {}), options);
   const raw = methodProxy(call);
   const positional = {
     raw,

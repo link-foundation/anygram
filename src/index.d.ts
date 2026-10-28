@@ -22,6 +22,60 @@ export declare const multiply: (a: number, b: number) => number;
 export declare const delay: (ms: number) => Promise<void>;
 
 export type Parameters = Record<string, unknown>;
+export interface MessageEntity {
+  type: string;
+  offset: number;
+  length: number;
+  [key: string]: unknown;
+}
+export interface TextWithEntities {
+  text: string;
+  entities?: readonly MessageEntity[];
+}
+export declare class FormattedText implements TextWithEntities {
+  constructor(
+    text: string | TextWithEntities,
+    entities?: readonly MessageEntity[]
+  );
+  readonly text: string;
+  readonly entities: readonly MessageEntity[];
+  readonly caption: string;
+  readonly caption_entities: readonly MessageEntity[];
+  toString(): string;
+  plain(value: unknown): FormattedText;
+  bold(value: unknown): FormattedText;
+  italic(value: unknown): FormattedText;
+  underline(value: unknown): FormattedText;
+  strikethrough(value: unknown): FormattedText;
+  spoiler(value: unknown): FormattedText;
+  code(value: unknown): FormattedText;
+  blockquote(value: unknown): FormattedText;
+}
+export declare function fmt(value: unknown, ...parts: unknown[]): FormattedText;
+export declare function formatTemplate(
+  template: string,
+  values?: Record<string, unknown>
+): FormattedText;
+export type TextFormatter = (
+  value: unknown,
+  ...parts: unknown[]
+) => FormattedText;
+export declare const bold: TextFormatter;
+export declare const italic: TextFormatter;
+export declare const underline: TextFormatter;
+export declare const strikethrough: TextFormatter;
+export declare const spoiler: TextFormatter;
+export declare const code: TextFormatter;
+export declare const blockquote: TextFormatter;
+export declare function pre(value: unknown, language?: string): FormattedText;
+export declare function link(value: unknown, url: string): FormattedText;
+export {
+  FormattedText as FormattedString,
+  bold as b,
+  italic as i,
+  underline as u,
+  strikethrough as s,
+};
 export interface RequestOptions {
   signal?: AbortSignal;
   timeout?: number;
@@ -138,7 +192,7 @@ export declare class Anygram {
   execute<T = unknown>(operation: string, ...args: unknown[]): Promise<T>;
   sendMessage(
     peer: unknown,
-    text: string | Parameters,
+    text: string | Parameters | TextWithEntities,
     options?: Parameters
   ): Promise<unknown>;
   connect(): Promise<unknown>;
@@ -204,7 +258,7 @@ export declare class BotApi {
   getMe(options?: RequestOptions): Promise<unknown>;
   sendMessage(
     chat: string | number | bigint,
-    text: string,
+    text: string | TextWithEntities,
     options?: Parameters
   ): Promise<unknown>;
   editMessage(chat: unknown, options: Parameters): Promise<unknown>;
@@ -335,14 +389,14 @@ export interface ContextApi {
   getMe(): Promise<Parameters>;
   sendMessage(
     chat: unknown,
-    text: string,
+    text: string | TextWithEntities,
     options?: Parameters
   ): Promise<BotMessage>;
   editMessageText(
     chat: unknown,
     id: number | undefined,
     inlineId: string | undefined,
-    text: string,
+    text: string | TextWithEntities,
     options?: Parameters
   ): Promise<unknown>;
   deleteMessage(chat: unknown, id: number): Promise<unknown>;
@@ -364,8 +418,14 @@ export declare class Context {
   readonly msg?: BotMessage;
   readonly chat?: BotMessage['chat'];
   readonly from?: Parameters;
-  reply(text: string, options?: Parameters): Promise<BotMessage>;
-  editMessageText(text: string, options?: Parameters): Promise<unknown>;
+  reply(
+    text: string | TextWithEntities,
+    options?: Parameters
+  ): Promise<BotMessage>;
+  editMessageText(
+    text: string | TextWithEntities,
+    options?: Parameters
+  ): Promise<unknown>;
   answerCallbackQuery(options?: string | Parameters): Promise<unknown>;
   deleteMessage(id?: number): Promise<unknown>;
   replyWithPhoto(file: unknown, options?: Parameters): Promise<unknown>;
@@ -436,10 +496,13 @@ export declare class TelegramBot {
   processUpdate(update: BotUpdate): Promise<void>;
   sendMessage(
     chat: unknown,
-    text: string,
+    text: string | TextWithEntities,
     options?: Parameters
   ): Promise<BotMessage>;
-  editMessageText(text: string, options: Parameters): Promise<unknown>;
+  editMessageText(
+    text: string | TextWithEntities,
+    options: Parameters
+  ): Promise<unknown>;
   getChat(chat: unknown): Promise<unknown>;
   deleteMessage(chat: unknown, message: number): Promise<unknown>;
   answerCallbackQuery(id: string, options?: Parameters): Promise<unknown>;

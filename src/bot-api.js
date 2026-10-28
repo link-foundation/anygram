@@ -1,5 +1,6 @@
 import { TelegramError } from './errors.js';
 import { methodProxy } from './requests.js';
+import { botTextParams } from './formatting.js';
 
 export const stringify = (value) =>
   JSON.stringify(value, (key, entry) =>
@@ -119,7 +120,7 @@ export class BotApi {
     }
     const { response, envelope } = await this.request(
       `bot${this.#token}/${method}`,
-      { method: 'POST', ...uploadBody(params) },
+      { method: 'POST', ...uploadBody(botTextParams(params)) },
       options,
       async (response, timeoutSignal) => {
         let envelope;

@@ -139,6 +139,32 @@ differ; full cross-library return-model compatibility is not claimed.
 
 ## Development and evidence
 
+Compose text with Telegram entities without parsing user input as markup:
+
+```js
+import { bold, fmt, formatTemplate } from 'anygram';
+const greeting = fmt`👋 Hello ${bold('Ada 🚀')}!`;
+await client.sendMessage('me', greeting);
+// Localized strings can be loaded at runtime; formatting survives insertion.
+const localized = formatTemplate('👋 Hello {name}!', { name: bold('Ada') });
+// Bot context replies/edits and text/caption API fields accept formatted text.
+await bot.api.sendMessage(chatId, localized);
+```
+
+`FormattedText` (`FormattedString`), `fmt`, paired tags such as
+`` fmt`${bold}hello${bold}` ``, and chain methods share immutable text/entity
+values. Offsets use UTF-16 as required by Telegram. Incoming text and captions
+retain their entities when interpolated. Invalid nesting and out-of-range
+entities fail locally. Bot requests use explicit entities; shared MTProto
+operations translate them to TL constructors. See
+[the runnable localized greeting example](examples/formatted-greetings.js).
+
+Account operations also expose `getInputEntity`, `getContacts`,
+`getGreetingStickers`, `downloadFile`, and `downloadProfilePhoto`. Downloads of
+message documents use the advertised size and can refresh expired file references
+by reloading the original message. For other origins, provide
+`refreshFileReference`; refreshes are bounded and never resend a message.
+
 Node >=20.18.3 is required. Tests also run on Bun and Deno.
 
 ```sh

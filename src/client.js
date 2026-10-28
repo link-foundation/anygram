@@ -1,6 +1,7 @@
 import { TelegramError, UnsupportedError } from './errors.js';
 import { methodProxy, requestOf } from './requests.js';
 import { iterateHistory } from './operations.js';
+import { botTextParams } from './formatting.js';
 
 export class Anygram {
   constructor({ adapters = [], backend, debug } = {}) {
@@ -81,7 +82,9 @@ export class Anygram {
   }
 
   callBotApi(method, params = {}, options) {
-    return this.route('bot', (adapter) => adapter.bot(method, params, options));
+    return this.route('bot', (adapter) =>
+      adapter.bot(method, botTextParams(params), options)
+    );
   }
 
   execute(operation, ...args) {

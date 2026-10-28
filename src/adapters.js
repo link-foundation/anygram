@@ -32,6 +32,13 @@ const styles = {
   },
 };
 
+function hasFormattedEntities(operation, args) {
+  return (
+    operation === 'sendMessage' &&
+    args[2]?.entities?.some((entity) => entity.type)
+  );
+}
+
 export function createAdapter(
   name,
   client,
@@ -115,7 +122,9 @@ export function createAdapter(
       if (
         adapter.supports('invoke') &&
         typeof operations[operation] === 'function' &&
-        (style !== 'gramjs' || typeof client[method] !== 'function')
+        (style !== 'gramjs' ||
+          typeof client[method] !== 'function' ||
+          hasFormattedEntities(operation, args))
       ) {
         return operations[operation](...args);
       }

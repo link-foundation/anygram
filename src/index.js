@@ -36,3 +36,22 @@ export { Session } from './session.js';
 export { Bot, TelegramBot, webhookCallback } from './bot.js';
 export { Context } from './bot-context.js';
 export { UpdateManager } from './updates.js';
+export {
+  FormattedText,
+  FormattedString,
+  b,
+  i,
+  u,
+  s,
+  fmt,
+  formatTemplate,
+  bold,
+  italic,
+  underline,
+  strikethrough,
+  spoiler,
+  code,
+  pre,
+  link,
+  blockquote,
+} from './formatting.js';
