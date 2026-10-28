@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto';
 import { TelegramError, UnsupportedError } from './errors.js';
+import { randomId } from './random.js';
 
 const PART_SIZE = 512 * 1024;
 function validatePartSize(size) {
@@ -154,9 +155,7 @@ export class MediaOperations {
     const source = await sourceOf(file);
     try {
       const parts = uploadParts(source.size, partSize, maxParts);
-      const id = new DataView(
-        globalThis.crypto.getRandomValues(new Uint8Array(8)).buffer
-      ).getBigInt64(0, true);
+      const id = randomId();
       const big = source.size > 10 * 1024 * 1024;
       const checksum = createHash('md5');
       for (let part = 0; part < parts; part++) {
@@ -198,17 +197,16 @@ export class MediaOperations {
     }
   }
 
-  async sendFile(
-    peer,
-    {
-      file,
-      caption = '',
-      forceDocument = true,
-      mimeType = 'application/octet-stream',
-      attributes,
-      ...options
+  async prepareMedia({
+    file,
+    forceDocument = true,
+    mimeType = 'application/octet-stream',
+    attributes,
+    ...options
+  }) {
+    if (['inputMediaPhoto', 'inputMediaDocument'].includes(file?._)) {
+      return file;
     }
-  ) {
     let media;
     if (typeof file === 'string' && /^https?:\/\//.test(file)) {
       media = {
@@ -232,9 +230,14 @@ export class MediaOperations {
           }
         : { _: 'inputMediaUploadedPhoto', file: input };
     }
-    const random = new DataView(
-      globalThis.crypto.getRandomValues(new Uint8Array(8)).buffer
-    ).getBigInt64(0, true);
+    return media;
+  }
+
+  async sendFile(peer, { file, caption = '', ...options }) {
+    if (Array.isArray(file)) {
+      return this.sendAlbum(peer, file, { ...options, caption });
+    }
+    const media = await this.prepareMedia({ file, ...options });
     return this.rpc(
       'messages.sendMedia',
       {
@@ -242,8 +245,68 @@ export class MediaOperations {
         peer: await this.resolvePeer(peer),
         media,
         message: caption,
-        random_id: options.randomId ?? random,
+        random_id: options.randomId ?? randomId(),
       },
+      options
+    );
+  }
+
+  async reusableMedia(peer, media, options) {
+    if (['inputMediaPhoto', 'inputMediaDocument'].includes(media._)) {
+      return media;
+    }
+    const result = await this.rpc(
+      'messages.uploadMedia',
+      { peer, media },
+      options
+    );
+    const value = result.photo ?? result.document;
+    if (!['photo', 'document'].includes(value?._)) {
+      throw new TelegramError('Telegram did not return reusable album media');
+    }
+    const type = value._ === 'photo' ? 'Photo' : 'Document';
+    return {
+      _: `inputMedia${type}`,
+      id: {
+        _: `input${type}`,
+        id: value.id,
+        access_hash: value.access_hash,
+        file_reference: value.file_reference,
+      },
+    };
+  }
+
+  async sendAlbum(peer, files, { caption = '', ...options } = {}) {
+    if (!Array.isArray(files) || files.length < 2 || files.length > 10) {
+      throw new RangeError('An album requires 2 to 10 items');
+    }
+    const input = await this.resolvePeer(peer);
+    const multi_media = [];
+    for (const [index, file] of files.entries()) {
+      const entry = file?.file !== undefined ? file : { file };
+      const settings = { ...options, ...entry };
+      const media = await this.reusableMedia(
+        input,
+        await this.prepareMedia(settings),
+        options
+      );
+      multi_media.push({
+        _: 'inputSingleMedia',
+        media,
+        message:
+          entry.caption ??
+          (Array.isArray(caption)
+            ? (caption[index] ?? '')
+            : index === 0
+              ? caption
+              : ''),
+        entities: entry.entities,
+        random_id: entry.randomId ?? randomId(),
+      });
+    }
+    return this.rpc(
+      'messages.sendMultiMedia',
+      { ...options, peer: input, multi_media },
       options
     );
   }

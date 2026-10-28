@@ -194,9 +194,13 @@ export class UpdateManager {
     const count = key === 'qts' ? 1 : (update.pts_count ?? 0);
     if (state[key] + count < target) {
       if (id === undefined) {
-        await this.recover();
+        await this.recover(update);
       } else {
-        await this.recoverChannel(id);
+        await this.recoverChannel(id, update);
+      }
+      if (state[key] >= target) {
+        // Recovery delivered the buffered event or its equivalent replay.
+        return;
       }
     }
     if (state[key] + count > target) {
@@ -214,8 +218,9 @@ export class UpdateManager {
       await this.call('messages.receivedQueue', { max_qts: target });
     }
   }
-  async differenceEvents(result, channel) {
+  async differenceEvents(result, channel, pending) {
     this.remember(result.chats);
+    await this.deliverPending(result, pending);
     for (const message of result.new_messages ?? []) {
       await this.onUpdate({
         _: channel ? 'updateNewChannelMessage' : 'updateNewMessage',
@@ -238,7 +243,40 @@ export class UpdateManager {
       }
     }
   }
-  async recover() {
+  async deliverPending(result, pending = []) {
+    const next = result.state ?? result.intermediate_state ?? result;
+    for (const update of [...pending]) {
+      const key = update.qts === undefined ? 'pts' : 'qts';
+      if (next[key] < update[key] || next[key] === undefined) {
+        continue;
+      }
+      const replayed = result.other_updates?.some(
+        (item) =>
+          JSON.stringify(item, stableJSON) ===
+          JSON.stringify(update, stableJSON)
+      );
+      const newMessage = [
+        'updateNewMessage',
+        'updateNewChannelMessage',
+      ].includes(update._);
+      const inMessages =
+        newMessage &&
+        result.new_messages?.some(
+          (item) =>
+            item.id === update.message.id &&
+            JSON.stringify(item.peer_id, stableJSON) ===
+              JSON.stringify(update.message.peer_id, stableJSON)
+        );
+      if (!replayed && !inMessages) {
+        // Deliver buffered live events before authoritative difference snapshots.
+        // A newer cursor alone is not proof that the handler received an event.
+        await this.onUpdate(update);
+      }
+      pending.splice(pending.indexOf(update), 1);
+    }
+  }
+  async recover(update) {
+    const pending = update ? [update] : [];
     for (let page = 0; page < this.maxPages; page++) {
       const { pts, qts, date } = this.state;
       const result = await this.call('updates.getDifference', {
@@ -274,7 +312,7 @@ export class UpdateManager {
       ) {
         throw new TelegramError('Invalid updates difference response');
       }
-      await this.differenceEvents(result);
+      await this.differenceEvents(result, false, pending);
       const next = result.state ?? result.intermediate_state;
       Object.assign(
         this.state,
@@ -297,7 +335,7 @@ export class UpdateManager {
     }
     throw new TelegramError('Updates difference page limit exceeded');
   }
-  async recoverChannel(id) {
+  async recoverChannel(id, update) {
     const key = String(id);
     if (
       this.recoveringChannels.has(key) ||
@@ -309,12 +347,12 @@ export class UpdateManager {
     }
     this.recoveringChannels.add(key);
     try {
-      return await this.channelDifference(id);
+      return await this.channelDifference(id, update ? [update] : []);
     } finally {
       this.recoveringChannels.delete(key);
     }
   }
-  async channelDifference(id) {
+  async channelDifference(id, pending) {
     const state = await this.channel(id);
     for (let page = 0; page < this.maxPages; page++) {
       const before = state.pts;
@@ -337,9 +375,10 @@ export class UpdateManager {
         });
         state.pts = result.dialog.pts;
       } else if (result._ === 'updates.channelDifference') {
-        await this.differenceEvents(result, true);
+        await this.differenceEvents(result, true, pending);
         state.pts = result.pts;
       } else if (result._ === 'updates.channelDifferenceEmpty') {
+        await this.deliverPending(result, pending);
         state.pts = result.pts;
       } else {
         throw new TelegramError('Invalid channel difference response');
@@ -354,4 +393,18 @@ export class UpdateManager {
     }
     throw new TelegramError('Channel difference page limit exceeded');
   }
+}
+
+function stableJSON(key, value) {
+  if (typeof value === 'bigint') {
+    return String(value);
+  }
+  if (value && typeof value === 'object' && !Array.isArray(value)) {
+    return Object.fromEntries(
+      Object.keys(value)
+        .sort()
+        .map((name) => [name, value[name]])
+    );
+  }
+  return value;
 }

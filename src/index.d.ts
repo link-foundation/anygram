@@ -144,6 +144,11 @@ export declare class Anygram {
   getEntity(peer: unknown): Promise<unknown>;
   getParticipants(peer: unknown, options?: Parameters): Promise<unknown>;
   sendFile(peer: unknown, options: Parameters): Promise<unknown>;
+  sendAlbum(
+    peer: unknown,
+    files: unknown[],
+    options?: Parameters
+  ): Promise<unknown>;
   uploadFile(file: unknown, options?: Parameters): Promise<TlRequest>;
   iterDownload(media: unknown, options?: Parameters): AsyncIterable<Uint8Array>;
   downloadMedia(media: unknown, options?: Parameters): Promise<unknown>;

@@ -114,6 +114,7 @@ for (const operation of [
   'getEntity',
   'getParticipants',
   'sendFile',
+  'sendAlbum',
   'uploadFile',
   'downloadMedia',
   'editMessage',

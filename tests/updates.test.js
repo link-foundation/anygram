@@ -191,3 +191,101 @@ it('bounds cyclic channel recovery hints and preserves the cursor on failure', a
   assert.equal(calls, 1);
   assert.equal(manager.state.channels[42].pts, 1);
 });
+it('delivers a live read receipt omitted by a difference that advances past it (gotd #1853)', async () => {
+  const seen = [];
+  const manager = new UpdateManager({
+    state: { pts: 100, date: 1 },
+    invoke: async () => ({
+      _: 'updates.difference',
+      other_updates: [],
+      state: { pts: 130, qts: 0, seq: 1, date: 2 },
+    }),
+    onUpdate: (update) => seen.push(update.max_id),
+  });
+  const receipt = {
+    _: 'updateReadHistoryOutbox',
+    peer: { _: 'peerUser', user_id: 7n },
+    max_id: 42,
+    pts: 106,
+    pts_count: 1,
+  };
+  await manager.feed({ _: 'updateShort', update: receipt });
+  await manager.feed({ _: 'updateShort', update: receipt });
+  assert.deepEqual(seen, [42]);
+  assert.equal(manager.state.pts, 130);
+});
+it('delivers a difference replay once and preserves distinct receipts at the same pts', async () => {
+  const first = {
+    _: 'updateReadHistoryOutbox',
+    peer: { _: 'peerUser', user_id: 7n },
+    max_id: 42,
+    pts: 106,
+    pts_count: 1,
+  };
+  const second = { ...first, peer: { _: 'peerUser', user_id: 8n } };
+  const seen = [];
+  const manager = new UpdateManager({
+    state: { pts: 100, date: 1 },
+    invoke: async () => ({
+      _: 'updates.difference',
+      other_updates: [first],
+      state: { pts: 130, qts: 0, seq: 1, date: 2 },
+    }),
+    onUpdate: (u) => seen.push(u.peer.user_id),
+  });
+  await manager.feed({ _: 'updateShort', update: second });
+  assert.deepEqual(seen, [8n, 7n]);
+  const replayed = [];
+  const another = new UpdateManager({
+    state: { pts: 100, date: 1 },
+    invoke: manager.invoke,
+    onUpdate: (u) => replayed.push(u),
+  });
+  await another.feed({ _: 'updateShort', update: first });
+  assert.equal(replayed.length, 1);
+});
+it('preserves a live channel event when an empty difference advances its cursor', async () => {
+  const seen = [];
+  const manager = new UpdateManager({
+    state: { date: 1, channels: { 42: { pts: 1, access_hash: 5n } } },
+    invoke: async () => ({
+      _: 'updates.channelDifferenceEmpty',
+      pts: 7,
+      final: true,
+    }),
+    onUpdate: (u) => seen.push(u.max_id),
+  });
+  await manager.feed({
+    _: 'updateShort',
+    update: {
+      _: 'updateReadChannelOutbox',
+      channel_id: 42n,
+      max_id: 50,
+      pts: 5,
+      pts_count: 0,
+    },
+  });
+  assert.deepEqual(seen, [50]);
+});
+it('delivers zero-count events once when recovery ends at their exact cursor', async () => {
+  const seen = [];
+  const manager = new UpdateManager({
+    state: { pts: 1, date: 1 },
+    invoke: async () => ({
+      _: 'updates.difference',
+      other_updates: [],
+      state: { pts: 5, date: 2 },
+    }),
+    onUpdate: (u) => seen.push(u.max_id),
+  });
+  await manager.feed({
+    _: 'updateShort',
+    update: {
+      _: 'updateReadHistoryOutbox',
+      max_id: 50,
+      pts: 5,
+      pts_count: 0,
+    },
+  });
+  assert.deepEqual(seen, [50]);
+});

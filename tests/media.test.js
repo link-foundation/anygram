@@ -118,3 +118,48 @@ it('rejects a truncated download instead of returning incomplete media', async (
     /advertised size/
   );
 });
+it('converts uploaded photos to persistent media before sending an album (mtproto-core #148)', async () => {
+  const calls = [];
+  const client = clientFor(async (method, params) => {
+    calls.push([method, params]);
+    if (method === 'upload.saveFilePart') {
+      return true;
+    }
+    if (method === 'messages.uploadMedia') {
+      return {
+        _: 'messageMediaPhoto',
+        photo: {
+          _: 'photo',
+          id: BigInt(calls.length),
+          access_hash: 9n,
+          file_reference: new Uint8Array([3]),
+        },
+      };
+    }
+    assert.equal(method, 'messages.sendMultiMedia');
+    assert.equal(params.multi_media.length, 2);
+    assert.deepEqual(
+      params.multi_media.map((item) => item.message),
+      ['first', '']
+    );
+    for (const item of params.multi_media) {
+      assert.equal(item.media._, 'inputMediaPhoto');
+    }
+    return { _: 'updates', updates: [], chats: [], users: [] };
+  });
+  await client.sendFile('me', {
+    file: [new Uint8Array([1]), new Uint8Array([2])],
+    caption: ['first', ''],
+    forceDocument: false,
+  });
+  assert.deepEqual(
+    calls.map(([method]) => method),
+    [
+      'upload.saveFilePart',
+      'messages.uploadMedia',
+      'upload.saveFilePart',
+      'messages.uploadMedia',
+      'messages.sendMultiMedia',
+    ]
+  );
+});

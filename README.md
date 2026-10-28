@@ -79,7 +79,7 @@ await updates;
 Update handlers finish before their cursors are saved. Delivery can repeat after
 handler or persistence failures; application side effects should be idempotent.
 `onReset` reports a missing initial channel cursor or a difference too old for
-server recovery. `uploadFile`, `iterDownload`, `downloadMedia`, and `sendFile`
+server recovery. `uploadFile`, `iterDownload`, `downloadMedia`, `sendFile`, and `sendAlbum`
 share chunking and bounds across raw MTProto backends. Downloads accept
 `refreshFileReference` to refetch an expired reference from its original message.
 

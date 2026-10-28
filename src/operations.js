@@ -1,11 +1,7 @@
 import { TelegramError } from './errors.js';
 import { objectRequest, requestOf } from './requests.js';
 import { MediaOperations } from './media.js';
-
-export function randomId() {
-  const bytes = globalThis.crypto.getRandomValues(new Uint8Array(8));
-  return new DataView(bytes.buffer).getBigInt64(0, true);
-}
+import { randomId } from './random.js';
 // Normalize raw client objects without changing exact IDs or byte buffers.
 export function normalize(value) {
   if (Array.isArray(value)) {
