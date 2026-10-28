@@ -1,0 +1,24 @@
+{
+  "collectedAt": "2026-10-28T20:55:17.795Z",
+  "repositories": [
+    "link-foundation/command-stream",
+    "link-foundation/meta-sovereign",
+    "konard/telegram-bot",
+    "konard/follow",
+    "konard/telegram-terminal-bot",
+    "konard/telegram-community-posts",
+    "gram-js/gramjs",
+    "sanyok12345/teleproto",
+    "mtcute/mtcute",
+    "alik0211/mtproto-core",
+    "grammyjs/grammY",
+    "telegraf/telegraf",
+    "yagop/node-telegram-bot-api",
+    "BANNERETS/tdl",
+    "LonamiWebs/Telethon",
+    "pyrogram/pyrogram",
+    "tdlib/td",
+    "gotd/td",
+    "danog/MadelineProto"
+  ]
+}

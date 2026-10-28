@@ -26,3 +26,8 @@ export const multiply = (a, b) => a * b;
  */
 export const delay = (ms) =>
   new Promise((resolve) => globalThis.setTimeout(resolve, ms));
+
+export { Anygram } from './client.js';
+export { createAdapter } from './adapters.js';
+export { TelegramError, UnsupportedError } from './errors.js';
+export { BotApi } from './bot-api.js';

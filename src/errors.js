@@ -1,0 +1,47 @@
+export class UnsupportedError extends Error {
+  constructor(operation, backend) {
+    super(
+      `Operation ${operation} is unavailable${backend ? ` on ${backend}` : ''}`
+    );
+    this.name = 'UnsupportedError';
+    this.operation = operation;
+    this.backend = backend;
+  }
+}
+
+export class TelegramError extends Error {
+  constructor(
+    message,
+    { code, type, backend, retryAfter, migrateTo, cause } = {}
+  ) {
+    super(message, { cause });
+    this.name = 'TelegramError';
+    Object.assign(this, { code, type, backend, retryAfter, migrateTo });
+  }
+
+  static from(error, backend) {
+    if (error instanceof TelegramError || error instanceof UnsupportedError) {
+      return error;
+    }
+    const type =
+      error.errorMessage ??
+      error.error_message ??
+      error.message ??
+      String(error);
+    const wait = /(?:FLOOD|SLOWMODE|FLOOD_PREMIUM)_WAIT_(\d+)/.exec(type);
+    const migrate = /(?:PHONE|NETWORK|USER|FILE)_MIGRATE_(\d+)/.exec(type);
+    return new TelegramError(type, {
+      code: error.code ?? error.error_code,
+      type,
+      backend,
+      retryAfter:
+        error.seconds ??
+        error.parameters?.retry_after ??
+        (wait ? Number(wait[1]) : undefined),
+      migrateTo:
+        error.parameters?.migrate_to_chat_id ??
+        (migrate ? Number(migrate[1]) : undefined),
+      cause: error,
+    });
+  }
+}
