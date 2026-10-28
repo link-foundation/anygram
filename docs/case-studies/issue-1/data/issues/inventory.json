@@ -1,0 +1,236 @@
+[
+  {
+    "repository": "gram-js/gramjs",
+    "number": 682,
+    "title": "NewMessage event not working for majority of channels all of a sudden",
+    "comments": 29,
+    "file": "gram-js--gramjs-682.json"
+  },
+  {
+    "repository": "gram-js/gramjs",
+    "number": 654,
+    "title": "NewMessage event stops triggering from channels after ~10 seconds since connection",
+    "comments": 27,
+    "file": "gram-js--gramjs-654.json"
+  },
+  {
+    "repository": "gram-js/gramjs",
+    "number": 280,
+    "title": "NewMessage event stop getting update",
+    "comments": 24,
+    "file": "gram-js--gramjs-280.json"
+  },
+  {
+    "repository": "sanyok12345/teleproto",
+    "number": 36,
+    "title": "Random 10-20s delay when receiving NewMessage events from some Telegram channels",
+    "comments": 2,
+    "file": "sanyok12345--teleproto-36.json"
+  },
+  {
+    "repository": "sanyok12345/teleproto",
+    "number": 51,
+    "title": "Outgoing messages deleted server-side in batches while a teleproto user session is connected, which stopped after the session was logged out. Could the client be a factor?",
+    "comments": 1,
+    "file": "sanyok12345--teleproto-51.json"
+  },
+  {
+    "repository": "sanyok12345/teleproto",
+    "number": 42,
+    "title": "MTProxy with fake-TLS secret (`ee…`) never connects: timestamp byte order in ClientHello + Abridged codec",
+    "comments": 1,
+    "file": "sanyok12345--teleproto-42.json"
+  },
+  {
+    "repository": "mtcute/mtcute",
+    "number": 57,
+    "title": "Expo/React Native",
+    "comments": 6,
+    "file": "mtcute--mtcute-57.json"
+  },
+  {
+    "repository": "mtcute/mtcute",
+    "number": 54,
+    "title": "Add support for cloudflare workers environment",
+    "comments": 6,
+    "file": "mtcute--mtcute-54.json"
+  },
+  {
+    "repository": "mtcute/mtcute",
+    "number": 40,
+    "title": "file reference support",
+    "comments": 5,
+    "file": "mtcute--mtcute-40.json"
+  },
+  {
+    "repository": "alik0211/mtproto-core",
+    "number": 279,
+    "title": "messages.getAllChats always retrun INPUT_METHOD_INVALID_2271179966_*",
+    "comments": 21,
+    "file": "alik0211--mtproto-core-279.json"
+  },
+  {
+    "repository": "alik0211/mtproto-core",
+    "number": 177,
+    "title": "How to authenticate?",
+    "comments": 18,
+    "file": "alik0211--mtproto-core-177.json"
+  },
+  {
+    "repository": "alik0211/mtproto-core",
+    "number": 148,
+    "title": "API messages.sendMultiMedia Always Fails (400 MEDIA_INVALID) for valid media",
+    "comments": 10,
+    "file": "alik0211--mtproto-core-148.json"
+  },
+  {
+    "repository": "grammyjs/grammY",
+    "number": 110,
+    "title": "Plugin Ideas",
+    "comments": 24,
+    "file": "grammyjs--grammY-110.json"
+  },
+  {
+    "repository": "grammyjs/grammY",
+    "number": 901,
+    "title": "End-to-end testing for grammY bots via a Bot API emulator",
+    "comments": 6,
+    "file": "grammyjs--grammY-901.json"
+  },
+  {
+    "repository": "grammyjs/grammY",
+    "number": 669,
+    "title": "Native support for templating messages",
+    "comments": 5,
+    "file": "grammyjs--grammY-669.json"
+  },
+  {
+    "repository": "telegraf/telegraf",
+    "number": 1961,
+    "title": "Getting ETIMEDOUT while running Telegraf bot in docker container with network mode host",
+    "comments": 28,
+    "file": "telegraf--telegraf-1961.json"
+  },
+  {
+    "repository": "telegraf/telegraf",
+    "number": 1914,
+    "title": "Considerable delay to enter to WizardScene after adding '@telegraf/session/mongodb'",
+    "comments": 25,
+    "file": "telegraf--telegraf-1914.json"
+  },
+  {
+    "repository": "telegraf/telegraf",
+    "number": 894,
+    "title": "Type defenition of ctx.scene.state",
+    "comments": 19,
+    "file": "telegraf--telegraf-894.json"
+  },
+  {
+    "repository": "BANNERETS/tdl",
+    "number": 157,
+    "title": "Fail-safe mode: return without throwing on failure",
+    "comments": 3,
+    "file": "BANNERETS--tdl-157.json"
+  },
+  {
+    "repository": "BANNERETS/tdl",
+    "number": 170,
+    "title": "Ways to obtain information about channels",
+    "comments": 2,
+    "file": "BANNERETS--tdl-170.json"
+  },
+  {
+    "repository": "BANNERETS/tdl",
+    "number": 160,
+    "title": "updateNewChat is emitting random chats that I'm not receiving",
+    "comments": 0,
+    "file": "BANNERETS--tdl-160.json"
+  },
+  {
+    "repository": "LonamiWebs/Telethon",
+    "number": 4462,
+    "title": "NewMessageListener - fired multiple times",
+    "comments": 2,
+    "file": "LonamiWebs--Telethon-4462.json"
+  },
+  {
+    "repository": "tdlib/td",
+    "number": 902,
+    "title": "TDLib data has been corrupted (fatal error)",
+    "comments": 34,
+    "file": "tdlib--td-902.json"
+  },
+  {
+    "repository": "tdlib/td",
+    "number": 2696,
+    "title": "Could you please make the tag regularly after every update?",
+    "comments": 25,
+    "file": "tdlib--td-2696.json"
+  },
+  {
+    "repository": "tdlib/td",
+    "number": 1112,
+    "title": "react native support",
+    "comments": 24,
+    "file": "tdlib--td-1112.json"
+  },
+  {
+    "repository": "gotd/td",
+    "number": 1853,
+    "title": "updates: common-state pts gap strands buffered updates (sequence-box state advance)",
+    "comments": 1,
+    "file": "gotd--td-1853.json"
+  },
+  {
+    "repository": "gotd/td",
+    "number": 1800,
+    "title": "updates.Manager: steady-state cost (per-channel idle getChannelDifference + goroutine-per-channel) scales with channel count — ideas welcome",
+    "comments": 1,
+    "file": "gotd--td-1800.json"
+  },
+  {
+    "repository": "danog/MadelineProto",
+    "number": 1661,
+    "title": "High server load",
+    "comments": 31,
+    "file": "danog--MadelineProto-1661.json"
+  },
+  {
+    "repository": "danog/MadelineProto",
+    "number": 942,
+    "title": "thanks danog for this amazing piece of software",
+    "comments": 24,
+    "file": "danog--MadelineProto-942.json"
+  },
+  {
+    "repository": "danog/MadelineProto",
+    "number": 1562,
+    "title": "ParseMode",
+    "comments": 3,
+    "file": "danog--MadelineProto-1562.json"
+  },
+  {
+    "repository": "yagop/node-telegram-bot-api",
+    "number": 550,
+    "title": "getUpdates ETELEGRAM 409 Conflict: terminated by other getUpdates request;",
+    "comments": 37,
+    "selection": "Highest-comment closed reports; open ranking contained no actual issues",
+    "file": "yagop--node-telegram-bot-api-550.json"
+  },
+  {
+    "repository": "yagop/node-telegram-bot-api",
+    "number": 1136,
+    "title": "Polling Error: EFATAL",
+    "comments": 36,
+    "selection": "Highest-comment closed reports; open ranking contained no actual issues",
+    "file": "yagop--node-telegram-bot-api-1136.json"
+  },
+  {
+    "repository": "yagop/node-telegram-bot-api",
+    "number": 1161,
+    "title": "My bot can't get 'new_chat_members' event - only working for bots created with botfather for testing, not real users",
+    "comments": 36,
+    "selection": "Highest-comment closed reports; open ranking contained no actual issues",
+    "file": "yagop--node-telegram-bot-api-1161.json"
+  }
+]

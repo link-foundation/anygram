@@ -7,12 +7,12 @@ unverified criteria open; passing CI alone does not establish protocol parity.
 1. [x] Read the entire issue, issue comments, sub-issue inventory, and all three
        PR feedback streams. There are currently no comments or sub-issues.
 2. [x] Inspect the template, release pipeline, tests, and repository guidance.
-3. [ ] Archive primary-source research on JavaScript and other-language clients,
+3. [x] Archive primary-source research on JavaScript and other-language clients,
        top competitor issues, command-stream, and all five downstream projects.
-4. [ ] Inventory every requirement and map implementation and verification.
+4. [x] Inventory every requirement and map implementation and verification.
 5. [ ] Write failing, minimal tests for unified routing, backend selection,
        compatibility styles, native operation, and error handling.
-6. [ ] Implement the shared operation pipeline and optional adapters without
+6. [x] Implement the shared operation pipeline and optional adapters without
        silently replaying side effects or conflating unsupported and failed calls.
 7. [ ] Implement native Bot API and MTProto protocol coverage, authentication,
        sessions, updates, media, and high-level operations.
@@ -24,7 +24,7 @@ unverified criteria open; passing CI alone does not establish protocol parity.
         capability matrix, and case study with evidence and remaining limits.
 11. [ ] Run focused tests then all Node/Bun/Deno tests and local CI checks; keep
         large output in ci-logs, run memory-heavy work sequentially, and bound probes.
-12. [ ] Commit useful atomic changes on issue-1-1052f45c2e5e after checks pass.
+12. [x] Commit useful atomic changes on issue-1-1052f45c2e5e after checks pass.
 13. [ ] Fetch/merge main, review the complete PR diff and preserve all features.
 14. [ ] Push only the prepared branch; replace PR #2 title/body and retain Fixes #1.
 15. [ ] Check recent CI timestamps/SHAs; download and read every failed run log,
@@ -34,3 +34,36 @@ unverified criteria open; passing CI alone does not establish protocol parity.
 
 Experiments belong in experiments/; reusable application scenarios belong in
 examples/. No live credentials or sessions may be included in research data.
+
+## Completed checkpoints
+
+- Routing/native Bot API, schema/encrypted MTProto, authentication/SRP/sessions,
+  and shared media/DC/update operations were committed independently with tests.
+- Album finalization and omitted live-update recovery have failing-before/passing-
+  after regressions derived from complete competitor discussions.
+- Bounded QR/DC login, handler failure propagation, pagination validation and
+  actual GramJS factory/session interoperability were committed and verified.
+- One clock now schedules at most ten explicitly watched channels and common
+  idle recovery. It allocates no timer per channel membership.
+- Shared peer/contact/greeting/profile helpers and automatic message-origin file
+  refresh are covered by regressions, including advertised-size truncation.
+- Immutable formatted text supports runtime localized templates, UTF-16 offsets,
+  bot text/captions and MTProto translation checked with the actual GramJS schema.
+- In-process polling ownership and explicit membership subscriptions are tested.
+- Through d1ebd63, Node/Bun/Deno each pass 103 tests; lint, format, duplication and
+  four declaration entry points pass. Each later code change requires fresh checks.
+- Refreshed issue/sub-issue and all three PR feedback streams are empty. Main is
+  an ancestor of the branch. CI for 0c9cc9a passed; later heads need fresh evidence.
+- Research includes 32 complete discussions, 26 inspected images, nineteen pinned
+  test-path inventories and all 333 Telegram-related meta-sovereign JS files.
+- The npm dry run contains only 35 source/package/README/LICENSE entries and
+  excludes research, screenshots, experiments and optional client dependencies.
+
+## Next steps
+
+Keep protocol completion (secret chats/call media/transports), complete backend
+return/event/style compatibility and actual downstream scenarios open in the
+ledger. Continue with transport resource/cancellation gaps and the shared bot
+session/scene and account scenario surfaces, each with a reproducing test.
+Update PR #2 with current implementation and evidence; keep it draft until the
+remaining requirements are genuinely implemented and verified.

@@ -1,0 +1,2954 @@
+[
+  {
+    "path": "js/src/server/routes-telegram-account-data.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-account-extras.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-accounts.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-admin-extras.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-admin.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-apps.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-boosts.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-bot-login.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-business.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-calls.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-channel-dm.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-channel-manage.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-chat-admins.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-chat-reactions.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-chat-settings.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-chat-themes.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-chatlists.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-checklist-stats.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-cloud-themes.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-common-chats.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-contact-extras.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-contacts.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-drafts-calendar.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-effects.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-emoji-groups.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-emoji-status.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-ephemeral.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-export.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-files.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-folder-edit.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-forum-view.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-games.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-gift-send.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-gifts-manage.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-group-extras.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-hashtags.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-inline.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-instant-view.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-invite-links.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-link-preview.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-message-links.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-notify-settings.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-paid.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-pinned-list.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-pinned-order.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-privacy.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-private-call.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-profile-extras.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-profile-stories.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-proxy.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-quick-replies.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-request-peer.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-ringtones.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-round.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-saved-gifs.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-saved-tags.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-security-extras.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-security.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-send-as.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-share.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-stars.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-stats.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-sticker-extras.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-sticker-settings.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-storage.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-stories.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-story-actions.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-story-extras.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-story-manage.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-story-post.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-topic-admin.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-transcribe.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-translate-chat.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-ttl.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-voice-chat.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-wallpapers.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-web-apps.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram-yextras.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/routes-telegram.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/telegram-extras.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/server/telegram-route-error.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/auto-import/telegram-creds.js",
+    "constructors": [],
+    "operations": [
+      "getMe"
+    ],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-account-data-paths.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-account-data-run.js",
+    "constructors": [
+      "contacts.GetContacts",
+      "messages.GetDialogs",
+      "users.GetFullUser"
+    ],
+    "operations": [
+      "getInputEntity",
+      "invoke"
+    ],
+    "invokes": 4
+  },
+  {
+    "path": "js/src/sources/telegram-account-data.js",
+    "constructors": [
+      "account.FinishTakeoutSession",
+      "account.InitTakeoutSession"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 2
+  },
+  {
+    "path": "js/src/sources/telegram-account-extras.js",
+    "constructors": [
+      "account.GetGlobalPrivacySettings",
+      "account.GetWebAuthorizations",
+      "account.ResetWebAuthorization",
+      "account.ResetWebAuthorizations",
+      "account.SetGlobalPrivacySettings",
+      "messages.ReorderPinnedSavedDialogs",
+      "messages.ToggleSavedDialogPin"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 8
+  },
+  {
+    "path": "js/src/sources/telegram-account-live.js",
+    "constructors": [],
+    "operations": [
+      "addEventHandler"
+    ],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-account.js",
+    "constructors": [
+      "channels.ReadHistory",
+      "contacts.GetContacts",
+      "help.GetConfig",
+      "messages.ReadDiscussion",
+      "messages.ReadHistory",
+      "messages.SaveDraft",
+      "messages.SetTyping"
+    ],
+    "operations": [
+      "connect",
+      "getContacts",
+      "getDialogs",
+      "getMe",
+      "invoke"
+    ],
+    "invokes": 6
+  },
+  {
+    "path": "js/src/sources/telegram-accounts.js",
+    "constructors": [
+      "auth.LogOut"
+    ],
+    "operations": [
+      "connect",
+      "getDialogs",
+      "getMe",
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-actions.js",
+    "constructors": [
+      "channels.DeleteMessages",
+      "messages.DeleteMessages",
+      "messages.EditMessage",
+      "messages.ForwardMessages",
+      "messages.SendReaction",
+      "messages.UpdatePinnedMessage"
+    ],
+    "operations": [
+      "getMessages",
+      "invoke"
+    ],
+    "invokes": 5
+  },
+  {
+    "path": "js/src/sources/telegram-add-members.js",
+    "constructors": [
+      "channels.InviteToChannel",
+      "contacts.GetContacts",
+      "contacts.GetTopPeers",
+      "messages.AddChatUser",
+      "messages.ExportChatInvite",
+      "messages.SendMessage"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 6
+  },
+  {
+    "path": "js/src/sources/telegram-admin-manage.js",
+    "constructors": [
+      "channels.EditAdmin",
+      "channels.GetParticipants",
+      "channels.TogglePreHistoryHidden",
+      "messages.EditChatAdmin",
+      "messages.GetFullChat",
+      "messages.MigrateChat"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 6
+  },
+  {
+    "path": "js/src/sources/telegram-admin-rights.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-admin.js",
+    "constructors": [
+      "channels.GetAdminLog",
+      "channels.GetFullChannel",
+      "channels.ToggleSlowMode",
+      "messages.EditChatDefaultBannedRights",
+      "messages.GetFullChat"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 5
+  },
+  {
+    "path": "js/src/sources/telegram-apps.js",
+    "constructors": [
+      "bots.GetBotRecommendations",
+      "bots.GetPopularAppBots",
+      "fragment.GetCollectibleInfo",
+      "messages.GetPreparedInlineMessage"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 4
+  },
+  {
+    "path": "js/src/sources/telegram-avatars.js",
+    "constructors": [
+      "users.GetUsers"
+    ],
+    "operations": [
+      "downloadProfilePhoto",
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-backfill.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-boosts.js",
+    "constructors": [
+      "premium.ApplyBoost",
+      "premium.GetBoostsList",
+      "premium.GetBoostsStatus",
+      "premium.GetMyBoosts"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 4
+  },
+  {
+    "path": "js/src/sources/telegram-bot-commands.js",
+    "constructors": [
+      "channels.GetFullChannel",
+      "messages.GetFullChat",
+      "users.GetFullUser"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 2
+  },
+  {
+    "path": "js/src/sources/telegram-bot-login.js",
+    "constructors": [
+      "help.GetAppConfig",
+      "messages.AcceptUrlAuth",
+      "messages.GetAttachMenuBot",
+      "messages.GetAttachMenuBots",
+      "messages.RequestUrlAuth",
+      "messages.ToggleBotInAttachMenu"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 6
+  },
+  {
+    "path": "js/src/sources/telegram-bots.js",
+    "constructors": [
+      "messages.GetBotCallbackAnswer"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-business-bots.js",
+    "constructors": [
+      "account.DisablePeerConnectedBot",
+      "account.GetConnectedBots",
+      "account.ToggleConnectedBotPaused",
+      "account.UpdateConnectedBot",
+      "contacts.ResolveUsername",
+      "messages.GetPeerSettings"
+    ],
+    "operations": [
+      "getInputEntity"
+    ],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-business-links.js",
+    "constructors": [
+      "account.CreateBusinessChatLink",
+      "account.DeleteBusinessChatLink",
+      "account.EditBusinessChatLink",
+      "account.GetBusinessChatLinks",
+      "account.ResolveBusinessChatLink"
+    ],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-business-messages.js",
+    "constructors": [
+      "account.UpdateBusinessAwayMessage",
+      "account.UpdateBusinessGreetingMessage",
+      "messages.GetQuickReplies",
+      "users.GetFullUser"
+    ],
+    "operations": [
+      "getInputEntity",
+      "invoke"
+    ],
+    "invokes": 3
+  },
+  {
+    "path": "js/src/sources/telegram-business.js",
+    "constructors": [
+      "account.UpdateBusinessIntro",
+      "account.UpdateBusinessLocation",
+      "account.UpdateBusinessWorkHours",
+      "help.GetTimezonesList",
+      "messages.GetStickers",
+      "messages.ToggleDialogFilterTags",
+      "users.GetFullUser"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-calendar.js",
+    "constructors": [
+      "messages.GetSearchResultsCalendar"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-calls.js",
+    "constructors": [
+      "messages.Search"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-catchup.js",
+    "constructors": [
+      "updates.GetDifference",
+      "updates.GetState"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 2
+  },
+  {
+    "path": "js/src/sources/telegram-channel-dm-shape.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-channel-dm.js",
+    "constructors": [
+      "messages.GetHistory",
+      "messages.GetSavedDialogs",
+      "messages.GetSavedHistory",
+      "messages.SendMessage",
+      "messages.ToggleSuggestedPostApproval"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 4
+  },
+  {
+    "path": "js/src/sources/telegram-channel-manage.js",
+    "constructors": [
+      "channels.CheckUsername",
+      "channels.DeactivateAllUsernames",
+      "channels.GetAdminedPublicChannels",
+      "channels.GetInactiveChannels",
+      "channels.LeaveChannel",
+      "channels.UpdateColor",
+      "channels.UpdateEmojiStatus",
+      "channels.UpdateUsername"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 3
+  },
+  {
+    "path": "js/src/sources/telegram-channels.js",
+    "constructors": [
+      "updates.GetChannelDifference"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-chat-admins.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-chat-edit.js",
+    "constructors": [
+      "channels.CreateChannel",
+      "channels.EditPhoto",
+      "channels.EditTitle",
+      "contacts.GetContacts",
+      "messages.CreateChat",
+      "messages.EditChatAbout",
+      "messages.EditChatPhoto",
+      "messages.EditChatTitle"
+    ],
+    "operations": [
+      "invoke",
+      "uploadFile"
+    ],
+    "invokes": 4
+  },
+  {
+    "path": "js/src/sources/telegram-chat-info.js",
+    "constructors": [
+      "channels.GetFullChannel",
+      "messages.GetFullChat",
+      "messages.GetOnlines",
+      "users.GetFullUser"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 4
+  },
+  {
+    "path": "js/src/sources/telegram-chat-reactions.js",
+    "constructors": [
+      "messages.GetAvailableReactions",
+      "messages.SetChatAvailableReactions"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 2
+  },
+  {
+    "path": "js/src/sources/telegram-chat-removal.js",
+    "constructors": [
+      "channels.DeleteChannel",
+      "channels.DeleteHistory",
+      "channels.LeaveChannel",
+      "messages.DeleteChat",
+      "messages.DeleteChatUser",
+      "messages.DeleteHistory"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 6
+  },
+  {
+    "path": "js/src/sources/telegram-chat-settings.js",
+    "constructors": [
+      "channels.GetGroupsForDiscussion",
+      "channels.SetDiscussionGroup",
+      "channels.ToggleAntiSpam",
+      "channels.ToggleAutotranslation",
+      "channels.ToggleJoinRequest",
+      "channels.ToggleJoinToSend",
+      "channels.ToggleParticipantsHidden",
+      "channels.ToggleSignatures",
+      "messages.ToggleNoForwards"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 3
+  },
+  {
+    "path": "js/src/sources/telegram-chat-themes.js",
+    "constructors": [
+      "account.GetChatThemes",
+      "messages.SetChatTheme"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 2
+  },
+  {
+    "path": "js/src/sources/telegram-chat-url.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-chatlists.js",
+    "constructors": [
+      "chatlists.CheckChatlistInvite",
+      "chatlists.DeleteExportedInvite",
+      "chatlists.EditExportedInvite",
+      "chatlists.ExportChatlistInvite",
+      "chatlists.GetChatlistUpdates",
+      "chatlists.GetExportedInvites",
+      "chatlists.GetLeaveChatlistSuggestions",
+      "chatlists.HideChatlistUpdates",
+      "chatlists.JoinChatlistInvite",
+      "chatlists.JoinChatlistUpdates",
+      "chatlists.LeaveChatlist"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 11
+  },
+  {
+    "path": "js/src/sources/telegram-cloud-themes.js",
+    "constructors": [
+      "account.GetTheme",
+      "account.GetThemes",
+      "account.InstallTheme",
+      "messages.TogglePeerTranslations"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 4
+  },
+  {
+    "path": "js/src/sources/telegram-comments.js",
+    "constructors": [
+      "messages.GetDiscussionMessage",
+      "messages.ReadDiscussion"
+    ],
+    "operations": [
+      "getMessages",
+      "invoke"
+    ],
+    "invokes": 2
+  },
+  {
+    "path": "js/src/sources/telegram-common-chats.js",
+    "constructors": [
+      "messages.GetCommonChats"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-contact-extras.js",
+    "constructors": [
+      "contacts.BlockFromReplies",
+      "contacts.ExportContactToken",
+      "contacts.GetSaved",
+      "contacts.ImportContactToken",
+      "contacts.ResetSaved",
+      "contacts.ResolvePhone",
+      "contacts.UpdateContactNote",
+      "photos.UploadContactProfilePhoto",
+      "users.SuggestBirthday"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 9
+  },
+  {
+    "path": "js/src/sources/telegram-contacts-edit.js",
+    "constructors": [
+      "contacts.EditCloseFriends",
+      "contacts.GetContacts",
+      "contacts.ImportContacts"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 3
+  },
+  {
+    "path": "js/src/sources/telegram-contacts.js",
+    "constructors": [
+      "contacts.GetStatuses",
+      "messages.GetOutboxReadDate"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 2
+  },
+  {
+    "path": "js/src/sources/telegram-custom-emoji-search.js",
+    "constructors": [
+      "messages.SearchCustomEmoji"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-custom-emoji.js",
+    "constructors": [
+      "messages.GetCustomEmojiDocuments"
+    ],
+    "operations": [
+      "downloadFile",
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-dialog-state.js",
+    "constructors": [
+      "messages.GetPeerDialogs"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-dialogs.js",
+    "constructors": [
+      "account.UpdateNotifySettings",
+      "channels.ReadHistory",
+      "folders.EditPeerFolders",
+      "messages.MarkDialogUnread",
+      "messages.ReadHistory",
+      "messages.ToggleDialogPin"
+    ],
+    "operations": [
+      "getInputEntity",
+      "invoke"
+    ],
+    "invokes": 6
+  },
+  {
+    "path": "js/src/sources/telegram-drafts.js",
+    "constructors": [
+      "messages.ClearAllDrafts",
+      "messages.GetAllDrafts"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 2
+  },
+  {
+    "path": "js/src/sources/telegram-effects.js",
+    "constructors": [
+      "messages.GetAvailableEffects"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-emoji-groups.js",
+    "constructors": [
+      "messages.GetEmojiGroups",
+      "messages.GetEmojiStatusGroups",
+      "users.GetUsers"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 2
+  },
+  {
+    "path": "js/src/sources/telegram-emoji-keywords.js",
+    "constructors": [
+      "messages.GetEmojiKeywords",
+      "messages.GetEmojiKeywordsDifference"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 2
+  },
+  {
+    "path": "js/src/sources/telegram-emoji-status.js",
+    "constructors": [
+      "account.UpdateEmojiStatus"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 2
+  },
+  {
+    "path": "js/src/sources/telegram-ephemeral.js",
+    "constructors": [
+      "ephemeral.GetCallbackAnswer"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-export-html.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-export-media.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-export-output.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-export-paths.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-export-run.js",
+    "constructors": [
+      "messages.GetHistory"
+    ],
+    "operations": [
+      "downloadFile",
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-export-shape.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-export.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-fact-checks.js",
+    "constructors": [
+      "messages.GetFactCheck"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-folder-edit.js",
+    "constructors": [
+      "messages.GetDialogFilters",
+      "messages.GetSuggestedDialogFilters",
+      "messages.UpdateDialogFilter",
+      "messages.UpdateDialogFiltersOrder"
+    ],
+    "operations": [
+      "getInputEntity",
+      "invoke"
+    ],
+    "invokes": 5
+  },
+  {
+    "path": "js/src/sources/telegram-folders.js",
+    "constructors": [
+      "messages.GetDialogFilters"
+    ],
+    "operations": [
+      "getMe",
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-format.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-forum-view.js",
+    "constructors": [
+      "channels.ToggleViewForumAsMessages"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-forum.js",
+    "constructors": [
+      "messages.GetForumTopics"
+    ],
+    "operations": [
+      "getMessages",
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-games.js",
+    "constructors": [
+      "messages.GetGameHighScores"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-gif-save.js",
+    "constructors": [
+      "messages.SaveGif"
+    ],
+    "operations": [
+      "getMessages",
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-gift-send.js",
+    "constructors": [
+      "payments.CheckCanSendGift",
+      "payments.GetPaymentForm",
+      "payments.GetStarGifts",
+      "payments.SendStarsForm"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 4
+  },
+  {
+    "path": "js/src/sources/telegram-gifts-manage.js",
+    "constructors": [
+      "help.GetAppConfig",
+      "payments.ApplyGiftCode",
+      "payments.CheckGiftCode",
+      "payments.ConvertStarGift",
+      "payments.GetPaymentForm",
+      "payments.GetStarGiftUpgradePreview",
+      "payments.GetUniqueStarGift",
+      "payments.SendStarsForm",
+      "payments.ToggleStarGiftsPinnedToTop",
+      "payments.TransferStarGift",
+      "payments.UpgradeStarGift"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 10
+  },
+  {
+    "path": "js/src/sources/telegram-giveaways.js",
+    "constructors": [
+      "channels.GetChannels",
+      "payments.GetGiveawayInfo",
+      "users.GetUsers"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 2
+  },
+  {
+    "path": "js/src/sources/telegram-global.js",
+    "constructors": [
+      "channels.SearchPosts",
+      "contacts.Search",
+      "messages.SearchGlobal"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 2
+  },
+  {
+    "path": "js/src/sources/telegram-group-extras.js",
+    "constructors": [
+      "account.GetContactSignUpNotification",
+      "account.SetContactSignUpNotification",
+      "channels.SetEmojiStickers",
+      "channels.SetStickers"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 3
+  },
+  {
+    "path": "js/src/sources/telegram-history.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-inline-bots.js",
+    "constructors": [
+      "contacts.ResolveUsername",
+      "messages.GetInlineBotResults",
+      "messages.SendInlineBotResult",
+      "messages.StartBot"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 4
+  },
+  {
+    "path": "js/src/sources/telegram-instant-view-shape.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-instant-view-whole.js",
+    "constructors": [],
+    "operations": [
+      "downloadFile"
+    ],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-instant-view.js",
+    "constructors": [
+      "messages.GetWebPage"
+    ],
+    "operations": [
+      "downloadFile",
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-invite-links.js",
+    "constructors": [
+      "messages.DeleteExportedChatInvite",
+      "messages.DeleteRevokedExportedChatInvites",
+      "messages.EditExportedChatInvite",
+      "messages.ExportChatInvite",
+      "messages.GetChatInviteImporters",
+      "messages.GetExportedChatInvites",
+      "messages.HideAllChatJoinRequests",
+      "messages.HideChatJoinRequest"
+    ],
+    "operations": [
+      "getInputEntity",
+      "invoke"
+    ],
+    "invokes": 2
+  },
+  {
+    "path": "js/src/sources/telegram-invite.js",
+    "constructors": [
+      "messages.CheckChatInvite",
+      "messages.ExportChatInvite",
+      "messages.ImportChatInvite"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 3
+  },
+  {
+    "path": "js/src/sources/telegram-jump.js",
+    "constructors": [],
+    "operations": [
+      "getMessages"
+    ],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-layer.js",
+    "constructors": [
+      "messages.DialogsSlice"
+    ],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-left-channels.js",
+    "constructors": [
+      "channels.GetLeftChannels"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-link-preview.js",
+    "constructors": [
+      "messages.GetWebPagePreview"
+    ],
+    "operations": [
+      "downloadFile",
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-map.js",
+    "constructors": [
+      "upload.GetWebFile"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-media.js",
+    "constructors": [],
+    "operations": [
+      "downloadFile"
+    ],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-members.js",
+    "constructors": [
+      "channels.EditBanned",
+      "channels.GetParticipants",
+      "messages.DeleteChatUser",
+      "messages.GetFullChat"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 4
+  },
+  {
+    "path": "js/src/sources/telegram-message-links.js",
+    "constructors": [
+      "channels.ExportMessageLink",
+      "contacts.ResolveUsername"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 2
+  },
+  {
+    "path": "js/src/sources/telegram-moderation.js",
+    "constructors": [
+      "channels.DeleteParticipantHistory",
+      "channels.EditBanned",
+      "channels.ReportAntiSpamFalsePositive",
+      "channels.ReportSpam"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 3
+  },
+  {
+    "path": "js/src/sources/telegram-mtproto.js",
+    "constructors": [],
+    "operations": [
+      "connect",
+      "getMe",
+      "start"
+    ],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-notify-extras.js",
+    "constructors": [
+      "account.GetAutoDownloadSettings",
+      "account.GetReactionsNotifySettings",
+      "account.ResetNotifySettings",
+      "account.SetReactionsNotifySettings"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 5
+  },
+  {
+    "path": "js/src/sources/telegram-notify-settings.js",
+    "constructors": [
+      "account.GetNotifyExceptions",
+      "account.GetNotifySettings",
+      "account.UpdateNotifySettings"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 3
+  },
+  {
+    "path": "js/src/sources/telegram-ownership.js",
+    "constructors": [
+      "account.GetPassword",
+      "channels.ConvertToGigagroup",
+      "messages.EditChatCreator"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 3
+  },
+  {
+    "path": "js/src/sources/telegram-pages.js",
+    "constructors": [],
+    "operations": [
+      "getDialogs",
+      "getEntity",
+      "getMessages"
+    ],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-paid-messages.js",
+    "constructors": [
+      "account.GetGlobalPrivacySettings",
+      "account.GetPaidMessagesRevenue",
+      "account.SetGlobalPrivacySettings",
+      "account.ToggleNoPaidMessagesException",
+      "channels.GetChannels",
+      "channels.UpdatePaidMessagesPrice",
+      "users.GetRequirementsToContact"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 7
+  },
+  {
+    "path": "js/src/sources/telegram-peer-actions.js",
+    "constructors": [
+      "contacts.AcceptContact",
+      "contacts.AddContact",
+      "contacts.Block",
+      "contacts.DeleteContacts",
+      "contacts.Unblock",
+      "messages.GetPeerSettings",
+      "messages.HidePeerSettingsBar",
+      "messages.Report",
+      "messages.ReportSpam"
+    ],
+    "operations": [
+      "getInputEntity",
+      "invoke"
+    ],
+    "invokes": 8
+  },
+  {
+    "path": "js/src/sources/telegram-peers.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-phone-change.js",
+    "constructors": [
+      "account.ChangePhone",
+      "account.SendChangePhoneCode"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 2
+  },
+  {
+    "path": "js/src/sources/telegram-pinned-list.js",
+    "constructors": [
+      "messages.Search",
+      "messages.UnpinAllMessages"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 2
+  },
+  {
+    "path": "js/src/sources/telegram-pinned-order.js",
+    "constructors": [
+      "messages.ReorderPinnedDialogs"
+    ],
+    "operations": [
+      "getInputEntity",
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-polls.js",
+    "constructors": [
+      "messages.AppendTodoList",
+      "messages.EditMessage",
+      "messages.GetPollResults",
+      "messages.GetPollVotes",
+      "messages.SendMedia",
+      "messages.SendVote",
+      "messages.ToggleTodoCompleted"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 7
+  },
+  {
+    "path": "js/src/sources/telegram-privacy.js",
+    "constructors": [
+      "account.GetAuthorizations",
+      "account.GetPrivacy",
+      "account.ResetAuthorization",
+      "account.SetPrivacy",
+      "auth.ResetAuthorizations",
+      "contacts.GetBlocked",
+      "contacts.Unblock",
+      "messages.GetDefaultHistoryTTL",
+      "messages.SetDefaultHistoryTTL"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-private-call.js",
+    "constructors": [
+      "messages.GetDhConfig",
+      "phone.AcceptCall",
+      "phone.ConfirmCall",
+      "phone.DiscardCall",
+      "phone.GetCallConfig",
+      "phone.ReceivedCall",
+      "phone.RequestCall",
+      "phone.SetCallRating"
+    ],
+    "operations": [
+      "getEntity",
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-profile-extras.js",
+    "constructors": [
+      "account.UpdateBirthday",
+      "account.UpdateColor",
+      "account.UpdatePersonalChannel",
+      "channels.GetAdminedPublicChannels",
+      "channels.GetFullChannel",
+      "channels.GetMessages",
+      "contacts.GetBirthdays",
+      "help.GetPeerColors",
+      "help.GetPeerProfileColors",
+      "users.GetFullUser"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-profile-music.js",
+    "constructors": [
+      "account.SaveMusic",
+      "users.GetSavedMusic"
+    ],
+    "operations": [
+      "downloadFile",
+      "getMessages",
+      "invoke"
+    ],
+    "invokes": 3
+  },
+  {
+    "path": "js/src/sources/telegram-profile-stories.js",
+    "constructors": [
+      "stories.GetAlbumStories",
+      "stories.GetAlbums",
+      "stories.GetPinnedStories",
+      "stories.GetStoriesArchive",
+      "stories.TogglePinned",
+      "stories.TogglePinnedToTop"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 6
+  },
+  {
+    "path": "js/src/sources/telegram-profile.js",
+    "constructors": [
+      "account.CheckUsername",
+      "account.UpdateProfile",
+      "account.UpdateUsername",
+      "photos.DeletePhotos",
+      "photos.UploadProfilePhoto",
+      "users.GetFullUser"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-proxy.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-qr-login.js",
+    "constructors": [
+      "auth.ExportLoginToken",
+      "auth.ImportLoginToken"
+    ],
+    "operations": [
+      "_switchDC",
+      "connect",
+      "invoke"
+    ],
+    "invokes": 2
+  },
+  {
+    "path": "js/src/sources/telegram-quick-reaction.js",
+    "constructors": [
+      "help.GetConfig",
+      "messages.SetDefaultReaction"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 2
+  },
+  {
+    "path": "js/src/sources/telegram-quick-replies.js",
+    "constructors": [
+      "messages.CheckQuickReplyShortcut",
+      "messages.DeleteQuickReplyMessages",
+      "messages.DeleteQuickReplyShortcut",
+      "messages.EditMessage",
+      "messages.EditQuickReplyShortcut",
+      "messages.GetQuickReplies",
+      "messages.GetQuickReplyMessages",
+      "messages.ReorderQuickReplies",
+      "messages.SendMessage",
+      "messages.SendQuickReplyMessages"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-readers.js",
+    "constructors": [
+      "messages.GetMessageReactionsList",
+      "messages.GetMessageReadParticipants",
+      "messages.ReportReaction"
+    ],
+    "operations": [
+      "getEntity",
+      "invoke"
+    ],
+    "invokes": 3
+  },
+  {
+    "path": "js/src/sources/telegram-repair.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-request-peer.js",
+    "constructors": [
+      "contacts.GetContacts",
+      "messages.GetRecentLocations",
+      "messages.SendBotRequestedPeer"
+    ],
+    "operations": [
+      "getDialogs",
+      "getInputEntity",
+      "invoke"
+    ],
+    "invokes": 3
+  },
+  {
+    "path": "js/src/sources/telegram-ringtones.js",
+    "constructors": [
+      "account.GetSavedRingtones",
+      "account.SaveRingtone",
+      "account.UploadRingtone"
+    ],
+    "operations": [
+      "downloadFile",
+      "invoke"
+    ],
+    "invokes": 4
+  },
+  {
+    "path": "js/src/sources/telegram-round.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-runtime.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-saved-tags.js",
+    "constructors": [
+      "messages.GetSavedReactionTags",
+      "messages.Search",
+      "messages.UpdateSavedReactionTag"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 3
+  },
+  {
+    "path": "js/src/sources/telegram-scheduled.js",
+    "constructors": [
+      "messages.DeleteScheduledMessages",
+      "messages.EditMessage",
+      "messages.GetScheduledHistory",
+      "messages.SendScheduledMessages"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 4
+  },
+  {
+    "path": "js/src/sources/telegram-search.js",
+    "constructors": [],
+    "operations": [
+      "getMessages"
+    ],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-security-extras.js",
+    "constructors": [
+      "account.DeclinePasswordReset",
+      "account.DeletePasskey",
+      "account.GetPasskeys",
+      "account.InitPasskeyRegistration",
+      "account.InvalidateSignInCodes",
+      "account.RegisterPasskey",
+      "account.ResetPassword",
+      "account.SendVerifyEmailCode",
+      "account.VerifyEmail",
+      "auth.RecoverPassword",
+      "auth.RequestPasswordRecovery",
+      "messages.GetHistory"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 2
+  },
+  {
+    "path": "js/src/sources/telegram-security.js",
+    "constructors": [
+      "account.CancelPasswordEmail",
+      "account.ChangeAuthorizationSettings",
+      "account.ConfirmPasswordEmail",
+      "account.GetAccountTTL",
+      "account.GetContentSettings",
+      "account.GetPassword",
+      "account.PasswordInputSettings",
+      "account.ResendPasswordEmail",
+      "account.SetAccountTTL",
+      "account.SetAuthorizationTTL",
+      "account.SetContentSettings",
+      "account.UpdatePasswordSettings"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-send-as-client.js",
+    "constructors": [],
+    "operations": [
+      "getInputEntity"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-send-as.js",
+    "constructors": [
+      "channels.GetFullChannel",
+      "channels.GetSendAs",
+      "messages.SaveDefaultSendAs"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 3
+  },
+  {
+    "path": "js/src/sources/telegram-send.js",
+    "constructors": [
+      "messages.SendMedia",
+      "messages.SendMessage"
+    ],
+    "operations": [
+      "getInputEntity",
+      "invoke",
+      "sendMessage"
+    ],
+    "invokes": 2
+  },
+  {
+    "path": "js/src/sources/telegram-service-names.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-share-media.js",
+    "constructors": [
+      "contacts.GetContacts",
+      "messages.EditMessage",
+      "messages.SendMedia"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 3
+  },
+  {
+    "path": "js/src/sources/telegram-shared.js",
+    "constructors": [
+      "messages.GetSearchCounters"
+    ],
+    "operations": [
+      "getMessages",
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-similar-channels.js",
+    "constructors": [
+      "channels.GetChannelRecommendations",
+      "channels.JoinChannel"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 2
+  },
+  {
+    "path": "js/src/sources/telegram-stars.js",
+    "constructors": [
+      "messages.SendPaidReaction",
+      "payments.GetPaymentForm",
+      "payments.GetSavedStarGifts",
+      "payments.GetStarsStatus",
+      "payments.GetStarsTransactions",
+      "payments.SaveStarGift",
+      "payments.SendStarsForm"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 7
+  },
+  {
+    "path": "js/src/sources/telegram-stats-more.js",
+    "constructors": [
+      "channels.GetFullChannel",
+      "payments.GetStarsRevenueStats",
+      "stats.GetMessagePublicForwards",
+      "stats.GetMessageStats",
+      "users.GetFullUser"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 2
+  },
+  {
+    "path": "js/src/sources/telegram-stats.js",
+    "constructors": [
+      "channels.GetFullChannel",
+      "channels.GetMessages",
+      "stats.GetBroadcastStats",
+      "stats.GetMegagroupStats",
+      "stats.LoadAsyncGraph"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 5
+  },
+  {
+    "path": "js/src/sources/telegram-sticker-search.js",
+    "constructors": [
+      "messages.GetInlineBotResults",
+      "messages.GetStickers",
+      "messages.SearchStickerSets",
+      "messages.SearchStickers"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 4
+  },
+  {
+    "path": "js/src/sources/telegram-sticker-sets.js",
+    "constructors": [
+      "messages.GetAllStickers",
+      "messages.GetArchivedStickers",
+      "messages.GetEmojiStickers",
+      "messages.InstallStickerSet",
+      "messages.ReorderStickerSets",
+      "messages.UninstallStickerSet"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 4
+  },
+  {
+    "path": "js/src/sources/telegram-sticker-trending.js",
+    "constructors": [
+      "messages.ClearRecentStickers",
+      "messages.GetAttachedStickers",
+      "messages.GetFeaturedEmojiStickers",
+      "messages.GetFeaturedStickers",
+      "messages.GetOldFeaturedStickers",
+      "messages.ReadFeaturedStickers"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 4
+  },
+  {
+    "path": "js/src/sources/telegram-stickers.js",
+    "constructors": [
+      "messages.FaveSticker",
+      "messages.GetAllStickers",
+      "messages.GetFavedStickers",
+      "messages.GetRecentStickers",
+      "messages.GetSavedGifs",
+      "messages.GetStickerSet",
+      "messages.InstallStickerSet",
+      "messages.SaveGif",
+      "messages.SaveRecentSticker",
+      "messages.SendMedia",
+      "messages.UninstallStickerSet"
+    ],
+    "operations": [
+      "downloadFile",
+      "invoke"
+    ],
+    "invokes": 8
+  },
+  {
+    "path": "js/src/sources/telegram-storage.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-stories.js",
+    "constructors": [
+      "stories.GetAllStories",
+      "stories.GetPeerStories",
+      "stories.GetStoriesByID",
+      "stories.ReadStories"
+    ],
+    "operations": [
+      "downloadFile",
+      "invoke"
+    ],
+    "invokes": 5
+  },
+  {
+    "path": "js/src/sources/telegram-story-actions.js",
+    "constructors": [
+      "messages.SendMessage",
+      "stories.DeleteStories",
+      "stories.GetStoryViewsList",
+      "stories.SendReaction",
+      "stories.TogglePeerStoriesHidden"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 5
+  },
+  {
+    "path": "js/src/sources/telegram-story-extras.js",
+    "constructors": [
+      "stories.ActivateStealthMode",
+      "stories.GetStoriesViews",
+      "stories.GetStoryReactionsList",
+      "stories.Report"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 4
+  },
+  {
+    "path": "js/src/sources/telegram-story-manage.js",
+    "constructors": [
+      "stories.EditStory",
+      "stories.ExportStoryLink"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 2
+  },
+  {
+    "path": "js/src/sources/telegram-story-post.js",
+    "constructors": [
+      "contacts.GetContacts",
+      "stories.CanSendStory",
+      "stories.SendStory"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 3
+  },
+  {
+    "path": "js/src/sources/telegram-top-peers.js",
+    "constructors": [
+      "contacts.GetTopPeers",
+      "contacts.ResetTopPeerRating",
+      "contacts.ToggleTopPeers"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 3
+  },
+  {
+    "path": "js/src/sources/telegram-topic-admin.js",
+    "constructors": [
+      "channels.ToggleForum",
+      "messages.CreateForumTopic",
+      "messages.DeleteTopicHistory",
+      "messages.EditForumTopic",
+      "messages.GetStickerSet",
+      "messages.ReorderPinnedForumTopics",
+      "messages.UpdatePinnedForumTopic"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 7
+  },
+  {
+    "path": "js/src/sources/telegram-transcribe.js",
+    "constructors": [
+      "messages.RateTranscribedAudio",
+      "messages.TranscribeAudio"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 2
+  },
+  {
+    "path": "js/src/sources/telegram-translate-chat.js",
+    "constructors": [
+      "messages.SummarizeText"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-translate.js",
+    "constructors": [
+      "messages.TranslateText"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-ttl.js",
+    "constructors": [
+      "messages.DeleteSavedHistory",
+      "messages.GetSavedDialogs",
+      "messages.GetSavedHistory",
+      "messages.SetHistoryTTL"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 4
+  },
+  {
+    "path": "js/src/sources/telegram-unread.js",
+    "constructors": [
+      "channels.ReadMessageContents",
+      "messages.GetUnreadMentions",
+      "messages.GetUnreadReactions",
+      "messages.ReadMentions",
+      "messages.ReadMessageContents",
+      "messages.ReadReactions"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 4
+  },
+  {
+    "path": "js/src/sources/telegram-updates.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-upload.js",
+    "constructors": [],
+    "operations": [
+      "sendFile"
+    ],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-usernames.js",
+    "constructors": [
+      "account.ReorderUsernames",
+      "account.ToggleUsername",
+      "channels.ReorderUsernames",
+      "channels.ToggleUsername"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 2
+  },
+  {
+    "path": "js/src/sources/telegram-views.js",
+    "constructors": [
+      "messages.GetMessagesViews"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 1
+  },
+  {
+    "path": "js/src/sources/telegram-voice-chat-live.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram-voice-chat.js",
+    "constructors": [
+      "channels.GetFullChannel",
+      "messages.GetFullChat",
+      "phone.EditGroupCallParticipant",
+      "phone.GetGroupCall",
+      "phone.GetGroupCallJoinAs",
+      "phone.GetGroupParticipants",
+      "phone.JoinGroupCall",
+      "phone.LeaveGroupCall",
+      "phone.ToggleGroupCallStartSubscription"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 10
+  },
+  {
+    "path": "js/src/sources/telegram-wallpapers.js",
+    "constructors": [
+      "account.GetWallPaper",
+      "account.GetWallPapers",
+      "messages.SetChatWallPaper"
+    ],
+    "operations": [
+      "downloadFile",
+      "invoke"
+    ],
+    "invokes": 3
+  },
+  {
+    "path": "js/src/sources/telegram-web-apps.js",
+    "constructors": [
+      "messages.GetBotApp",
+      "messages.ProlongWebView",
+      "messages.RequestAppWebView",
+      "messages.RequestMainWebView",
+      "messages.RequestSimpleWebView",
+      "messages.RequestWebView",
+      "messages.SendWebViewData"
+    ],
+    "operations": [
+      "invoke"
+    ],
+    "invokes": 7
+  },
+  {
+    "path": "js/src/sources/telegram-write-outcome.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/sources/telegram.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/web/connections/telegram-qr-login.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/web/connections/telegram-sessions.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/web/dom-telegram-calls.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/web/telegram-account-scope.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/web/telegram-online.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/src/web/telegram-status.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/helpers/telegram-route.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-account-actions.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-account-data.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-account-extras.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-account.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-accounts.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-actions.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-admin.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-apps.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-backfill.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-boosts.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-bot-commands.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-bot-parity.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-business.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-channels.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-chat-admins.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-chat-edit.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-chat-removal.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-comments.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-community.test.js",
+    "constructors": [
+      "messages.ChannelMessages",
+      "messages.DialogsSlice",
+      "updates.Difference",
+      "updates.State"
+    ],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-contact-extras.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-creds.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-custom-emoji.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-dialog-state.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-dialogs.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-dice.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-effects.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-emoji-keywords.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-emoji-status.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-ephemeral.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-export.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-extra-accounts.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-folders.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-format.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-games.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-gifts-manage.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-history.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-inline-bots.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-invite.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-layer.test.js",
+    "constructors": [
+      "MessageMediaPoll.CONSTRUCTOR_ID",
+      "messages.SendVote"
+    ],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-live.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-login-route.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-map.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-members.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-mtproto.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-peer-actions.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-poll-create.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-polls.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-privacy.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-private-call.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-profile.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-proxy.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-pts-pending.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-qr-login.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-quick-replies.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-readers.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-realtime.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-request-peer.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-runtime.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-saved-tags.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-scheduled.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-search.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-security-extras.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-security.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-send-as.test.js",
+    "constructors": [
+      "channels.GetSendAs",
+      "messages.SendMedia",
+      "messages.SendMessage"
+    ],
+    "operations": [],
+    "invokes": 5
+  },
+  {
+    "path": "js/tests/telegram-senders.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-share-media.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-stars.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-sticker-box.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-sticker-save.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-sticker-search.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-stickers.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-storage.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-stories.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-story-actions.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-story-extras.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-story-manage.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-story-post.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-transcribe.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-translate.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-ttl.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-unread.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-upload.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  },
+  {
+    "path": "js/tests/telegram-write-outcome.test.js",
+    "constructors": [],
+    "operations": [],
+    "invokes": 0
+  }
+]

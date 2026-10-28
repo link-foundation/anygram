@@ -1,0 +1,91 @@
+{
+  "repository": "BANNERETS/tdl",
+  "issue": {
+    "url": "https://api.github.com/repos/eilvelia/tdl/issues/160",
+    "repository_url": "https://api.github.com/repos/eilvelia/tdl",
+    "labels_url": "https://api.github.com/repos/eilvelia/tdl/issues/160/labels{/name}",
+    "comments_url": "https://api.github.com/repos/eilvelia/tdl/issues/160/comments",
+    "events_url": "https://api.github.com/repos/eilvelia/tdl/issues/160/events",
+    "html_url": "https://github.com/eilvelia/tdl/issues/160",
+    "id": 2365890490,
+    "node_id": "I_kwDOB9xHv86NBJ-6",
+    "number": 160,
+    "title": "updateNewChat is emitting random chats that I'm not receiving",
+    "user": {
+      "login": "lexermekongnet",
+      "id": 150870949,
+      "node_id": "U_kgDOCP4bpQ",
+      "avatar_url": "https://avatars.githubusercontent.com/u/150870949?v=4",
+      "gravatar_id": "",
+      "url": "https://api.github.com/users/lexermekongnet",
+      "html_url": "https://github.com/lexermekongnet",
+      "followers_url": "https://api.github.com/users/lexermekongnet/followers",
+      "following_url": "https://api.github.com/users/lexermekongnet/following{/other_user}",
+      "gists_url": "https://api.github.com/users/lexermekongnet/gists{/gist_id}",
+      "starred_url": "https://api.github.com/users/lexermekongnet/starred{/owner}{/repo}",
+      "subscriptions_url": "https://api.github.com/users/lexermekongnet/subscriptions",
+      "organizations_url": "https://api.github.com/users/lexermekongnet/orgs",
+      "repos_url": "https://api.github.com/users/lexermekongnet/repos",
+      "events_url": "https://api.github.com/users/lexermekongnet/events{/privacy}",
+      "received_events_url": "https://api.github.com/users/lexermekongnet/received_events",
+      "type": "User",
+      "user_view_type": "public",
+      "site_admin": false
+    },
+    "labels": [
+      {
+        "id": 952787941,
+        "node_id": "MDU6TGFiZWw5NTI3ODc5NDE=",
+        "url": "https://api.github.com/repos/eilvelia/tdl/labels/TDLib%20issue",
+        "name": "TDLib issue",
+        "color": "51bbf0",
+        "default": false,
+        "description": "The issue is related to TDLib (or Telegram) itself, not to the tdl bindings.",
+        "archived_at": null,
+        "archived_by": null
+      }
+    ],
+    "state": "open",
+    "locked": false,
+    "assignees": [],
+    "milestone": null,
+    "comments": 0,
+    "created_at": "2024-06-21T07:17:02Z",
+    "updated_at": "2024-06-21T08:34:44Z",
+    "closed_at": null,
+    "assignee": null,
+    "author_association": "NONE",
+    "active_lock_reason": null,
+    "sub_issues_summary": {
+      "total": 0,
+      "completed": 0,
+      "percent_completed": 0
+    },
+    "issue_dependencies_summary": {
+      "blocked_by": 0,
+      "total_blocked_by": 0,
+      "blocking": 0,
+      "total_blocking": 0
+    },
+    "body": "`\r\nimport dotenv from \"dotenv\";\r\nimport * as tdl from 'tdl';\r\nimport { getTdjson } from 'prebuilt-tdlib';\r\ndotenv.config();\r\n\r\nconst TELEGRAM_API_ID = process.env.TELEGRAM_API_ID ?? '0';\r\nconst TELEGRAM_API_HASH = process.env.TELEGRAM_API_HASH ?? '';\r\nconst TELEGRAM_PHONE = process.env.TELEGRAM_PHONE ?? '';\r\n\r\ntdl.configure({ tdjson: getTdjson() })\r\nconst client = tdl.createClient({\r\n    apiId: parseInt(TELEGRAM_API_ID), // Your api_id\r\n    apiHash: TELEGRAM_API_HASH // Your api_hash\r\n\r\n})\r\n\r\nclient.on('error', console.error)\r\n\r\nclient.on('update', async update => {\r\n    const { _ } = update\r\n    if (_ === 'updateNewChat') {\r\n        const { id, title } = update.chat\r\n        console.log(id, title)\r\n    }\r\n})\r\n\r\nexport async function startTelegramClient() {\r\n    await client.login({ getPhoneNumber: async () => TELEGRAM_PHONE })\r\n}\r\n`\r\n\r\nas the title suggest I am receiving updateNewChats but of random people who's not chatting with me",
+    "closed_by": null,
+    "reactions": {
+      "url": "https://api.github.com/repos/eilvelia/tdl/issues/160/reactions",
+      "total_count": 0,
+      "+1": 0,
+      "-1": 0,
+      "laugh": 0,
+      "hooray": 0,
+      "confused": 0,
+      "heart": 0,
+      "rocket": 0,
+      "eyes": 0
+    },
+    "timeline_url": "https://api.github.com/repos/eilvelia/tdl/issues/160/timeline",
+    "performed_via_github_app": null,
+    "state_reason": null,
+    "pinned_comment": null
+  },
+  "comments": [],
+  "capturedAt": "2026-10-28T21:19:52.577Z"
+}

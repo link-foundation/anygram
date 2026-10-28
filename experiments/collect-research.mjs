@@ -1,6 +1,7 @@
 // Run: node experiments/collect-research.mjs. Requires authenticated GitHub CLI.
 import { execFileSync } from 'node:child_process';
 import { writeFileSync } from 'node:fs';
+import { sanitizeResearch } from './research-redaction.mjs';
 
 const directory = 'docs/case-studies/issue-1/data';
 const repositories = [
@@ -26,10 +27,11 @@ const repositories = [
 ];
 
 function api(path) {
-  return execFileSync('gh', ['api', path, '--paginate'], {
+  const value = execFileSync('gh', ['api', path, '--paginate', '--slurp'], {
     encoding: 'utf8',
     maxBuffer: 32 * 1024 * 1024,
   });
+  return JSON.stringify(sanitizeResearch(JSON.parse(value).flat()), null, 2);
 }
 
 for (const repository of repositories) {
@@ -59,11 +61,16 @@ for (const repository of repositories) {
         encoding: 'utf8',
         maxBuffer: 32 * 1024 * 1024,
       });
-      writeFileSync(`${directory}/${name}-${suffix}`, result);
+      writeFileSync(
+        `${directory}/${name}-${suffix}`,
+        JSON.stringify(sanitizeResearch(JSON.parse(result)), null, 2)
+      );
       if (suffix === 'readme.json') {
         writeFileSync(
           `${directory}/${name}-README.md`,
-          Buffer.from(JSON.parse(result).content, 'base64')
+          sanitizeResearch(
+            Buffer.from(JSON.parse(result).content, 'base64').toString('utf8')
+          )
         );
       }
       console.log(`${repository}: ${suffix}`);
