@@ -110,3 +110,7 @@ Map all 198 public helpers from the pinned grammY API through one shared
 positional translator, preserving raw-object compatibility, aliases, inline
 routes, rich-message branches, poll normalization and request controls. Check
 regenerated method facts and declarations against actual SDK comparisons.
+
+Share all six query registration shortcuts and asynchronous scoped filters,
+preserving actual grammY string/regular-expression match values, trigger-array
+snapshots and query context aliases across selected bot transports.

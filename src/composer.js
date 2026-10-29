@@ -35,6 +35,14 @@ export class Composer {
         : next()
     );
   }
+  filter(predicate, ...middleware) {
+    const branch = new Composer(...middleware);
+    const run = branch.middleware();
+    this.use(async (ctx, next) =>
+      (await predicate(ctx)) ? run(ctx, next) : next()
+    );
+    return branch;
+  }
   command(commands, ...middleware) {
     const names = Array.isArray(commands) ? commands : [commands];
     const run = compose(middleware);
@@ -71,4 +79,49 @@ export class Composer {
   middleware() {
     return compose(this.handlers);
   }
+}
+
+function queryMatch(triggers, value) {
+  if (typeof value !== 'string') {
+    return null;
+  }
+  for (const trigger of triggers) {
+    const match =
+      typeof trigger === 'string'
+        ? value === trigger && trigger
+        : value.match(trigger);
+    if (match) {
+      return match;
+    }
+  }
+  return null;
+}
+
+// Query shortcuts share filtering, matching and the normal dispatch boundary.
+for (const signature of [
+  'callbackQuery callback_query data',
+  'gameQuery callback_query game_short_name',
+  'inlineQuery inline_query query',
+  'chosenInlineResult chosen_inline_result result_id',
+  'preCheckoutQuery pre_checkout_query invoice_payload',
+  'shippingQuery shipping_query invoice_payload',
+]) {
+  const [method, event, field] = signature.split(' ');
+  Composer.prototype[method] = function (trigger, ...middleware) {
+    if (Array.isArray(trigger) && trigger.length > 1000) {
+      throw new RangeError('Query trigger limit exceeded');
+    }
+    const triggers = Array.isArray(trigger) ? [...trigger] : [trigger];
+    return this.filter(
+      (ctx) => {
+        const match = queryMatch(triggers, ctx.update[event]?.[field]);
+        if (!match) {
+          return false;
+        }
+        ctx.match = match;
+        return true;
+      },
+      ...middleware
+    );
+  };
 }

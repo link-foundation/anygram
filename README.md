@@ -51,6 +51,12 @@ Unambiguous raw-object calls remain accepted; `.raw` accepts arbitrary payloads.
 See the [positional comparisons](docs/case-studies/issue-1/bot-positional-api.md)
 for the exact scope and current type-model limits.
 
+Query shortcuts such as `bot.callbackQuery('refresh').use(handler)` return a
+scoped composer. The six query shortcuts accept strings, regular expressions or
+arrays and share asynchronous `filter(predicate)` registration. See the
+[actual SDK comparisons](docs/case-studies/issue-1/bot-query-composer.md) and
+[checked example](examples/typed-bot-queries.ts).
+
 Register recovery with `bot.catch(({ error, ctx }) => ...)` for shared `Bot`
 and `TelegramBot` instances, or `telegraf.catch((error, ctx) => ...)` for the
 Telegraf view. Dispatch awaits the catcher before acknowledging an update or

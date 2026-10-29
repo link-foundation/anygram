@@ -610,3 +610,11 @@ all 974 core cases pass per runtime. Strict gates, 26 native integrations,
 two vendor wire cases and the FIFO probe pass, with zero clones across 87
 production sources and 130 permitted package entries. Full ecosystem, context,
 plugin and type-model parity remain open.
+
+The [query registration comparison](bot-query-composer.md) advances
+R01/R05/R13/R16/R17/R19. Nine original failures reproduce missing query shortcuts
+and filtering. Eleven composer cases compare all six actual grammY shortcuts,
+match values, expression flags, trigger-array snapshots, scoped chaining,
+asynchronous predicates, bounds and recovery. Four actual selected-backend HTTP
+cases cover callback acknowledgement/editing and update ownership. Broader filter,
+framework and type-model compatibility remain open.

@@ -723,3 +723,17 @@ Complete pinned grammY positional API work plan:
       cancellation, upload controls, runtime suites and strict/package gates.
 - [ ] Review the atomic diff, commit/push, verify fresh CI and continue all other
       open requirements without presenting this comparison set as full parity.
+
+Bot query registration work plan:
+
+- [x] Compare all six pinned grammY query registration shortcuts, trigger arrays,
+      exact string/RegExp matches and returned scoped composers before fixing.
+- [x] Share asynchronous filtering and query registration across bots/composers,
+      preserve existing action behavior and expose missing context aliases.
+- [x] Verify actual selected-backend HTTP callback acknowledgement/edit requests,
+      predicate failures, declaration examples and immutable update fields.
+- [x] Pass all 989 core tests per runtime, fifteen focused Node 20 cases,
+      strict static gates, 26 native checks, vendor wire/FIFO and package audit.
+- [ ] Pass focused/full runtime suites, strict static/package and integration
+      gates; review the diff, commit/push and inspect fresh CI by SHA/time.
+- [ ] Continue all remaining issue criteria in this draft, unmerged PR.

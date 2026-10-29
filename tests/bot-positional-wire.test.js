@@ -1,8 +1,8 @@
 import { it } from 'test-anywhere';
 import assert from 'node:assert/strict';
-import { gunzipSync } from 'node:zlib';
-import { Bot, createClient, InputFile } from '../src/index.js';
+import { Bot, InputFile } from '../src/index.js';
 import { uploadServer } from './fixtures/bot-upload-server.js';
+import { selectedBotClient, botRequestFields } from './fixtures/bot-client.js';
 
 const token = 'positional:fixture';
 const styles = ['native', 'grammy', 'telegraf', 'node-telegram-bot-api'];
@@ -55,48 +55,12 @@ const aliases = {
   editMessageCaptionInline: 'editMessageCaption',
 };
 
-function clientFor(backend, root) {
-  const clientOptions = {
-    grammy: { client: { apiRoot: root } },
-    telegraf: { telegram: { apiRoot: root } },
-    'node-telegram-bot-api': { apiRoot: root, maxRetries: 0 },
-  }[backend];
-  return createClient({
-    token,
-    backend,
-    native: backend === 'native',
-    libraries: backend === 'native' ? [] : [backend],
-    baseUrl: root,
-    clientOptions,
-    timeout: 2000,
-  });
-}
-
-function payload({ headers, body }) {
-  if (headers['content-encoding'] === 'gzip') {
-    body = gunzipSync(body, { maxOutputLength: 64 * 1024 });
-  }
-  if (headers['content-type'].includes('application/json')) {
-    return JSON.parse(body.toString());
-  }
-  assert.match(headers['content-type'], /application\/x-www-form-urlencoded/);
-  return Object.fromEntries(
-    [...new globalThis.URLSearchParams(body.toString())].map(([key, value]) => {
-      try {
-        return [key, JSON.parse(value)];
-      } catch {
-        return [key, value];
-      }
-    })
-  );
-}
-
 for (const backend of styles) {
   it(`sends positional, inline, alias and raw calls through actual ${backend} HTTP`, async () => {
     const server = await uploadServer({ maxRequests: cases.length });
     try {
       const bot = new Bot(token, {
-        api: await clientFor(backend, server.root),
+        api: await selectedBotClient(backend, server.root, token),
       });
       const reason = new Error('cancel before dispatch');
       await assert.rejects(
@@ -109,7 +73,7 @@ for (const backend of styles) {
         assert.equal(await bot.api[method](...args), true);
         const request = server.requests.at(-1);
         assert.equal(request.url.split('/').at(-1), aliases[method] ?? method);
-        assert.deepEqual(payload(request), expected);
+        assert.deepEqual(botRequestFields(request), expected);
         assert.deepEqual(args, before);
       }
       assert.equal(server.requests.length, cases.length);
@@ -119,7 +83,9 @@ for (const backend of styles) {
   });
 
   it(`bounds nested positional upload preparation before ${backend} dispatch`, async () => {
-    const bot = new Bot(token, { api: await clientFor(backend) });
+    const bot = new Bot(token, {
+      api: await selectedBotClient(backend, undefined, token),
+    });
     let release;
     const blocked = new Promise((resolve) => {
       release = resolve;

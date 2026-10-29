@@ -102,6 +102,15 @@ export class Context {
   get inlineQuery() {
     return this.update.inline_query;
   }
+  get chosenInlineResult() {
+    return this.update.chosen_inline_result;
+  }
+  get preCheckoutQuery() {
+    return this.update.pre_checkout_query;
+  }
+  get shippingQuery() {
+    return this.update.shipping_query;
+  }
   get msg() {
     return (
       this.message ??
@@ -118,14 +127,23 @@ export class Context {
     );
   }
   get from() {
-    return (
-      this.callbackQuery?.from ??
-      this.inlineQuery?.from ??
-      this.msg?.from ??
-      this.update.chat_member?.from ??
-      this.update.my_chat_member?.from ??
-      this.update.chat_join_request?.from
-    );
+    for (const source of [
+      this.callbackQuery,
+      this.inlineQuery,
+      this.chosenInlineResult,
+      this.preCheckoutQuery,
+      this.shippingQuery,
+      this.msg,
+      this.update.chat_member,
+      this.update.my_chat_member,
+      this.update.chat_join_request,
+    ]) {
+      const from = source?.from;
+      if (from !== undefined && from !== null) {
+        return from;
+      }
+    }
+    return undefined;
   }
   get chatId() {
     return this.chat?.id ?? this.update.business_connection?.user_chat_id;

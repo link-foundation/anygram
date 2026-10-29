@@ -592,10 +592,20 @@ export interface BotUpdate extends Parameters {
   callback_query?: {
     id: string;
     data?: string;
+    game_short_name?: string;
     message?: BotMessage;
     inline_message_id?: string;
     from?: Parameters;
   };
+  inline_query?: Parameters & { query: string; from?: Parameters };
+  chosen_inline_result?: Parameters & { result_id: string; from?: Parameters };
+  pre_checkout_query?: BotPaymentQuery;
+  shipping_query?: BotPaymentQuery;
+}
+export interface BotPaymentQuery extends Parameters {
+  id: string;
+  invoice_payload: string;
+  from?: Parameters;
 }
 export interface BotContextApi {
   raw: {
@@ -689,11 +699,15 @@ export declare class Context {
   me?: Parameters;
   readonly botInfo?: Parameters;
   state: Parameters;
-  match?: string | RegExpExecArray;
+  match?: string | RegExpMatchArray;
   readonly message?: BotMessage;
   readonly editedMessage?: BotMessage;
   readonly channelPost?: BotMessage;
   readonly callbackQuery?: BotUpdate['callback_query'];
+  readonly inlineQuery?: BotUpdate['inline_query'];
+  readonly chosenInlineResult?: BotUpdate['chosen_inline_result'];
+  readonly preCheckoutQuery?: BotUpdate['pre_checkout_query'];
+  readonly shippingQuery?: BotUpdate['shipping_query'];
   readonly msg?: BotMessage;
   readonly chat?: BotMessage['chat'];
   readonly chatId?: string | number | bigint;
@@ -810,6 +824,10 @@ export type MiddlewareLike<C extends Omit<Context, 'me'> = Context> =
 export type BotErrorHandler<C extends Omit<Context, 'me'> = Context> = (
   error: Error & { error: unknown; ctx: C }
 ) => unknown | Promise<unknown>;
+export type QueryTrigger = string | RegExp | readonly (string | RegExp)[];
+export type BotPredicate<C extends Omit<Context, 'me'> = Context> = (
+  ctx: C
+) => boolean | Promise<boolean>;
 export declare class Composer<C extends Omit<Context, 'me'> = Context> {
   constructor(...middleware: MiddlewareLike<C>[]);
   use(...middleware: MiddlewareLike<C>[]): this;
@@ -817,6 +835,31 @@ export declare class Composer<C extends Omit<Context, 'me'> = Context> {
   command(commands: string | string[], ...middleware: Middleware<C>[]): this;
   hears(pattern: string | RegExp, ...middleware: Middleware<C>[]): this;
   action(pattern: string | RegExp, ...middleware: Middleware<C>[]): this;
+  filter(
+    predicate: BotPredicate<C>,
+    ...middleware: Middleware<C>[]
+  ): Composer<C>;
+  callbackQuery(
+    trigger: QueryTrigger,
+    ...middleware: Middleware<C>[]
+  ): Composer<C>;
+  gameQuery(trigger: QueryTrigger, ...middleware: Middleware<C>[]): Composer<C>;
+  inlineQuery(
+    trigger: QueryTrigger,
+    ...middleware: Middleware<C>[]
+  ): Composer<C>;
+  chosenInlineResult(
+    trigger: QueryTrigger,
+    ...middleware: Middleware<C>[]
+  ): Composer<C>;
+  preCheckoutQuery(
+    trigger: QueryTrigger,
+    ...middleware: Middleware<C>[]
+  ): Composer<C>;
+  shippingQuery(
+    trigger: QueryTrigger,
+    ...middleware: Middleware<C>[]
+  ): Composer<C>;
   middleware(): Middleware<C>;
 }
 export declare class Bot<

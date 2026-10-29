@@ -25,6 +25,11 @@ translator. Actual public SDK comparisons and representative HTTP requests cover
 inline methods, aliases, polls, rich messages, raw-object compatibility and
 nested upload deadlines. Full framework and type-model parity remain open.
 
+The [query registration comparison](bot-query-composer.md) covers all six grammY
+query shortcuts, exact and regular-expression match values, asynchronous filters
+and returned scoped composers. Actual selected-backend HTTP cases acknowledge
+and edit callback messages without mutating their updates.
+
 Historical checkpoints below reported duplication-check exit status. A later
 investigation found the inherited configuration selected the nonexistent source
 format `console`, so those checks scanned no files. They did not establish
