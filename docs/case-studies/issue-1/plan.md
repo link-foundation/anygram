@@ -108,6 +108,17 @@ examples/. No live credentials or sessions may be included in research data.
 
 ## Next steps
 
+Current protocol work: integrate the tested PFS action state machine and key
+ring into the durable session, persist pending key fingerprints with sequence
+gaps, preserve exact cached ciphertext after key erasure, and pass the original
+DH parameters from initial handshakes. Reproduce automatic rotation, collisions,
+lost commits and transactional restart failures before implementing each path.
+
+The key-ring checkpoint passes all 297 tests on Node, Bun and Deno, strict
+lint/format/types and a zero-clone scan of 59 production files. PFS action
+head 0692634 passed all nine runtime/OS jobs and gates in run 40808138340,
+created 2026-10-29T02:44:27Z and completed 2026-10-29T02:46:14Z.
+
 Keep protocol completion (secret chats/call media/transports), complete backend
 return/event/style compatibility and actual downstream scenarios open in the
 ledger. Continue with transport resource/cancellation gaps and the shared bot

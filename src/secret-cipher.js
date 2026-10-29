@@ -1,6 +1,23 @@
 import { randomBytes } from 'node:crypto';
 import { hash, encryptAuthenticated, decryptAuthenticated } from './crypto.js';
 import { encryptLegacySecret, decryptLegacySecret } from './secret-legacy.js';
+import { TelegramError } from './errors.js';
+
+/** Authenticate before a separate sequence policy accepts either wire format. */
+export function decryptSecretVersions(ciphers, data) {
+  const failures = [];
+  for (const version of [2, 1]) {
+    try {
+      return { body: ciphers[version].decrypt(data), version };
+    } catch (error) {
+      failures.push(error);
+    }
+  }
+  throw new TelegramError('Invalid encrypted secret chat packet', {
+    type: 'SECRET_CHAT_BAD_PACKET',
+    cause: new globalThis.AggregateError(failures),
+  });
+}
 
 /** Secret-chat envelopes; sequencing, version negotiation and keys are separate. */
 export class SecretChatCipher {

@@ -906,3 +906,23 @@ All 290 tests pass on Node, Bun and Deno, alongside strict lint, formatting,
 full declaration/example checking and the zero-clone scan of 58 production
 files. The package dry run has 63 permitted entries. Fresh CI is required for
 the PFS action checkpoint.
+
+## Key retention through sequence gaps
+
+The key ring owns a current and optional previous generation. Authentication of
+an uninstalled candidate leaves active keys unchanged; accepted sequence frames
+establish the first new-key boundary. Previous-key frames at or beyond that
+boundary reject. Retirement requires new-key proof and closure of the preceding
+incoming gap, so a missing commit cannot erase keys needed by older frames.
+Original SHA-1/SHA-256 visualization prefixes survive retirement without keeping
+the original key. Retained outgoing ciphertext can remain in the resend cache
+after its encryption key is erased.
+
+Seven regressions cover both envelope versions, candidate authentication,
+sequence boundaries, bounded overlapping transitions, portable-state corruption,
+cached ciphertext and owned byte/hash copies. All 297 tests pass on Node, Bun
+and Deno with strict checks and no clones across 59 production files. The active
+session still requires automatic, durable integration of these primitives.
+
+PFS action head 0692634 passed every runtime/OS job and applicable gate in
+[run 40808138340](https://github.com/link-foundation/anygram/actions/runs/40808138340).

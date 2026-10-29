@@ -53,3 +53,10 @@ simultaneous exchanges, lost commits, cryptographic validation and usage/age
 thresholds. Real encrypted service frames verify the key-installation boundary.
 The clone scan covers 58 production files, and the package has 63 permitted
 entries. Automatic integration and gap-aware previous-key erasure remain open.
+
+The key-ring checkpoint adds seven regressions for authenticated candidate
+selection, old-key retention through gaps, downgrade boundaries, portable
+state, retained ciphertext and original visualization hashes. All 297 tests
+pass on Node, Bun and Deno; strict checks scan 59 production files with no
+clones. The ring owns at most two key generations and erases the previous one
+after ordered proof. Automatic durable session integration remains open.

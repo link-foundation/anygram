@@ -1,4 +1,4 @@
-import { SecretChatCipher } from './secret-cipher.js';
+import { SecretChatCipher, decryptSecretVersions } from './secret-cipher.js';
 import { SecretChatCodec } from './secret-codec.js';
 import { SecretChatSequence } from './secret-sequence.js';
 import { SecretChatLayers } from './secret-layers.js';
@@ -334,18 +334,7 @@ export class SecretSessionState {
   }
 
   decrypt(data) {
-    const failures = [];
-    for (const version of [2, 1]) {
-      try {
-        return { body: this.ciphers[version].decrypt(data), version };
-      } catch (error) {
-        failures.push(error);
-      }
-    }
-    throw new TelegramError('Invalid encrypted secret chat packet', {
-      type: 'SECRET_CHAT_BAD_PACKET',
-      cause: new globalThis.AggregateError(failures),
-    });
+    return decryptSecretVersions(this.ciphers, data);
   }
 
   receive(data) {

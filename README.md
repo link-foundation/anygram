@@ -329,6 +329,16 @@ see `examples/typed-secret-rekey.ts`. The active session does not yet invoke
 this policy automatically or retain/erase previous keys across gaps. Full PFS
 integration remains open.
 
+`SecretChatKeyRing` owns the current key and at most one previous generation.
+Authentication of a candidate does not install it. After sequence validation,
+`observe(fingerprint, counter)` records an accepted frame, excluding duplicates.
+`retire(incomingCounter)` erases the old key only after new-key proof and the
+preceding incoming gaps have closed. Downgrades across that boundary reject.
+Snapshots retain the original visualization hashes after old keys are erased.
+`decryptOutgoing()` returns `undefined` for ciphertext whose key is retired;
+applications may keep exact ciphertext for retransmission without keeping that
+key. These primitives still require transactional integration with the session.
+
 ## Select existing clients
 
 ```js

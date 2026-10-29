@@ -170,6 +170,60 @@ export type SecretChatRekeyPhase =
   | 'requesting'
   | 'accepted'
   | 'committed';
+/** Contains up to two private keys; use protected storage. */
+export interface SecretChatKeyRingState {
+  version: 1;
+  originator: boolean;
+  key: string;
+  previous: string | null;
+  visualization: string;
+  highestCurrentSequence: number;
+  highestPreviousSequence: number;
+  minimumCurrentSequence: number | null;
+  confirmed: boolean;
+  retiredFingerprint: string | null;
+}
+/** Key ownership and sequence cutovers; combine with authenticated sequence checks. */
+export declare class SecretChatKeyRing {
+  constructor(
+    options: (
+      | { key: Uint8Array; originator: boolean }
+      | { state: SecretChatKeyRingState }
+    ) & { maxBytes?: number }
+  );
+  readonly state: {
+    currentFingerprint: bigint;
+    previousFingerprint: bigint | null;
+    minimumCurrentSequence: number | null;
+    highestCurrentSequence: number;
+    highestPreviousSequence: number;
+    confirmed: boolean;
+    canRotate: boolean;
+  };
+  /** Original SHA-1 prefix (16 bytes) followed by SHA-256 prefix (20 bytes). */
+  readonly visualization: Uint8Array;
+  encrypt(body: Uint8Array, version?: 1 | 2): Uint8Array;
+  decrypt(
+    data: Uint8Array,
+    options?: { candidate?: Uint8Array }
+  ): {
+    body: Uint8Array;
+    version: 1 | 2;
+    fingerprint: bigint;
+    candidate: boolean;
+  };
+  /** Undefined when the packet's key was retired. */
+  decryptOutgoing(data: Uint8Array, version: 1 | 2): Uint8Array | undefined;
+  install(
+    key: Uint8Array,
+    options?: { boundary?: number | null; confirmed?: boolean }
+  ): bigint;
+  /** Accepted authenticated frames only, with counter indices rather than wire sequence values. */
+  observe(fingerprint: bigint, sequence: number): void;
+  retire(incoming: number): bigint | undefined;
+  exportState(): SecretChatKeyRingState;
+  destroy(): void;
+}
 /** Contains a pending exponent or shared key; use protected storage. */
 export interface SecretChatRekeyState {
   version: 1;
