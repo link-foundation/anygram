@@ -134,7 +134,9 @@ it('does not swallow environment read/write failures and can recover its save qu
     const path = join(directory, 'blocker');
     await writeFile(path, 'not a directory');
     const store = new FollowEnvironmentSessionStore(join(path, '.env'));
-    await assert.rejects(store.load());
+    // Windows reports ENOENT for a child of a regular file; use an existing
+    // directory to reproduce a read error consistently on every platform.
+    await assert.rejects(new FollowEnvironmentSessionStore(directory).load());
     await assert.rejects(store.save(session(8)));
     await rm(path);
     await store.save(session(9));
