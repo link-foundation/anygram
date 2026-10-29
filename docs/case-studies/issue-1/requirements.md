@@ -367,3 +367,33 @@ migration remain open, alongside all other unmet requirements.
 Fixed-integer head 036fa35 passed every applicable gate and all nine runtime/OS
 jobs in [run 40826739905](https://github.com/link-foundation/anygram/actions/runs/40826739905).
 Fresh CI is required for the account-style checkpoint.
+
+## Pinned follow application checkpoint
+
+The FollowClient example bridges configured account scopes to follow's application
+helper names. It normalizes vendor/native responses before unwrapping layer-232
+join results, preserves complete notification fields and qualifies cached dialog
+identity by peer kind and exact ID. Connection cancellation remains active when
+callers provide another signal; notification failures and exhausted cleanup
+causes propagate. Login callbacks and session storage use the shared factory
+and scope, rather than another connection or persistence implementation.
+
+Eight regressions execute both pinned application classes without rewriting their
+business logic. The batch covers existing/new public groups, private invites,
+approval, private message access, invalid hosts, mute and archive over actual
+GramJS/teleproto request and response constructors and native encrypted TCP.
+The join/list/leave class runs against shared operations, including basic-chat
+leave. Source hashes are checked before class extraction; CLI startup/imports
+are excluded and pacing is bounded/omitted. Separate failing-before assertions
+catch rounded numeric IDs and an overridden connection cancellation signal.
+
+All 447 tests pass on Node, Bun and Deno, with strict checks and zero clones
+across 73 production sources. The package dry run remains 78 permitted entries.
+Account-style head 821d810 passed all nine runtime/OS jobs and gates in
+[run 40828227547](https://github.com/link-foundation/anygram/actions/runs/40828227547),
+created 2026-10-29T06:16:33Z and completed 2026-10-29T06:18:22Z.
+Fresh CI is required for this bridge checkpoint. CLI arguments/Links Notation,
+cache input, prompts, standalone connection/session compatibility and controlled
+accounts remain open. The archived CLI's missing info/message methods and unsafe
+numeric private-link conversion need explicit migration; these tests do not
+claim those paths. All other unmet issue criteria remain unfinished.

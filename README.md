@@ -539,6 +539,15 @@ request options and cancellation reach the selected backend. These are plain
 data views; vendor custom model methods, drafts, array totals, legacy big-integer
 methods and `instanceof Api.*` behavior require the original `backend()` API.
 
+The [follow migration bridge](examples/follow-client.js) adapts a configured
+account to follow's application helpers, preserving owned connection cleanup,
+join-result shape, notification fields and exact peer identity. Regression tests
+execute its pinned follow batch and join/list/leave application classes against
+the bridge; native TCP and actual GramJS/teleproto constructors cover the batch.
+Pass login callbacks through `scope.start` and persistence through `createClient`.
+The bridge does not load or rewrite `.env`, prompt, or implement the upstream
+CLI flags. Those entry points and controlled-account validation remain open.
+
 ## Development and evidence
 
 Compose text with Telegram entities without parsing user input as markup:
