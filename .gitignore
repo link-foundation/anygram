@@ -141,3 +141,10 @@ vite.config.ts.timestamp-*
 # jscpd reports
 reports/
 ci-logs/
+
+# Community example credentials and durable message state
+/token
+/.community-posts.json
+/.community-account.session
+/.community-posts.json.*.tmp
+/.community-account.session.*.tmp

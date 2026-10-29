@@ -92,3 +92,8 @@ Share canonical bot identity, send, edit, delete, forward and document operation
 across all four bot transports. Separate cancellation/deadline controls from
 payload fields, preserve explicit object-message options, and retain grammY's
 zero-payload raw method signatures.
+
+Add a complete community-posting application example over selected bot and
+account transports, with durable scoped prompts, rate limits, publication
+reconciliation and publish-before-delete lifting. Own CLI polling, account
+connections and shutdown through cancellation and bounded local persistence.

@@ -635,7 +635,8 @@ Shared high-level bot operation work plan:
 - [x] Verify actual automatic SDK construction and finite local HTTP requests.
 - [x] Separate request controls and preserve explicit object-message options.
 - [x] Run 685 tests on all runtimes, Node 20 focused tests and strict gates.
-- [ ] Review the atomic diff, audit the package, commit/push and inspect fresh CI.
+- [x] Review the atomic diff, audit the package, commit/push and inspect fresh CI.
+      Bot checkpoint c3832f3 passed every job in run 40859500804.
 - [ ] Continue full backend/framework/downstream criteria; keep PR draft/unmerged.
 
 See [bot operation evidence](bot-operations.md). Node, Bun and Deno pass all 685
@@ -647,3 +648,20 @@ does not close any broader open criterion.
 Thirteen native terminal integrations, two actual Telegraf Node 20 multipart
 cases and the bounded Linux FIFO probe pass. The package audit has 127 permitted
 entries. Fresh main is an ancestor; every atomic production change was reviewed.
+
+Community posting work plan:
+
+- [x] Verify the complete pinned source and package against current upstream.
+- [x] Execute the original to reproduce cross-user capture, reset limits,
+      missing callback acknowledgements and deletion before replacement.
+- [x] Share bot/account transports in a complete posting/lifting example.
+- [x] Persist bounded per-user limits, prompts and delivery/cleanup state before
+      side effects; retain ambiguous deliveries without automatic replay.
+- [x] Use bounded account search, preserve originals on failed replacement and
+      verify restart, concurrency, errors, cancellation and listener cleanup.
+- [x] Run focused actual-backend/native transport cases and all runtime suites:
+      724 cases per runtime, plus 39 community cases on Node 20.18.3.
+- [x] Run strict static/package gates, 13 native terminal integrations, two
+      actual Telegraf Node 20 wire cases and the bounded FIFO probe.
+- [ ] Commit the reviewed atomic work, push and inspect fresh CI by SHA/time.
+- [ ] Continue every other open requirement; retain draft/unmerged status.

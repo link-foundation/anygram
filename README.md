@@ -692,6 +692,24 @@ CLI flags. Those entry points and controlled-account validation remain open.
 
 ## Development and evidence
 
+The [community posting example](examples/community-posts-cli.mjs) runs the
+original Russian menu, channel publication and lifting flow with independently
+selected bot and account transports:
+
+```sh
+node examples/community-posts-cli.mjs --help
+node examples/community-posts-cli.mjs --bot-backend grammy --account-backend gramjs
+```
+
+It retains the original `token` file and `community_posts` channel default;
+account search additionally needs authorized account API credentials. Prompts,
+24-hour limits and publication/cleanup intents persist across restarts.
+Replacements publish before old posts are deleted. `/cancel` removes pending
+input, and `/status` reconciles uncertain delivery without automatic replay.
+See [setup, bounds and verification](docs/case-studies/issue-1/community-posts.md)
+before running one process per token and journal. Local native/vendor evidence
+does not verify live channel permissions or Telegram search indexing.
+
 Compose text with Telegram entities without parsing user input as markup:
 
 ```js

@@ -1,7 +1,14 @@
 import { createServer } from 'node:http';
 
 /** Finite, account-free wire oracle for actual vendor multipart encoders. */
-export async function uploadServer({ trace = () => {} } = {}) {
+export async function uploadServer({
+  trace = () => {},
+  result = () => true,
+  maxRequests = 8,
+} = {}) {
+  if (!Number.isInteger(maxRequests) || maxRequests < 1 || maxRequests > 32) {
+    throw new RangeError('Invalid fixture request limit');
+  }
   const requests = [];
   const server = createServer((request, response) => {
     trace({
@@ -14,7 +21,7 @@ export async function uploadServer({ trace = () => {} } = {}) {
     request.on('data', (chunk) => {
       trace({ event: 'chunk', length: chunk.length });
       length += chunk.length;
-      if (length > 64 * 1024 || requests.length >= 8) {
+      if (length > 64 * 1024 || requests.length >= maxRequests) {
         request.destroy(new Error('Fixture upload limit exceeded'));
       } else {
         chunks.push(chunk);
@@ -26,13 +33,14 @@ export async function uploadServer({ trace = () => {} } = {}) {
     });
     request.on('end', () => {
       trace({ event: 'end', length });
-      requests.push({
+      const received = {
         url: request.url,
         headers: request.headers,
         body: Buffer.concat(chunks),
-      });
+      };
+      requests.push(received);
       response.setHeader('content-type', 'application/json');
-      response.end(JSON.stringify({ ok: true, result: true }));
+      response.end(JSON.stringify({ ok: true, result: result(received) }));
     });
   });
   server.requestTimeout = 5000;

@@ -7,6 +7,13 @@ superiority requested in [issue #1](https://github.com/link-foundation/anygram/i
 The [requirement ledger](requirements.md) keeps those acceptance criteria open.
 All work is in [PR #2](https://github.com/link-foundation/anygram/pull/2).
 
+The [community-posting migration](community-posts.md) retains the original
+menu and posting/lifting flow with separate selected bot/account transports.
+Durable limits, user/chat prompts, publication recovery and deferred deletion
+have original-source regressions, actual SDK HTTP/serializer comparisons and
+encrypted native account search. Controlled Telegram channel execution remains
+unverified.
+
 The [shared bot operation checkpoint](bot-operations.md) verifies identity, text
 send/edit, batch deletion/forwarding and document sends through all four actual
 bot transports. Fifteen regressions cover exact wire parameters, cancellation,
