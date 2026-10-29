@@ -31,6 +31,11 @@ const styles = {
     getParticipants: 'getChatMembers',
   },
 };
+const canonicalOperations = new Set([
+  'iterDialogs',
+  'checkChatInvite',
+  'getNotifySettings',
+]);
 
 function hasFormattedEntities(operation, args) {
   return (
@@ -123,7 +128,7 @@ export function createAdapter(
         adapter.supports('invoke') &&
         typeof operations[operation] === 'function' &&
         (style !== 'gramjs' ||
-          operation === 'iterDialogs' ||
+          canonicalOperations.has(operation) ||
           typeof client[method] !== 'function' ||
           hasFormattedEntities(operation, args))
       ) {

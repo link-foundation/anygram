@@ -169,6 +169,24 @@ resolve only through a previously loaded access hash and cannot grant membership
 join replies retain their wrapper and cache the nested peers for later settings.
 Approval errors and verification replies remain explicit server outcomes.
 
+`checkChatInvite(hash, options)` inspects a private invite without joining and
+caches an already-member or preview chat's access hash. `getNotifySettings(peer,
+options)` reads current preferences for a peer or a canonical `InputNotifyPeer`.
+`muteChat(peer, options)` sets `until` (Unix seconds, default 2147483647), optional
+`showPreviews`, `silent`, `sound`, `storiesMuted`, `storiesHideSender` and
+`storiesSound`. Explicit `false` and `until: 0` are preserved; omitted preferences
+remain absent from the request. Nested sound objects are copied before lookup.
+
+The [follow workflow](examples/follow-groups.js) scans existing groups, follows
+up to 1000 public/private links, optionally mutes and archives confirmed members,
+and provides group listing, recent history and leave helpers. Invite membership
+is checked after joining before applying settings. Results distinguish existing
+membership, accepted joins, approval requests and required verification, and
+retain completed settings if a later operation fails. Flood waits stop the batch
+by default; `continueOnFloodWait` processes later links without replaying or
+waiting on the failed operation. Capacity errors always stop. The application
+owns durable progress, deliberate retries and user interaction for verification.
+
 `Session` can import Anygram, GramJS/teleproto, and Telethon string sessions.
 Use `session.save('gramjs')` to export an authorized portable session for
 GramJS/teleproto. The optional client factory uses in-memory string sessions,

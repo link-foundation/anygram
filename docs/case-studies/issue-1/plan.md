@@ -108,15 +108,16 @@ examples/. No live credentials or sessions may be included in research data.
 
 ## Next steps
 
-Current protocol work: verify the expiry/history checkpoint, then exercise
-controlled-peer interoperability. Encrypted file references, application services,
-ordered TTL defaults and read-triggered lifetime metadata now have local
-regressions. Applications own transactional storage; the typed expiry example
-commits deletion with durable protocol/timer state and batches service IDs.
+Current downstream work: preserve the verified invite/notification and bounded
+follow workflow checkpoint, then complete its connection cleanup and wrapper/CLI
+migration. Use the immutable follow source and related cleanup review as the
+contract; reproduce failure handling before implementing it. Never overwrite a
+primary application failure with a cleanup failure. Controlled-account validation
+remains blocked without credentials; independent implementation work continues.
 
-The preceding service checkpoint passed 339 tests on Node, Bun and Deno and all
-strict checks. Its CI head ed1c457 is being verified in run 40817252237; check
-current status and exact head before citing it as passing.
+The workflow checkpoint passes 407 tests on each runtime and strict checks, with
+zero clones across 71 production sources and a 76-entry package dry run. All nine
+runtime/OS jobs and applicable gates passed for chat-link head b3a8f18 in run 40822942152. Commit/push the next step and verify its exact CI SHA and timestamps.
 
 Keep protocol completion (secret chats/call media/transports), complete backend
 return/event/style compatibility and actual downstream scenarios open in the
@@ -458,9 +459,13 @@ Downstream account workflow audit:
   Node/Bun/Deno with strict lint, formatting, types, zero clones across 70
   sources and a 75-entry package dry run. Actual clients and native TCP cover
   private import followed by settings; approval/verification outcomes stay explicit.
-- Next: add shared invite/notification inspection and complete the bounded follow
-  workflow scenario, including existing membership, approval, settings, leave,
-  private history and rate limits, without replaying side effects.
+- Added shared invite/notification inspection and the bounded follow workflow,
+  including exact private membership confirmation, existing groups, aliases,
+  approval/verification, settings, history, leave and rate-limit outcomes.
+  Nineteen regressions include batch/settings ownership failures, actual clients
+  and encrypted TCP; all 407 tests and strict checks pass on each runtime.
+- Next: connection cleanup that preserves original errors, followed by the
+  downstream wrapper/CLI migration and controlled-account evidence.
 - Continue all other unmet protocol/runtime/compatibility/downstream criteria.
   Controlled accounts and official-app-only passkeys remain externally blocked;
   independent implementation work remains available. Keep PR #2 draft/unmerged.

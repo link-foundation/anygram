@@ -5,6 +5,7 @@ import { randomId } from './random.js';
 import { mtprotoTextParams } from './formatting.js';
 import { iterateDialogs } from './dialogs.js';
 import { parseTelegramLink } from './chat-links.js';
+import { notificationOptions, notificationPeer } from './notifications.js';
 // Normalize raw client objects without changing exact IDs or byte buffers.
 export function normalize(value) {
   if (Array.isArray(value)) {
@@ -104,9 +105,11 @@ export class RpcOperations extends MediaOperations {
     }
     const entities = Array.isArray(result)
       ? result
-      : [...(result.users ?? []), ...(result.chats ?? [])];
+      : ['chatInviteAlready', 'chatInvitePeek'].includes(result._)
+        ? [result.chat]
+        : [...(result.users ?? []), ...(result.chats ?? [])];
     for (const entity of entities) {
-      const type = entity._?.replace(/Forbidden$/, '');
+      const type = entity?._?.replace(/Forbidden$/, '');
       if (!['user', 'chat', 'channel'].includes(type)) {
         continue;
       }
@@ -506,6 +509,23 @@ export class RpcOperations extends MediaOperations {
     );
   }
 
+  checkChatInvite(hash, options) {
+    if (typeof hash !== 'string' || !/^[a-zA-Z0-9_-]{1,4096}$/.test(hash)) {
+      throw new TypeError('Invalid invite hash');
+    }
+    return this.rpc('messages.checkChatInvite', { hash }, options);
+  }
+
+  async getNotifySettings(peer, options) {
+    return this.rpc(
+      'account.getNotifySettings',
+      {
+        peer: await notificationPeer(this, normalize(peer), options),
+      },
+      options
+    );
+  }
+
   async leaveChat(peer, options) {
     const input = await this.resolvePeer(peer, options);
     return input._ === 'inputPeerChat'
@@ -537,15 +557,14 @@ export class RpcOperations extends MediaOperations {
     );
   }
 
-  async muteChat(peer, { until = 2147483647, ...options } = {}) {
+  async muteChat(peer, input = {}) {
+    const { settings, options } = notificationOptions(input);
+    const ownedSettings = normalize(settings);
     return this.rpc(
       'account.updateNotifySettings',
       {
-        peer: {
-          _: 'inputNotifyPeer',
-          peer: await this.resolvePeer(peer, options),
-        },
-        settings: { _: 'inputPeerNotifySettings', mute_until: until },
+        peer: await notificationPeer(this, normalize(peer), options),
+        settings: ownedSettings,
       },
       options
     );

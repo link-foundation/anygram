@@ -1226,3 +1226,36 @@ required for the chat-link checkpoint. Full follow scenarios, complete migration
 controlled accounts, calls, remaining backends/runtimes and all other unmet
 requirements remain open. Issue comments and all three PR feedback streams were
 refreshed after the dialog commit and remain empty.
+
+Invite inspection and follow workflow checkpoint: shared `checkChatInvite`
+inspects without joining and caches exact already-member/preview entities.
+`getNotifySettings` accepts peers and canonical notification scopes. `muteChat`
+now preserves explicit false flags, unmute timestamps, sounds and story settings;
+nested preferences are owned before asynchronous peer lookup. Public declarations
+and the typed chat-link example cover the new methods and settings.
+
+`examples/follow-groups.js` executes a complete bounded batch over the shared
+client: dialog membership indexing, public aliases, private invite preflight and
+post-join confirmation, approval/verification outcomes, mute/archive, listing,
+recent history and leave. Settings target the confirmed peer, never an arbitrary
+chat included in updates. Accepted membership and completed settings remain
+visible when a later operation fails. The default stops on flood waits; an
+explicit continuation processes later destinations without replaying or sleeping.
+Capacity errors always stop. Caller mutations cannot expand a validated batch
+beyond 1000 links or change its requested settings while membership is loading.
+
+Nineteen new regressions include failing-before missing helpers, nested settings
+ownership, duplicate alias joins, malformed preflight and mutable batch bounds.
+Actual GramJS/teleproto constructors and replies, independent mtcute writer bytes,
+and encrypted native TCP cover invite confirmation and settings. A native test
+includes unrelated join-result chats and verifies the final settings peer.
+All 407 tests pass on Node, Bun and Deno, with strict lint, formatting, full types,
+zero clones across 71 production sources and 76 permitted package entries.
+
+Chat-link head b3a8f18 passed all nine runtime/OS jobs and applicable gates in
+[run 40822942152](https://github.com/link-foundation/anygram/actions/runs/40822942152),
+created 2026-10-29T05:21:39Z and completed 2026-10-29T05:23:24Z. Fresh CI is
+required for this workflow checkpoint. Follow's full wrapper/CLI migration,
+connection cleanup and controlled-account evidence remain open, together with
+all other unmet criteria. The latest issue/sub-issue inventory and all three
+PR feedback streams are empty. Main remains an ancestor of the branch.

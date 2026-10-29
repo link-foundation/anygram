@@ -141,6 +141,8 @@ for (const operation of [
   'searchMessages',
   'resolvePeer',
   'joinChat',
+  'checkChatInvite',
+  'getNotifySettings',
   'leaveChat',
   'archiveChat',
   'muteChat',

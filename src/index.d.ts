@@ -201,6 +201,15 @@ export declare function parseTelegramLink(
   input: string,
   options?: { domains?: readonly string[] }
 ): TelegramChatLink;
+export interface NotificationOptions extends RequestOptions {
+  until?: number;
+  showPreviews?: boolean;
+  silent?: boolean;
+  sound?: TlRequest;
+  storiesMuted?: boolean;
+  storiesHideSender?: boolean;
+  storiesSound?: TlRequest;
+}
 export declare class Anygram {
   constructor(options?: ClientOptions);
   adapters: Adapter[];
@@ -288,9 +297,14 @@ export declare class Anygram {
   ): Promise<Parameters[]>;
   resolvePeer(peer: unknown, options?: RequestOptions): Promise<TlRequest>;
   joinChat(peer: unknown, options?: RequestOptions): Promise<unknown>;
+  checkChatInvite(hash: string, options?: RequestOptions): Promise<TlRequest>;
+  getNotifySettings(
+    peer: unknown,
+    options?: RequestOptions
+  ): Promise<Parameters>;
   leaveChat(peer: unknown, options?: RequestOptions): Promise<unknown>;
   archiveChat(peer: unknown, options?: Parameters): Promise<unknown>;
-  muteChat(peer: unknown, options?: Parameters): Promise<unknown>;
+  muteChat(peer: unknown, options?: NotificationOptions): Promise<unknown>;
   addContact(peer: unknown, options?: Parameters): Promise<unknown>;
   saveSession(): Promise<string>;
   runUpdates(options?: RunUpdatesOptions): Promise<UpdateState | undefined>;
