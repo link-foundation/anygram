@@ -4,8 +4,12 @@ import type {
   TlObject,
   LongValue,
   FixedInteger,
+  ResolvablePeer,
 } from '../api-classes.js';
 export interface RootClasses7 {
+  ProfileTabLinks: TlClass<'ProfileTabLinks', 'ProfileTab', {}>;
+  ProfileTabGifs: TlClass<'ProfileTabGifs', 'ProfileTab', {}>;
+  InputChatThemeEmpty: TlClass<'InputChatThemeEmpty', 'InputChatTheme', {}>;
   InputChatTheme: TlClass<
     'InputChatTheme',
     'InputChatTheme',
@@ -311,7 +315,7 @@ export interface RootClasses7 {
       blocks: Array<TlObject<'PageBlock'>>;
       photos?: Array<TlObject<'InputPhoto'>>;
       documents?: Array<TlObject<'InputDocument'>>;
-      users?: Array<TlObject<'InputUser'>>;
+      users?: Array<ResolvablePeer<'InputUser'>>;
     }
   >;
   InputRichMessageHTML: TlClass<
@@ -439,7 +443,7 @@ export interface RootClasses7 {
       requestWriteAccess?: boolean;
       fwdText?: string;
       url: string;
-      bot?: TlObject<'InputUser'>;
+      bot?: ResolvablePeer<'InputUser'>;
     }
   >;
   InlineButtonTypeWebView: TlClass<
@@ -471,7 +475,7 @@ export interface RootClasses7 {
   InputInlineButtonTypeUserProfile: TlClass<
     'InputInlineButtonTypeUserProfile',
     'InlineButtonType',
-    { userId: TlObject<'InputUser'> }
+    { userId: ResolvablePeer<'InputUser'> }
   >;
   InlineButtonTypeCopy: TlClass<
     'InlineButtonTypeCopy',

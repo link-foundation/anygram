@@ -4,6 +4,7 @@ import type {
   TlObject,
   LongValue,
   FixedInteger,
+  ResolvablePeer,
 } from '../api-classes.js';
 export interface StickersClasses0 {
   CreateStickerSet: TlClass<
@@ -13,7 +14,7 @@ export interface StickersClasses0 {
       masks?: boolean;
       emojis?: boolean;
       textColor?: boolean;
-      userId: TlObject<'InputUser'>;
+      userId: ResolvablePeer<'InputUser'>;
       title: string;
       shortName: string;
       thumb?: TlObject<'InputDocument'>;

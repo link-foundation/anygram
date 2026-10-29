@@ -4,8 +4,14 @@ import type {
   TlObject,
   LongValue,
   FixedInteger,
+  ResolvablePeer,
 } from '../api-classes.js';
 export interface RootClasses6 {
+  ExportedChatlistInvite: TlClass<
+    'ExportedChatlistInvite',
+    'ExportedChatlistInvite',
+    { title: string; url: string; peers: Array<TlObject<'Peer'>> }
+  >;
   MessagePeerVote: TlClass<
     'MessagePeerVote',
     'MessagePeerVote',
@@ -110,11 +116,11 @@ export interface RootClasses6 {
     {
       replyToMsgId: number;
       topMsgId?: number;
-      replyToPeerId?: TlObject<'InputPeer'>;
+      replyToPeerId?: ResolvablePeer<'InputPeer'>;
       quoteText?: string;
       quoteEntities?: Array<TlObject<'MessageEntity'>>;
       quoteOffset?: number;
-      monoforumPeerId?: TlObject<'InputPeer'>;
+      monoforumPeerId?: ResolvablePeer<'InputPeer'>;
       todoItemId?: number;
       pollOption?: Uint8Array;
       quoteRich?: Array<TlObject<'RichText'>>;
@@ -123,12 +129,12 @@ export interface RootClasses6 {
   InputReplyToStory: TlClass<
     'InputReplyToStory',
     'InputReplyTo',
-    { peer: TlObject<'InputPeer'>; storyId: number }
+    { peer: ResolvablePeer<'InputPeer'>; storyId: number }
   >;
   InputReplyToMonoForum: TlClass<
     'InputReplyToMonoForum',
     'InputReplyTo',
-    { monoforumPeerId: TlObject<'InputPeer'> }
+    { monoforumPeerId: ResolvablePeer<'InputPeer'> }
   >;
   InputReplyToEphemeralMessage: TlClass<
     'InputReplyToEphemeralMessage',
@@ -212,7 +218,7 @@ export interface RootClasses6 {
     'MediaArea',
     {
       coordinates: TlObject<'MediaAreaCoordinates'>;
-      channel: TlObject<'InputChannel'>;
+      channel: ResolvablePeer<'InputChannel'>;
       msgId: number;
     }
   >;
@@ -428,7 +434,7 @@ export interface RootClasses6 {
       contacts?: boolean;
       nonContacts?: boolean;
       excludeSelected?: boolean;
-      users?: Array<TlObject<'InputUser'>>;
+      users?: Array<ResolvablePeer<'InputUser'>>;
     }
   >;
   BusinessRecipients: TlClass<
@@ -574,8 +580,8 @@ export interface RootClasses6 {
       contacts?: boolean;
       nonContacts?: boolean;
       excludeSelected?: boolean;
-      users?: Array<TlObject<'InputUser'>>;
-      excludeUsers?: Array<TlObject<'InputUser'>>;
+      users?: Array<ResolvablePeer<'InputUser'>>;
+      excludeUsers?: Array<ResolvablePeer<'InputUser'>>;
     }
   >;
   BusinessBotRecipients: TlClass<
@@ -1115,7 +1121,7 @@ export interface RootClasses6 {
   InputSavedStarGiftChat: TlClass<
     'InputSavedStarGiftChat',
     'InputSavedStarGift',
-    { peer: TlObject<'InputPeer'>; savedId: LongValue }
+    { peer: ResolvablePeer<'InputPeer'>; savedId: LongValue }
   >;
   InputSavedStarGiftSlug: TlClass<
     'InputSavedStarGiftSlug',
@@ -1135,7 +1141,7 @@ export interface RootClasses6 {
   PaidReactionPrivacyPeer: TlClass<
     'PaidReactionPrivacyPeer',
     'PaidReactionPrivacy',
-    { peer: TlObject<'InputPeer'> }
+    { peer: ResolvablePeer<'InputPeer'> }
   >;
   RequirementToContactEmpty: TlClass<
     'RequirementToContactEmpty',
@@ -1301,7 +1307,4 @@ export interface RootClasses6 {
   ProfileTabFiles: TlClass<'ProfileTabFiles', 'ProfileTab', {}>;
   ProfileTabMusic: TlClass<'ProfileTabMusic', 'ProfileTab', {}>;
   ProfileTabVoice: TlClass<'ProfileTabVoice', 'ProfileTab', {}>;
-  ProfileTabLinks: TlClass<'ProfileTabLinks', 'ProfileTab', {}>;
-  ProfileTabGifs: TlClass<'ProfileTabGifs', 'ProfileTab', {}>;
-  InputChatThemeEmpty: TlClass<'InputChatThemeEmpty', 'InputChatTheme', {}>;
 }

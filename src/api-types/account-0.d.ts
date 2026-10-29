@@ -4,6 +4,7 @@ import type {
   TlObject,
   LongValue,
   FixedInteger,
+  ResolvablePeer,
 } from '../api-classes.js';
 export interface AccountClasses0 {
   RegisterDevice: TlClass<
@@ -27,14 +28,14 @@ export interface AccountClasses0 {
     'account.UpdateNotifySettings',
     'Bool',
     {
-      peer: TlObject<'InputNotifyPeer'>;
+      peer: ResolvablePeer<'InputNotifyPeer'>;
       settings: TlObject<'InputPeerNotifySettings'>;
     }
   >;
   GetNotifySettings: TlClass<
     'account.GetNotifySettings',
     'PeerNotifySettings',
-    { peer: TlObject<'InputNotifyPeer'> }
+    { peer: ResolvablePeer<'InputNotifyPeer'> }
   >;
   ResetNotifySettings: TlClass<'account.ResetNotifySettings', 'Bool', {}>;
   UpdateProfile: TlClass<
@@ -52,7 +53,7 @@ export interface AccountClasses0 {
     'account.ReportPeer',
     'Bool',
     {
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       reason: TlObject<'ReportReason'>;
       message: string;
     }
@@ -252,7 +253,7 @@ export interface AccountClasses0 {
     {
       compareSound?: boolean;
       compareStories?: boolean;
-      peer?: TlObject<'InputNotifyPeer'>;
+      peer?: ResolvablePeer<'InputNotifyPeer'>;
     }
   >;
   GetWallPaper: TlClass<
@@ -388,7 +389,7 @@ export interface AccountClasses0 {
     'account.ReportProfilePhoto',
     'Bool',
     {
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       photoId: TlObject<'InputPhoto'>;
       reason: TlObject<'ReportReason'>;
       message: string;
@@ -487,7 +488,7 @@ export interface AccountClasses0 {
       users?: boolean;
       chats?: boolean;
       broadcasts?: boolean;
-      peer?: TlObject<'InputPeer'>;
+      peer?: ResolvablePeer<'InputPeer'>;
       settings: TlObject<'AutoSaveSettings'>;
     }
   >;
@@ -547,7 +548,7 @@ export interface AccountClasses0 {
     {
       deleted?: boolean;
       rights?: TlObject<'BusinessBotRights'>;
-      bot: TlObject<'InputUser'>;
+      bot: ResolvablePeer<'InputUser'>;
       recipients: TlObject<'InputBusinessBotRecipients'>;
     }
   >;
@@ -569,12 +570,12 @@ export interface AccountClasses0 {
   ToggleConnectedBotPaused: TlClass<
     'account.ToggleConnectedBotPaused',
     'Bool',
-    { peer: TlObject<'InputPeer'>; paused: boolean }
+    { peer: ResolvablePeer<'InputPeer'>; paused: boolean }
   >;
   DisablePeerConnectedBot: TlClass<
     'account.DisablePeerConnectedBot',
     'Bool',
-    { peer: TlObject<'InputPeer'> }
+    { peer: ResolvablePeer<'InputPeer'> }
   >;
   UpdateBirthday: TlClass<
     'account.UpdateBirthday',
@@ -609,7 +610,7 @@ export interface AccountClasses0 {
   UpdatePersonalChannel: TlClass<
     'account.UpdatePersonalChannel',
     'Bool',
-    { channel: TlObject<'InputChannel'> }
+    { channel: ResolvablePeer<'InputChannel'> }
   >;
   ToggleSponsoredMessages: TlClass<
     'account.ToggleSponsoredMessages',
@@ -634,7 +635,10 @@ export interface AccountClasses0 {
   GetPaidMessagesRevenue: TlClass<
     'account.GetPaidMessagesRevenue',
     'account.PaidMessagesRevenue',
-    { parentPeer?: TlObject<'InputPeer'>; userId: TlObject<'InputUser'> }
+    {
+      parentPeer?: ResolvablePeer<'InputPeer'>;
+      userId: ResolvablePeer<'InputUser'>;
+    }
   >;
   ToggleNoPaidMessagesException: TlClass<
     'account.ToggleNoPaidMessagesException',
@@ -642,8 +646,8 @@ export interface AccountClasses0 {
     {
       refundCharged?: boolean;
       requirePayment?: boolean;
-      parentPeer?: TlObject<'InputPeer'>;
-      userId: TlObject<'InputUser'>;
+      parentPeer?: ResolvablePeer<'InputPeer'>;
+      userId: ResolvablePeer<'InputUser'>;
     }
   >;
   SetMainProfileTab: TlClass<
@@ -685,7 +689,7 @@ export interface AccountClasses0 {
   ConfirmBotConnection: TlClass<
     'account.ConfirmBotConnection',
     'Bool',
-    { botId: TlObject<'InputUser'> }
+    { botId: ResolvablePeer<'InputUser'> }
   >;
   GetWebBrowserSettings: TlClass<
     'account.GetWebBrowserSettings',

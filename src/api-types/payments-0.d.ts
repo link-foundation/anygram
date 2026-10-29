@@ -4,6 +4,7 @@ import type {
   TlObject,
   LongValue,
   FixedInteger,
+  ResolvablePeer,
 } from '../api-classes.js';
 export interface PaymentsClasses0 {
   GetPaymentForm: TlClass<
@@ -14,7 +15,7 @@ export interface PaymentsClasses0 {
   GetPaymentReceipt: TlClass<
     'payments.GetPaymentReceipt',
     'payments.PaymentReceipt',
-    { peer: TlObject<'InputPeer'>; msgId: number }
+    { peer: ResolvablePeer<'InputPeer'>; msgId: number }
   >;
   ValidateRequestedInfo: TlClass<
     'payments.ValidateRequestedInfo',
@@ -69,7 +70,7 @@ export interface PaymentsClasses0 {
   GetPremiumGiftCodeOptions: TlClass<
     'payments.GetPremiumGiftCodeOptions',
     'Vector<PremiumGiftCodeOption>',
-    { boostPeer?: TlObject<'InputPeer'> }
+    { boostPeer?: ResolvablePeer<'InputPeer'> }
   >;
   CheckGiftCode: TlClass<
     'payments.CheckGiftCode',
@@ -80,13 +81,13 @@ export interface PaymentsClasses0 {
   GetGiveawayInfo: TlClass<
     'payments.GetGiveawayInfo',
     'payments.GiveawayInfo',
-    { peer: TlObject<'InputPeer'>; msgId: number }
+    { peer: ResolvablePeer<'InputPeer'>; msgId: number }
   >;
   LaunchPrepaidGiveaway: TlClass<
     'payments.LaunchPrepaidGiveaway',
     'Updates',
     {
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       giveawayId: LongValue;
       purpose: TlObject<'InputStorePaymentPurpose'>;
     }
@@ -99,7 +100,7 @@ export interface PaymentsClasses0 {
   GetStarsStatus: TlClass<
     'payments.GetStarsStatus',
     'payments.StarsStatus',
-    { ton?: boolean; peer: TlObject<'InputPeer'> }
+    { ton?: boolean; peer: ResolvablePeer<'InputPeer'> }
   >;
   GetStarsTransactions: TlClass<
     'payments.GetStarsTransactions',
@@ -110,7 +111,7 @@ export interface PaymentsClasses0 {
       ascending?: boolean;
       ton?: boolean;
       subscriptionId?: string;
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       offset: string;
       limit: number;
     }
@@ -123,19 +124,19 @@ export interface PaymentsClasses0 {
   RefundStarsCharge: TlClass<
     'payments.RefundStarsCharge',
     'Updates',
-    { userId: TlObject<'InputUser'>; chargeId: string }
+    { userId: ResolvablePeer<'InputUser'>; chargeId: string }
   >;
   GetStarsRevenueStats: TlClass<
     'payments.GetStarsRevenueStats',
     'payments.StarsRevenueStats',
-    { dark?: boolean; ton?: boolean; peer: TlObject<'InputPeer'> }
+    { dark?: boolean; ton?: boolean; peer: ResolvablePeer<'InputPeer'> }
   >;
   GetStarsRevenueWithdrawalUrl: TlClass<
     'payments.GetStarsRevenueWithdrawalUrl',
     'payments.StarsRevenueWithdrawalUrl',
     {
       ton?: boolean;
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       amount?: LongValue;
       password: TlObject<'InputCheckPasswordSRP'>;
     }
@@ -143,36 +144,44 @@ export interface PaymentsClasses0 {
   GetStarsRevenueAdsAccountUrl: TlClass<
     'payments.GetStarsRevenueAdsAccountUrl',
     'payments.StarsRevenueAdsAccountUrl',
-    { peer: TlObject<'InputPeer'> }
+    { peer: ResolvablePeer<'InputPeer'> }
   >;
   GetStarsTransactionsByID: TlClass<
     'payments.GetStarsTransactionsByID',
     'payments.StarsStatus',
     {
       ton?: boolean;
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       id: Array<TlObject<'InputStarsTransaction'>>;
     }
   >;
   GetStarsGiftOptions: TlClass<
     'payments.GetStarsGiftOptions',
     'Vector<StarsGiftOption>',
-    { userId?: TlObject<'InputUser'> }
+    { userId?: ResolvablePeer<'InputUser'> }
   >;
   GetStarsSubscriptions: TlClass<
     'payments.GetStarsSubscriptions',
     'payments.StarsStatus',
-    { missingBalance?: boolean; peer: TlObject<'InputPeer'>; offset: string }
+    {
+      missingBalance?: boolean;
+      peer: ResolvablePeer<'InputPeer'>;
+      offset: string;
+    }
   >;
   ChangeStarsSubscription: TlClass<
     'payments.ChangeStarsSubscription',
     'Bool',
-    { peer: TlObject<'InputPeer'>; subscriptionId: string; canceled?: boolean }
+    {
+      peer: ResolvablePeer<'InputPeer'>;
+      subscriptionId: string;
+      canceled?: boolean;
+    }
   >;
   FulfillStarsSubscription: TlClass<
     'payments.FulfillStarsSubscription',
     'Bool',
-    { peer: TlObject<'InputPeer'>; subscriptionId: string }
+    { peer: ResolvablePeer<'InputPeer'>; subscriptionId: string }
   >;
   GetStarsGiveawayOptions: TlClass<
     'payments.GetStarsGiveawayOptions',
@@ -197,13 +206,13 @@ export interface PaymentsClasses0 {
   BotCancelStarsSubscription: TlClass<
     'payments.BotCancelStarsSubscription',
     'Bool',
-    { restore?: boolean; userId: TlObject<'InputUser'>; chargeId: string }
+    { restore?: boolean; userId: ResolvablePeer<'InputUser'>; chargeId: string }
   >;
   GetConnectedStarRefBots: TlClass<
     'payments.GetConnectedStarRefBots',
     'payments.ConnectedStarRefBots',
     {
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       offsetDate?: number;
       offsetLink?: string;
       limit: number;
@@ -212,7 +221,7 @@ export interface PaymentsClasses0 {
   GetConnectedStarRefBot: TlClass<
     'payments.GetConnectedStarRefBot',
     'payments.ConnectedStarRefBots',
-    { peer: TlObject<'InputPeer'>; bot: TlObject<'InputUser'> }
+    { peer: ResolvablePeer<'InputPeer'>; bot: ResolvablePeer<'InputUser'> }
   >;
   GetSuggestedStarRefBots: TlClass<
     'payments.GetSuggestedStarRefBots',
@@ -220,7 +229,7 @@ export interface PaymentsClasses0 {
     {
       orderByRevenue?: boolean;
       orderByDate?: boolean;
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       offset: string;
       limit: number;
     }
@@ -228,12 +237,12 @@ export interface PaymentsClasses0 {
   ConnectStarRefBot: TlClass<
     'payments.ConnectStarRefBot',
     'payments.ConnectedStarRefBots',
-    { peer: TlObject<'InputPeer'>; bot: TlObject<'InputUser'> }
+    { peer: ResolvablePeer<'InputPeer'>; bot: ResolvablePeer<'InputUser'> }
   >;
   EditConnectedStarRefBot: TlClass<
     'payments.EditConnectedStarRefBot',
     'payments.ConnectedStarRefBots',
-    { revoked?: boolean; peer: TlObject<'InputPeer'>; link: string }
+    { revoked?: boolean; peer: ResolvablePeer<'InputPeer'>; link: string }
   >;
   GetStarGiftUpgradePreview: TlClass<
     'payments.GetStarGiftUpgradePreview',
@@ -248,7 +257,10 @@ export interface PaymentsClasses0 {
   TransferStarGift: TlClass<
     'payments.TransferStarGift',
     'Updates',
-    { stargift: TlObject<'InputSavedStarGift'>; toId: TlObject<'InputPeer'> }
+    {
+      stargift: TlObject<'InputSavedStarGift'>;
+      toId: ResolvablePeer<'InputPeer'>;
+    }
   >;
   GetUniqueStarGift: TlClass<
     'payments.GetUniqueStarGift',
@@ -268,7 +280,7 @@ export interface PaymentsClasses0 {
       excludeUnupgradable?: boolean;
       peerColorAvailable?: boolean;
       excludeHosted?: boolean;
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       collectionId?: number;
       offset: string;
       limit: number;
@@ -287,13 +299,13 @@ export interface PaymentsClasses0 {
   ToggleChatStarGiftNotifications: TlClass<
     'payments.ToggleChatStarGiftNotifications',
     'Bool',
-    { enabled?: boolean; peer: TlObject<'InputPeer'> }
+    { enabled?: boolean; peer: ResolvablePeer<'InputPeer'> }
   >;
   ToggleStarGiftsPinnedToTop: TlClass<
     'payments.ToggleStarGiftsPinnedToTop',
     'Bool',
     {
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       stargift: Array<TlObject<'InputSavedStarGift'>>;
     }
   >;
@@ -329,7 +341,7 @@ export interface PaymentsClasses0 {
     'payments.CreateStarGiftCollection',
     'StarGiftCollection',
     {
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       title: string;
       stargift: Array<TlObject<'InputSavedStarGift'>>;
     }
@@ -338,7 +350,7 @@ export interface PaymentsClasses0 {
     'payments.UpdateStarGiftCollection',
     'StarGiftCollection',
     {
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       collectionId: number;
       title?: string;
       deleteStargift?: Array<TlObject<'InputSavedStarGift'>>;
@@ -349,17 +361,17 @@ export interface PaymentsClasses0 {
   ReorderStarGiftCollections: TlClass<
     'payments.ReorderStarGiftCollections',
     'Bool',
-    { peer: TlObject<'InputPeer'>; order: Array<number> }
+    { peer: ResolvablePeer<'InputPeer'>; order: Array<number> }
   >;
   DeleteStarGiftCollection: TlClass<
     'payments.DeleteStarGiftCollection',
     'Bool',
-    { peer: TlObject<'InputPeer'>; collectionId: number }
+    { peer: ResolvablePeer<'InputPeer'>; collectionId: number }
   >;
   GetStarGiftCollections: TlClass<
     'payments.GetStarGiftCollections',
     'payments.StarGiftCollections',
-    { peer: TlObject<'InputPeer'>; hash: LongValue }
+    { peer: ResolvablePeer<'InputPeer'>; hash: LongValue }
   >;
   GetUniqueStarGiftValueInfo: TlClass<
     'payments.GetUniqueStarGiftValueInfo',
@@ -395,7 +407,7 @@ export interface PaymentsClasses0 {
     'payments.SendStarGiftOffer',
     'Updates',
     {
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       slug: string;
       price: TlObject<'StarsAmount'>;
       duration: number;
@@ -490,12 +502,12 @@ export interface PaymentsClasses0 {
   DepositStarGift: TlClass<
     'payments.DepositStarGift',
     'payments.StarGiftDepositPayload',
-    { hideSender?: boolean; peer: TlObject<'InputPeer'>; slug: string }
+    { hideSender?: boolean; peer: ResolvablePeer<'InputPeer'>; slug: string }
   >;
   DisplayStarGift: TlClass<
     'payments.DisplayStarGift',
     'Bool',
-    { peer?: TlObject<'InputPeer'>; slug: string }
+    { peer?: ResolvablePeer<'InputPeer'>; slug: string }
   >;
   DeleteStarGift: TlClass<
     'payments.DeleteStarGift',

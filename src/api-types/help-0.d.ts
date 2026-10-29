@@ -4,6 +4,7 @@ import type {
   TlObject,
   LongValue,
   FixedInteger,
+  ResolvablePeer,
 } from '../api-classes.js';
 export interface HelpClasses0 {
   GetConfig: TlClass<'help.GetConfig', 'Config', {}>;
@@ -60,13 +61,13 @@ export interface HelpClasses0 {
   GetUserInfo: TlClass<
     'help.GetUserInfo',
     'help.UserInfo',
-    { userId: TlObject<'InputUser'> }
+    { userId: ResolvablePeer<'InputUser'> }
   >;
   EditUserInfo: TlClass<
     'help.EditUserInfo',
     'help.UserInfo',
     {
-      userId: TlObject<'InputUser'>;
+      userId: ResolvablePeer<'InputUser'>;
       message: string;
       entities: Array<TlObject<'MessageEntity'>>;
     }
@@ -75,12 +76,12 @@ export interface HelpClasses0 {
   HidePromoData: TlClass<
     'help.HidePromoData',
     'Bool',
-    { peer: TlObject<'InputPeer'> }
+    { peer: ResolvablePeer<'InputPeer'> }
   >;
   DismissSuggestion: TlClass<
     'help.DismissSuggestion',
     'Bool',
-    { peer: TlObject<'InputPeer'>; suggestion: string }
+    { peer: ResolvablePeer<'InputPeer'>; suggestion: string }
   >;
   GetCountriesList: TlClass<
     'help.GetCountriesList',

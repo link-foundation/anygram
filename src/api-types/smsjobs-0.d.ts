@@ -4,6 +4,7 @@ import type {
   TlObject,
   LongValue,
   FixedInteger,
+  ResolvablePeer,
 } from '../api-classes.js';
 export interface SmsjobsClasses0 {
   IsEligibleToJoin: TlClass<

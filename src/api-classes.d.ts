@@ -3,9 +3,27 @@ export type LegacyInteger =
   | { toString(): string; toJSNumber(): number }
   | { readonly __isLong__: true; toString(): string };
 export type LongValue = bigint | number | string | LegacyInteger;
+export type ResolvablePeer<Type extends string> =
+  | string
+  | number
+  | bigint
+  | LegacyInteger
+  | TlObject<
+      | Type
+      | 'Peer'
+      | 'User'
+      | 'Chat'
+      | 'InputPeer'
+      | 'InputUser'
+      | 'InputChannel'
+    >;
+export type ResolutionOptions = { signal?: AbortSignal };
+export interface PeerResolver {
+  getInputEntity(peer: unknown, options?: ResolutionOptions): Promise<unknown>;
+}
 export type FixedInteger = bigint | Uint8Array | LegacyInteger;
 
-/** Schema class data; vendor resolution/custom model methods are separate. */
+/** Schema class data with shared peer resolution; vendor custom models are separate. */
 export interface TlObject<
   Type extends string = string,
   Name extends string = string,
@@ -16,6 +34,7 @@ export interface TlObject<
   CONSTRUCTOR_ID: number;
   SUBCLASS_OF_ID: number;
   originalArgs: Record<string, unknown>;
+  resolve(client: PeerResolver, options?: ResolutionOptions): Promise<void>;
   getBytes(): Uint8Array;
   toJSON(): Record<string, unknown>;
   [key: string]: unknown;

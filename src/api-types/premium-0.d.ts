@@ -4,6 +4,7 @@ import type {
   TlObject,
   LongValue,
   FixedInteger,
+  ResolvablePeer,
 } from '../api-classes.js';
 export interface PremiumClasses0 {
   GetBoostsList: TlClass<
@@ -11,7 +12,7 @@ export interface PremiumClasses0 {
     'premium.BoostsList',
     {
       gifts?: boolean;
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       offset: string;
       limit: number;
     }
@@ -20,17 +21,17 @@ export interface PremiumClasses0 {
   ApplyBoost: TlClass<
     'premium.ApplyBoost',
     'premium.MyBoosts',
-    { slots?: Array<number>; peer: TlObject<'InputPeer'> }
+    { slots?: Array<number>; peer: ResolvablePeer<'InputPeer'> }
   >;
   GetBoostsStatus: TlClass<
     'premium.GetBoostsStatus',
     'premium.BoostsStatus',
-    { peer: TlObject<'InputPeer'> }
+    { peer: ResolvablePeer<'InputPeer'> }
   >;
   GetUserBoosts: TlClass<
     'premium.GetUserBoosts',
     'premium.BoostsList',
-    { peer: TlObject<'InputPeer'>; userId: TlObject<'InputUser'> }
+    { peer: ResolvablePeer<'InputPeer'>; userId: ResolvablePeer<'InputUser'> }
   >;
   BoostsList: TlClass<
     'premium.BoostsList',

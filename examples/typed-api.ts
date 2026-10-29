@@ -23,10 +23,22 @@ export function checkConstructorTypes() {
   new Api.users.MissingMethod();
   // @ts-expect-error Required vector argument is absent.
   new Api.users.GetUsers();
-  // @ts-expect-error InputPeer does not satisfy the InputUser TL type.
-  new Api.users.GetUsers({ id: [new Api.InputPeerSelf()] });
+  new Api.users.GetUsers({
+    // @ts-expect-error A file is not a resolvable peer.
+    id: [new Api.InputFile({ id: 7n, parts: 1, name: 'x', md5Checksum: '' })],
+  });
   // @ts-expect-error CamelCase field names are checked.
   new Api.InputPeerUser({ user_id: 7n, accessHash: 17n });
   // @ts-expect-error TL strings do not accept integers.
   new Api.messages.SendMessage({ peer: new Api.InputPeerSelf(), message: 7 });
+}
+
+export async function sendWithUsername(client: Anygram) {
+  const request = new Api.messages.SendMessage({
+    peer: '@alice',
+    message: 'Hello',
+    sendAs: 'me',
+  });
+  await request.resolve(client);
+  return client.invoke(request);
 }

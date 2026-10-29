@@ -4,6 +4,7 @@ import type {
   TlObject,
   LongValue,
   FixedInteger,
+  ResolvablePeer,
 } from '../api-classes.js';
 export interface BotsClasses0 {
   SendCustomRequest: TlClass<
@@ -38,12 +39,12 @@ export interface BotsClasses0 {
   SetBotMenuButton: TlClass<
     'bots.SetBotMenuButton',
     'Bool',
-    { userId: TlObject<'InputUser'>; button: TlObject<'BotMenuButton'> }
+    { userId: ResolvablePeer<'InputUser'>; button: TlObject<'BotMenuButton'> }
   >;
   GetBotMenuButton: TlClass<
     'bots.GetBotMenuButton',
     'BotMenuButton',
-    { userId: TlObject<'InputUser'> }
+    { userId: ResolvablePeer<'InputUser'> }
   >;
   SetBotBroadcastDefaultAdminRights: TlClass<
     'bots.SetBotBroadcastDefaultAdminRights',
@@ -59,7 +60,7 @@ export interface BotsClasses0 {
     'bots.SetBotInfo',
     'Bool',
     {
-      bot?: TlObject<'InputUser'>;
+      bot?: ResolvablePeer<'InputUser'>;
       langCode: string;
       name?: string;
       about?: string;
@@ -69,33 +70,33 @@ export interface BotsClasses0 {
   GetBotInfo: TlClass<
     'bots.GetBotInfo',
     'bots.BotInfo',
-    { bot?: TlObject<'InputUser'>; langCode: string }
+    { bot?: ResolvablePeer<'InputUser'>; langCode: string }
   >;
   ReorderUsernames: TlClass<
     'bots.ReorderUsernames',
     'Bool',
-    { bot: TlObject<'InputUser'>; order: Array<string> }
+    { bot: ResolvablePeer<'InputUser'>; order: Array<string> }
   >;
   ToggleUsername: TlClass<
     'bots.ToggleUsername',
     'Bool',
-    { bot: TlObject<'InputUser'>; username: string; active: boolean }
+    { bot: ResolvablePeer<'InputUser'>; username: string; active: boolean }
   >;
   CanSendMessage: TlClass<
     'bots.CanSendMessage',
     'Bool',
-    { bot: TlObject<'InputUser'> }
+    { bot: ResolvablePeer<'InputUser'> }
   >;
   AllowSendMessage: TlClass<
     'bots.AllowSendMessage',
     'Updates',
-    { bot: TlObject<'InputUser'> }
+    { bot: ResolvablePeer<'InputUser'> }
   >;
   InvokeWebViewCustomMethod: TlClass<
     'bots.InvokeWebViewCustomMethod',
     'DataJSON',
     {
-      bot: TlObject<'InputUser'>;
+      bot: ResolvablePeer<'InputUser'>;
       customMethod: string;
       params: TlObject<'DataJSON'>;
     }
@@ -109,7 +110,7 @@ export interface BotsClasses0 {
     'bots.AddPreviewMedia',
     'BotPreviewMedia',
     {
-      bot: TlObject<'InputUser'>;
+      bot: ResolvablePeer<'InputUser'>;
       langCode: string;
       media: TlObject<'InputMedia'>;
     }
@@ -118,7 +119,7 @@ export interface BotsClasses0 {
     'bots.EditPreviewMedia',
     'BotPreviewMedia',
     {
-      bot: TlObject<'InputUser'>;
+      bot: ResolvablePeer<'InputUser'>;
       langCode: string;
       media: TlObject<'InputMedia'>;
       newMedia: TlObject<'InputMedia'>;
@@ -128,7 +129,7 @@ export interface BotsClasses0 {
     'bots.DeletePreviewMedia',
     'Bool',
     {
-      bot: TlObject<'InputUser'>;
+      bot: ResolvablePeer<'InputUser'>;
       langCode: string;
       media: Array<TlObject<'InputMedia'>>;
     }
@@ -137,7 +138,7 @@ export interface BotsClasses0 {
     'bots.ReorderPreviewMedias',
     'Bool',
     {
-      bot: TlObject<'InputUser'>;
+      bot: ResolvablePeer<'InputUser'>;
       langCode: string;
       order: Array<TlObject<'InputMedia'>>;
     }
@@ -145,34 +146,37 @@ export interface BotsClasses0 {
   GetPreviewInfo: TlClass<
     'bots.GetPreviewInfo',
     'bots.PreviewInfo',
-    { bot: TlObject<'InputUser'>; langCode: string }
+    { bot: ResolvablePeer<'InputUser'>; langCode: string }
   >;
   GetPreviewMedias: TlClass<
     'bots.GetPreviewMedias',
     'Vector<BotPreviewMedia>',
-    { bot: TlObject<'InputUser'> }
+    { bot: ResolvablePeer<'InputUser'> }
   >;
   UpdateUserEmojiStatus: TlClass<
     'bots.UpdateUserEmojiStatus',
     'Bool',
-    { userId: TlObject<'InputUser'>; emojiStatus: TlObject<'EmojiStatus'> }
+    {
+      userId: ResolvablePeer<'InputUser'>;
+      emojiStatus: TlObject<'EmojiStatus'>;
+    }
   >;
   ToggleUserEmojiStatusPermission: TlClass<
     'bots.ToggleUserEmojiStatusPermission',
     'Bool',
-    { bot: TlObject<'InputUser'>; enabled: boolean }
+    { bot: ResolvablePeer<'InputUser'>; enabled: boolean }
   >;
   CheckDownloadFileParams: TlClass<
     'bots.CheckDownloadFileParams',
     'Bool',
-    { bot: TlObject<'InputUser'>; fileName: string; url: string }
+    { bot: ResolvablePeer<'InputUser'>; fileName: string; url: string }
   >;
   GetAdminedBots: TlClass<'bots.GetAdminedBots', 'Vector<User>', {}>;
   UpdateStarRefProgram: TlClass<
     'bots.UpdateStarRefProgram',
     'StarRefProgram',
     {
-      bot: TlObject<'InputUser'>;
+      bot: ResolvablePeer<'InputUser'>;
       commissionPermille: number;
       durationMonths?: number;
     }
@@ -182,15 +186,15 @@ export interface BotsClasses0 {
     'Bool',
     {
       enabled?: boolean;
-      bot?: TlObject<'InputUser'>;
-      peer: TlObject<'InputPeer'>;
+      bot?: ResolvablePeer<'InputUser'>;
+      peer: ResolvablePeer<'InputPeer'>;
       customDescription?: TlObject<'TextWithEntities'>;
     }
   >;
   GetBotRecommendations: TlClass<
     'bots.GetBotRecommendations',
     'users.Users',
-    { bot: TlObject<'InputUser'> }
+    { bot: ResolvablePeer<'InputUser'> }
   >;
   CheckUsername: TlClass<
     'bots.CheckUsername',
@@ -204,36 +208,36 @@ export interface BotsClasses0 {
       viaDeeplink?: boolean;
       name: string;
       username: string;
-      managerId: TlObject<'InputUser'>;
+      managerId: ResolvablePeer<'InputUser'>;
     }
   >;
   ExportBotToken: TlClass<
     'bots.ExportBotToken',
     'bots.ExportedBotToken',
-    { bot: TlObject<'InputUser'>; revoke: boolean }
+    { bot: ResolvablePeer<'InputUser'>; revoke: boolean }
   >;
   RequestWebViewButton: TlClass<
     'bots.RequestWebViewButton',
     'bots.RequestedButton',
-    { userId: TlObject<'InputUser'>; button: TlObject<'KeyboardButton'> }
+    { userId: ResolvablePeer<'InputUser'>; button: TlObject<'KeyboardButton'> }
   >;
   GetRequestedWebViewButton: TlClass<
     'bots.GetRequestedWebViewButton',
     'KeyboardButton',
-    { bot: TlObject<'InputUser'>; webappReqId: string }
+    { bot: ResolvablePeer<'InputUser'>; webappReqId: string }
   >;
   GetAccessSettings: TlClass<
     'bots.GetAccessSettings',
     'bots.AccessSettings',
-    { bot: TlObject<'InputUser'> }
+    { bot: ResolvablePeer<'InputUser'> }
   >;
   EditAccessSettings: TlClass<
     'bots.EditAccessSettings',
     'Bool',
     {
       restricted?: boolean;
-      bot: TlObject<'InputUser'>;
-      addUsers?: Array<TlObject<'InputUser'>>;
+      bot: ResolvablePeer<'InputUser'>;
+      addUsers?: Array<ResolvablePeer<'InputUser'>>;
     }
   >;
   SetJoinChatResults: TlClass<
@@ -244,12 +248,12 @@ export interface BotsClasses0 {
   AddUsername: TlClass<
     'bots.AddUsername',
     'Bool',
-    { bot: TlObject<'InputUser'>; username: string }
+    { bot: ResolvablePeer<'InputUser'>; username: string }
   >;
   RemoveUsername: TlClass<
     'bots.RemoveUsername',
     'Bool',
-    { bot: TlObject<'InputUser'>; username: string }
+    { bot: ResolvablePeer<'InputUser'>; username: string }
   >;
   BotInfo: TlClass<
     'bots.BotInfo',

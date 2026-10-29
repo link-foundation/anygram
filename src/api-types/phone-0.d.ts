@@ -4,6 +4,7 @@ import type {
   TlObject,
   LongValue,
   FixedInteger,
+  ResolvablePeer,
 } from '../api-classes.js';
 export interface PhoneClasses0 {
   GetCallConfig: TlClass<'phone.GetCallConfig', 'DataJSON', {}>;
@@ -12,7 +13,7 @@ export interface PhoneClasses0 {
     'phone.PhoneCall',
     {
       video?: boolean;
-      userId: TlObject<'InputUser'>;
+      userId: ResolvablePeer<'InputUser'>;
       randomId: number;
       gAHash: Uint8Array;
       protocol: TlObject<'PhoneCallProtocol'>;
@@ -79,7 +80,7 @@ export interface PhoneClasses0 {
     'Updates',
     {
       rtmpStream?: boolean;
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       randomId: number;
       title?: string;
       scheduleDate?: number;
@@ -93,7 +94,7 @@ export interface PhoneClasses0 {
       muted?: boolean;
       videoStopped?: boolean;
       call: TlObject<'InputGroupCall'>;
-      joinAs: TlObject<'InputPeer'>;
+      joinAs: ResolvablePeer<'InputPeer'>;
       inviteHash?: string;
       publicKey?: FixedInteger;
       block?: Uint8Array;
@@ -108,7 +109,10 @@ export interface PhoneClasses0 {
   InviteToGroupCall: TlClass<
     'phone.InviteToGroupCall',
     'Updates',
-    { call: TlObject<'InputGroupCall'>; users: Array<TlObject<'InputUser'>> }
+    {
+      call: TlObject<'InputGroupCall'>;
+      users: Array<ResolvablePeer<'InputUser'>>;
+    }
   >;
   DiscardGroupCall: TlClass<
     'phone.DiscardGroupCall',
@@ -136,7 +140,7 @@ export interface PhoneClasses0 {
     'phone.GroupParticipants',
     {
       call: TlObject<'InputGroupCall'>;
-      ids: Array<TlObject<'InputPeer'>>;
+      ids: Array<ResolvablePeer<'InputPeer'>>;
       sources: Array<number>;
       offset: string;
       limit: number;
@@ -163,7 +167,7 @@ export interface PhoneClasses0 {
     'Updates',
     {
       call: TlObject<'InputGroupCall'>;
-      participant: TlObject<'InputPeer'>;
+      participant: ResolvablePeer<'InputPeer'>;
       muted?: boolean;
       volume?: number;
       raiseHand?: boolean;
@@ -180,7 +184,7 @@ export interface PhoneClasses0 {
   GetGroupCallJoinAs: TlClass<
     'phone.GetGroupCallJoinAs',
     'phone.JoinAsPeers',
-    { peer: TlObject<'InputPeer'> }
+    { peer: ResolvablePeer<'InputPeer'> }
   >;
   ExportGroupCallInvite: TlClass<
     'phone.ExportGroupCallInvite',
@@ -200,7 +204,7 @@ export interface PhoneClasses0 {
   SaveDefaultGroupCallJoinAs: TlClass<
     'phone.SaveDefaultGroupCallJoinAs',
     'Bool',
-    { peer: TlObject<'InputPeer'>; joinAs: TlObject<'InputPeer'> }
+    { peer: ResolvablePeer<'InputPeer'>; joinAs: ResolvablePeer<'InputPeer'> }
   >;
   JoinGroupCallPresentation: TlClass<
     'phone.JoinGroupCallPresentation',
@@ -220,7 +224,7 @@ export interface PhoneClasses0 {
   GetGroupCallStreamRtmpUrl: TlClass<
     'phone.GetGroupCallStreamRtmpUrl',
     'phone.GroupCallStreamRtmpUrl',
-    { liveStory?: boolean; peer: TlObject<'InputPeer'>; revoke: boolean }
+    { liveStory?: boolean; peer: ResolvablePeer<'InputPeer'>; revoke: boolean }
   >;
   SaveCallLog: TlClass<
     'phone.SaveCallLog',
@@ -263,7 +267,7 @@ export interface PhoneClasses0 {
     {
       video?: boolean;
       call: TlObject<'InputGroupCall'>;
-      userId: TlObject<'InputUser'>;
+      userId: ResolvablePeer<'InputUser'>;
     }
   >;
   DeclineConferenceCallInvite: TlClass<
@@ -289,7 +293,7 @@ export interface PhoneClasses0 {
       randomId: LongValue;
       message: TlObject<'TextWithEntities'>;
       allowPaidStars?: LongValue;
-      sendAs?: TlObject<'InputPeer'>;
+      sendAs?: ResolvablePeer<'InputPeer'>;
     },
     'randomId'
   >;
@@ -313,7 +317,7 @@ export interface PhoneClasses0 {
     {
       reportSpam?: boolean;
       call: TlObject<'InputGroupCall'>;
-      participant: TlObject<'InputPeer'>;
+      participant: ResolvablePeer<'InputPeer'>;
     }
   >;
   GetGroupCallStars: TlClass<
@@ -324,7 +328,7 @@ export interface PhoneClasses0 {
   SaveDefaultSendAs: TlClass<
     'phone.SaveDefaultSendAs',
     'Bool',
-    { call: TlObject<'InputGroupCall'>; sendAs: TlObject<'InputPeer'> }
+    { call: TlObject<'InputGroupCall'>; sendAs: ResolvablePeer<'InputPeer'> }
   >;
   PhoneCall: TlClass<
     'phone.PhoneCall',

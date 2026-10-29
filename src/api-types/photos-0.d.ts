@@ -4,6 +4,7 @@ import type {
   TlObject,
   LongValue,
   FixedInteger,
+  ResolvablePeer,
 } from '../api-classes.js';
 export interface PhotosClasses0 {
   UpdateProfilePhoto: TlClass<
@@ -11,7 +12,7 @@ export interface PhotosClasses0 {
     'photos.Photo',
     {
       fallback?: boolean;
-      bot?: TlObject<'InputUser'>;
+      bot?: ResolvablePeer<'InputUser'>;
       id: TlObject<'InputPhoto'>;
     }
   >;
@@ -20,7 +21,7 @@ export interface PhotosClasses0 {
     'photos.Photo',
     {
       fallback?: boolean;
-      bot?: TlObject<'InputUser'>;
+      bot?: ResolvablePeer<'InputUser'>;
       file?: TlObject<'InputFile'>;
       video?: TlObject<'InputFile'>;
       videoStartTs?: number;
@@ -36,7 +37,7 @@ export interface PhotosClasses0 {
     'photos.GetUserPhotos',
     'photos.Photos',
     {
-      userId: TlObject<'InputUser'>;
+      userId: ResolvablePeer<'InputUser'>;
       offset: number;
       maxId: LongValue;
       limit: number;
@@ -48,7 +49,7 @@ export interface PhotosClasses0 {
     {
       suggest?: boolean;
       save?: boolean;
-      userId: TlObject<'InputUser'>;
+      userId: ResolvablePeer<'InputUser'>;
       file?: TlObject<'InputFile'>;
       video?: TlObject<'InputFile'>;
       videoStartTs?: number;

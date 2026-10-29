@@ -4,12 +4,13 @@ import type {
   TlObject,
   LongValue,
   FixedInteger,
+  ResolvablePeer,
 } from '../api-classes.js';
 export interface StatsClasses0 {
   GetBroadcastStats: TlClass<
     'stats.GetBroadcastStats',
     'stats.BroadcastStats',
-    { dark?: boolean; channel: TlObject<'InputChannel'> }
+    { dark?: boolean; channel: ResolvablePeer<'InputChannel'> }
   >;
   LoadAsyncGraph: TlClass<
     'stats.LoadAsyncGraph',
@@ -19,13 +20,13 @@ export interface StatsClasses0 {
   GetMegagroupStats: TlClass<
     'stats.GetMegagroupStats',
     'stats.MegagroupStats',
-    { dark?: boolean; channel: TlObject<'InputChannel'> }
+    { dark?: boolean; channel: ResolvablePeer<'InputChannel'> }
   >;
   GetMessagePublicForwards: TlClass<
     'stats.GetMessagePublicForwards',
     'stats.PublicForwards',
     {
-      channel: TlObject<'InputChannel'>;
+      channel: ResolvablePeer<'InputChannel'>;
       msgId: number;
       offset: string;
       limit: number;
@@ -34,22 +35,27 @@ export interface StatsClasses0 {
   GetMessageStats: TlClass<
     'stats.GetMessageStats',
     'stats.MessageStats',
-    { dark?: boolean; channel: TlObject<'InputChannel'>; msgId: number }
+    { dark?: boolean; channel: ResolvablePeer<'InputChannel'>; msgId: number }
   >;
   GetStoryStats: TlClass<
     'stats.GetStoryStats',
     'stats.StoryStats',
-    { dark?: boolean; peer: TlObject<'InputPeer'>; id: number }
+    { dark?: boolean; peer: ResolvablePeer<'InputPeer'>; id: number }
   >;
   GetStoryPublicForwards: TlClass<
     'stats.GetStoryPublicForwards',
     'stats.PublicForwards',
-    { peer: TlObject<'InputPeer'>; id: number; offset: string; limit: number }
+    {
+      peer: ResolvablePeer<'InputPeer'>;
+      id: number;
+      offset: string;
+      limit: number;
+    }
   >;
   GetPollStats: TlClass<
     'stats.GetPollStats',
     'stats.PollStats',
-    { dark?: boolean; peer: TlObject<'InputPeer'>; msgId: number }
+    { dark?: boolean; peer: ResolvablePeer<'InputPeer'>; msgId: number }
   >;
   BroadcastStats: TlClass<
     'stats.BroadcastStats',

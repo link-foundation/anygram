@@ -4,6 +4,7 @@ import type {
   TlObject,
   LongValue,
   FixedInteger,
+  ResolvablePeer,
 } from '../api-classes.js';
 export interface WalletClasses0 {
   GetState: TlClass<'wallet.GetState', 'WalletState', {}>;
@@ -12,7 +13,7 @@ export interface WalletClasses0 {
     'wallet.UserAddresses',
     {
       force?: boolean;
-      id: Array<TlObject<'InputUser'>>;
+      id: Array<ResolvablePeer<'InputUser'>>;
       addresses: Array<string>;
     }
   >;
@@ -83,7 +84,7 @@ export interface WalletClasses0 {
     {
       dataNormal: Uint8Array;
       dataGasless?: Uint8Array;
-      userId: TlObject<'InputUser'>;
+      userId: ResolvablePeer<'InputUser'>;
       randomId: LongValue;
     },
     'randomId'

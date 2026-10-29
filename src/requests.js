@@ -45,6 +45,9 @@ export const camel = (text) =>
 export const snake = (text) =>
   text.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
 
+export const schemaDefinition = (name) =>
+  definitions.get(aliases.get(name) ?? name);
+
 export function requestOf(method, params = {}) {
   if (typeof method === 'string') {
     if (!/^[a-zA-Z][\w]*(?:\.[a-zA-Z][\w]*)*$/.test(method)) {
@@ -67,7 +70,14 @@ export function requestOf(method, params = {}) {
   return { ...requestOf(name, values), original: method };
 }
 
-function requestMapper(visit, { maxDepth = 64, maxVector = 100000 } = {}) {
+export const requestLimits = Object.freeze({ maxDepth: 64, maxVector: 100000 });
+function requestMapper(
+  visit,
+  {
+    maxDepth = requestLimits.maxDepth,
+    maxVector = requestLimits.maxVector,
+  } = {}
+) {
   if (
     !Number.isSafeInteger(maxDepth) ||
     maxDepth < 0 ||

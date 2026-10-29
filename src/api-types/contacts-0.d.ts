@@ -4,6 +4,7 @@ import type {
   TlObject,
   LongValue,
   FixedInteger,
+  ResolvablePeer,
 } from '../api-classes.js';
 export interface ContactsClasses0 {
   GetContactIDs: TlClass<
@@ -25,7 +26,7 @@ export interface ContactsClasses0 {
   DeleteContacts: TlClass<
     'contacts.DeleteContacts',
     'Updates',
-    { id: Array<TlObject<'InputUser'>> }
+    { id: Array<ResolvablePeer<'InputUser'>> }
   >;
   DeleteByPhones: TlClass<
     'contacts.DeleteByPhones',
@@ -35,12 +36,12 @@ export interface ContactsClasses0 {
   Block: TlClass<
     'contacts.Block',
     'Bool',
-    { myStoriesFrom?: boolean; id: TlObject<'InputPeer'> }
+    { myStoriesFrom?: boolean; id: ResolvablePeer<'InputPeer'> }
   >;
   Unblock: TlClass<
     'contacts.Unblock',
     'Bool',
-    { myStoriesFrom?: boolean; id: TlObject<'InputPeer'> }
+    { myStoriesFrom?: boolean; id: ResolvablePeer<'InputPeer'> }
   >;
   GetBlocked: TlClass<
     'contacts.GetBlocked',
@@ -79,7 +80,7 @@ export interface ContactsClasses0 {
   ResetTopPeerRating: TlClass<
     'contacts.ResetTopPeerRating',
     'Bool',
-    { category: TlObject<'TopPeerCategory'>; peer: TlObject<'InputPeer'> }
+    { category: TlObject<'TopPeerCategory'>; peer: ResolvablePeer<'InputPeer'> }
   >;
   ResetSaved: TlClass<'contacts.ResetSaved', 'Bool', {}>;
   GetSaved: TlClass<'contacts.GetSaved', 'Vector<SavedContact>', {}>;
@@ -93,7 +94,7 @@ export interface ContactsClasses0 {
     'Updates',
     {
       addPhonePrivacyException?: boolean;
-      id: TlObject<'InputUser'>;
+      id: ResolvablePeer<'InputUser'>;
       firstName: string;
       lastName: string;
       phone: string;
@@ -103,7 +104,7 @@ export interface ContactsClasses0 {
   AcceptContact: TlClass<
     'contacts.AcceptContact',
     'Updates',
-    { id: TlObject<'InputUser'> }
+    { id: ResolvablePeer<'InputUser'> }
   >;
   GetLocated: TlClass<
     'contacts.GetLocated',
@@ -147,7 +148,11 @@ export interface ContactsClasses0 {
   SetBlocked: TlClass<
     'contacts.SetBlocked',
     'Bool',
-    { myStoriesFrom?: boolean; id: Array<TlObject<'InputPeer'>>; limit: number }
+    {
+      myStoriesFrom?: boolean;
+      id: Array<ResolvablePeer<'InputPeer'>>;
+      limit: number;
+    }
   >;
   GetBirthdays: TlClass<
     'contacts.GetBirthdays',
@@ -162,7 +167,7 @@ export interface ContactsClasses0 {
   UpdateContactNote: TlClass<
     'contacts.UpdateContactNote',
     'Bool',
-    { id: TlObject<'InputUser'>; note: TlObject<'TextWithEntities'> }
+    { id: ResolvablePeer<'InputUser'>; note: TlObject<'TextWithEntities'> }
   >;
   ExportNoPaidMessagesToken: TlClass<
     'contacts.ExportNoPaidMessagesToken',
@@ -172,7 +177,7 @@ export interface ContactsClasses0 {
   ImportNoPaidMessagesToken: TlClass<
     'contacts.ImportNoPaidMessagesToken',
     'User',
-    { userId: TlObject<'InputUser'>; token: string }
+    { userId: ResolvablePeer<'InputUser'>; token: string }
   >;
   ContactsNotModified: TlClass<
     'contacts.ContactsNotModified',

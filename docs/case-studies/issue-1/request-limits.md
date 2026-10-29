@@ -24,6 +24,8 @@ transport work. `experiments/request-limits.mjs` separately exercises a finite
 Node, Bun and Deno each pass all 532 tests. Strict ESLint, formatting, TypeScript
 compilation/regeneration and the 76-source zero-clone scan pass. The package
 surface is unchanged from the native-class checkpoint. Logs are retained under
-`ci-logs/request-limits-*`. Fresh CI must verify this checkpoint. This guards
+`ci-logs/request-limits-*`. Head d5f84c0 passed all nine runtime/OS jobs and
+applicable gates in [run 40838745111](https://github.com/link-foundation/anygram/actions/runs/40838745111),
+created 2026-10-29T07:57:15Z and completed 2026-10-29T08:01:17Z. This guards
 normalization depth and vector sizes; it does not establish complete protocol,
 runtime or application compatibility.

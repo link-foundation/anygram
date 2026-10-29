@@ -4,6 +4,7 @@ import type {
   TlObject,
   LongValue,
   FixedInteger,
+  ResolvablePeer,
 } from '../api-classes.js';
 export interface RootClasses1 {
   MessageActionTopicCreate: TlClass<
@@ -428,7 +429,7 @@ export interface RootClasses1 {
   InputNotifyPeer: TlClass<
     'InputNotifyPeer',
     'InputNotifyPeer',
-    { peer: TlObject<'InputPeer'> }
+    { peer: ResolvablePeer<'InputPeer'> }
   >;
   InputNotifyUsers: TlClass<'InputNotifyUsers', 'InputNotifyPeer', {}>;
   InputNotifyChats: TlClass<'InputNotifyChats', 'InputNotifyPeer', {}>;
@@ -440,12 +441,12 @@ export interface RootClasses1 {
   InputNotifyForumTopic: TlClass<
     'InputNotifyForumTopic',
     'InputNotifyPeer',
-    { peer: TlObject<'InputPeer'>; topMsgId: number }
+    { peer: ResolvablePeer<'InputPeer'>; topMsgId: number }
   >;
   InputNotifyCommunity: TlClass<
     'InputNotifyCommunity',
     'InputNotifyPeer',
-    { community: TlObject<'InputChannel'> }
+    { community: ResolvablePeer<'InputChannel'> }
   >;
   InputPeerNotifySettings: TlClass<
     'InputPeerNotifySettings',

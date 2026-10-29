@@ -1,5 +1,5 @@
 import schema from './schema/telegram.json' with { type: 'json' };
-import { requestOf, objectRequest } from './requests.js';
+import { requestOf, objectRequest, requestLimits } from './requests.js';
 import { fixedIntegerBytes, joinBytes } from './bytes.js';
 
 const VECTOR = 0x1cb5c415;
@@ -18,8 +18,8 @@ function checkedVector(codec, type, depth) {
 export class TlCodec {
   constructor({
     registry = schema,
-    maxVector = 100000,
-    maxDepth = 64,
+    maxVector = requestLimits.maxVector,
+    maxDepth = requestLimits.maxDepth,
     maxBytes = 16 * 1024 * 1024,
   } = {}) {
     this.layer = registry.layer;

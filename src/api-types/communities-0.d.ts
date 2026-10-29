@@ -4,6 +4,7 @@ import type {
   TlObject,
   LongValue,
   FixedInteger,
+  ResolvablePeer,
 } from '../api-classes.js';
 export interface CommunitiesClasses0 {
   Create: TlClass<
@@ -13,7 +14,7 @@ export interface CommunitiesClasses0 {
       hidden?: boolean;
       title: string;
       about?: string;
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
     }
   >;
   TogglePeerLink: TlClass<
@@ -23,8 +24,8 @@ export interface CommunitiesClasses0 {
       visible?: boolean;
       hidden?: boolean;
       deleted?: boolean;
-      community: TlObject<'InputChannel'>;
-      peer: TlObject<'InputPeer'>;
+      community: ResolvablePeer<'InputChannel'>;
+      peer: ResolvablePeer<'InputPeer'>;
     }
   >;
   GetJoinedCommunities: TlClass<
@@ -35,40 +36,43 @@ export interface CommunitiesClasses0 {
   ToggleCommunityCollapsedInDialogs: TlClass<
     'communities.ToggleCommunityCollapsedInDialogs',
     'Updates',
-    { collapsed?: boolean; community: TlObject<'InputChannel'> }
+    { collapsed?: boolean; community: ResolvablePeer<'InputChannel'> }
   >;
   GetPeerLinkRequests: TlClass<
     'communities.GetPeerLinkRequests',
     'communities.PeerLinkRequests',
-    { community: TlObject<'InputChannel'>; offset: string; limit: number }
+    { community: ResolvablePeer<'InputChannel'>; offset: string; limit: number }
   >;
   TogglePeerLinkRequestApproval: TlClass<
     'communities.TogglePeerLinkRequestApproval',
     'Bool',
     {
       reject?: boolean;
-      community: TlObject<'InputChannel'>;
-      peer: TlObject<'InputPeer'>;
+      community: ResolvablePeer<'InputChannel'>;
+      peer: ResolvablePeer<'InputPeer'>;
     }
   >;
   ToggleAllPeerLinkRequestApproval: TlClass<
     'communities.ToggleAllPeerLinkRequestApproval',
     'Bool',
-    { reject?: boolean; community: TlObject<'InputChannel'> }
+    { reject?: boolean; community: ResolvablePeer<'InputChannel'> }
   >;
   ToggleParticipantBanned: TlClass<
     'communities.ToggleParticipantBanned',
     'Bool',
     {
       unban?: boolean;
-      community: TlObject<'InputChannel'>;
-      participant: TlObject<'InputPeer'>;
+      community: ResolvablePeer<'InputChannel'>;
+      participant: ResolvablePeer<'InputPeer'>;
     }
   >;
   GetParticipantJoinedChats: TlClass<
     'communities.GetParticipantJoinedChats',
     'communities.ParticipantJoinedChats',
-    { community: TlObject<'InputChannel'>; participant: TlObject<'InputPeer'> }
+    {
+      community: ResolvablePeer<'InputChannel'>;
+      participant: ResolvablePeer<'InputPeer'>;
+    }
   >;
   PeerLinkRequests: TlClass<
     'communities.PeerLinkRequests',

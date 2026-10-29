@@ -4,6 +4,7 @@ import type {
   TlObject,
   LongValue,
   FixedInteger,
+  ResolvablePeer,
 } from '../api-classes.js';
 export interface UpdatesClasses0 {
   GetState: TlClass<'updates.GetState', 'updates.State', {}>;
@@ -24,7 +25,7 @@ export interface UpdatesClasses0 {
     'updates.ChannelDifference',
     {
       force?: boolean;
-      channel: TlObject<'InputChannel'>;
+      channel: ResolvablePeer<'InputChannel'>;
       filter: TlObject<'ChannelMessagesFilter'>;
       pts: number;
       limit: number;

@@ -4,8 +4,39 @@ import type {
   TlObject,
   LongValue,
   FixedInteger,
+  ResolvablePeer,
 } from '../api-classes.js';
 export interface MessagesClasses2 {
+  AvailableEffects: TlClass<
+    'messages.AvailableEffects',
+    'messages.AvailableEffects',
+    {
+      hash: number;
+      effects: Array<TlObject<'AvailableEffect'>>;
+      documents: Array<TlObject<'Document'>>;
+    }
+  >;
+  BotPreparedInlineMessage: TlClass<
+    'messages.BotPreparedInlineMessage',
+    'messages.BotPreparedInlineMessage',
+    { id: string; expireDate: number }
+  >;
+  PreparedInlineMessage: TlClass<
+    'messages.PreparedInlineMessage',
+    'messages.PreparedInlineMessage',
+    {
+      queryId: LongValue;
+      result: TlObject<'BotInlineResult'>;
+      peerTypes: Array<TlObject<'InlineQueryPeerType'>>;
+      cacheTime: number;
+      users: Array<TlObject<'User'>>;
+    }
+  >;
+  FoundStickersNotModified: TlClass<
+    'messages.FoundStickersNotModified',
+    'messages.FoundStickers',
+    { nextOffset?: number }
+  >;
   FoundStickers: TlClass<
     'messages.FoundStickers',
     'messages.FoundStickers',

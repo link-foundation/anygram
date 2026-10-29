@@ -3,6 +3,8 @@
 ---
 
 Introduce shared Telegram backend routing and optional client adapters alongside
+schema-aware native request peer/message shortcuts, recursive resolution through
+the selected backend, checked shortcut declarations and cancellation/depth guards,
 independent Bot API and encrypted MTProto HTTPS/TCP transports. Add four native
 TCP framing formats with bounded streams and send-only acknowledgements,
 SOCKS4/4a and SOCKS5 CONNECT with proxy-side DNS, IPv4/IPv6 and optional authentication,

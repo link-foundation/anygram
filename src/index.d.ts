@@ -12,6 +12,9 @@ export type {
   TlClass,
   LongValue,
   FixedInteger,
+  ResolvablePeer,
+  PeerResolver,
+  ResolutionOptions,
 } from './api-classes.js';
 
 /**

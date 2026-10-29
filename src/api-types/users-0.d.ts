@@ -4,33 +4,37 @@ import type {
   TlObject,
   LongValue,
   FixedInteger,
+  ResolvablePeer,
 } from '../api-classes.js';
 export interface UsersClasses0 {
   GetUsers: TlClass<
     'users.GetUsers',
     'Vector<User>',
-    { id: Array<TlObject<'InputUser'>> }
+    { id: Array<ResolvablePeer<'InputUser'>> }
   >;
   GetFullUser: TlClass<
     'users.GetFullUser',
     'users.UserFull',
-    { id: TlObject<'InputUser'> }
+    { id: ResolvablePeer<'InputUser'> }
   >;
   SetSecureValueErrors: TlClass<
     'users.SetSecureValueErrors',
     'Bool',
-    { id: TlObject<'InputUser'>; errors: Array<TlObject<'SecureValueError'>> }
+    {
+      id: ResolvablePeer<'InputUser'>;
+      errors: Array<TlObject<'SecureValueError'>>;
+    }
   >;
   GetRequirementsToContact: TlClass<
     'users.GetRequirementsToContact',
     'Vector<RequirementToContact>',
-    { id: Array<TlObject<'InputUser'>> }
+    { id: Array<ResolvablePeer<'InputUser'>> }
   >;
   GetSavedMusic: TlClass<
     'users.GetSavedMusic',
     'users.SavedMusic',
     {
-      id: TlObject<'InputUser'>;
+      id: ResolvablePeer<'InputUser'>;
       offset: number;
       limit: number;
       hash: LongValue;
@@ -39,12 +43,15 @@ export interface UsersClasses0 {
   GetSavedMusicByID: TlClass<
     'users.GetSavedMusicByID',
     'users.SavedMusic',
-    { id: TlObject<'InputUser'>; documents: Array<TlObject<'InputDocument'>> }
+    {
+      id: ResolvablePeer<'InputUser'>;
+      documents: Array<TlObject<'InputDocument'>>;
+    }
   >;
   SuggestBirthday: TlClass<
     'users.SuggestBirthday',
     'Updates',
-    { id: TlObject<'InputUser'>; birthday: TlObject<'Birthday'> }
+    { id: ResolvablePeer<'InputUser'>; birthday: TlObject<'Birthday'> }
   >;
   UserFull: TlClass<
     'users.UserFull',

@@ -4,13 +4,34 @@ import type {
   TlObject,
   LongValue,
   FixedInteger,
+  ResolvablePeer,
 } from '../api-classes.js';
 export interface MessagesClasses1 {
+  RequestSimpleWebView: TlClass<
+    'messages.RequestSimpleWebView',
+    'WebViewResult',
+    {
+      fromSwitchWebview?: boolean;
+      fromSideMenu?: boolean;
+      compact?: boolean;
+      fullscreen?: boolean;
+      bot: ResolvablePeer<'InputUser'>;
+      url?: string;
+      startParam?: string;
+      themeParams?: TlObject<'DataJSON'>;
+      platform: string;
+    }
+  >;
+  SendWebViewResultMessage: TlClass<
+    'messages.SendWebViewResultMessage',
+    'WebViewMessageSent',
+    { botQueryId: string; result: TlObject<'InputBotInlineResult'> }
+  >;
   SendWebViewData: TlClass<
     'messages.SendWebViewData',
     'Updates',
     {
-      bot: TlObject<'InputUser'>;
+      bot: ResolvablePeer<'InputUser'>;
       randomId: LongValue;
       buttonText: string;
       data: string;
@@ -20,13 +41,13 @@ export interface MessagesClasses1 {
   TranscribeAudio: TlClass<
     'messages.TranscribeAudio',
     'messages.TranscribedAudio',
-    { peer: TlObject<'InputPeer'>; msgId: number }
+    { peer: ResolvablePeer<'InputPeer'>; msgId: number }
   >;
   RateTranscribedAudio: TlClass<
     'messages.RateTranscribedAudio',
     'Bool',
     {
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       msgId: number;
       transcriptionId: LongValue;
       good: boolean;
@@ -51,9 +72,9 @@ export interface MessagesClasses1 {
     'messages.ReportReaction',
     'Bool',
     {
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       id: number;
-      reactionPeer: TlObject<'InputPeer'>;
+      reactionPeer: ResolvablePeer<'InputPeer'>;
     }
   >;
   GetTopReactions: TlClass<
@@ -70,7 +91,7 @@ export interface MessagesClasses1 {
   GetExtendedMedia: TlClass<
     'messages.GetExtendedMedia',
     'Updates',
-    { peer: TlObject<'InputPeer'>; id: Array<number> }
+    { peer: ResolvablePeer<'InputPeer'>; id: Array<number> }
   >;
   SetDefaultHistoryTTL: TlClass<
     'messages.SetDefaultHistoryTTL',
@@ -86,11 +107,11 @@ export interface MessagesClasses1 {
     'messages.SendBotRequestedPeer',
     'Updates',
     {
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       msgId?: number;
       webappReqId?: string;
       buttonId: number;
-      requestedPeers: Array<TlObject<'InputPeer'>>;
+      requestedPeers: Array<ResolvablePeer<'InputPeer'>>;
     }
   >;
   GetEmojiGroups: TlClass<
@@ -116,7 +137,7 @@ export interface MessagesClasses1 {
   TogglePeerTranslations: TlClass<
     'messages.TogglePeerTranslations',
     'Bool',
-    { disabled?: boolean; peer: TlObject<'InputPeer'> }
+    { disabled?: boolean; peer: ResolvablePeer<'InputPeer'> }
   >;
   GetBotApp: TlClass<
     'messages.GetBotApp',
@@ -130,7 +151,7 @@ export interface MessagesClasses1 {
       writeAllowed?: boolean;
       compact?: boolean;
       fullscreen?: boolean;
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       app: TlObject<'InputBotApp'>;
       startParam?: string;
       themeParams?: TlObject<'DataJSON'>;
@@ -143,7 +164,7 @@ export interface MessagesClasses1 {
     {
       forBoth?: boolean;
       revert?: boolean;
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       wallpaper?: TlObject<'InputWallPaper'>;
       settings?: TlObject<'WallPaperSettings'>;
       id?: number;
@@ -159,10 +180,10 @@ export interface MessagesClasses1 {
     'messages.SavedDialogs',
     {
       excludePinned?: boolean;
-      parentPeer?: TlObject<'InputPeer'>;
+      parentPeer?: ResolvablePeer<'InputPeer'>;
       offsetDate: number;
       offsetId: number;
-      offsetPeer: TlObject<'InputPeer'>;
+      offsetPeer: ResolvablePeer<'InputPeer'>;
       limit: number;
       hash: LongValue;
     }
@@ -171,8 +192,8 @@ export interface MessagesClasses1 {
     'messages.GetSavedHistory',
     'messages.Messages',
     {
-      parentPeer?: TlObject<'InputPeer'>;
-      peer: TlObject<'InputPeer'>;
+      parentPeer?: ResolvablePeer<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       offsetId: number;
       offsetDate: number;
       addOffset: number;
@@ -186,8 +207,8 @@ export interface MessagesClasses1 {
     'messages.DeleteSavedHistory',
     'messages.AffectedHistory',
     {
-      parentPeer?: TlObject<'InputPeer'>;
-      peer: TlObject<'InputPeer'>;
+      parentPeer?: ResolvablePeer<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       maxId: number;
       minDate?: number;
       maxDate?: number;
@@ -201,17 +222,17 @@ export interface MessagesClasses1 {
   ToggleSavedDialogPin: TlClass<
     'messages.ToggleSavedDialogPin',
     'Bool',
-    { pinned?: boolean; peer: TlObject<'InputDialogPeer'> }
+    { pinned?: boolean; peer: ResolvablePeer<'InputDialogPeer'> }
   >;
   ReorderPinnedSavedDialogs: TlClass<
     'messages.ReorderPinnedSavedDialogs',
     'Bool',
-    { force?: boolean; order: Array<TlObject<'InputDialogPeer'>> }
+    { force?: boolean; order: Array<ResolvablePeer<'InputDialogPeer'>> }
   >;
   GetSavedReactionTags: TlClass<
     'messages.GetSavedReactionTags',
     'messages.SavedReactionTags',
-    { peer?: TlObject<'InputPeer'>; hash: LongValue }
+    { peer?: ResolvablePeer<'InputPeer'>; hash: LongValue }
   >;
   UpdateSavedReactionTag: TlClass<
     'messages.UpdateSavedReactionTag',
@@ -226,7 +247,7 @@ export interface MessagesClasses1 {
   GetOutboxReadDate: TlClass<
     'messages.GetOutboxReadDate',
     'OutboxReadDate',
-    { peer: TlObject<'InputPeer'>; msgId: number }
+    { peer: ResolvablePeer<'InputPeer'>; msgId: number }
   >;
   GetQuickReplies: TlClass<
     'messages.GetQuickReplies',
@@ -262,7 +283,7 @@ export interface MessagesClasses1 {
     'messages.SendQuickReplyMessages',
     'Updates',
     {
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       shortcutId: number;
       id: Array<number>;
       randomId: Array<LongValue>;
@@ -298,7 +319,7 @@ export interface MessagesClasses1 {
     'messages.EditFactCheck',
     'Updates',
     {
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       msgId: number;
       text: TlObject<'TextWithEntities'>;
     }
@@ -306,12 +327,12 @@ export interface MessagesClasses1 {
   DeleteFactCheck: TlClass<
     'messages.DeleteFactCheck',
     'Updates',
-    { peer: TlObject<'InputPeer'>; msgId: number }
+    { peer: ResolvablePeer<'InputPeer'>; msgId: number }
   >;
   GetFactCheck: TlClass<
     'messages.GetFactCheck',
     'Vector<FactCheck>',
-    { peer: TlObject<'InputPeer'>; msgId: Array<number> }
+    { peer: ResolvablePeer<'InputPeer'>; msgId: Array<number> }
   >;
   RequestMainWebView: TlClass<
     'messages.RequestMainWebView',
@@ -319,8 +340,8 @@ export interface MessagesClasses1 {
     {
       compact?: boolean;
       fullscreen?: boolean;
-      peer: TlObject<'InputPeer'>;
-      bot: TlObject<'InputUser'>;
+      peer: ResolvablePeer<'InputPeer'>;
+      bot: ResolvablePeer<'InputUser'>;
       startParam?: string;
       themeParams?: TlObject<'DataJSON'>;
       platform: string;
@@ -330,7 +351,7 @@ export interface MessagesClasses1 {
     'messages.SendPaidReaction',
     'Updates',
     {
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       msgId: number;
       count: number;
       randomId: LongValue;
@@ -342,7 +363,7 @@ export interface MessagesClasses1 {
     'messages.TogglePaidReactionPrivacy',
     'Bool',
     {
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       msgId: number;
       private: TlObject<'PaidReactionPrivacy'>;
     }
@@ -370,21 +391,21 @@ export interface MessagesClasses1 {
   GetSponsoredMessages: TlClass<
     'messages.GetSponsoredMessages',
     'messages.SponsoredMessages',
-    { peer: TlObject<'InputPeer'>; msgId?: number }
+    { peer: ResolvablePeer<'InputPeer'>; msgId?: number }
   >;
   SavePreparedInlineMessage: TlClass<
     'messages.SavePreparedInlineMessage',
     'messages.BotPreparedInlineMessage',
     {
       result: TlObject<'InputBotInlineResult'>;
-      userId: TlObject<'InputUser'>;
+      userId: ResolvablePeer<'InputUser'>;
       peerTypes?: Array<TlObject<'InlineQueryPeerType'>>;
     }
   >;
   GetPreparedInlineMessage: TlClass<
     'messages.GetPreparedInlineMessage',
     'messages.PreparedInlineMessage',
-    { bot: TlObject<'InputUser'>; id: string }
+    { bot: ResolvablePeer<'InputUser'>; id: string }
   >;
   SearchStickers: TlClass<
     'messages.SearchStickers',
@@ -402,19 +423,22 @@ export interface MessagesClasses1 {
   ReportMessagesDelivery: TlClass<
     'messages.ReportMessagesDelivery',
     'Bool',
-    { push?: boolean; peer: TlObject<'InputPeer'>; id: Array<number> }
+    { push?: boolean; peer: ResolvablePeer<'InputPeer'>; id: Array<number> }
   >;
   GetSavedDialogsByID: TlClass<
     'messages.GetSavedDialogsByID',
     'messages.SavedDialogs',
-    { parentPeer?: TlObject<'InputPeer'>; ids: Array<TlObject<'InputPeer'>> }
+    {
+      parentPeer?: ResolvablePeer<'InputPeer'>;
+      ids: Array<ResolvablePeer<'InputPeer'>>;
+    }
   >;
   ReadSavedHistory: TlClass<
     'messages.ReadSavedHistory',
     'Bool',
     {
-      parentPeer: TlObject<'InputPeer'>;
-      peer: TlObject<'InputPeer'>;
+      parentPeer: ResolvablePeer<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       maxId: number;
     }
   >;
@@ -422,7 +446,7 @@ export interface MessagesClasses1 {
     'messages.ToggleTodoCompleted',
     'Updates',
     {
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       msgId: number;
       completed: Array<number>;
       incompleted: Array<number>;
@@ -432,7 +456,7 @@ export interface MessagesClasses1 {
     'messages.AppendTodoList',
     'Updates',
     {
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       msgId: number;
       list: Array<TlObject<'TodoItem'>>;
     }
@@ -442,7 +466,7 @@ export interface MessagesClasses1 {
     'Updates',
     {
       reject?: boolean;
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       msgId: number;
       scheduleDate?: number;
       rejectComment?: string;
@@ -452,7 +476,7 @@ export interface MessagesClasses1 {
     'messages.GetForumTopics',
     'messages.ForumTopics',
     {
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       q?: string;
       offsetDate: number;
       offsetId: number;
@@ -463,13 +487,13 @@ export interface MessagesClasses1 {
   GetForumTopicsByID: TlClass<
     'messages.GetForumTopicsByID',
     'messages.ForumTopics',
-    { peer: TlObject<'InputPeer'>; topics: Array<number> }
+    { peer: ResolvablePeer<'InputPeer'>; topics: Array<number> }
   >;
   EditForumTopic: TlClass<
     'messages.EditForumTopic',
     'Updates',
     {
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       topicId: number;
       title?: string;
       iconEmojiId?: LongValue;
@@ -480,31 +504,31 @@ export interface MessagesClasses1 {
   UpdatePinnedForumTopic: TlClass<
     'messages.UpdatePinnedForumTopic',
     'Updates',
-    { peer: TlObject<'InputPeer'>; topicId: number; pinned: boolean }
+    { peer: ResolvablePeer<'InputPeer'>; topicId: number; pinned: boolean }
   >;
   ReorderPinnedForumTopics: TlClass<
     'messages.ReorderPinnedForumTopics',
     'Updates',
-    { force?: boolean; peer: TlObject<'InputPeer'>; order: Array<number> }
+    { force?: boolean; peer: ResolvablePeer<'InputPeer'>; order: Array<number> }
   >;
   CreateForumTopic: TlClass<
     'messages.CreateForumTopic',
     'Updates',
     {
       titleMissing?: boolean;
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       title: string;
       iconColor?: number;
       iconEmojiId?: LongValue;
       randomId: LongValue;
-      sendAs?: TlObject<'InputPeer'>;
+      sendAs?: ResolvablePeer<'InputPeer'>;
     },
     'randomId'
   >;
   DeleteTopicHistory: TlClass<
     'messages.DeleteTopicHistory',
     'messages.AffectedHistory',
-    { peer: TlObject<'InputPeer'>; topMsgId: number }
+    { peer: ResolvablePeer<'InputPeer'>; topMsgId: number }
   >;
   GetEmojiGameInfo: TlClass<
     'messages.GetEmojiGameInfo',
@@ -514,28 +538,33 @@ export interface MessagesClasses1 {
   SummarizeText: TlClass<
     'messages.SummarizeText',
     'TextWithEntities',
-    { peer: TlObject<'InputPeer'>; id: number; toLang?: string; tone?: string }
+    {
+      peer: ResolvablePeer<'InputPeer'>;
+      id: number;
+      toLang?: string;
+      tone?: string;
+    }
   >;
   EditChatCreator: TlClass<
     'messages.EditChatCreator',
     'Updates',
     {
-      peer: TlObject<'InputPeer'>;
-      userId: TlObject<'InputUser'>;
+      peer: ResolvablePeer<'InputPeer'>;
+      userId: ResolvablePeer<'InputUser'>;
       password: TlObject<'InputCheckPasswordSRP'>;
     }
   >;
   GetFutureChatCreatorAfterLeave: TlClass<
     'messages.GetFutureChatCreatorAfterLeave',
     'User',
-    { peer: TlObject<'InputPeer'> }
+    { peer: ResolvablePeer<'InputPeer'> }
   >;
   EditChatParticipantRank: TlClass<
     'messages.EditChatParticipantRank',
     'Updates',
     {
-      peer: TlObject<'InputPeer'>;
-      participant: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
+      participant: ResolvablePeer<'InputPeer'>;
       rank: string;
     }
   >;
@@ -560,7 +589,7 @@ export interface MessagesClasses1 {
     'messages.ReportReadMetrics',
     'Bool',
     {
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       metrics: Array<TlObject<'InputMessageReadMetric'>>;
     }
   >;
@@ -573,7 +602,7 @@ export interface MessagesClasses1 {
     'messages.AddPollAnswer',
     'Updates',
     {
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       msgId: number;
       answer: TlObject<'PollAnswer'>;
     }
@@ -581,13 +610,13 @@ export interface MessagesClasses1 {
   DeletePollAnswer: TlClass<
     'messages.DeletePollAnswer',
     'Updates',
-    { peer: TlObject<'InputPeer'>; msgId: number; option: Uint8Array }
+    { peer: ResolvablePeer<'InputPeer'>; msgId: number; option: Uint8Array }
   >;
   GetUnreadPollVotes: TlClass<
     'messages.GetUnreadPollVotes',
     'messages.Messages',
     {
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       topMsgId?: number;
       offsetId: number;
       addOffset: number;
@@ -599,7 +628,7 @@ export interface MessagesClasses1 {
   ReadPollVotes: TlClass<
     'messages.ReadPollVotes',
     'messages.AffectedHistory',
-    { peer: TlObject<'InputPeer'>; topMsgId?: number }
+    { peer: ResolvablePeer<'InputPeer'>; topMsgId?: number }
   >;
   SetBotGuestChatResult: TlClass<
     'messages.SetBotGuestChatResult',
@@ -609,22 +638,25 @@ export interface MessagesClasses1 {
   DeleteParticipantReactions: TlClass<
     'messages.DeleteParticipantReactions',
     'Bool',
-    { peer: TlObject<'InputPeer'>; participant: TlObject<'InputPeer'> }
+    {
+      peer: ResolvablePeer<'InputPeer'>;
+      participant: ResolvablePeer<'InputPeer'>;
+    }
   >;
   DeleteParticipantReaction: TlClass<
     'messages.DeleteParticipantReaction',
     'Updates',
     {
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       msgId: number;
-      participant: TlObject<'InputPeer'>;
+      participant: ResolvablePeer<'InputPeer'>;
     }
   >;
   GetPersonalChannelHistory: TlClass<
     'messages.GetPersonalChannelHistory',
     'messages.Messages',
     {
-      userId: TlObject<'InputUser'>;
+      userId: ResolvablePeer<'InputUser'>;
       limit: number;
       maxId: number;
       minId: number;
@@ -634,13 +666,13 @@ export interface MessagesClasses1 {
   GetRichMessage: TlClass<
     'messages.GetRichMessage',
     'messages.Messages',
-    { peer: TlObject<'InputPeer'>; id: number }
+    { peer: ResolvablePeer<'InputPeer'>; id: number }
   >;
   TranslateRichMessage: TlClass<
     'messages.TranslateRichMessage',
     'messages.TranslatedRichMessage',
     {
-      peer?: TlObject<'InputPeer'>;
+      peer?: ResolvablePeer<'InputPeer'>;
       id?: Array<number>;
       text?: Array<TlObject<'InputRichMessage'>>;
       toLang: string;
@@ -666,7 +698,7 @@ export interface MessagesClasses1 {
   SetShareTheme: TlClass<
     'messages.SetShareTheme',
     'Bool',
-    { peer: TlObject<'InputPeer'>; theme: TlObject<'ShareTheme'> }
+    { peer: ResolvablePeer<'InputPeer'>; theme: TlObject<'ShareTheme'> }
   >;
   GetShareThemeBackdrops: TlClass<
     'messages.GetShareThemeBackdrops',
@@ -1269,35 +1301,5 @@ export interface MessagesClasses1 {
     'messages.AvailableEffectsNotModified',
     'messages.AvailableEffects',
     {}
-  >;
-  AvailableEffects: TlClass<
-    'messages.AvailableEffects',
-    'messages.AvailableEffects',
-    {
-      hash: number;
-      effects: Array<TlObject<'AvailableEffect'>>;
-      documents: Array<TlObject<'Document'>>;
-    }
-  >;
-  BotPreparedInlineMessage: TlClass<
-    'messages.BotPreparedInlineMessage',
-    'messages.BotPreparedInlineMessage',
-    { id: string; expireDate: number }
-  >;
-  PreparedInlineMessage: TlClass<
-    'messages.PreparedInlineMessage',
-    'messages.PreparedInlineMessage',
-    {
-      queryId: LongValue;
-      result: TlObject<'BotInlineResult'>;
-      peerTypes: Array<TlObject<'InlineQueryPeerType'>>;
-      cacheTime: number;
-      users: Array<TlObject<'User'>>;
-    }
-  >;
-  FoundStickersNotModified: TlClass<
-    'messages.FoundStickersNotModified',
-    'messages.FoundStickers',
-    { nextOffset?: number }
   >;
 }

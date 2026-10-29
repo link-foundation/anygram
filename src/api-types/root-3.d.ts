@@ -4,6 +4,7 @@ import type {
   TlObject,
   LongValue,
   FixedInteger,
+  ResolvablePeer,
 } from '../api-classes.js';
 export interface RootClasses3 {
   ChatInviteExported: TlClass<
@@ -271,7 +272,7 @@ export interface RootClasses3 {
   InputMessageEntityMentionName: TlClass<
     'InputMessageEntityMentionName',
     'MessageEntity',
-    { offset: number; length: number; userId: TlObject<'InputUser'> }
+    { offset: number; length: number; userId: ResolvablePeer<'InputUser'> }
   >;
   MessageEntityPhone: TlClass<
     'MessageEntityPhone',
@@ -357,7 +358,7 @@ export interface RootClasses3 {
   InputChannelFromMessage: TlClass<
     'InputChannelFromMessage',
     'InputChannel',
-    { peer: TlObject<'InputPeer'>; msgId: number; channelId: LongValue }
+    { peer: ResolvablePeer<'InputPeer'>; msgId: number; channelId: LongValue }
   >;
   MessageRange: TlClass<
     'MessageRange',
@@ -923,7 +924,7 @@ export interface RootClasses3 {
   InputGameShortName: TlClass<
     'InputGameShortName',
     'InputGame',
-    { botId: TlObject<'InputUser'>; shortName: string }
+    { botId: ResolvablePeer<'InputUser'>; shortName: string }
   >;
   HighScore: TlClass<
     'HighScore',

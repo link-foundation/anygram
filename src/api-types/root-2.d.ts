@@ -4,6 +4,7 @@ import type {
   TlObject,
   LongValue,
   FixedInteger,
+  ResolvablePeer,
 } from '../api-classes.js';
 export interface RootClasses2 {
   UpdatePeerHistoryTTL: TlClass<
@@ -1065,7 +1066,7 @@ export interface RootClasses2 {
   InputPrivacyValueAllowUsers: TlClass<
     'InputPrivacyValueAllowUsers',
     'InputPrivacyRule',
-    { users: Array<TlObject<'InputUser'>> }
+    { users: Array<ResolvablePeer<'InputUser'>> }
   >;
   InputPrivacyValueDisallowContacts: TlClass<
     'InputPrivacyValueDisallowContacts',
@@ -1080,7 +1081,7 @@ export interface RootClasses2 {
   InputPrivacyValueDisallowUsers: TlClass<
     'InputPrivacyValueDisallowUsers',
     'InputPrivacyRule',
-    { users: Array<TlObject<'InputUser'>> }
+    { users: Array<ResolvablePeer<'InputUser'>> }
   >;
   InputPrivacyValueAllowChatParticipants: TlClass<
     'InputPrivacyValueAllowChatParticipants',

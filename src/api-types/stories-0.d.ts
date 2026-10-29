@@ -4,12 +4,13 @@ import type {
   TlObject,
   LongValue,
   FixedInteger,
+  ResolvablePeer,
 } from '../api-classes.js';
 export interface StoriesClasses0 {
   CanSendStory: TlClass<
     'stories.CanSendStory',
     'stories.CanSendStoryCount',
-    { peer: TlObject<'InputPeer'> }
+    { peer: ResolvablePeer<'InputPeer'> }
   >;
   SendStory: TlClass<
     'stories.SendStory',
@@ -18,7 +19,7 @@ export interface StoriesClasses0 {
       pinned?: boolean;
       noforwards?: boolean;
       fwdModified?: boolean;
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       media: TlObject<'InputMedia'>;
       mediaAreas?: Array<TlObject<'MediaArea'>>;
       caption?: string;
@@ -26,7 +27,7 @@ export interface StoriesClasses0 {
       privacyRules: Array<TlObject<'InputPrivacyRule'>>;
       randomId: LongValue;
       period?: number;
-      fwdFromId?: TlObject<'InputPeer'>;
+      fwdFromId?: ResolvablePeer<'InputPeer'>;
       fwdFromStory?: number;
       albums?: Array<number>;
       music?: TlObject<'InputDocument'>;
@@ -37,7 +38,7 @@ export interface StoriesClasses0 {
     'stories.EditStory',
     'Updates',
     {
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       id: number;
       media?: TlObject<'InputMedia'>;
       mediaAreas?: Array<TlObject<'MediaArea'>>;
@@ -50,12 +51,12 @@ export interface StoriesClasses0 {
   DeleteStories: TlClass<
     'stories.DeleteStories',
     'Vector<int>',
-    { peer: TlObject<'InputPeer'>; id: Array<number> }
+    { peer: ResolvablePeer<'InputPeer'>; id: Array<number> }
   >;
   TogglePinned: TlClass<
     'stories.TogglePinned',
     'Vector<int>',
-    { peer: TlObject<'InputPeer'>; id: Array<number>; pinned: boolean }
+    { peer: ResolvablePeer<'InputPeer'>; id: Array<number>; pinned: boolean }
   >;
   GetAllStories: TlClass<
     'stories.GetAllStories',
@@ -65,17 +66,17 @@ export interface StoriesClasses0 {
   GetPinnedStories: TlClass<
     'stories.GetPinnedStories',
     'stories.Stories',
-    { peer: TlObject<'InputPeer'>; offsetId: number; limit: number }
+    { peer: ResolvablePeer<'InputPeer'>; offsetId: number; limit: number }
   >;
   GetStoriesArchive: TlClass<
     'stories.GetStoriesArchive',
     'stories.Stories',
-    { peer: TlObject<'InputPeer'>; offsetId: number; limit: number }
+    { peer: ResolvablePeer<'InputPeer'>; offsetId: number; limit: number }
   >;
   GetStoriesByID: TlClass<
     'stories.GetStoriesByID',
     'stories.Stories',
-    { peer: TlObject<'InputPeer'>; id: Array<number> }
+    { peer: ResolvablePeer<'InputPeer'>; id: Array<number> }
   >;
   ToggleAllStoriesHidden: TlClass<
     'stories.ToggleAllStoriesHidden',
@@ -85,12 +86,12 @@ export interface StoriesClasses0 {
   ReadStories: TlClass<
     'stories.ReadStories',
     'Vector<int>',
-    { peer: TlObject<'InputPeer'>; maxId: number }
+    { peer: ResolvablePeer<'InputPeer'>; maxId: number }
   >;
   IncrementStoryViews: TlClass<
     'stories.IncrementStoryViews',
     'Bool',
-    { peer: TlObject<'InputPeer'>; id: Array<number> }
+    { peer: ResolvablePeer<'InputPeer'>; id: Array<number> }
   >;
   GetStoryViewsList: TlClass<
     'stories.GetStoryViewsList',
@@ -99,7 +100,7 @@ export interface StoriesClasses0 {
       justContacts?: boolean;
       reactionsFirst?: boolean;
       forwardsFirst?: boolean;
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       q?: string;
       id: number;
       offset: string;
@@ -109,18 +110,18 @@ export interface StoriesClasses0 {
   GetStoriesViews: TlClass<
     'stories.GetStoriesViews',
     'stories.StoryViews',
-    { peer: TlObject<'InputPeer'>; id: Array<number> }
+    { peer: ResolvablePeer<'InputPeer'>; id: Array<number> }
   >;
   ExportStoryLink: TlClass<
     'stories.ExportStoryLink',
     'ExportedStoryLink',
-    { peer: TlObject<'InputPeer'>; id: number }
+    { peer: ResolvablePeer<'InputPeer'>; id: number }
   >;
   Report: TlClass<
     'stories.Report',
     'ReportResult',
     {
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       id: Array<number>;
       option: Uint8Array;
       message: string;
@@ -136,7 +137,7 @@ export interface StoriesClasses0 {
     'Updates',
     {
       addToRecent?: boolean;
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       storyId: number;
       reaction: TlObject<'Reaction'>;
     }
@@ -144,7 +145,7 @@ export interface StoriesClasses0 {
   GetPeerStories: TlClass<
     'stories.GetPeerStories',
     'stories.PeerStories',
-    { peer: TlObject<'InputPeer'> }
+    { peer: ResolvablePeer<'InputPeer'> }
   >;
   GetAllReadPeerStories: TlClass<
     'stories.GetAllReadPeerStories',
@@ -154,20 +155,20 @@ export interface StoriesClasses0 {
   GetPeerMaxIDs: TlClass<
     'stories.GetPeerMaxIDs',
     'Vector<RecentStory>',
-    { id: Array<TlObject<'InputPeer'>> }
+    { id: Array<ResolvablePeer<'InputPeer'>> }
   >;
   GetChatsToSend: TlClass<'stories.GetChatsToSend', 'messages.Chats', {}>;
   TogglePeerStoriesHidden: TlClass<
     'stories.TogglePeerStoriesHidden',
     'Bool',
-    { peer: TlObject<'InputPeer'>; hidden: boolean }
+    { peer: ResolvablePeer<'InputPeer'>; hidden: boolean }
   >;
   GetStoryReactionsList: TlClass<
     'stories.GetStoryReactionsList',
     'stories.StoryReactionsList',
     {
       forwardsFirst?: boolean;
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       id: number;
       reaction?: TlObject<'Reaction'>;
       offset?: string;
@@ -177,7 +178,7 @@ export interface StoriesClasses0 {
   TogglePinnedToTop: TlClass<
     'stories.TogglePinnedToTop',
     'Bool',
-    { peer: TlObject<'InputPeer'>; id: Array<number> }
+    { peer: ResolvablePeer<'InputPeer'>; id: Array<number> }
   >;
   SearchPosts: TlClass<
     'stories.SearchPosts',
@@ -185,7 +186,7 @@ export interface StoriesClasses0 {
     {
       hashtag?: string;
       area?: TlObject<'MediaArea'>;
-      peer?: TlObject<'InputPeer'>;
+      peer?: ResolvablePeer<'InputPeer'>;
       offset: string;
       limit: number;
     }
@@ -193,13 +194,13 @@ export interface StoriesClasses0 {
   CreateAlbum: TlClass<
     'stories.CreateAlbum',
     'StoryAlbum',
-    { peer: TlObject<'InputPeer'>; title: string; stories: Array<number> }
+    { peer: ResolvablePeer<'InputPeer'>; title: string; stories: Array<number> }
   >;
   UpdateAlbum: TlClass<
     'stories.UpdateAlbum',
     'StoryAlbum',
     {
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       albumId: number;
       title?: string;
       deleteStories?: Array<number>;
@@ -210,23 +211,23 @@ export interface StoriesClasses0 {
   ReorderAlbums: TlClass<
     'stories.ReorderAlbums',
     'Bool',
-    { peer: TlObject<'InputPeer'>; order: Array<number> }
+    { peer: ResolvablePeer<'InputPeer'>; order: Array<number> }
   >;
   DeleteAlbum: TlClass<
     'stories.DeleteAlbum',
     'Bool',
-    { peer: TlObject<'InputPeer'>; albumId: number }
+    { peer: ResolvablePeer<'InputPeer'>; albumId: number }
   >;
   GetAlbums: TlClass<
     'stories.GetAlbums',
     'stories.Albums',
-    { peer: TlObject<'InputPeer'>; hash: LongValue }
+    { peer: ResolvablePeer<'InputPeer'>; hash: LongValue }
   >;
   GetAlbumStories: TlClass<
     'stories.GetAlbumStories',
     'stories.Stories',
     {
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       albumId: number;
       offset: number;
       limit: number;
@@ -239,7 +240,7 @@ export interface StoriesClasses0 {
       pinned?: boolean;
       noforwards?: boolean;
       rtmpStream?: boolean;
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       caption?: string;
       entities?: Array<TlObject<'MessageEntity'>>;
       privacyRules: Array<TlObject<'InputPrivacyRule'>>;

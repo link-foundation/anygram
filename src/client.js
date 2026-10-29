@@ -1,5 +1,5 @@
 import { TelegramError, UnsupportedError } from './errors.js';
-import { methodProxy, requestOf } from './requests.js';
+import { methodProxy, requestOf, nativeTlObjects } from './requests.js';
 import { iterateHistory } from './operations.js';
 import { botTextParams } from './formatting.js';
 import { withConnection } from './lifecycle.js';
@@ -76,7 +76,20 @@ export class Anygram {
       options ??= params;
     }
     const request = requestOf(method, params);
-    return this.route('invoke', (adapter) => adapter.invoke(request, options));
+    return this.route('invoke', async (adapter) => {
+      if (nativeTlObjects.has(method)) {
+        await method.resolve(
+          {
+            getInputEntity: (peer, settings) =>
+              adapter.execute('getInputEntity', [peer, settings]),
+          },
+          options
+        );
+        options?.signal?.throwIfAborted();
+        return adapter.invoke(requestOf(method), options);
+      }
+      return adapter.invoke(request, options);
+    });
   }
 
   call(method, params, options) {

@@ -4,6 +4,7 @@ import type {
   TlObject,
   LongValue,
   FixedInteger,
+  ResolvablePeer,
 } from '../api-classes.js';
 export interface RootClasses4 {
   InputPageBlockMap: TlClass<
@@ -785,7 +786,7 @@ export interface RootClasses4 {
   InputDialogPeer: TlClass<
     'InputDialogPeer',
     'InputDialogPeer',
-    { peer: TlObject<'InputPeer'> }
+    { peer: ResolvablePeer<'InputPeer'> }
   >;
   InputDialogPeerFolder: TlClass<
     'InputDialogPeerFolder',
@@ -795,7 +796,7 @@ export interface RootClasses4 {
   InputDialogPeerCommunity: TlClass<
     'InputDialogPeerCommunity',
     'InputDialogPeer',
-    { community: TlObject<'InputChannel'> }
+    { community: ResolvablePeer<'InputChannel'> }
   >;
   DialogPeer: TlClass<'DialogPeer', 'DialogPeer', { peer: TlObject<'Peer'> }>;
   DialogPeerFolder: TlClass<

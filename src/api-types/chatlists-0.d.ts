@@ -4,6 +4,7 @@ import type {
   TlObject,
   LongValue,
   FixedInteger,
+  ResolvablePeer,
 } from '../api-classes.js';
 export interface ChatlistsClasses0 {
   ExportChatlistInvite: TlClass<
@@ -12,7 +13,7 @@ export interface ChatlistsClasses0 {
     {
       chatlist: TlObject<'InputChatlist'>;
       title: string;
-      peers: Array<TlObject<'InputPeer'>>;
+      peers: Array<ResolvablePeer<'InputPeer'>>;
     }
   >;
   DeleteExportedInvite: TlClass<
@@ -27,7 +28,7 @@ export interface ChatlistsClasses0 {
       chatlist: TlObject<'InputChatlist'>;
       slug: string;
       title?: string;
-      peers?: Array<TlObject<'InputPeer'>>;
+      peers?: Array<ResolvablePeer<'InputPeer'>>;
     }
   >;
   GetExportedInvites: TlClass<
@@ -43,7 +44,7 @@ export interface ChatlistsClasses0 {
   JoinChatlistInvite: TlClass<
     'chatlists.JoinChatlistInvite',
     'Updates',
-    { slug: string; peers: Array<TlObject<'InputPeer'>> }
+    { slug: string; peers: Array<ResolvablePeer<'InputPeer'>> }
   >;
   GetChatlistUpdates: TlClass<
     'chatlists.GetChatlistUpdates',
@@ -53,7 +54,10 @@ export interface ChatlistsClasses0 {
   JoinChatlistUpdates: TlClass<
     'chatlists.JoinChatlistUpdates',
     'Updates',
-    { chatlist: TlObject<'InputChatlist'>; peers: Array<TlObject<'InputPeer'>> }
+    {
+      chatlist: TlObject<'InputChatlist'>;
+      peers: Array<ResolvablePeer<'InputPeer'>>;
+    }
   >;
   HideChatlistUpdates: TlClass<
     'chatlists.HideChatlistUpdates',
@@ -68,7 +72,10 @@ export interface ChatlistsClasses0 {
   LeaveChatlist: TlClass<
     'chatlists.LeaveChatlist',
     'Updates',
-    { chatlist: TlObject<'InputChatlist'>; peers: Array<TlObject<'InputPeer'>> }
+    {
+      chatlist: TlObject<'InputChatlist'>;
+      peers: Array<ResolvablePeer<'InputPeer'>>;
+    }
   >;
   ExportedChatlistInvite: TlClass<
     'chatlists.ExportedChatlistInvite',

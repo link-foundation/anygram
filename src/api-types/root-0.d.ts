@@ -4,6 +4,7 @@ import type {
   TlObject,
   LongValue,
   FixedInteger,
+  ResolvablePeer,
 } from '../api-classes.js';
 export interface RootClasses0 {
   InvokeAfterMsg: TlClass<
@@ -135,12 +136,12 @@ export interface RootClasses0 {
   InputPeerUserFromMessage: TlClass<
     'InputPeerUserFromMessage',
     'InputPeer',
-    { peer: TlObject<'InputPeer'>; msgId: number; userId: LongValue }
+    { peer: ResolvablePeer<'InputPeer'>; msgId: number; userId: LongValue }
   >;
   InputPeerChannelFromMessage: TlClass<
     'InputPeerChannelFromMessage',
     'InputPeer',
-    { peer: TlObject<'InputPeer'>; msgId: number; channelId: LongValue }
+    { peer: ResolvablePeer<'InputPeer'>; msgId: number; channelId: LongValue }
   >;
   InputUserEmpty: TlClass<'InputUserEmpty', 'InputUser', {}>;
   InputUserSelf: TlClass<'InputUserSelf', 'InputUser', {}>;
@@ -152,7 +153,7 @@ export interface RootClasses0 {
   InputUserFromMessage: TlClass<
     'InputUserFromMessage',
     'InputUser',
-    { peer: TlObject<'InputPeer'>; msgId: number; userId: LongValue }
+    { peer: ResolvablePeer<'InputPeer'>; msgId: number; userId: LongValue }
   >;
   InputPhoneContact: TlClass<
     'InputPhoneContact',
@@ -318,7 +319,7 @@ export interface RootClasses0 {
   InputMediaStory: TlClass<
     'InputMediaStory',
     'InputMedia',
-    { peer: TlObject<'InputPeer'>; id: number }
+    { peer: ResolvablePeer<'InputPeer'>; id: number }
   >;
   InputMediaWebPage: TlClass<
     'InputMediaWebPage',
@@ -437,7 +438,7 @@ export interface RootClasses0 {
   InputPeerPhotoFileLocation: TlClass<
     'InputPeerPhotoFileLocation',
     'InputFileLocation',
-    { big?: boolean; peer: TlObject<'InputPeer'>; photoId: LongValue }
+    { big?: boolean; peer: ResolvablePeer<'InputPeer'>; photoId: LongValue }
   >;
   InputStickerSetThumb: TlClass<
     'InputStickerSetThumb',
@@ -575,7 +576,7 @@ export interface RootClasses0 {
       participantsCount: number;
       date: number;
       version: number;
-      migratedTo?: TlObject<'InputChannel'>;
+      migratedTo?: ResolvablePeer<'InputChannel'>;
       adminRights?: TlObject<'ChatAdminRights'>;
       defaultBannedRights?: TlObject<'ChatBannedRights'>;
     }

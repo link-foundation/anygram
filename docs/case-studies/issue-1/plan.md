@@ -148,8 +148,15 @@ Windows fixture repair.
 
 The request-bound checkpoint adds eight regressions and passes all 532 tests per
 runtime plus strict checks. See [normalization evidence](request-limits.md).
-Commit/push it and verify fresh CI. Then continue peer resolution and remaining
-application contracts with failing-before tests. Main remains an ancestor.
+Head d5f84c0 passed all nine runtime/OS jobs and applicable gates in run
+40838745111 (07:57:15Z–08:01:17Z, 2026-10-29). Main remains an ancestor.
+
+The [peer-resolution checkpoint](peer-resolution.md) adds seventeen regressions
+for native API classes, nested requests, actual vendor argument bytes, selected
+backend routing, cancellation and late-mutation depth bounds. All 549 tests pass
+on each runtime, with strict checks and a zero-clone scan of 77 sources. The
+package contains 120 permitted entries. Commit/push and verify fresh CI. Continue remaining
+return/model and application contracts with failing-before tests.
 
 Keep protocol completion (secret chats/call media/transports), complete backend
 return/event/style compatibility and actual downstream scenarios open in the
@@ -165,7 +172,8 @@ remaining requirements are genuinely implemented and verified.
 3. [x] Identify the Windows ENOENT/ENOTDIR fixture assumption; retain actual store behavior.
 4. [x] Use an existing-directory read failure and keep blocked write/recovery checks.
 5. [x] Verify all nine OS/runtime jobs on head 6b3e3e0 in run 40837895072.
-6. [ ] Verify fresh matrix CI after the request-bound checkpoint is pushed.
+6. [x] Verify request-bound head d5f84c0 in run 40838745111.
+7. [ ] Verify fresh matrix CI for the peer-resolution checkpoint.
 
 ## Historical CI investigations
 

@@ -99,13 +99,18 @@ the pinned layer-232 registry, including its MTProto service definitions:
 import { Api } from 'anygram';
 const request = new Api.users.GetUsers({ id: [new Api.InputUserSelf()] });
 const users = await client.invoke(request);
+await client.invoke(
+  new Api.messages.SendMessage({ peer: '@alice', message: 'Hello' })
+);
 ```
 
 Constructors accept camelCase fields and serialize through the shared TL codec.
 Numeric request random IDs are generated once when omitted; explicit zero IDs
-are retained. Use fully specified TL input objects here. String peer resolution,
-vendor custom models and vendor reader methods remain separate compatibility
-work. The same requests convert to actual GramJS/teleproto classes when those
+are retained. Owned requests resolve username/ID peer shortcuts through the
+selected backend, including nested requests and numeric message IDs. To serialize
+a request yourself, first call `await request.resolve(client)`. Vendor custom
+models and vendor reader methods remain separate compatibility work. The same
+requests convert to actual GramJS/teleproto classes when those
 backends are selected. Generated declarations check names, fields and TL input
 types; see the [typed example](examples/typed-api.ts).
 

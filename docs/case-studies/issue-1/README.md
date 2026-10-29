@@ -15,14 +15,21 @@ actual source scan.
 
 The [native class checkpoint](api-classes.md) provides schema-backed camelCase
 constructors and checked declarations for all 2629 pinned definitions. Node,
-Bun and Deno each pass 524 tests. String-peer resolution and full vendor model
-compatibility remain open. The same checkpoint repairs a Windows-specific
+Bun and Deno each pass 524 tests at that checkpoint. Full vendor model
+compatibility remains open. The same checkpoint repairs a Windows-specific
 read-error fixture; all nine runtime/OS jobs and applicable gates pass in
 run 40837895072 for head 6b3e3e0.
 
 The [request normalization checkpoint](request-limits.md) rejects excessive
 depth and vector length before traversing nested requests. All 532 tests pass
-on Node, Bun and Deno, with strict static checks. Fresh CI is required.
+on Node, Bun and Deno, with strict static checks. All nine runtime/OS jobs and
+applicable gates pass for head d5f84c0 in run 40838745111.
+
+The [peer-resolution checkpoint](peer-resolution.md) adds backend-selected peer
+and message shortcuts, recursive nested resolution, cancellation and bounded
+traversal. Seventeen regressions include actual vendor argument-byte comparisons
+and native encrypted TCP. Full vendor custom models and return/event parity
+remain open.
 
 ## Evidence and research method
 

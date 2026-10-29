@@ -4,37 +4,41 @@ import type {
   TlObject,
   LongValue,
   FixedInteger,
+  ResolvablePeer,
 } from '../api-classes.js';
 export interface ChannelsClasses0 {
   ReadHistory: TlClass<
     'channels.ReadHistory',
     'Bool',
-    { channel: TlObject<'InputChannel'>; maxId: number }
+    { channel: ResolvablePeer<'InputChannel'>; maxId: number }
   >;
   DeleteMessages: TlClass<
     'channels.DeleteMessages',
     'messages.AffectedMessages',
-    { channel: TlObject<'InputChannel'>; id: Array<number> }
+    { channel: ResolvablePeer<'InputChannel'>; id: Array<number> }
   >;
   ReportSpam: TlClass<
     'channels.ReportSpam',
     'Bool',
     {
-      channel: TlObject<'InputChannel'>;
-      participant: TlObject<'InputPeer'>;
+      channel: ResolvablePeer<'InputChannel'>;
+      participant: ResolvablePeer<'InputPeer'>;
       id: Array<number>;
     }
   >;
   GetMessages: TlClass<
     'channels.GetMessages',
     'messages.Messages',
-    { channel: TlObject<'InputChannel'>; id: Array<TlObject<'InputMessage'>> }
+    {
+      channel: ResolvablePeer<'InputChannel'>;
+      id: Array<number | TlObject<'InputMessage' | 'Message'>>;
+    }
   >;
   GetParticipants: TlClass<
     'channels.GetParticipants',
     'channels.ChannelParticipants',
     {
-      channel: TlObject<'InputChannel'>;
+      channel: ResolvablePeer<'InputChannel'>;
       filter: TlObject<'ChannelParticipantsFilter'>;
       offset: number;
       limit: number;
@@ -44,17 +48,20 @@ export interface ChannelsClasses0 {
   GetParticipant: TlClass<
     'channels.GetParticipant',
     'channels.ChannelParticipant',
-    { channel: TlObject<'InputChannel'>; participant: TlObject<'InputPeer'> }
+    {
+      channel: ResolvablePeer<'InputChannel'>;
+      participant: ResolvablePeer<'InputPeer'>;
+    }
   >;
   GetChannels: TlClass<
     'channels.GetChannels',
     'messages.Chats',
-    { id: Array<TlObject<'InputChannel'>> }
+    { id: Array<ResolvablePeer<'InputChannel'>> }
   >;
   GetFullChannel: TlClass<
     'channels.GetFullChannel',
     'messages.ChatFull',
-    { channel: TlObject<'InputChannel'> }
+    { channel: ResolvablePeer<'InputChannel'> }
   >;
   CreateChannel: TlClass<
     'channels.CreateChannel',
@@ -75,8 +82,8 @@ export interface ChannelsClasses0 {
     'channels.EditAdmin',
     'Updates',
     {
-      channel: TlObject<'InputChannel'>;
-      userId: TlObject<'InputUser'>;
+      channel: ResolvablePeer<'InputChannel'>;
+      userId: ResolvablePeer<'InputUser'>;
       adminRights: TlObject<'ChatAdminRights'>;
       rank?: string;
     }
@@ -84,42 +91,48 @@ export interface ChannelsClasses0 {
   EditTitle: TlClass<
     'channels.EditTitle',
     'Updates',
-    { channel: TlObject<'InputChannel'>; title: string }
+    { channel: ResolvablePeer<'InputChannel'>; title: string }
   >;
   EditPhoto: TlClass<
     'channels.EditPhoto',
     'Updates',
-    { channel: TlObject<'InputChannel'>; photo: TlObject<'InputChatPhoto'> }
+    {
+      channel: ResolvablePeer<'InputChannel'>;
+      photo: TlObject<'InputChatPhoto'>;
+    }
   >;
   CheckUsername: TlClass<
     'channels.CheckUsername',
     'Bool',
-    { channel: TlObject<'InputChannel'>; username: string }
+    { channel: ResolvablePeer<'InputChannel'>; username: string }
   >;
   UpdateUsername: TlClass<
     'channels.UpdateUsername',
     'Bool',
-    { channel: TlObject<'InputChannel'>; username: string }
+    { channel: ResolvablePeer<'InputChannel'>; username: string }
   >;
   JoinChannel: TlClass<
     'channels.JoinChannel',
     'messages.ChatInviteJoinResult',
-    { channel: TlObject<'InputChannel'> }
+    { channel: ResolvablePeer<'InputChannel'> }
   >;
   LeaveChannel: TlClass<
     'channels.LeaveChannel',
     'Updates',
-    { channel: TlObject<'InputChannel'> }
+    { channel: ResolvablePeer<'InputChannel'> }
   >;
   InviteToChannel: TlClass<
     'channels.InviteToChannel',
     'messages.InvitedUsers',
-    { channel: TlObject<'InputChannel'>; users: Array<TlObject<'InputUser'>> }
+    {
+      channel: ResolvablePeer<'InputChannel'>;
+      users: Array<ResolvablePeer<'InputUser'>>;
+    }
   >;
   DeleteChannel: TlClass<
     'channels.DeleteChannel',
     'Updates',
-    { channel: TlObject<'InputChannel'> }
+    { channel: ResolvablePeer<'InputChannel'> }
   >;
   ExportMessageLink: TlClass<
     'channels.ExportMessageLink',
@@ -127,7 +140,7 @@ export interface ChannelsClasses0 {
     {
       grouped?: boolean;
       thread?: boolean;
-      channel: TlObject<'InputChannel'>;
+      channel: ResolvablePeer<'InputChannel'>;
       id: number;
     }
   >;
@@ -137,7 +150,7 @@ export interface ChannelsClasses0 {
     {
       signaturesEnabled?: boolean;
       profilesEnabled?: boolean;
-      channel: TlObject<'InputChannel'>;
+      channel: ResolvablePeer<'InputChannel'>;
     }
   >;
   GetAdminedPublicChannels: TlClass<
@@ -154,8 +167,8 @@ export interface ChannelsClasses0 {
     'channels.EditBanned',
     'Updates',
     {
-      channel: TlObject<'InputChannel'>;
-      participant: TlObject<'InputPeer'>;
+      channel: ResolvablePeer<'InputChannel'>;
+      participant: ResolvablePeer<'InputPeer'>;
       bannedRights: TlObject<'ChatBannedRights'>;
     }
   >;
@@ -163,10 +176,10 @@ export interface ChannelsClasses0 {
     'channels.GetAdminLog',
     'channels.AdminLogResults',
     {
-      channel: TlObject<'InputChannel'>;
+      channel: ResolvablePeer<'InputChannel'>;
       q: string;
       eventsFilter?: TlObject<'ChannelAdminLogEventsFilter'>;
-      admins?: Array<TlObject<'InputUser'>>;
+      admins?: Array<ResolvablePeer<'InputUser'>>;
       maxId: LongValue;
       minId: LongValue;
       limit: number;
@@ -176,24 +189,28 @@ export interface ChannelsClasses0 {
     'channels.SetStickers',
     'Bool',
     {
-      channel: TlObject<'InputChannel'>;
+      channel: ResolvablePeer<'InputChannel'>;
       stickerset: TlObject<'InputStickerSet'>;
     }
   >;
   ReadMessageContents: TlClass<
     'channels.ReadMessageContents',
     'Bool',
-    { channel: TlObject<'InputChannel'>; id: Array<number> }
+    { channel: ResolvablePeer<'InputChannel'>; id: Array<number> }
   >;
   DeleteHistory: TlClass<
     'channels.DeleteHistory',
     'Updates',
-    { forEveryone?: boolean; channel: TlObject<'InputChannel'>; maxId: number }
+    {
+      forEveryone?: boolean;
+      channel: ResolvablePeer<'InputChannel'>;
+      maxId: number;
+    }
   >;
   TogglePreHistoryHidden: TlClass<
     'channels.TogglePreHistoryHidden',
     'Updates',
-    { channel: TlObject<'InputChannel'>; enabled: boolean }
+    { channel: ResolvablePeer<'InputChannel'>; enabled: boolean }
   >;
   GetLeftChannels: TlClass<
     'channels.GetLeftChannels',
@@ -208,13 +225,16 @@ export interface ChannelsClasses0 {
   SetDiscussionGroup: TlClass<
     'channels.SetDiscussionGroup',
     'Bool',
-    { broadcast: TlObject<'InputChannel'>; group: TlObject<'InputChannel'> }
+    {
+      broadcast: ResolvablePeer<'InputChannel'>;
+      group: ResolvablePeer<'InputChannel'>;
+    }
   >;
   EditLocation: TlClass<
     'channels.EditLocation',
     'Bool',
     {
-      channel: TlObject<'InputChannel'>;
+      channel: ResolvablePeer<'InputChannel'>;
       geoPoint: TlObject<'InputGeoPoint'>;
       address: string;
     }
@@ -222,7 +242,7 @@ export interface ChannelsClasses0 {
   ToggleSlowMode: TlClass<
     'channels.ToggleSlowMode',
     'Updates',
-    { channel: TlObject<'InputChannel'>; seconds: number }
+    { channel: ResolvablePeer<'InputChannel'>; seconds: number }
   >;
   GetInactiveChannels: TlClass<
     'channels.GetInactiveChannels',
@@ -232,7 +252,7 @@ export interface ChannelsClasses0 {
   ConvertToGigagroup: TlClass<
     'channels.ConvertToGigagroup',
     'Updates',
-    { channel: TlObject<'InputChannel'> }
+    { channel: ResolvablePeer<'InputChannel'> }
   >;
   GetSendAs: TlClass<
     'channels.GetSendAs',
@@ -240,70 +260,77 @@ export interface ChannelsClasses0 {
     {
       forPaidReactions?: boolean;
       forLiveStories?: boolean;
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
     }
   >;
   DeleteParticipantHistory: TlClass<
     'channels.DeleteParticipantHistory',
     'messages.AffectedHistory',
-    { channel: TlObject<'InputChannel'>; participant: TlObject<'InputPeer'> }
+    {
+      channel: ResolvablePeer<'InputChannel'>;
+      participant: ResolvablePeer<'InputPeer'>;
+    }
   >;
   ToggleJoinToSend: TlClass<
     'channels.ToggleJoinToSend',
     'Updates',
-    { channel: TlObject<'InputChannel'>; enabled: boolean }
+    { channel: ResolvablePeer<'InputChannel'>; enabled: boolean }
   >;
   ToggleJoinRequest: TlClass<
     'channels.ToggleJoinRequest',
     'Updates',
     {
       applyToInvites?: boolean;
-      channel: TlObject<'InputChannel'>;
+      channel: ResolvablePeer<'InputChannel'>;
       enabled: boolean;
-      guardBot?: TlObject<'InputUser'>;
+      guardBot?: ResolvablePeer<'InputUser'>;
     }
   >;
   ReorderUsernames: TlClass<
     'channels.ReorderUsernames',
     'Bool',
-    { channel: TlObject<'InputChannel'>; order: Array<string> }
+    { channel: ResolvablePeer<'InputChannel'>; order: Array<string> }
   >;
   ToggleUsername: TlClass<
     'channels.ToggleUsername',
     'Bool',
-    { channel: TlObject<'InputChannel'>; username: string; active: boolean }
+    {
+      channel: ResolvablePeer<'InputChannel'>;
+      username: string;
+      active: boolean;
+    }
   >;
   DeactivateAllUsernames: TlClass<
     'channels.DeactivateAllUsernames',
     'Bool',
-    { channel: TlObject<'InputChannel'> }
+    { channel: ResolvablePeer<'InputChannel'> }
   >;
   ToggleForum: TlClass<
     'channels.ToggleForum',
     'Updates',
-    { channel: TlObject<'InputChannel'>; enabled: boolean; tabs: boolean }
+    { channel: ResolvablePeer<'InputChannel'>; enabled: boolean; tabs: boolean }
   >;
   ToggleAntiSpam: TlClass<
     'channels.ToggleAntiSpam',
     'Updates',
-    { channel: TlObject<'InputChannel'>; enabled: boolean }
+    { channel: ResolvablePeer<'InputChannel'>; enabled: boolean }
   >;
   ReportAntiSpamFalsePositive: TlClass<
     'channels.ReportAntiSpamFalsePositive',
     'Bool',
-    { channel: TlObject<'InputChannel'>; msgId: number }
+    { channel: ResolvablePeer<'InputChannel'>; msgId: number }
   >;
   ToggleParticipantsHidden: TlClass<
     'channels.ToggleParticipantsHidden',
     'Updates',
-    { channel: TlObject<'InputChannel'>; enabled: boolean }
+    { channel: ResolvablePeer<'InputChannel'>; enabled: boolean }
   >;
   UpdateColor: TlClass<
     'channels.UpdateColor',
     'Updates',
     {
       forProfile?: boolean;
-      channel: TlObject<'InputChannel'>;
+      channel: ResolvablePeer<'InputChannel'>;
       color?: number;
       backgroundEmojiId?: LongValue;
     }
@@ -311,35 +338,38 @@ export interface ChannelsClasses0 {
   ToggleViewForumAsMessages: TlClass<
     'channels.ToggleViewForumAsMessages',
     'Updates',
-    { channel: TlObject<'InputChannel'>; enabled: boolean }
+    { channel: ResolvablePeer<'InputChannel'>; enabled: boolean }
   >;
   GetChannelRecommendations: TlClass<
     'channels.GetChannelRecommendations',
     'messages.Chats',
-    { channel?: TlObject<'InputChannel'> }
+    { channel?: ResolvablePeer<'InputChannel'> }
   >;
   UpdateEmojiStatus: TlClass<
     'channels.UpdateEmojiStatus',
     'Updates',
-    { channel: TlObject<'InputChannel'>; emojiStatus: TlObject<'EmojiStatus'> }
+    {
+      channel: ResolvablePeer<'InputChannel'>;
+      emojiStatus: TlObject<'EmojiStatus'>;
+    }
   >;
   SetBoostsToUnblockRestrictions: TlClass<
     'channels.SetBoostsToUnblockRestrictions',
     'Updates',
-    { channel: TlObject<'InputChannel'>; boosts: number }
+    { channel: ResolvablePeer<'InputChannel'>; boosts: number }
   >;
   SetEmojiStickers: TlClass<
     'channels.SetEmojiStickers',
     'Bool',
     {
-      channel: TlObject<'InputChannel'>;
+      channel: ResolvablePeer<'InputChannel'>;
       stickerset: TlObject<'InputStickerSet'>;
     }
   >;
   RestrictSponsoredMessages: TlClass<
     'channels.RestrictSponsoredMessages',
     'Updates',
-    { channel: TlObject<'InputChannel'>; restricted: boolean }
+    { channel: ResolvablePeer<'InputChannel'>; restricted: boolean }
   >;
   SearchPosts: TlClass<
     'channels.SearchPosts',
@@ -348,7 +378,7 @@ export interface ChannelsClasses0 {
       hashtag?: string;
       query?: string;
       offsetRate: number;
-      offsetPeer: TlObject<'InputPeer'>;
+      offsetPeer: ResolvablePeer<'InputPeer'>;
       offsetId: number;
       limit: number;
       allowPaidStars?: LongValue;
@@ -359,19 +389,19 @@ export interface ChannelsClasses0 {
     'Updates',
     {
       broadcastMessagesAllowed?: boolean;
-      channel: TlObject<'InputChannel'>;
+      channel: ResolvablePeer<'InputChannel'>;
       sendPaidMessagesStars: LongValue;
     }
   >;
   ToggleAutotranslation: TlClass<
     'channels.ToggleAutotranslation',
     'Updates',
-    { channel: TlObject<'InputChannel'>; enabled: boolean }
+    { channel: ResolvablePeer<'InputChannel'>; enabled: boolean }
   >;
   GetMessageAuthor: TlClass<
     'channels.GetMessageAuthor',
     'User',
-    { channel: TlObject<'InputChannel'>; id: number }
+    { channel: ResolvablePeer<'InputChannel'>; id: number }
   >;
   CheckSearchPostsFlood: TlClass<
     'channels.CheckSearchPostsFlood',
@@ -381,7 +411,7 @@ export interface ChannelsClasses0 {
   SetMainProfileTab: TlClass<
     'channels.SetMainProfileTab',
     'Bool',
-    { channel: TlObject<'InputChannel'>; tab: TlObject<'ProfileTab'> }
+    { channel: ResolvablePeer<'InputChannel'>; tab: TlObject<'ProfileTab'> }
   >;
   ChannelParticipants: TlClass<
     'channels.ChannelParticipants',

@@ -4,6 +4,7 @@ import type {
   TlObject,
   LongValue,
   FixedInteger,
+  ResolvablePeer,
 } from '../api-classes.js';
 export interface EphemeralClasses0 {
   SendMessage: TlClass<
@@ -14,8 +15,8 @@ export interface EphemeralClasses0 {
       welcome?: boolean;
       anchor?: boolean;
       noforwards?: boolean;
-      peer?: TlObject<'InputPeer'>;
-      receiverId: TlObject<'InputUser'>;
+      peer?: ResolvablePeer<'InputPeer'>;
+      receiverId: ResolvablePeer<'InputUser'>;
       queryId?: LongValue;
       message: string;
       entities?: Array<TlObject<'MessageEntity'>>;
@@ -31,8 +32,8 @@ export interface EphemeralClasses0 {
     'ephemeral.DeleteMessage',
     'Bool',
     {
-      peer?: TlObject<'InputPeer'>;
-      receiverId: TlObject<'InputUser'>;
+      peer?: ResolvablePeer<'InputPeer'>;
+      receiverId: ResolvablePeer<'InputUser'>;
       id: number;
     }
   >;
@@ -40,7 +41,7 @@ export interface EphemeralClasses0 {
     'ephemeral.ReportMessage',
     'ReportResult',
     {
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       id: number;
       option: Uint8Array;
       message: string;
@@ -49,7 +50,7 @@ export interface EphemeralClasses0 {
   GetCallbackAnswer: TlClass<
     'ephemeral.GetCallbackAnswer',
     'messages.BotCallbackAnswer',
-    { peer: TlObject<'InputPeer'>; id: number; data?: Uint8Array }
+    { peer: ResolvablePeer<'InputPeer'>; id: number; data?: Uint8Array }
   >;
   EditMessage: TlClass<
     'ephemeral.EditMessage',
@@ -57,8 +58,8 @@ export interface EphemeralClasses0 {
     {
       invertMedia?: boolean;
       welcome?: boolean;
-      peer?: TlObject<'InputPeer'>;
-      receiverId: TlObject<'InputUser'>;
+      peer?: ResolvablePeer<'InputPeer'>;
+      receiverId: ResolvablePeer<'InputUser'>;
       id: number;
       message?: string;
       media?: TlObject<'InputMedia'>;
@@ -70,17 +71,17 @@ export interface EphemeralClasses0 {
   DeleteWelcomeMessage: TlClass<
     'ephemeral.DeleteWelcomeMessage',
     'Bool',
-    { peer: TlObject<'InputPeer'>; id: number }
+    { peer: ResolvablePeer<'InputPeer'>; id: number }
   >;
   DeleteAllWelcomeMessages: TlClass<
     'ephemeral.DeleteAllWelcomeMessages',
     'Bool',
-    { peer: TlObject<'InputPeer'> }
+    { peer: ResolvablePeer<'InputPeer'> }
   >;
   GetWelcomeMessages: TlClass<
     'ephemeral.GetWelcomeMessages',
     'ephemeral.WelcomeMessages',
-    { peer: TlObject<'InputPeer'>; hash: LongValue }
+    { peer: ResolvablePeer<'InputPeer'>; hash: LongValue }
   >;
   WelcomeMessagesNotModified: TlClass<
     'ephemeral.WelcomeMessagesNotModified',

@@ -3,6 +3,7 @@ import { TlCodec } from './tl.js';
 import { camel, gramClassName, nativeTlObjects } from './requests.js';
 import { crc32 } from './bytes.js';
 import { randomId } from './random.js';
+import { resolveTlRequest } from './tl-resolution.js';
 
 const codec = new TlCodec();
 
@@ -53,6 +54,13 @@ function createClass(definition) {
       nativeTlObjects.add(this);
     }
 
+    async resolve(client, options) {
+      if (!definition.method) {
+        throw new TypeError('resolve() requires a request instance');
+      }
+      await resolveTlRequest(this, fields, client, construct, options);
+    }
+
     getBytes() {
       return Buffer.from(codec.encode(this));
     }
@@ -66,6 +74,17 @@ function createClass(definition) {
   }
   Object.assign(SchemaObject, metadata);
   return SchemaObject;
+}
+
+function construct(name, fields) {
+  const Constructor = gramClassName(name)
+    .split('.')
+    .reduce((scope, key) => scope[key], Api);
+  return new Constructor(
+    Object.fromEntries(
+      Object.entries(fields).map(([key, value]) => [camel(key), value])
+    )
+  );
 }
 
 /** Class constructors use the same schema and serializer as native plain RPCs. */

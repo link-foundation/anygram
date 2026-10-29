@@ -4,6 +4,7 @@ import type {
   TlObject,
   LongValue,
   FixedInteger,
+  ResolvablePeer,
 } from '../api-classes.js';
 export interface RootClasses5 {
   ChatBannedRights: TlClass<
@@ -139,7 +140,7 @@ export interface RootClasses5 {
   InputFolderPeer: TlClass<
     'InputFolderPeer',
     'InputFolderPeer',
-    { peer: TlObject<'InputPeer'>; folderId: number }
+    { peer: ResolvablePeer<'InputPeer'>; folderId: number }
   >;
   FolderPeer: TlClass<
     'FolderPeer',
@@ -312,9 +313,9 @@ export interface RootClasses5 {
       title: TlObject<'TextWithEntities'>;
       emoticon?: string;
       color?: number;
-      pinnedPeers: Array<TlObject<'InputPeer'>>;
-      includePeers: Array<TlObject<'InputPeer'>>;
-      excludePeers: Array<TlObject<'InputPeer'>>;
+      pinnedPeers: Array<ResolvablePeer<'InputPeer'>>;
+      includePeers: Array<ResolvablePeer<'InputPeer'>>;
+      excludePeers: Array<ResolvablePeer<'InputPeer'>>;
     }
   >;
   DialogFilterDefault: TlClass<'DialogFilterDefault', 'DialogFilter', {}>;
@@ -328,8 +329,8 @@ export interface RootClasses5 {
       title: TlObject<'TextWithEntities'>;
       emoticon?: string;
       color?: number;
-      pinnedPeers: Array<TlObject<'InputPeer'>>;
-      includePeers: Array<TlObject<'InputPeer'>>;
+      pinnedPeers: Array<ResolvablePeer<'InputPeer'>>;
+      includePeers: Array<ResolvablePeer<'InputPeer'>>;
     }
   >;
   DialogFilterSuggested: TlClass<
@@ -611,17 +612,17 @@ export interface RootClasses5 {
   BotCommandScopePeer: TlClass<
     'BotCommandScopePeer',
     'BotCommandScope',
-    { peer: TlObject<'InputPeer'> }
+    { peer: ResolvablePeer<'InputPeer'> }
   >;
   BotCommandScopePeerAdmins: TlClass<
     'BotCommandScopePeerAdmins',
     'BotCommandScope',
-    { peer: TlObject<'InputPeer'> }
+    { peer: ResolvablePeer<'InputPeer'> }
   >;
   BotCommandScopePeerUser: TlClass<
     'BotCommandScopePeerUser',
     'BotCommandScope',
-    { peer: TlObject<'InputPeer'>; userId: TlObject<'InputUser'> }
+    { peer: ResolvablePeer<'InputPeer'>; userId: ResolvablePeer<'InputUser'> }
   >;
   ChatTheme: TlClass<'ChatTheme', 'ChatTheme', { emoticon: string }>;
   ChatThemeUniqueGift: TlClass<
@@ -834,7 +835,7 @@ export interface RootClasses5 {
   InputInvoiceMessage: TlClass<
     'InputInvoiceMessage',
     'InputInvoice',
-    { peer: TlObject<'InputPeer'>; msgId: number }
+    { peer: ResolvablePeer<'InputPeer'>; msgId: number }
   >;
   InputInvoiceSlug: TlClass<
     'InputInvoiceSlug',
@@ -865,7 +866,7 @@ export interface RootClasses5 {
     {
       hideName?: boolean;
       includeUpgrade?: boolean;
-      peer: TlObject<'InputPeer'>;
+      peer: ResolvablePeer<'InputPeer'>;
       giftId: LongValue;
       message?: TlObject<'TextWithEntities'>;
     }
@@ -878,13 +879,16 @@ export interface RootClasses5 {
   InputInvoiceStarGiftTransfer: TlClass<
     'InputInvoiceStarGiftTransfer',
     'InputInvoice',
-    { stargift: TlObject<'InputSavedStarGift'>; toId: TlObject<'InputPeer'> }
+    {
+      stargift: TlObject<'InputSavedStarGift'>;
+      toId: ResolvablePeer<'InputPeer'>;
+    }
   >;
   InputInvoicePremiumGiftStars: TlClass<
     'InputInvoicePremiumGiftStars',
     'InputInvoice',
     {
-      userId: TlObject<'InputUser'>;
+      userId: ResolvablePeer<'InputUser'>;
       months: number;
       message?: TlObject<'TextWithEntities'>;
     }
@@ -892,7 +896,7 @@ export interface RootClasses5 {
   InputInvoiceBusinessBotTransferStars: TlClass<
     'InputInvoiceBusinessBotTransferStars',
     'InputInvoice',
-    { bot: TlObject<'InputUser'>; stars: LongValue }
+    { bot: ResolvablePeer<'InputUser'>; stars: LongValue }
   >;
   InputInvoiceStarGiftResale: TlClass<
     'InputInvoiceStarGiftResale',
@@ -901,14 +905,14 @@ export interface RootClasses5 {
       ton?: boolean;
       showName?: boolean;
       slug: string;
-      toId: TlObject<'InputPeer'>;
+      toId: ResolvablePeer<'InputPeer'>;
       message?: TlObject<'TextWithEntities'>;
     }
   >;
   InputInvoiceStarGiftPrepaidUpgrade: TlClass<
     'InputInvoiceStarGiftPrepaidUpgrade',
     'InputInvoice',
-    { peer: TlObject<'InputPeer'>; hash: string }
+    { peer: ResolvablePeer<'InputPeer'>; hash: string }
   >;
   InputInvoicePremiumAuthCode: TlClass<
     'InputInvoicePremiumAuthCode',
@@ -926,7 +930,7 @@ export interface RootClasses5 {
     {
       hideName?: boolean;
       updateBid?: boolean;
-      peer?: TlObject<'InputPeer'>;
+      peer?: ResolvablePeer<'InputPeer'>;
       giftId: LongValue;
       bidAmount: LongValue;
       message?: TlObject<'TextWithEntities'>;
@@ -940,14 +944,14 @@ export interface RootClasses5 {
   InputStorePaymentGiftPremium: TlClass<
     'InputStorePaymentGiftPremium',
     'InputStorePaymentPurpose',
-    { userId: TlObject<'InputUser'>; currency: string; amount: LongValue }
+    { userId: ResolvablePeer<'InputUser'>; currency: string; amount: LongValue }
   >;
   InputStorePaymentPremiumGiftCode: TlClass<
     'InputStorePaymentPremiumGiftCode',
     'InputStorePaymentPurpose',
     {
-      users: Array<TlObject<'InputUser'>>;
-      boostPeer?: TlObject<'InputPeer'>;
+      users: Array<ResolvablePeer<'InputUser'>>;
+      boostPeer?: ResolvablePeer<'InputPeer'>;
       currency: string;
       amount: LongValue;
       message?: TlObject<'TextWithEntities'>;
@@ -959,8 +963,8 @@ export interface RootClasses5 {
     {
       onlyNewSubscribers?: boolean;
       winnersAreVisible?: boolean;
-      boostPeer: TlObject<'InputPeer'>;
-      additionalPeers?: Array<TlObject<'InputPeer'>>;
+      boostPeer: ResolvablePeer<'InputPeer'>;
+      additionalPeers?: Array<ResolvablePeer<'InputPeer'>>;
       countriesIso2?: Array<string>;
       prizeDescription?: string;
       randomId: LongValue;
@@ -977,14 +981,14 @@ export interface RootClasses5 {
       stars: LongValue;
       currency: string;
       amount: LongValue;
-      spendPurposePeer?: TlObject<'InputPeer'>;
+      spendPurposePeer?: ResolvablePeer<'InputPeer'>;
     }
   >;
   InputStorePaymentStarsGift: TlClass<
     'InputStorePaymentStarsGift',
     'InputStorePaymentPurpose',
     {
-      userId: TlObject<'InputUser'>;
+      userId: ResolvablePeer<'InputUser'>;
       stars: LongValue;
       currency: string;
       amount: LongValue;
@@ -997,8 +1001,8 @@ export interface RootClasses5 {
       onlyNewSubscribers?: boolean;
       winnersAreVisible?: boolean;
       stars: LongValue;
-      boostPeer: TlObject<'InputPeer'>;
-      additionalPeers?: Array<TlObject<'InputPeer'>>;
+      boostPeer: ResolvablePeer<'InputPeer'>;
+      additionalPeers?: Array<ResolvablePeer<'InputPeer'>>;
       countriesIso2?: Array<string>;
       prizeDescription?: string;
       randomId: LongValue;
@@ -1267,7 +1271,7 @@ export interface RootClasses5 {
   InputBotAppShortName: TlClass<
     'InputBotAppShortName',
     'InputBotApp',
-    { botId: TlObject<'InputUser'>; shortName: string }
+    { botId: ResolvablePeer<'InputUser'>; shortName: string }
   >;
   BotAppNotModified: TlClass<'BotAppNotModified', 'BotApp', {}>;
   BotApp: TlClass<
@@ -1298,10 +1302,5 @@ export interface RootClasses5 {
     'InputChatlistDialogFilter',
     'InputChatlist',
     { filterId: number }
-  >;
-  ExportedChatlistInvite: TlClass<
-    'ExportedChatlistInvite',
-    'ExportedChatlistInvite',
-    { title: string; url: string; peers: Array<TlObject<'Peer'>> }
   >;
 }

@@ -4,6 +4,7 @@ import type {
   TlObject,
   LongValue,
   FixedInteger,
+  ResolvablePeer,
 } from '../api-classes.js';
 export interface StorageClasses0 {
   FileUnknown: TlClass<'storage.FileUnknown', 'storage.FileType', {}>;

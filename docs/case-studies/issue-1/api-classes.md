@@ -32,8 +32,9 @@ schema declaration bodies are excluded from clone detection as data; all
 handwritten production code remains in its existing scan. The 38 generated
 declaration files are compiled and checked for freshness separately.
 
-These constructors require fully specified TL objects. String/input-peer
-resolution, vendor reader/custom model methods, full return/event compatibility
+This initial checkpoint required fully specified TL objects. The subsequent
+[peer-resolution checkpoint](peer-resolution.md) adds string/input-peer and
+numeric message shortcuts. Vendor reader/custom model methods, full return/event compatibility
 and controlled-account application evidence remain open. The namespace alone
 does not satisfy complete backend or protocol parity.
 
