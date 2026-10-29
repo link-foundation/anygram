@@ -20,7 +20,7 @@ export { TransportFraming } from './transport-framing.js';
 export { TcpTransport };
 export { WebSocketTransport };
 export { WebSocketFraming } from './websocket-framing.js';
-export { createSocks5Connector } from './socks5.js';
+export { createSocks4Connector, createSocks5Connector } from './socks5.js';
 export { ObfuscatedFraming } from './obfuscated-framing.js';
 
 export class HttpTransport {

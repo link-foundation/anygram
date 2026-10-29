@@ -74,11 +74,13 @@ examples/. No live credentials or sessions may be included in research data.
   fragmented TCP/WebSocket reads. Finite copy-budget regressions and storage
   reuse/immutability tests verify the change.
 - In-process polling ownership and explicit membership subscriptions are tested.
-- After resource regressions, Node/Bun/Deno each pass 156 tests; lint, format, duplication and
+- SOCKS4/4a CONNECT supports IPv4 and proxy DNS with bounded UTF-8 user IDs.
+  Fragmented replies, rejection codes, deadlines and TLS WebSocket tunnels pass.
+- After SOCKS4 regressions, Node/Bun/Deno each pass 160 tests; lint, format, duplication and
   four declaration entry points pass. Each later code change requires fresh checks.
 - Refreshed issue/sub-issue and all three PR feedback streams are empty. Main is
-  an ancestor of the branch. CI for 15dd3b6 passed all nine runtime/OS jobs and
-  release gates in run 40789930055, including asynchronous DC cleanup. Later heads
+  an ancestor of the branch. CI for ee81109 passed all nine runtime/OS jobs and
+  release gates in run 40790365948, including assembly-copy budgets and DC cleanup. Later heads
   require fresh CI evidence.
 - Research includes 32 complete discussions, 26 inspected images, nineteen pinned
   test-path inventories and all 333 Telegram-related meta-sovereign JS files.

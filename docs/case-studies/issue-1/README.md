@@ -383,3 +383,19 @@ A third verifies that compaction, caller input mutation and later buffer reuse
 cannot change delivered packets or incomplete data. All 156 tests pass on Node,
 Bun and Deno. Shutdown head 15dd3b6 passed all CI jobs in
 [run 40789930055](https://github.com/link-foundation/anygram/actions/runs/40789930055).
+
+## SOCKS4 checkpoint
+
+SOCKS4/4a CONNECT shares the existing socket lifecycle and supports IPv4 and
+proxy-side domain resolution with bounded UTF-8 user IDs. Four new regressions
+cover original-specification bytes, fragmented/coalesced replies, rejection
+codes, deadlines and TLS-verified WebSocket traffic through a loopback SOCKS4a
+tunnel. A discovered hostname-conversion truncation bug is fixed for SOCKS5 as
+well. Unsupported IPv6/password settings fail before connecting.
+
+All 160 tests pass on Node, Bun and Deno; strict lint, formatting, duplication
+and TypeScript checks pass. Buffer head ee81109 passed every applicable CI job in
+[run 40790365948](https://github.com/link-foundation/anygram/actions/runs/40790365948).
+Historical checkpoint counts above describe their respective commits. Fake TLS,
+browser/Worker APIs, secret chats, calls and complete backend/application parity
+remain open.

@@ -70,7 +70,7 @@ Independent login/2FA, DC migration, session storage, ordered update recovery an
 media primitives have deterministic tests; complete application/live-account
 scenarios remain unverified. Secret-chat state and voice/video media still need
 implementation and verification. The requirements ledger stays open.
-Fake TLS, obfuscated full framing and SOCKS4 remain unfinished.
+Fake TLS and obfuscated full framing remain unfinished.
 The unified TDLib adapter must preserve TDLib's separate JSON API; it must never
 claim that an MTProto method string is a valid TDLib request.
 
@@ -103,7 +103,7 @@ rejects authentication downgrade, invalid versions/address types, empty domain
 replies and CONNECT failure codes before sending Telegram data. The TCP request
 deadline includes negotiation; cancellation closes the negotiating socket.
 This implements CONNECT with no authentication or username/password, without
-claiming GSSAPI, BIND, UDP ASSOCIATE or SOCKS4 support.
+claiming GSSAPI, BIND or UDP ASSOCIATE support. SOCKS4/4a is verified separately below.
 
 The initial three regressions in `tests/socks5.test.js` failed because proxy
 settings were ignored and the destination was resolved directly (ENOTFOUND).
@@ -169,3 +169,24 @@ than concatenating the entire incomplete packet on every network chunk. Delivere
 packets own their bytes. `tests/framing-resources.test.js` checks a finite copy
 budget, compaction, caller mutation and storage reuse. Large empty buffers release
 their allocations instead of retaining maximum capacity on idle connections.
+
+## SOCKS4/4a CONNECT verification
+
+The independent connector follows Ying-Da Lee's original
+[SOCKS4 specification](https://www.openssh.org/txt/socks4.protocol) and
+[SOCKS4a extension](https://www.openssh.org/txt/socks4a.protocol), captured in
+`data/socks4.protocol` and `data/socks4a.protocol`. IPv4 CONNECT uses a bounded
+NUL-terminated UTF-8 user ID; domain destinations use the 0.0.0.1 sentinel and
+proxy-side IDNA DNS. IPv6, passwords and ambiguous reserved IPv4 destinations
+are rejected before creating a socket. This implements CONNECT; BIND is not
+part of this connector.
+
+The initial three tests failed before implementation. Four regressions now
+verify wire bytes, fragmented and coalesced replies, rejection codes 91–93,
+invalid versions, bounded negotiation, unsupported settings and TLS-verified
+obfuscated WebSocket traffic through a real loopback SOCKS4a tunnel. The TLS
+server uses the independent WebSocket library. A malformed-domain test also
+exposed Node domainToASCII truncating `bad/domain` to `bad`; both SOCKS versions
+now reject invalid input before conversion can silently change its meaning.
+All 160 tests pass on Node, Bun and Deno; strict lint, declaration and example
+checks pass. Fake TLS, browser/Worker APIs and full protocol parity remain open.

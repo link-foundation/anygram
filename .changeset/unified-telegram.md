@@ -5,7 +5,7 @@
 Introduce shared Telegram backend routing and optional client adapters alongside
 independent Bot API and encrypted MTProto HTTPS/TCP transports. Add four native
 TCP framing formats with bounded streams and send-only acknowledgements,
-SOCKS5 CONNECT with proxy-side DNS, IPv4/IPv6 and optional authentication,
+SOCKS4/4a and SOCKS5 CONNECT with proxy-side DNS, IPv4/IPv6 and optional authentication,
 continuous AES-CTR obfuscation and MTProxy secret/DC routing, binary WebSocket
 transport with TLS validation, masked frames and bounded fragmented streams,
 layer-232 TL support,

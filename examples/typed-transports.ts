@@ -6,6 +6,7 @@ import {
   ObfuscatedFraming,
   WebSocketTransport,
   WebSocketFraming,
+  createSocks4Connector,
   createSocks5Connector,
 } from '../src/mtproto.js';
 
@@ -24,6 +25,10 @@ const factory = createClient({
   transportFactory: (dc) => new TcpTransport({ dc }),
 });
 const proxied = createClient({ proxy: { host: '127.0.0.1', port: 1080 } });
+const socks4 = createClient({
+  proxy: { host: '127.0.0.1', port: 1080, socksType: 4 },
+});
+const socks4Connector = createSocks4Connector({ host: '127.0.0.1' });
 const connector = createSocks5Connector({
   host: '127.0.0.1',
   port: 1080,
@@ -34,6 +39,9 @@ const obfuscated = new ObfuscatedFraming({ mode: 'padded' });
 const websocket = new WebSocketTransport({ dc: 2 });
 const wsFraming = new WebSocketFraming({ maxBytes: 1024 * 1024 });
 const wsClient = createClient({ transport: 'websocket' });
+const wsSocks4 = new WebSocketTransport({
+  proxy: { type: 'socks4a', host: '127.0.0.1', username: 'example' },
+});
 const mtproxy = createClient({
   proxy: {
     type: 'mtproxy',
@@ -48,10 +56,13 @@ void [
   framing,
   factory,
   proxied,
+  socks4,
+  socks4Connector,
   connector,
   obfuscated,
   websocket,
   wsFraming,
   wsClient,
+  wsSocks4,
   mtproxy,
 ];

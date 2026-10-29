@@ -3,11 +3,47 @@ import { Duplex } from 'node:stream';
 import { domainToASCII } from 'node:url';
 import { TelegramError } from './errors.js';
 
-const failure = (message, code) =>
-  new TelegramError(`SOCKS5 ${message}`, { type: 'PROXY_ERROR', code });
+const failure = (message, code, version = 5) =>
+  new TelegramError(`SOCKS${version} ${message}`, {
+    type: 'PROXY_ERROR',
+    code,
+  });
+
+export function createSocksConnector(options) {
+  return options.socksType === 4 || ['socks4', 'socks4a'].includes(options.type)
+    ? createSocks4Connector(options)
+    : createSocks5Connector(options);
+}
 
 /** Independent CONNECT connector. Destinations are resolved by the proxy. */
 export function createSocks5Connector(options = {}) {
+  const proxy = proxyEndpoint(options, 5);
+  const auth = authentication(options.username, options.password);
+  return (destination) =>
+    new SocksSocket(proxy, auth, destinationPacket(destination));
+}
+
+export function createSocks4Connector(options = {}) {
+  const proxy = proxyEndpoint(options, 4);
+  const username = options.username ?? '';
+  if (
+    typeof username !== 'string' ||
+    username.includes('\0') ||
+    options.password !== undefined
+  ) {
+    throw new TypeError(
+      'SOCKS4 requires a NUL-free user ID and does not support passwords'
+    );
+  }
+  const user = Buffer.from(username);
+  if (user.length > 255) {
+    throw new RangeError('SOCKS4 user ID exceeds 255 UTF-8 bytes');
+  }
+  return (destination) =>
+    new SocksSocket(proxy, undefined, socks4Request(destination, user));
+}
+
+function proxyEndpoint(options, version) {
   const host = options.host ?? options.ip;
   const port = options.port ?? 1080;
   if (
@@ -17,14 +53,43 @@ export function createSocks5Connector(options = {}) {
     port < 1 ||
     port > 65535 ||
     options.secret !== undefined ||
-    ![undefined, 5].includes(options.socksType) ||
-    ![undefined, 'socks5'].includes(options.type)
+    options.MTProxy === true ||
+    ![undefined, version].includes(options.socksType) ||
+    !(
+      version === 4 ? [undefined, 'socks4', 'socks4a'] : [undefined, 'socks5']
+    ).includes(options.type)
   ) {
-    throw new TypeError('Invalid SOCKS5 proxy endpoint or type');
+    throw new TypeError(`Invalid SOCKS${version} proxy endpoint or type`);
   }
-  const auth = authentication(options.username, options.password);
-  return (destination) =>
-    new SocksSocket({ host, port }, auth, destinationPacket(destination));
+  return { host, port };
+}
+
+function socks4Request(destination, user) {
+  // Share destination validation, IDNA and port encoding with SOCKS5.
+  const packet = destinationPacket(destination, 4);
+  if (packet[3] === 4) {
+    throw new TypeError('SOCKS4 does not support IPv6 destinations');
+  }
+  const domain = packet[3] === 3;
+  const address = domain ? Buffer.from([0, 0, 0, 1]) : packet.subarray(4, 8);
+  if (
+    !domain &&
+    address.subarray(0, 3).equals(Buffer.alloc(3)) &&
+    address[3] !== 0
+  ) {
+    throw new TypeError('SOCKS4 IPv4 address is reserved for domain routing');
+  }
+  const suffix = domain
+    ? Buffer.concat([packet.subarray(5, -2), Buffer.from([0])])
+    : Buffer.alloc(0);
+  return Buffer.concat([
+    Buffer.from([4, 1]),
+    packet.subarray(-2),
+    address,
+    user,
+    Buffer.from([0]),
+    suffix,
+  ]);
 }
 
 function authentication(username, password) {
@@ -52,7 +117,7 @@ function authentication(username, password) {
   ]);
 }
 
-function destinationPacket({ host, port }) {
+function destinationPacket({ host, port }, version = 5) {
   if (
     typeof host !== 'string' ||
     !host ||
@@ -60,7 +125,7 @@ function destinationPacket({ host, port }) {
     port < 1 ||
     port > 65535
   ) {
-    throw new RangeError('Invalid SOCKS5 destination');
+    throw new RangeError(`Invalid SOCKS${version} destination`);
   }
   const kind = isIP(host);
   let address;
@@ -70,8 +135,14 @@ function destinationPacket({ host, port }) {
     address = Buffer.concat([Buffer.from([4]), ipv6(host)]);
   } else {
     const ascii = domainToASCII(host);
-    if (!ascii || ascii.length > 255 || /[\s\0/\\:@%[\]]/.test(ascii)) {
-      throw new TypeError('Invalid SOCKS5 destination domain');
+    const invalid = /[\s\0/\\:@%[\]]/;
+    if (
+      !ascii ||
+      ascii.length > 255 ||
+      invalid.test(host) ||
+      invalid.test(ascii)
+    ) {
+      throw new TypeError(`Invalid SOCKS${version} destination domain`);
     }
     const bytes = Buffer.from(ascii);
     address = Buffer.concat([Buffer.from([3, bytes.length]), bytes]);
@@ -115,11 +186,13 @@ class SocksSocket extends Duplex {
     super();
     this.#auth = auth;
     this.request = request;
-    this.state = 'method';
+    this.state = request[0] === 4 ? 'reply' : 'method';
     this.buffer = Buffer.alloc(0);
     this.socket = createConnection(proxy);
     this.socket.once('connect', () =>
-      this.socket.write(Buffer.from([5, 1, auth ? 2 : 0]))
+      this.socket.write(
+        request[0] === 4 ? request : Buffer.from([5, 1, auth ? 2 : 0])
+      )
     );
     this.socket.on('data', (bytes) => this.accept(bytes));
     this.socket.on('error', (error) => this.destroy(error));
@@ -127,7 +200,9 @@ class SocksSocket extends Duplex {
       if (this.state === 'ready') {
         this.push(null);
       } else {
-        this.destroy(failure('proxy closed during negotiation'));
+        this.destroy(
+          failure('proxy closed during negotiation', undefined, request[0])
+        );
       }
     });
     this.socket.on('close', () => {
@@ -141,7 +216,7 @@ class SocksSocket extends Duplex {
   }
   _write(bytes, encoding, done) {
     if (this.state !== 'ready') {
-      done(failure('tunnel is not connected'));
+      done(failure('tunnel is not connected', undefined, this.request[0]));
       return;
     }
     this.socket.write(bytes, encoding, done);
@@ -218,16 +293,8 @@ class SocksSocket extends Duplex {
   }
   acceptReply() {
     const bytes = this.buffer;
-    if (bytes.length < 4) {
-      return false;
-    }
-    if (bytes[0] !== 5 || bytes[2] !== 0) {
-      throw failure('invalid CONNECT response');
-    }
-    if (bytes[1] !== 0) {
-      throw failure('CONNECT rejected', bytes[1]);
-    }
-    const length = replyLength(bytes);
+    const length =
+      this.request[0] === 4 ? socks4Reply(bytes) : socks5Reply(bytes);
     if (length === undefined || bytes.length < length) {
       return false;
     }
@@ -239,6 +306,32 @@ class SocksSocket extends Duplex {
     }
     return true;
   }
+}
+
+function socks4Reply(bytes) {
+  if (bytes.length < 2) {
+    return undefined;
+  }
+  if (bytes[0] !== 0) {
+    throw failure('invalid CONNECT response', undefined, 4);
+  }
+  if (bytes[1] !== 90) {
+    throw failure('CONNECT rejected', bytes[1], 4);
+  }
+  return 8;
+}
+
+function socks5Reply(bytes) {
+  if (bytes.length < 4) {
+    return undefined;
+  }
+  if (bytes[0] !== 5 || bytes[2] !== 0) {
+    throw failure('invalid CONNECT response');
+  }
+  if (bytes[1] !== 0) {
+    throw failure('CONNECT rejected', bytes[1]);
+  }
+  return replyLength(bytes);
 }
 
 function replyLength(bytes) {

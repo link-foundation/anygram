@@ -5,7 +5,7 @@ import { createConnection, isIP } from 'node:net';
 import { Duplex } from 'node:stream';
 import { randomBytes, createHash } from 'node:crypto';
 import { TcpTransport } from './tcp-transport.js';
-import { createSocks5Connector } from './socks5.js';
+import { createSocksConnector } from './socks5.js';
 import { WebSocketFraming, websocketError } from './websocket-framing.js';
 import { dcUrl } from './endpoints.js';
 
@@ -25,7 +25,7 @@ export class WebSocketTransport extends TcpTransport {
         'WebSocket requires its socket connector and obfuscation'
       );
     }
-    const connector = proxy ? createSocks5Connector(proxy) : createConnection;
+    const connector = proxy ? createSocksConnector(proxy) : createConnection;
     // Validate frame limits before opening sockets; each connection gets fresh state.
     new WebSocketFraming({
       maxBytes: maxWebSocketBytes,

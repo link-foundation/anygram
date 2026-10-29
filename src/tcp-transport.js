@@ -3,7 +3,7 @@ import { TransportFraming } from './transport-framing.js';
 import { dcAddress } from './endpoints.js';
 import { validateTimeout } from './http.js';
 import { TelegramError } from './errors.js';
-import { createSocks5Connector } from './socks5.js';
+import { createSocksConnector } from './socks5.js';
 import { ObfuscatedFraming } from './obfuscated-framing.js';
 
 /** Persistent packet stream. It never retries a possibly transmitted packet. */
@@ -297,7 +297,7 @@ function socketConnector(connectSocket, proxy) {
   if (!proxy || proxy.MTProxy === true || proxy.type === 'mtproxy') {
     return createConnection;
   }
-  return createSocks5Connector(proxy);
+  return createSocksConnector(proxy);
 }
 
 function createFraming(options) {

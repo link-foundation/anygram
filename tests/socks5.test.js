@@ -245,7 +245,7 @@ it('bounds SOCKS negotiation by the request deadline and validates settings befo
   }
   for (const proxy of [
     { host: '127.0.0.1', port: 0 },
-    { host: '127.0.0.1', port: 1080, socksType: 4 },
+    { host: '127.0.0.1', port: 1080, socksType: 3 },
     { host: '127.0.0.1', port: 1080, username: 'u', password: 'p'.repeat(256) },
   ]) {
     assert.throws(() => new protocol.TcpTransport({ proxy }), /SOCKS|proxy/i);

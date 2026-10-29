@@ -37,6 +37,22 @@ export interface ObfuscationOptions extends FramingOptions {
 export declare class ObfuscatedFraming extends TransportFraming {
   constructor(options?: ObfuscationOptions);
 }
+export interface Socks4ConnectorOptions {
+  host?: string;
+  ip?: string;
+  port?: number;
+  socksType?: 4;
+  type?: 'socks4' | 'socks4a';
+  username?: string;
+}
+export type Socks4ProxyOptions = Socks4ConnectorOptions &
+  (
+    | { socksType: 4; type?: 'socks4' | 'socks4a' }
+    | { type: 'socks4' | 'socks4a'; socksType?: 4 }
+  );
+export declare function createSocks4Connector(
+  options: Socks4ConnectorOptions
+): (destination: { host: string; port: number }) => TransportSocket;
 export interface Socks5ProxyOptions {
   host?: string;
   ip?: string;
@@ -64,7 +80,7 @@ export interface TcpTransportOptions extends Omit<FramingOptions, 'random'> {
   port?: number;
   timeout?: number;
   maxQueuedBytes?: number;
-  proxy?: Socks5ProxyOptions | MtproxyOptions;
+  proxy?: Socks4ProxyOptions | Socks5ProxyOptions | MtproxyOptions;
   obfuscate?: boolean;
   media?: boolean;
   connectSocket?: (options: { host: string; port: number }) => TransportSocket;
@@ -110,7 +126,7 @@ export interface WebSocketTransportOptions extends Omit<
 > {
   url?: string;
   ca?: string | Uint8Array;
-  proxy?: Socks5ProxyOptions;
+  proxy?: Socks4ProxyOptions | Socks5ProxyOptions;
   maxWebSocketBytes?: number;
 }
 export declare class WebSocketTransport extends TcpTransport {

@@ -110,6 +110,9 @@ Use `proxy: { host: '127.0.0.1', port: 1080 }` for SOCKS5 CONNECT; this selects
 TCP when no transport is specified. Optional `username` and `password` must be
 provided together. Domain destinations are resolved by the proxy, IPv4/IPv6
 destinations are encoded directly, and negotiation shares the request deadline.
+Add `socksType: 4` or `type: 'socks4a'` for SOCKS4/4a CONNECT. IPv4 destinations
+are encoded directly; domain names use proxy-side SOCKS4a DNS. Its optional
+`username` is a user ID of at most 255 UTF-8 bytes; IPv6 and passwords are rejected.
 An explicit HTTP transport requires an injected Fetch implementation configured
 for its proxy instead of the `proxy` option. `connectSocket` accepts a custom
 connector and cannot be combined with `proxy`.
@@ -123,10 +126,10 @@ Select `transport: 'websocket'` for Telegram's binary WebSocket endpoint. It use
 native HTTP/TLS and obfuscation, masks outgoing frames, handles fragmented
 binary streams and ping/pong, and validates the upgrade and TLS certificates.
 `url` overrides the endpoint, `ca` adds a private test certificate authority,
-and SOCKS5 proxies remain available. `WebSocketTransport` and `WebSocketFraming`
+and SOCKS4/4a/5 proxies remain available. `WebSocketTransport` and `WebSocketFraming`
 are exported from `anygram/mtproto`. This transport requires Node-compatible
 network APIs; browser/Worker support remains open.
-SOCKS4, fake TLS and obfuscated full framing remain unfinished.
+Fake TLS and obfuscated full framing remain unfinished.
 The [typed transport example](examples/typed-transports.ts)
 shows the supported construction options.
 
