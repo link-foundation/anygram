@@ -724,3 +724,13 @@ production sources, exact regeneration and 159 permitted package entries. All
 26 native checks, two vendor wire cases and the bounded FIFO probe pass. Full
 SDK filter narrowing, exhaustive public models, subclass fluent type precision
 and every other open acceptance criterion remain unfinished.
+
+The Composer declaration follow-up retains fluent custom Composer/Telegraf,
+scene, wizard and stage receiver types. A checked public example reproduces
+six diagnostics against immutable preceding declarations, then compiles with
+negative type assertions intact. Equivalent valid chains compile against actual
+Telegraf 4.16.3 with pinned ambient Node types and strict library checking. The
+implementation uses polymorphic method returns and a generic constructor
+prototype; callbacks and scoped query types remain checked. Runtime code is
+unchanged. SDK filter narrowing, complete models and all other open criteria
+remain unfinished.

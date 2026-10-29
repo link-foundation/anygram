@@ -52,16 +52,6 @@ interface RegistrationArguments<C extends CommonContext> {
   cashtag: [EntityArgument<C>];
   spoiler: [EntityArgument<C>];
 }
-type EntityMethod =
-  | 'email'
-  | 'url'
-  | 'textLink'
-  | 'textMention'
-  | 'mention'
-  | 'phone'
-  | 'hashtag'
-  | 'cashtag'
-  | 'spoiler';
 interface EntityRegistration<C extends CommonContext, R> {
   (
     middleware: TelegrafMiddlewareLike<C>,
@@ -69,14 +59,32 @@ interface EntityRegistration<C extends CommonContext, R> {
   ): R;
   (trigger: Triggers<C>, ...middleware: TelegrafMiddlewareLike<C>[]): R;
 }
-export type TelegrafRegistrations<C extends CommonContext, R> = {
-  [K in Exclude<keyof RegistrationArguments<C>, EntityMethod>]: (
-    ...args: [...RegistrationArguments<C>[K], ...TelegrafMiddlewareLike<C>[]]
-  ) => R;
-} & { [K in EntityMethod]: EntityRegistration<C, R> } & {
-  filter(predicate: Predicate<C>): R;
-  drop(predicate: Predicate<C>): R;
-};
+type RegistrationParameters<
+  C extends CommonContext,
+  K extends keyof RegistrationArguments<C>,
+> = [...RegistrationArguments<C>[K], ...TelegrafMiddlewareLike<C>[]];
+export interface TelegrafRegistrations<C extends CommonContext> {
+  guard(...args: RegistrationParameters<C, 'guard'>): this;
+  on(...args: RegistrationParameters<C, 'on'>): this;
+  hears(...args: RegistrationParameters<C, 'hears'>): this;
+  command(...args: RegistrationParameters<C, 'command'>): this;
+  action(...args: RegistrationParameters<C, 'action'>): this;
+  inlineQuery(...args: RegistrationParameters<C, 'inlineQuery'>): this;
+  gameQuery(...args: RegistrationParameters<C, 'gameQuery'>): this;
+  reaction(...args: RegistrationParameters<C, 'reaction'>): this;
+  entity(...args: RegistrationParameters<C, 'entity'>): this;
+  email: EntityRegistration<C, this>;
+  url: EntityRegistration<C, this>;
+  textLink: EntityRegistration<C, this>;
+  textMention: EntityRegistration<C, this>;
+  mention: EntityRegistration<C, this>;
+  phone: EntityRegistration<C, this>;
+  hashtag: EntityRegistration<C, this>;
+  cashtag: EntityRegistration<C, this>;
+  spoiler: EntityRegistration<C, this>;
+  filter(predicate: Predicate<C>): this;
+  drop(predicate: Predicate<C>): this;
+}
 type FactoryArguments<C extends CommonContext> = RegistrationArguments<C> & {
   optional: [Predicate<C>];
   acl: [number | readonly number[] | Predicate<C>];
@@ -97,9 +105,7 @@ type Factories = {
   ) => TelegrafMiddleware<C>;
 };
 export interface TelegrafComposer<C extends CommonContext = TelegrafContext>
-  extends
-    TelegrafRegistrations<C, TelegrafComposer<C>>,
-    TelegrafQueryExtensions<C> {
+  extends TelegrafRegistrations<C>, TelegrafQueryExtensions<C> {
   use(...middleware: TelegrafMiddlewareLike<C>[]): this;
   start(...middleware: TelegrafMiddlewareLike<C>[]): this;
   help(...middleware: TelegrafMiddlewareLike<C>[]): this;
@@ -114,7 +120,7 @@ export interface TelegrafComposerConstructor extends Factories {
   new <C extends CommonContext = TelegrafContext>(
     ...middleware: TelegrafMiddlewareLike<C>[]
   ): TelegrafComposer<C>;
-  prototype: TelegrafComposer;
+  prototype: TelegrafComposer<any>;
   unwrap<C extends CommonContext>(
     middleware: TelegrafMiddlewareLike<C>
   ): TelegrafMiddleware<C>;

@@ -1,0 +1,7 @@
+{
+  "private": true,
+  "description": "Pinned ambient Node declarations for the actual Telegraf type oracle",
+  "devDependencies": {
+    "@types/node": "22.18.3"
+  }
+}

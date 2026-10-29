@@ -162,3 +162,6 @@ context filters with lazy routes, branches, forks and scoped error boundaries.
 Add Telegraf static middleware factories, entity/reaction guards and exact command
 payload/argument parsing; retain scenes, query extensions and the shared bot
 runner. Export BotError with original context/value and preserve catcher causes.
+
+Retain fluent receiver types for custom Telegraf/Composer subclasses and scenes,
+including generic custom contexts, without weakening middleware callback types.

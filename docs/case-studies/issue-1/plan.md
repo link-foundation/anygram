@@ -912,5 +912,24 @@ Composer work plan:
       exact regeneration and 159 permitted package entries pass. All 26 native
       checks, two vendor wire cases and the bounded FIFO probe pass. Main is an
       ancestor; the atomic diff and paginated PR file inventory were reviewed.
-- [ ] Commit/push Composer changes and inspect fresh CI by exact SHA/time.
+- [x] Commit/push Composer changes and inspect fresh CI by exact SHA/time.
+      Head 84328a107c89a8b4cbd7eddd67dfdb2444603688 passed run 40898554327,
+      created 2026-10-29T15:08:43Z and completed 2026-10-29T15:11:43Z.
 - [ ] Continue every other open requirement in this draft, unmerged PR.
+
+Composer declaration precision work plan:
+
+- [x] Reproduce lost fluent subclass/scene registrations with a checked example
+      before implementation. The first compile also exposed an incorrectly
+      specialized static prototype on generic Composer subclasses.
+- [x] Retain polymorphic return types and generic subclass construction without
+      weakening callback context or scoped-query declarations.
+- [x] Compare valid chains with pinned Telegraf types; retain a frozen declaration
+      reproduction and negative assertions.
+- [x] Pass all local static gates, isolated declaration reproduction and actual
+      Telegraf type oracle with strict library checking. Runtime code is
+      unchanged from the 2,002-case checkpoint. The gate scans 116 sources with
+      zero clones; package audit retains 159 permitted entries. Declarations,
+      examples, immutable reproduction and the atomic diff were reviewed.
+- [ ] Commit/push declaration precision and inspect exact-head CI.
+- [ ] Continue filter/model narrowing and all other open requirements.

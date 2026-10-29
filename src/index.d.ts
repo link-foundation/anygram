@@ -1088,7 +1088,7 @@ export declare class Bot<
 export interface Telegraf<C extends CommonContext = TelegrafContext>
   extends
     Omit<Bot<C>, keyof Composer<C> | 'start' | 'catch'>,
-    TelegrafRegistrations<C, Telegraf<C>>,
+    TelegrafRegistrations<C>,
     TelegrafQueryExtensions<C>,
     Pick<TelegrafComposer<C>, 'middleware'> {
   use(

@@ -84,8 +84,44 @@ contains 159 permitted entries. All 26 native terminal checks, two actual
 Telegraf wire cases on Node 20 and the bounded FIFO cleanup probe pass. Main
 remains an ancestor. The atomic diff and paginated PR file inventory were
 reviewed; GitHub rejects the complete PR diff above 300 files. Full SDK filter
-type narrowing, exhaustive public models and subclass fluent type precision
-remain open. Runtime method inventory and these oracle
+type narrowing and exhaustive public models remain open. Runtime method inventory and these oracle
 cases do not prove complete ecosystem parity or the issue's broader protocol,
 downstream, browser, platform and controlled-account requirements. Those remain
 open in PR #2.
+
+## Fluent subclass declaration regression
+
+The next declaration-only checkpoint fixes registrations losing the concrete
+receiver type. A custom Composer or Telegraf subclass could execute a registration
+but could not chain its own methods; scene and wizard chains lost `enter`, and
+stages lost `register`. An explicitly default-context `prototype` also rejected
+subclasses with additional required context fields.
+
+`examples/typed-composer-fluency.ts` exercises every fluent registration family
+and custom context callbacks, including negative assertions for invalid context
+assignments and nonexistent members. The unchanged example reports six compiler
+diagnostics against the frozen declarations from `84328a1`. It compiles after
+registration methods return polymorphic `this` and the generic constructor
+prototype uses the standard generic instance representation. Callback arguments,
+scoped query returns and published runtime dependencies retain their types.
+
+The corresponding valid chains in
+`experiments/typed-composer-fluency-oracle.ts` compile against actual Telegraf
+4.16.3. Its isolated ambient Node declarations are pinned because the root
+application deliberately excludes Node globals. Both checks use strict mode
+with library checking enabled. The public example remains part of the existing
+CI typecheck. Reproduce the immutable failure, current success and SDK oracle:
+
+```sh
+node experiments/composer-fluency-check.mjs --before
+node experiments/composer-fluency-check.mjs
+npm ci --prefix experiments/composer-types-runtime --ignore-scripts
+node node_modules/typescript/bin/tsc --ignoreConfig --strict --noEmit \
+  --target ES2022 --module NodeNext --moduleResolution NodeNext \
+  --typeRoots experiments/composer-types-runtime/node_modules/@types \
+  experiments/typed-composer-fluency-oracle.ts
+```
+
+The frozen check copies only declarations to a temporary directory and removes
+it in `finally`; it does not overwrite the checkout. Full SDK filter narrowing,
+model precision and the wider open acceptance criteria still require work.
