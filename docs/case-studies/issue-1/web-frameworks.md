@@ -46,7 +46,7 @@ and resolve isolated Node dependencies without weakening type checks:
 
 ```sh
 bun test ./experiments/bot-framework-runtime/*.integration.js
-deno test --no-config --node-modules-dir=manual --allow-read --allow-env --allow-net=127.0.0.1 experiments/bot-framework-runtime/*.integration.js
+(cd experiments/bot-framework-runtime && deno test --no-config --node-modules-dir=manual --allow-read --allow-env --allow-net=127.0.0.1 *.integration.js)
 ```
 
 CI runs all 71 cases on each runtime across Linux, macOS and Windows. The release
@@ -141,3 +141,23 @@ The same run exposed a separate macOS Bun five-second timeout in the existing
 deadline remain unchanged; [allocation regressions](crypto-allocations.md)
 identify excessive temporary XOR buffers and verify the revised cipher loop.
 Fresh matrix CI is required for both corrections before this checkpoint is verified.
+
+Run 40956444029 tested fbb5a4faba4294b608dc4e6a61e0c6a4d4632cdb,
+created 2026-10-29T21:16:57Z after its 21:16:40Z commit. Its macOS Bun core
+job passes with the cipher correction. All three Deno framework jobs still
+fail declaration resolution: the explicit fixture dependency alone is insufficient.
+The earlier local empty-cache check retained the existing node_modules layout.
+
+`experiments/framework-clean-check.mjs` archives that exact commit into a new
+temporary directory and installs both lockfiles with npm ci. It uses separate
+empty DENO_DIR paths and Deno 2.9.8. From the repository root it reproduces the
+CI declaration failure; from the isolated fixture directory all 71 cases pass.
+Manual npm resolution anchors the ambient Node declarations to the starting
+package. The workflow now starts Deno in the fixture directory containing its
+explicit dependency. Type checking remains enabled. The experiment asserts both
+the frozen failure and corrected invocation and keeps its path in the output
+for inspection. Fresh CI is required before marking the matrix verified.
+
+```sh
+ANYGRAM_DENO_BINARY=deno node --max-old-space-size=256 experiments/framework-clean-check.mjs
+```

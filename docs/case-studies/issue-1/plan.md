@@ -1280,6 +1280,10 @@ Encrypted-upload CI follow-up work plan:
       211 entries. Main is an ancestor and all feedback streams remain empty.
 - [ ] Push both corrections and verify fresh exact-head CI, including all nine
       framework jobs and the previously failing macOS Bun core job.
+      Run 40956444029 verifies the unchanged macOS Bun test, but three Deno
+      framework jobs still fail. A clean archived npm-ci checkout reproduces the
+      root invocation failure and passes all 71 cases from the fixture directory.
+      Correct the workflow's working directory and verify a fresh complete matrix.
 
 Account input-media conversion work plan:
 

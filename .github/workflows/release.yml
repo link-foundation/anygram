@@ -392,7 +392,8 @@ jobs:
         run: bun test ./experiments/bot-framework-runtime/*.integration.js
       - name: Verify installed frameworks on Deno
         if: matrix.runtime == 'deno'
-        run: deno test --no-config --node-modules-dir=manual --allow-read --allow-env --allow-net=127.0.0.1 experiments/bot-framework-runtime/*.integration.js
+        working-directory: experiments/bot-framework-runtime
+        run: deno test --no-config --node-modules-dir=manual --allow-read --allow-env --allow-net=127.0.0.1 *.integration.js
 
   # Release - only runs on main after tests pass (for push events)
   release:
