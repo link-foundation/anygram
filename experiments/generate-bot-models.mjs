@@ -79,7 +79,14 @@ files.set(
     .map((model) =>
       ['Message', 'Chat', 'ChatFullInfo', 'Update'].includes(model.name)
         ? `export type { ${model.name} } from '../bot-message-types.js';`
-        : `export type ${model.name} = BotModels['${model.name}'];`
+        : [
+              'MessageEntity',
+              'InlineKeyboardButton',
+              'KeyboardButton',
+              'RichMessageButton',
+            ].includes(model.name)
+          ? `export type { ${model.name} } from '../bot-component-types.js';`
+          : `export type ${model.name} = BotModels['${model.name}'];`
     )
     .join('\n')}`
 );

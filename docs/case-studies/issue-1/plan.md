@@ -1086,5 +1086,25 @@ Terminal keyboard and static PNG work plan:
       with zero clones; packaging permits 197 entries. The isolated native suite
       passes 27 checks and six Node 20 wire cases cover actual selected clients.
       Main remains an ancestor and all four feedback streams remain empty.
-- [ ] Commit/push, update the PR and verify exact-head CI by SHA and timestamp.
+- [x] Commit/push, update the PR and verify exact-head CI by SHA and timestamp.
+      Head 2dbeff7aaa23d56e12bf9bf18e227dafb1c29d81 passed run 40928334002,
+      created 2026-10-29T18:10:45Z, including the native terminal integration job
+      and every applicable runtime/static check.
 - [ ] Continue the remaining complete application and protocol criteria.
+
+Entity and button subtype work plan:
+
+- [x] Reproduce absent names with checked examples before implementation.
+      Frozen declarations at 2dbeff7 reproduce 48 diagnostics.
+- [x] Derive all remaining entity/button namespace names from owned official
+      models and verify exact public inventory and required fields.
+- [x] Compile portable fixtures against actual SDKs and document precise
+      compatibility limits discovered through the assignment oracle.
+- [x] Complete local static/runtime/package gates and review the change.
+      All 2,022 core tests pass per runtime; frozen final examples reproduce
+      61 diagnostics. Both current and actual-SDK examples and all 37 mutual
+      assignment/presence comparisons compile. Strict checks scan 155 sources
+      with zero clones; packaging permits 198 entries. Main is an ancestor
+      and all four feedback streams remain empty.
+- [ ] Commit/push the reviewed declaration change.
+- [ ] Update PR evidence and verify exact-head CI before continuing wider work.

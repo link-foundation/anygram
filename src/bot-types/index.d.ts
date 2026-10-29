@@ -28,7 +28,7 @@ export type { Message } from '../bot-message-types.js';
 export type MessageId = BotModels['MessageId'];
 export type InaccessibleMessage = BotModels['InaccessibleMessage'];
 export type MaybeInaccessibleMessage = BotModels['MaybeInaccessibleMessage'];
-export type MessageEntity = BotModels['MessageEntity'];
+export type { MessageEntity } from '../bot-component-types.js';
 export type TextQuote = BotModels['TextQuote'];
 export type ExternalReplyInfo = BotModels['ExternalReplyInfo'];
 export type ReplyParameters = BotModels['ReplyParameters'];
@@ -135,7 +135,7 @@ export type UserProfileAudios = BotModels['UserProfileAudios'];
 export type File = BotModels['File'];
 export type WebAppInfo = BotModels['WebAppInfo'];
 export type ReplyKeyboardMarkup = BotModels['ReplyKeyboardMarkup'];
-export type KeyboardButton = BotModels['KeyboardButton'];
+export type { KeyboardButton } from '../bot-component-types.js';
 export type KeyboardButtonRequestUsers =
   BotModels['KeyboardButtonRequestUsers'];
 export type KeyboardButtonRequestChat = BotModels['KeyboardButtonRequestChat'];
@@ -144,7 +144,7 @@ export type KeyboardButtonRequestManagedBot =
 export type KeyboardButtonPollType = BotModels['KeyboardButtonPollType'];
 export type ReplyKeyboardRemove = BotModels['ReplyKeyboardRemove'];
 export type InlineKeyboardMarkup = BotModels['InlineKeyboardMarkup'];
-export type InlineKeyboardButton = BotModels['InlineKeyboardButton'];
+export type { InlineKeyboardButton } from '../bot-component-types.js';
 export type LoginUrl = BotModels['LoginUrl'];
 export type SwitchInlineQueryChosenChat =
   BotModels['SwitchInlineQueryChosenChat'];
@@ -279,7 +279,7 @@ export type InputSticker = BotModels['InputSticker'];
 export type RichMessage = BotModels['RichMessage'];
 export type InputRichMessage = BotModels['InputRichMessage'];
 export type InputRichMessageMedia = BotModels['InputRichMessageMedia'];
-export type RichMessageButton = BotModels['RichMessageButton'];
+export type { RichMessageButton } from '../bot-component-types.js';
 export type RichText = BotModels['RichText'];
 export type RichTextBold = BotModels['RichTextBold'];
 export type RichTextItalic = BotModels['RichTextItalic'];

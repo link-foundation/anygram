@@ -822,3 +822,10 @@ integrations cover authorization, stale menus, failures and cancellation. Native
 encoding/decoding and a committed upload artifact document the photo path.
 Broader emulator/color, recovery, platform and controlled-delivery criteria remain
 unfinished; R13 and the wider feature union stay open.
+
+R01/R05/R08/R13/R16/R17/R19 component declaration follow-up exposes all 37
+entity/button namespace names with exact required-field and mutual-assignment
+comparisons against the pinned SDK. Together with message/chat/update names,
+the eight modern model namespaces expose all 130 public names.
+[Component evidence](bot-component-types.md) preserves checked examples and
+recursive-label constraints; complete SDK/framework/application parity stays open.

@@ -1613,3 +1613,8 @@ compile against actual pinned SDKs; wider compatibility remains unfinished.
 scoped keyboards to both pinned applications and actual static PNG uploads to
 the visual application. Portable comparisons, native encoding/decoding and all
 four selected HTTP transports provide local evidence; wider criteria remain open.
+
+Entity and button declarations now expose the remaining 37 modern model namespace
+names. Actual SDK comparisons verify exact field presence and mutual assignment,
+including recursive rich labels. [Component evidence](bot-component-types.md)
+records reproduction, portable fixtures and remaining SDK compatibility limits.

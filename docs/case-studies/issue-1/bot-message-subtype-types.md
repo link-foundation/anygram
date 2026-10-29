@@ -62,7 +62,9 @@ includes both already-verified examples; this was a commit inventory defect.
 
 ## Remaining acceptance criteria
 
-Other SDK namespaces and conditional server constraints, full chat/update result
+The remaining entity/button namespaces are covered by the subsequent
+[component declaration change](bot-component-types.md). Conditional server
+constraints, full chat/update result
 refinement, remaining manual helpers, framework/webhook integration,
 vendor-private input conversion and the wider account/application/protocol and
 production interoperability criteria remain unfinished. Subtype name and

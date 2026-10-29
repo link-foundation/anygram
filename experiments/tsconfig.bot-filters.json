@@ -26,6 +26,10 @@
     "typed-context-result-differences.ts",
     "typed-grammy-subtypes-fixture.ts",
     "typed-telegraf-subtypes-fixture.ts",
-    "typed-bot-subtype-oracle.ts"
+    "typed-bot-subtype-oracle.ts",
+    "typed-bot-component-oracle.ts",
+    "typed-component-differences.ts",
+    "typed-grammy-components-fixture.ts",
+    "typed-telegraf-components-fixture.ts"
   ]
 }

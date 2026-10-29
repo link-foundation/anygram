@@ -1,0 +1,294 @@
+{
+  "sdk": "@grammyjs/types@5.0.0",
+  "sources": {
+    "node_modules/@grammyjs/types/message.d.ts": "5c4769e477995354bd8b8592a034cec914c0528cf7791e6420dc98aa5a178e1f",
+    "node_modules/@grammyjs/types/markup.d.ts": "792e27a3b93ac868cdb56aa4d04e3c673794cea7eecbea12226ae2b5c9cdc6ee",
+    "node_modules/@grammyjs/types/rich.d.ts": "b57359e768ee4308bf983b4a5459d9603295220a2d318dc880bead40c24882b8"
+  },
+  "namespaces": {
+    "MessageEntity": {
+      "base": "AbstractMessageEntity",
+      "fields": [
+        "offset",
+        "length"
+      ],
+      "aliases": {
+        "AbstractMessageEntity": {
+          "required": [],
+          "optional": [],
+          "types": null
+        },
+        "CommonMessageEntity": {
+          "required": [],
+          "optional": [],
+          "types": [
+            "mention",
+            "hashtag",
+            "cashtag",
+            "bot_command",
+            "url",
+            "email",
+            "phone_number",
+            "bold",
+            "italic",
+            "underline",
+            "strikethrough",
+            "spoiler",
+            "blockquote",
+            "expandable_blockquote",
+            "code"
+          ]
+        },
+        "PreMessageEntity": {
+          "required": [],
+          "optional": [
+            "language"
+          ],
+          "types": [
+            "pre"
+          ]
+        },
+        "TextLinkMessageEntity": {
+          "required": [
+            "url"
+          ],
+          "optional": [],
+          "types": [
+            "text_link"
+          ]
+        },
+        "TextMentionMessageEntity": {
+          "required": [
+            "user"
+          ],
+          "optional": [],
+          "types": [
+            "text_mention"
+          ]
+        },
+        "CustomEmojiMessageEntity": {
+          "required": [
+            "custom_emoji_id"
+          ],
+          "optional": [],
+          "types": [
+            "custom_emoji"
+          ]
+        },
+        "DateTimeMessageEntity": {
+          "required": [
+            "unix_time",
+            "date_time_format"
+          ],
+          "optional": [],
+          "types": [
+            "date_time"
+          ]
+        }
+      }
+    },
+    "InlineKeyboardButton": {
+      "base": "AbstractInlineKeyboardButton",
+      "fields": [
+        "text",
+        "icon_custom_emoji_id",
+        "style"
+      ],
+      "aliases": {
+        "AbstractInlineKeyboardButton": {
+          "required": [],
+          "optional": []
+        },
+        "UrlButton": {
+          "required": [
+            "url"
+          ],
+          "optional": []
+        },
+        "CallbackButton": {
+          "required": [
+            "callback_data"
+          ],
+          "optional": []
+        },
+        "WebAppButton": {
+          "required": [
+            "web_app"
+          ],
+          "optional": []
+        },
+        "LoginButton": {
+          "required": [
+            "login_url"
+          ],
+          "optional": []
+        },
+        "DisabledButtonButton": {
+          "required": [
+            "disabled"
+          ],
+          "optional": []
+        },
+        "SwitchInlineButton": {
+          "required": [
+            "switch_inline_query"
+          ],
+          "optional": []
+        },
+        "SwitchInlineCurrentChatButton": {
+          "required": [
+            "switch_inline_query_current_chat"
+          ],
+          "optional": []
+        },
+        "SwitchInlineChosenChatButton": {
+          "required": [
+            "switch_inline_query_chosen_chat"
+          ],
+          "optional": []
+        },
+        "CopyTextButtonButton": {
+          "required": [
+            "copy_text"
+          ],
+          "optional": []
+        },
+        "GameButton": {
+          "required": [
+            "callback_game"
+          ],
+          "optional": []
+        },
+        "PayButton": {
+          "required": [
+            "pay"
+          ],
+          "optional": []
+        }
+      }
+    },
+    "KeyboardButton": {
+      "base": "CommonButton",
+      "fields": [
+        "text",
+        "icon_custom_emoji_id",
+        "style"
+      ],
+      "aliases": {
+        "CommonButton": {
+          "required": [],
+          "optional": []
+        },
+        "RequestUsersButton": {
+          "required": [
+            "request_users"
+          ],
+          "optional": []
+        },
+        "RequestChatButton": {
+          "required": [
+            "request_chat"
+          ],
+          "optional": []
+        },
+        "RequestContactButton": {
+          "required": [
+            "request_contact"
+          ],
+          "optional": []
+        },
+        "RequestLocationButton": {
+          "required": [
+            "request_location"
+          ],
+          "optional": []
+        },
+        "RequestPollButton": {
+          "required": [
+            "request_poll"
+          ],
+          "optional": []
+        },
+        "RequestManagedBotButton": {
+          "required": [
+            "request_managed_bot"
+          ],
+          "optional": []
+        },
+        "WebAppButton": {
+          "required": [
+            "web_app"
+          ],
+          "optional": []
+        }
+      }
+    },
+    "RichMessageButton": {
+      "base": "AbstractRichMessageButton",
+      "fields": [
+        "text",
+        "style"
+      ],
+      "aliases": {
+        "AbstractRichMessageButton": {
+          "required": [],
+          "optional": []
+        },
+        "UrlButton": {
+          "required": [
+            "url"
+          ],
+          "optional": []
+        },
+        "CallbackButton": {
+          "required": [
+            "callback_data"
+          ],
+          "optional": []
+        },
+        "WebAppButton": {
+          "required": [
+            "web_app"
+          ],
+          "optional": []
+        },
+        "LoginUrlButton": {
+          "required": [
+            "login_url"
+          ],
+          "optional": []
+        },
+        "SwitchInlineButton": {
+          "required": [
+            "switch_inline_query"
+          ],
+          "optional": []
+        },
+        "SwitchInlineCurrentChatButton": {
+          "required": [
+            "switch_inline_query_current_chat"
+          ],
+          "optional": []
+        },
+        "SwitchInlineQueryChosenChatButton": {
+          "required": [
+            "switch_inline_query_chosen_chat"
+          ],
+          "optional": []
+        },
+        "CopyTextButtonButton": {
+          "required": [
+            "copy_text"
+          ],
+          "optional": []
+        },
+        "DisabledButtonButton": {
+          "required": [
+            "disabled"
+          ],
+          "optional": []
+        }
+      }
+    }
+  }
+}

@@ -203,3 +203,6 @@ results through raw methods, positional APIs and scoped replies.
 
 Add scoped terminal keyboard controls and bounded static PNG rendering through
 the complete downstream migration, with capture cancellation and upload recovery.
+
+Expose public entity and button subtype names with required payloads and
+recursive rich-label constraints, retaining the general wire-model aliases.
