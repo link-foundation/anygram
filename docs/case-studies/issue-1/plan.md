@@ -931,5 +931,28 @@ Composer declaration precision work plan:
       unchanged from the 2,002-case checkpoint. The gate scans 116 sources with
       zero clones; package audit retains 159 permitted entries. Declarations,
       examples, immutable reproduction and the atomic diff were reviewed.
-- [ ] Commit/push declaration precision and inspect exact-head CI.
+- [x] Commit/push declaration precision and inspect exact-head CI.
+      Head baa796927da5cc69ea00040e00c3936c25e4ea60 passed run 40899892222,
+      created 2026-10-29T15:16:33Z and completed 2026-10-29T15:19:37Z.
 - [ ] Continue filter/model narrowing and all other open requirements.
+
+Bot API model declaration work plan:
+
+- [x] Reproduce unknown nested message/update fields with a checked example
+      before implementation; archive and inspect official model facts.
+- [x] Generate independently owned declarations for all 400 documented models
+      and 1,888 fields, preserving recursive arrays, unions and upload inputs.
+- [x] Trace actual SDK assignment failures. Correct plain keyboard strings and
+      structural empty markers; explicitly assert the three precision roots
+      affecting 17 models rather than treating them as successful assignments.
+- [x] Add parser/field regressions, isolated before/after compilation and
+      exact regeneration to existing automated gates.
+- [x] Complete local static/runtime/package validation and review.
+      All 2,005 core cases pass on Node, Bun and Deno. Eight parser regressions
+      include exact extraction from the archived HTML. Strict checks compile
+      all examples and 399 SDK comparisons, regenerate exactly and scan 126
+      production sources with zero clones. Packaging permits 169 entries and
+      includes all ten model files. Main remains an ancestor. The atomic diff,
+      declarations, field graph and primary archive pins were reviewed.
+- [ ] Commit/push model declarations and inspect fresh CI by SHA and timestamp.
+- [ ] Continue refined models, filter narrowing and every wider issue criterion.

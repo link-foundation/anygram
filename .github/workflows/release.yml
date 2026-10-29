@@ -210,6 +210,9 @@ jobs:
       - name: Check TypeScript declarations and examples
         run: npm run typecheck
 
+      - name: Check official Bot API fact extraction
+        run: python3 experiments/test-bot-model-facts.py
+
   # Test matrix: 3 runtimes (Node.js, Bun, Deno) x 3 OS (Ubuntu, macOS, Windows)
   # IMPORTANT: Tests must validate the ACTUAL merge result, not a stale merge preview.
   # See docs/case-studies/issue-23 for why this is critical.

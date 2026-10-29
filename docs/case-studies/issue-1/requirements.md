@@ -734,3 +734,16 @@ implementation uses polymorphic method returns and a generic constructor
 prototype; callbacks and scoped query types remain checked. Runtime code is
 unchanged. SDK filter narrowing, complete models and all other open criteria
 remain unfinished.
+The [Bot API model declaration comparison](bot-model-types.md) advances
+R01/R05/R08/R13/R16/R17/R19 with independently generated declarations from
+400 official model definitions and 1,888 field facts. The complete primary
+document and reviewed facts are archived. The checked example reproduces
+14 compiler diagnostics with frozen preceding declarations, then compiles with
+typed nested messages, senders, reactions and discriminated model unions.
+All 399 non-upload names have actual SDK assignment comparisons: 382 match
+directly and 17 retain explicit, asserted precision differences from three
+documented property roots. Parser regressions and exact regeneration join the
+normal gates. All 2,005 core cases pass on Node, Bun and Deno; all eight parser
+regressions and strict static checks pass, with zero clones across 126 sources
+and 169 permitted package entries. SDK-specific refined message/chat unions, filter narrowing,
+per-method models and all wider unmet acceptance criteria remain unfinished.

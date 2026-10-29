@@ -1,3 +1,5 @@
+import type * as Telegram from './bot-types/index.js';
+export type * as Telegram from './bot-types/index.js';
 import type {
   TcpTransportOptions,
   EncryptedFileUpload,
@@ -649,56 +651,8 @@ export declare class UpdateManager {
   recoverChannel(id: bigint): Promise<number | undefined>;
 }
 
-export interface BotMessage extends Parameters {
-  message_id: number;
-  chat: { id: number; [key: string]: unknown };
-  from?: { id: number; [key: string]: unknown };
-  text?: string;
-}
-export interface BotUpdate extends Parameters {
-  update_id: number;
-  message?: BotMessage;
-  edited_message?: BotMessage;
-  channel_post?: BotMessage;
-  edited_channel_post?: BotMessage;
-  business_message?: BotMessage;
-  edited_business_message?: BotMessage;
-  guest_message?: BotMessage;
-  business_connection?: Parameters & {
-    id: string;
-    user_chat_id: number;
-    user?: Parameters;
-  };
-  deleted_business_messages?: Parameters & {
-    chat: BotMessage['chat'];
-    business_connection_id: string;
-  };
-  stopped_message_generation?: Parameters & { chat: BotMessage['chat'] };
-  message_reaction?: BotReactionUpdate;
-  message_reaction_count?: BotReactionUpdate;
-  poll?: Parameters;
-  poll_answer?: Parameters;
-  my_chat_member?: BotChatUpdate;
-  chat_member?: BotChatUpdate;
-  managed_bot?: Parameters;
-  chat_join_request?: BotChatUpdate;
-  chat_boost?: BotChatUpdate;
-  removed_chat_boost?: BotChatUpdate;
-  purchased_paid_media?: Parameters;
-  subscription?: Parameters;
-  callback_query?: {
-    id: string;
-    data?: string;
-    game_short_name?: string;
-    message?: BotMessage;
-    inline_message_id?: string;
-    from?: Parameters;
-  };
-  inline_query?: Parameters & { query: string; from?: Parameters };
-  chosen_inline_result?: Parameters & { result_id: string; from?: Parameters };
-  pre_checkout_query?: BotPaymentQuery;
-  shipping_query?: BotPaymentQuery;
-}
+export type BotMessage = Telegram.Message;
+export type BotUpdate = Telegram.Update;
 export interface BotPaymentQuery extends Parameters {
   id: string;
   invoice_payload: string;
@@ -825,7 +779,7 @@ export declare class Context {
   readonly senderChat?: Parameters | false;
   readonly inlineMessageId?: string;
   readonly businessConnectionId?: string;
-  readonly from?: Parameters;
+  readonly from?: Telegram.User;
   reply(
     text: string | TextWithEntities,
     options?: Parameters,

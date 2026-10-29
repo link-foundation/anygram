@@ -1,5 +1,10 @@
 # Unified Telegram client: investigation and implementation
 
+The [Bot API model comparison](bot-model-types.md) archives 400 official model
+definitions and 1,888 field facts, with independently generated declarations,
+checked nested message/update examples and explicit SDK precision differences.
+Refined framework models and filter narrowing remain open.
+
 The [Composer comparison](composer-scopes.md) separates grammY's extensible
 registration scopes from Telegraf's fluent methods and static factories. Actual
 SDK comparisons cover routing, forks, error isolation, commands/entities and

@@ -12,7 +12,11 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new globalThis.URL('../', import.meta.url));
-const revision = '84328a107c89a8b4cbd7eddd67dfdb2444603688';
+const models = process.argv.includes('--models');
+const fixture = models ? 'typed-bot-models.ts' : 'typed-composer-fluency.ts';
+const revision = models
+  ? 'baa796927da5cc69ea00040e00c3936c25e4ea60'
+  : '84328a107c89a8b4cbd7eddd67dfdb2444603688';
 const frozen = new Set(['src/index.d.ts', 'src/telegraf-composer.d.ts']);
 const before = process.argv.includes('--before');
 const workspace = await mkdtemp(join(tmpdir(), 'anygram-fluency-'));
@@ -42,8 +46,8 @@ try {
   await declarations('src');
   await mkdir(join(workspace, 'examples'));
   await writeFile(
-    join(workspace, 'examples/typed-composer-fluency.ts'),
-    await readFile(join(root, 'examples/typed-composer-fluency.ts'))
+    join(workspace, 'examples', fixture),
+    await readFile(join(root, 'examples', fixture))
   );
   await writeFile(join(workspace, 'package.json'), '{"type":"module"}\n');
   await writeFile(

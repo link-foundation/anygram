@@ -8,5 +8,9 @@
     "skipLibCheck": false,
     "types": []
   },
-  "include": ["src/**/*.d.ts", "examples/**/*.ts"]
+  "include": [
+    "src/**/*.d.ts",
+    "examples/**/*.ts",
+    "experiments/typed-bot-model-oracle.ts"
+  ]
 }
