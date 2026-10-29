@@ -3,6 +3,7 @@ import { methodProxy } from './requests.js';
 import { botTextParams } from './formatting.js';
 import {
   readResponseBytes,
+  createRequestScope,
   validateByteLimit,
   validateTimeout,
 } from './http.js';
@@ -92,12 +93,8 @@ export class BotApi {
     { signal, timeout = this.timeout } = {},
     consume
   ) {
-    validateTimeout(timeout);
-    const controller = new globalThis.AbortController();
-    const combined = signal
-      ? globalThis.AbortSignal.any([signal, controller.signal])
-      : controller.signal;
-    const timer = globalThis.setTimeout(() => controller.abort(), timeout);
+    const scope = createRequestScope({ signal, timeout });
+    const { controller, signal: combined } = scope;
     try {
       combined.throwIfAborted();
       const response = await this.fetch(`${this.baseUrl}/${path}`, {
@@ -119,7 +116,7 @@ export class BotApi {
         { type: 'NETWORK_ERROR' }
       );
     } finally {
-      globalThis.clearTimeout(timer);
+      scope.dispose();
     }
   }
 

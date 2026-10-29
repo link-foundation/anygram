@@ -1,3 +1,15 @@
+export function validateSocketEndpoint(host, port, name) {
+  if (
+    typeof host !== 'string' ||
+    !host ||
+    !Number.isInteger(port) ||
+    port < 1 ||
+    port > 65535
+  ) {
+    throw new RangeError(`Invalid ${name}`);
+  }
+}
+
 // Official bootstrap endpoints; refresh account-specific routes with help.getConfig.
 // https://github.com/telegramdesktop/tdesktop/blob/f985723b552b30fe1c17d377d57f44e61a15a8c4/Telegram/SourceFiles/mtproto/mtproto_dc_options.cpp
 export function dcAddress(dc, test = false) {

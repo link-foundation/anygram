@@ -13,6 +13,7 @@ import { WebSocketTransport } from './websocket-transport.js';
 import { dcUrl } from './endpoints.js';
 import {
   readResponseBytes,
+  createRequestScope,
   validateByteLimit,
   validateTimeout,
 } from './http.js';
@@ -43,13 +44,9 @@ export class HttpTransport {
   }
 
   async request(packet, { signal, timeout = this.timeout } = {}) {
-    validateTimeout(timeout);
-    const controller = new globalThis.AbortController();
-    const combined = signal
-      ? globalThis.AbortSignal.any([signal, controller.signal])
-      : controller.signal;
+    const scope = createRequestScope({ signal, timeout });
+    const { controller, signal: combined } = scope;
     this.controllers.add(controller);
-    const timer = globalThis.setTimeout(() => controller.abort(), timeout);
     try {
       combined.throwIfAborted();
       const response = await this.fetch(this.url, {
@@ -77,7 +74,7 @@ export class HttpTransport {
       }
       return bytes;
     } finally {
-      globalThis.clearTimeout(timer);
+      scope.dispose();
       this.controllers.delete(controller);
     }
   }
@@ -246,11 +243,13 @@ export class Mtproto {
     const run = () => this.datacenters.call(request, options);
     const result = this.queue.then(run, run);
     this.queue = result.catch(() => {});
-    return result.finally(() => {
-      for (const client of this.datacenters.clients.values()) {
-        client.dispatchUpdates();
-      }
-    });
+    return result.finally(() => this.dispatchDatacenterUpdates());
+  }
+
+  dispatchDatacenterUpdates() {
+    for (const client of this.datacenters.clients.values()) {
+      client.dispatchUpdates();
+    }
   }
 
   dispatchUpdates() {
@@ -276,11 +275,7 @@ export class Mtproto {
       await active.flushAcknowledgements(options);
     });
     this.queue = task.catch(() => {});
-    return task.finally(() => {
-      for (const client of this.datacenters.clients.values()) {
-        client.dispatchUpdates();
-      }
-    });
+    return task.finally(() => this.dispatchDatacenterUpdates());
   }
 
   stopUpdates() {

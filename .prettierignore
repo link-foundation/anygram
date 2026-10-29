@@ -1,5 +1,7 @@
 node_modules
 coverage
+reports
+ci-logs
 dist
 *.min.js
 package-lock.json

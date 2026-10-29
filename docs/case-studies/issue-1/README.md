@@ -7,6 +7,12 @@ superiority requested in [issue #1](https://github.com/link-foundation/anygram/i
 The [requirement ledger](requirements.md) keeps those acceptance criteria open.
 All work is in [PR #2](https://github.com/link-foundation/anygram/pull/2).
 
+Historical checkpoints below reported duplication-check exit status. A later
+investigation found the inherited configuration selected the nonexistent source
+format `console`, so those checks scanned no files. They did not establish
+absence of duplicated code. The duplication checkpoint records the repair and
+actual source scan.
+
 ## Evidence and research method
 
 `data/issue.json`, `issue-comments.json`, `sub-issues.json`, and the three PR
@@ -121,7 +127,7 @@ another repository.
 | [mtcute #57](https://github.com/mtcute/mtcute/issues/57), [#54](https://github.com/mtcute/mtcute/issues/54)                                                             | Expo/React Native crypto/storage and Workers request-lifetime/storage constraints require runtime-specific implementations. Workers screenshots/pricing comments changed over time; they cannot establish current hosting costs. Node/Bun/Deno CI does not cover those environments.                                                                                                                                             |
 | [mtcute #40](https://github.com/mtcute/mtcute/issues/40)                                                                                                                | Expired media references must be refreshed from their origin. `tests/media.test.js` verifies one bounded refresh and continued chunking; message-origin refresh and advertised document size now have a regression; other origins, CDN and all reference-error variants remain open.                                                                                                                                             |
 | [@mtproto/core #279](https://github.com/alik0211/mtproto-core/issues/279)                                                                                               | Removed `messages.getAllChats` is schema drift, not a transport retry condition. The replacement dialog pagination must terminate and preserve offset semantics. Anygram pins a current schema and exposes getDialogs; complete legacy-method migration needs more tests.                                                                                                                                                        |
-| [@mtproto/core #177](https://github.com/alik0211/mtproto-core/issues/177)                                                                                               | Authentication must preserve phone-code hash, handle 2FA, migrate DCs and persist authorization. Authentication/session/SRP/DC tests cover these mechanisms; email, paid and passkey flows and account-backed validation remain open.                                                                                                                                                                                            |
+| [@mtproto/core #177](https://github.com/alik0211/mtproto-core/issues/177)                                                                                               | Authentication must preserve phone-code hash, handle 2FA, migrate DCs and persist authorization. Authentication/session/SRP/DC/email tests cover these mechanisms; paid/passkey flows and account-backed validation remain open.                                                                                                                                                                                                 |
 | [@mtproto/core #148](https://github.com/alik0211/mtproto-core/issues/148)                                                                                               | Albums require uploaded media to be finalized through `messages.uploadMedia`, reusable input media, and a mandatory message field on each inputSingleMedia. The new album regression failed before implementation and now checks the full call order and captions.                                                                                                                                                               |
 | [grammY #110](https://github.com/grammyjs/grammY/issues/110)                                                                                                            | A plugin wishlist mixes many independent features. It is an inventory source, not one reproducible bug. Durable sessions, bulk work and plugin compatibility need individual contracts and tests.                                                                                                                                                                                                                                |
 | [grammY #901](https://github.com/grammyjs/grammY/issues/901)                                                                                                            | Bot API emulation can add integration coverage without production credentials. Current injected-Fetch tests exercise native requests; an actual emulator/differential suite remains open.                                                                                                                                                                                                                                        |
@@ -414,3 +420,25 @@ and declaration/example checks. SOCKS4 head abb5781 passed all applicable jobs i
 [run 40791196241](https://github.com/link-foundation/anygram/actions/runs/40791196241).
 Live email delivery, identity-provider tokens and account scenarios remain
 unverified; protocol and compatibility requirements stay open.
+
+## Duplication checkpoint
+
+The inherited jscpd configuration used `format: "console"`, selecting a nonexistent
+source language. Its successful exit scanned zero files. A new bounded experiment
+first reproduces this false success with two identical source files, then verifies
+that the corrected configuration rejects clones and scans unique files. The
+experiment runs before every duplication check, including CI.
+
+An explicit JavaScript/TypeScript scan initially found eleven production clones.
+Shared byte assembly, deadline scopes, socket validation, TL depth checks,
+matching middleware, event dispatch and TCP packet handling consolidate them.
+The corrected zero-threshold gate scans all 45 production JS/TS files and reports
+zero clones at the existing five-line/thirty-token threshold, without suppression
+markers. Generated reports are excluded from lint/formatting and remain untracked.
+
+All 166 tests still pass on Node, Bun and Deno. Strict lint, formatting,
+duplication and declaration/example checks pass; the package dry run contains
+49 permitted files. Email head 2598e6d passed all nine OS/runtime jobs and other
+applicable gates in
+[run 40791774228](https://github.com/link-foundation/anygram/actions/runs/40791774228).
+That run predates the repaired duplication gate; later heads need fresh CI.

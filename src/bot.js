@@ -3,6 +3,7 @@ import { Context, TelegrafContext, botApi, matchText } from './bot-context.js';
 import { Composer } from './composer.js';
 import { TelegramError } from './errors.js';
 import { pollingKey, acquirePolling, validatePolling } from './polling.js';
+import { joinBytes } from './bytes.js';
 
 /** Shared middleware runner usable with a native or adapted Bot API transport. */
 export class Bot extends Composer {
@@ -38,6 +39,7 @@ export class Bot extends Composer {
     if (this.seen.has(update.update_id)) {
       return;
     }
+    await this.emitUpdate?.(update);
     const ctx = new this.Context(update, this.api, this.botInfo);
     try {
       await this.middleware()(ctx);
@@ -182,19 +184,12 @@ export class TelegramBot extends Bot {
       await entry.callback(value, match);
     }
   }
-  async dispatch(update) {
-    if (!Number.isSafeInteger(update?.update_id)) {
-      throw new TypeError('Invalid Telegram update_id');
-    }
-    if (this.seen.has(update.update_id)) {
-      return;
-    }
+  async emitUpdate(update) {
     for (const [event, value] of Object.entries(update)) {
       if (event !== 'update_id') {
         await this.emit(event, value);
       }
     }
-    await super.dispatch(update);
   }
   startPolling(options) {
     this.polling = this.start(options);
@@ -263,12 +258,7 @@ export function webhookCallback(
         }
         chunks.push(chunk);
       }
-      const bytes = new Uint8Array(length);
-      let offset = 0;
-      for (const chunk of chunks) {
-        bytes.set(chunk, offset);
-        offset += chunk.length;
-      }
+      const bytes = joinBytes(chunks, length);
       update = JSON.parse(new globalThis.TextDecoder().decode(bytes));
       if (!Number.isSafeInteger(update?.update_id)) {
         throw new Error('Invalid update');

@@ -2,6 +2,7 @@ import { createConnection, isIP } from 'node:net';
 import { Duplex } from 'node:stream';
 import { domainToASCII } from 'node:url';
 import { TelegramError } from './errors.js';
+import { validateSocketEndpoint } from './endpoints.js';
 
 const failure = (message, code, version = 5) =>
   new TelegramError(`SOCKS${version} ${message}`, {
@@ -118,15 +119,7 @@ function authentication(username, password) {
 }
 
 function destinationPacket({ host, port }, version = 5) {
-  if (
-    typeof host !== 'string' ||
-    !host ||
-    !Number.isInteger(port) ||
-    port < 1 ||
-    port > 65535
-  ) {
-    throw new RangeError(`Invalid SOCKS${version} destination`);
-  }
+  validateSocketEndpoint(host, port, `SOCKS${version} destination`);
   const kind = isIP(host);
   let address;
   if (kind === 4) {

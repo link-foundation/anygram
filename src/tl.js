@@ -1,11 +1,19 @@
 import schema from './schema/telegram.json' with { type: 'json' };
 import { requestOf, objectRequest } from './requests.js';
+import { joinBytes } from './bytes.js';
 
 const VECTOR = 0x1cb5c415;
 const optional = (type) => /^(\w+)\.(\d+)\?(.+)$/.exec(type);
 const vector = (type) => /^(Vector|vector)<(.+)>$/.exec(type);
 const present = (value, type) =>
   type === 'true' ? value === true : value !== undefined && value !== null;
+
+function checkedVector(codec, type, depth) {
+  if (depth > codec.maxDepth) {
+    throw new RangeError('TL depth limit exceeded');
+  }
+  return vector(type);
+}
 
 export class TlCodec {
   constructor({
@@ -87,10 +95,7 @@ export class TlWriter {
   }
 
   write(type, value, depth = 0) {
-    if (depth > this.codec.maxDepth) {
-      throw new RangeError('TL depth limit exceeded');
-    }
-    const list = vector(type);
+    const list = checkedVector(this.codec, type, depth);
     if (list) {
       if (!Array.isArray(value) || value.length > this.codec.maxVector) {
         throw new RangeError('Invalid TL vector length');
@@ -149,13 +154,7 @@ export class TlWriter {
   }
 
   finish() {
-    const output = new Uint8Array(this.length);
-    let offset = 0;
-    for (const part of this.parts) {
-      output.set(part, offset);
-      offset += part.length;
-    }
-    return output;
+    return joinBytes(this.parts, this.length);
   }
 }
 
@@ -204,10 +203,7 @@ export class TlReader {
   }
 
   read(type = 'Object', depth = 0) {
-    if (depth > this.codec.maxDepth) {
-      throw new RangeError('TL depth limit exceeded');
-    }
-    const list = vector(type);
+    const list = checkedVector(this.codec, type, depth);
     if (list) {
       if (list[1] === 'Vector' && this.number(4, 'getUint32') !== VECTOR) {
         throw new TypeError('Invalid TL vector constructor');

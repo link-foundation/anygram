@@ -1,7 +1,7 @@
 import { createConnection } from 'node:net';
 import { TransportFraming } from './transport-framing.js';
-import { dcAddress } from './endpoints.js';
-import { validateTimeout } from './http.js';
+import { dcAddress, validateSocketEndpoint } from './endpoints.js';
+import { validateTimeout, createRequestScope } from './http.js';
 import { TelegramError } from './errors.js';
 import { createSocksConnector } from './socks5.js';
 import { ObfuscatedFraming } from './obfuscated-framing.js';
@@ -56,10 +56,7 @@ export class TcpTransport {
     const scope = requestScope(options, this.timeout);
     let ownsConnection = false;
     try {
-      scope.signal.throwIfAborted();
-      if (this.closed) {
-        throw new Error('TCP transport is closed');
-      }
+      this.assertOpen(scope.signal);
       if (this.connecting) {
         return await abortable(this.connecting, scope.signal);
       }
@@ -154,11 +151,7 @@ export class TcpTransport {
     try {
       scope.signal.throwIfAborted();
       this.framing.validatePayload(packet);
-      await this.connect({
-        signal: scope.signal,
-        timeout: options.timeout ?? this.timeout,
-      });
-      scope.signal.throwIfAborted();
+      await this.connectScoped(scope, options);
       const bytes = this.framing.encode(packet);
       await new Promise((resolve, reject) => {
         const abort = () => {
@@ -182,42 +175,46 @@ export class TcpTransport {
   async receive(options = {}) {
     const scope = requestScope(options, this.timeout);
     try {
-      scope.signal.throwIfAborted();
-      if (this.closed) {
-        throw new Error('TCP transport is closed');
-      }
-      if (this.failure) {
-        throw this.failure;
-      }
-      if (this.waiter) {
-        throw new Error('TCP receive is already pending');
-      }
+      this.assertReadable(scope.signal);
       if (this.packets.length) {
-        const packet = this.packets.shift();
-        this.queuedBytes -= packet.length;
-        return packet;
+        return this.shiftPacket();
       }
-      await this.connect({
-        signal: scope.signal,
-        timeout: options.timeout ?? this.timeout,
-      });
-      scope.signal.throwIfAborted();
-      if (this.closed || this.failure) {
-        throw this.failure ?? new Error('TCP transport is closed');
-      }
-      if (this.waiter) {
-        throw new Error('TCP receive is already pending');
-      }
+      await this.connectScoped(scope, options);
+      this.assertReadable(scope.signal);
       // A packet can arrive during connection setup.
-      if (this.packets.length) {
-        const packet = this.packets.shift();
-        this.queuedBytes -= packet.length;
-        return packet;
-      }
-      return await this.waitForPacket(scope.signal);
+      return this.packets.length
+        ? this.shiftPacket()
+        : await this.waitForPacket(scope.signal);
     } finally {
       scope.dispose();
     }
+  }
+  assertOpen(signal) {
+    signal.throwIfAborted();
+    if (this.closed) {
+      throw new Error('TCP transport is closed');
+    }
+  }
+  assertReadable(signal) {
+    this.assertOpen(signal);
+    if (this.failure) {
+      throw this.failure;
+    }
+    if (this.waiter) {
+      throw new Error('TCP receive is already pending');
+    }
+  }
+  async connectScoped(scope, options) {
+    await this.connect({
+      signal: scope.signal,
+      timeout: options.timeout ?? this.timeout,
+    });
+    scope.signal.throwIfAborted();
+  }
+  shiftPacket() {
+    const packet = this.packets.shift();
+    this.queuedBytes -= packet.length;
+    return packet;
   }
   waitForPacket(signal) {
     return new Promise((resolve, reject) => {
@@ -254,34 +251,14 @@ export class TcpTransport {
 }
 
 function requestScope({ signal, timeout }, fallback) {
-  timeout ??= fallback;
-  validateTimeout(timeout);
-  const controller = new globalThis.AbortController();
-  const timer = globalThis.setTimeout(
-    () =>
-      controller.abort(
-        new TelegramError('TCP request timeout', { type: 'TRANSPORT_TIMEOUT' })
-      ),
-    timeout
+  return createRequestScope(
+    { signal, timeout: timeout ?? fallback },
+    new TelegramError('TCP request timeout', { type: 'TRANSPORT_TIMEOUT' })
   );
-  return {
-    signal: signal
-      ? globalThis.AbortSignal.any([signal, controller.signal])
-      : controller.signal,
-    dispose: () => globalThis.clearTimeout(timer),
-  };
 }
 
 function validateEndpoint(host, port, maxQueuedBytes) {
-  if (
-    typeof host !== 'string' ||
-    !host ||
-    !Number.isInteger(port) ||
-    port < 1 ||
-    port > 65535
-  ) {
-    throw new RangeError('Invalid TCP endpoint');
-  }
+  validateSocketEndpoint(host, port, 'TCP endpoint');
   if (!Number.isSafeInteger(maxQueuedBytes) || maxQueuedBytes < 4) {
     throw new RangeError('Invalid TCP queued byte limit');
   }

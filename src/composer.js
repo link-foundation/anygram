@@ -1,5 +1,17 @@
 import { compose, matchesFilter, matchText } from './bot-context.js';
 
+function matching(pattern, valueOf, middleware) {
+  const run = compose(middleware);
+  return (ctx, next) => {
+    const match = matchText(pattern, valueOf(ctx));
+    if (!match) {
+      return next();
+    }
+    ctx.match = match;
+    return run(ctx, next);
+  };
+}
+
 /** Shared registration and dispatch for bots, nested composers and scenes. */
 export class Composer {
   constructor(...middleware) {
@@ -49,26 +61,12 @@ export class Composer {
     });
   }
   hears(pattern, ...middleware) {
-    const run = compose(middleware);
-    return this.use((ctx, next) => {
-      const match = matchText(pattern, ctx.msg?.text);
-      if (!match) {
-        return next();
-      }
-      ctx.match = match;
-      return run(ctx, next);
-    });
+    return this.use(matching(pattern, (ctx) => ctx.msg?.text, middleware));
   }
   action(pattern, ...middleware) {
-    const run = compose(middleware);
-    return this.use((ctx, next) => {
-      const match = matchText(pattern, ctx.callbackQuery?.data);
-      if (!match) {
-        return next();
-      }
-      ctx.match = match;
-      return run(ctx, next);
-    });
+    return this.use(
+      matching(pattern, (ctx) => ctx.callbackQuery?.data, middleware)
+    );
   }
   middleware() {
     return compose(this.handlers);

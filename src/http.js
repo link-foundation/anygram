@@ -1,9 +1,26 @@
 import { TelegramError } from './errors.js';
+import { joinBytes } from './bytes.js';
 
 export function validateTimeout(timeout) {
   if (!Number.isFinite(timeout) || timeout <= 0 || timeout > 2147483647) {
     throw new RangeError('timeout must be positive and at most 2147483647 ms');
   }
+}
+
+export function createRequestScope({ signal, timeout }, timeoutReason) {
+  validateTimeout(timeout);
+  const controller = new globalThis.AbortController();
+  const timer = globalThis.setTimeout(
+    () => controller.abort(timeoutReason),
+    timeout
+  );
+  return {
+    controller,
+    signal: signal
+      ? globalThis.AbortSignal.any([signal, controller.signal])
+      : controller.signal,
+    dispose: () => globalThis.clearTimeout(timer),
+  };
 }
 
 export function validateByteLimit(maxBytes) {
@@ -58,13 +75,7 @@ export async function readResponseBytes(response, { maxBytes, signal }) {
       }
       chunks.push(value);
     }
-    const bytes = new Uint8Array(length);
-    let offset = 0;
-    for (const chunk of chunks) {
-      bytes.set(chunk, offset);
-      offset += chunk.byteLength;
-    }
-    return bytes;
+    return joinBytes(chunks, length);
   } finally {
     signal?.removeEventListener('abort', cancel);
     reader.releaseLock();

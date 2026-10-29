@@ -79,11 +79,15 @@ examples/. No live credentials or sessions may be included in research data.
 - In-process polling ownership and explicit membership subscriptions are tested.
 - SOCKS4/4a CONNECT supports IPv4 and proxy DNS with bounded UTF-8 user IDs.
   Fragmented replies, rejection codes, deadlines and TLS WebSocket tunnels pass.
-- After email regressions, Node/Bun/Deno each pass 166 tests; lint, format, duplication and
-  four declaration entry points pass. Each later code change requires fresh checks.
+- The inherited duplication configuration scanned no files. A failing-before
+  fixture now guards the detector, and shared helpers consolidate eleven actual
+  clones. The repaired gate scans all 45 production JS/TS files with zero clones.
+- Node/Bun/Deno each pass 166 tests; strict lint, format, the repaired duplication
+  gate and declaration/example checks pass. Each later code change requires
+  fresh checks. The package contains 49 permitted files.
 - Refreshed issue/sub-issue and all three PR feedback streams are empty. Main is
-  an ancestor of the branch. CI for abb5781 passed all nine runtime/OS jobs and
-  release gates in run 40791196241, including SOCKS4/4a tunnels. Later heads
+  an ancestor of the branch. CI for 2598e6d passed all nine runtime/OS jobs and
+  release gates in run 40791774228, including email authentication. Later heads
   require fresh CI evidence.
 - Research includes 32 complete discussions, 26 inspected images, nineteen pinned
   test-path inventories and all 333 Telegram-related meta-sovereign JS files.

@@ -15,7 +15,9 @@
     "**/pnpm-lock.yaml",
     "**/yarn.lock"
   ],
-  "format": "console",
-  "reporters": ["console", "html"],
+  "format": ["javascript", "typescript"],
+  "maxLines": 1500,
+  "maxSize": "128kb",
+  "reporters": ["console", "json"],
   "output": "./reports/jscpd"
 }

@@ -29,7 +29,7 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check:duplication": "jscpd .",
+    "check:duplication": "node experiments/check-duplication-gate.mjs && jscpd src --noTips",
     "check": "npm run lint && npm run format:check && npm run check:duplication",
     "prepare": "husky || true",
     "changeset": "changeset",
