@@ -1,4 +1,11 @@
-import type { TcpTransportOptions } from './mtproto.js';
+import type {
+  TcpTransportOptions,
+  EncryptedFileUpload,
+  EncryptedFileDownload,
+  EncryptedFileUploadOptions,
+  EncryptedFileDownloadOptions,
+  EncryptedFileInput,
+} from './mtproto.js';
 
 /**
  * Adds two numbers
@@ -220,6 +227,18 @@ export declare class Anygram {
     options?: Parameters
   ): Promise<unknown>;
   uploadFile(file: unknown, options?: Parameters): Promise<TlRequest>;
+  uploadEncryptedFile(
+    file: EncryptedFileInput,
+    options?: EncryptedFileUploadOptions
+  ): Promise<EncryptedFileUpload>;
+  iterDownloadEncryptedFile(
+    file: EncryptedFileDownload,
+    options?: EncryptedFileDownloadOptions
+  ): AsyncIterable<Uint8Array>;
+  downloadEncryptedFile(
+    file: EncryptedFileDownload,
+    options?: EncryptedFileDownloadOptions
+  ): Promise<Uint8Array>;
   iterDownload(media: unknown, options?: Parameters): AsyncIterable<Uint8Array>;
   downloadMedia(media: unknown, options?: Parameters): Promise<unknown>;
   editMessage(peer: unknown, options: Parameters): Promise<unknown>;

@@ -25,6 +25,59 @@ export type SecretChatInvoke = (
   parameters: Parameters,
   options?: RequestOptions
 ) => Promise<unknown>;
+export interface EncryptedFileUpload {
+  file: TlRequest & { id: bigint; key_fingerprint: number };
+  /** One-time file key and initial IV. Store only with protected secret metadata. */
+  key: Uint8Array;
+  iv: Uint8Array;
+  /** Original plaintext byte length, excluding IGE padding. */
+  size: number;
+  name: string;
+}
+export interface EncryptedFileDownload {
+  file: TlRequest & {
+    _: 'encryptedFile';
+    id: bigint;
+    access_hash: bigint;
+    size: bigint;
+    dc_id: number;
+    key_fingerprint: number;
+  };
+  key: Uint8Array;
+  iv: Uint8Array;
+  size: number;
+}
+export interface EncryptedFileUploadOptions extends RequestOptions {
+  partSize?: number;
+  maxParts?: number;
+  filename?: string;
+  onProgress?: (uploaded: number, total: number) => void | Promise<void>;
+}
+export interface EncryptedFileDownloadOptions extends RequestOptions {
+  maxBytes?: number;
+  onProgress?: (downloaded: number, total: number) => void | Promise<void>;
+}
+export type EncryptedFileInput =
+  | Uint8Array
+  | Blob
+  | string
+  | { data: Uint8Array; filename?: string; name?: string };
+export declare function uploadEncryptedFile(
+  invoke: SecretChatInvoke,
+  file: EncryptedFileInput,
+  options?: EncryptedFileUploadOptions
+): Promise<EncryptedFileUpload>;
+/** IGE has no file MAC; obtain metadata from the authenticated secret message. */
+export declare function iterDownloadEncryptedFile(
+  invoke: SecretChatInvoke,
+  descriptor: EncryptedFileDownload,
+  options?: EncryptedFileDownloadOptions
+): AsyncIterable<Uint8Array>;
+export declare function downloadEncryptedFile(
+  invoke: SecretChatInvoke,
+  descriptor: EncryptedFileDownload,
+  options?: EncryptedFileDownloadOptions
+): Promise<Uint8Array>;
 export type SecretChatHandshakePhase =
   | 'requesting'
   | 'waiting'

@@ -306,3 +306,19 @@ reject. All 310 tests pass on each runtime with strict checks. Integrated PFS
 head e793a71 passed every gate and all nine runtime/OS jobs in run 40812109787,
 created 2026-10-29T03:26:04Z and completed 2026-10-29T03:28:50Z. Fresh CI is
 required for the age repair.
+
+Encrypted file transfer adds nine regressions after three failing-before API
+checks. Uploads use independent random keys/IVs, continuous AES-IGE across
+bounded parts, ciphertext checksums and the big-file path above 10 MiB.
+Downloads validate metadata/fingerprints and declared byte limits, use the
+file's DC, reject truncated/oversized/redirected chunks and strip only final
+padding. Cancellation, early iterator closure, owned key material, Blob/path
+sources and unchanged caller buffers have coverage. An independent GramJS IGE
+decryptor verifies ciphertext. Shared cloud upload behavior remains covered.
+
+All 319 tests pass on Node, Bun and Deno; strict lint, formatting, full types
+and the zero-clone scan of 63 production files pass. The package dry run has
+68 permitted entries. Key-age head d409008 passed every applicable CI gate and
+all nine runtime/OS jobs in run 40812653369. Durable attachment submission and
+incoming gap persistence remain open, as do controlled production peers and
+the wider issue requirements.

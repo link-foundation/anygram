@@ -329,8 +329,22 @@ into the original sequence position and queues a separate current-key deletion.
 Both packets count toward the combined buffer budget. Version-1 snapshots remain
 readable, and all new snapshots use version 2. Earlier completed handshakes that
 lack original DH parameters remain single-key sessions; fresh manually supplied
-credentials must include `dh: { p, g }` to enable PFS. Encrypted file handling and
-controlled live-account interoperability remain unfinished.
+credentials must include `dh: { p, g }` to enable PFS. Controlled live-account
+interoperability remains unfinished.
+
+`uploadEncryptedFile(invoke, source, options)` encrypts a byte buffer, Blob or
+local path using a fresh one-time file key and IV. It returns `{ file, key, iv,
+size, name }`; place the key, IV and original size inside the encrypted media
+body and pass `file` to `messages.sendEncryptedFile`. The helpers are also
+available on `Anygram` through raw-capable backends. Uploads share bounded
+sequential parts with cloud files; small-file MD5 checksums cover ciphertext.
+`iterDownloadEncryptedFile(invoke, { file, key, iv, size }, options)` downloads
+from the file's DC, decrypts continuous IGE blocks and removes final padding.
+It defaults to a 512 MiB limit; the collecting `downloadEncryptedFile` defaults
+to 64 MiB. Both accept cancellation and progress callbacks. IGE provides no file
+MAC: the fingerprint checks key/IV consistency, and file metadata must come
+from the authenticated secret message. See `examples/typed-secret-files.ts`.
+Durable attachment submission and incoming gap handling remain the next steps.
 
 `SecretChatRekey` provides the separate ordered PFS action state machine using
 the original chat's DH parameters. `request()` starts one exchange;

@@ -975,3 +975,28 @@ immediate compulsory rotation when the old key is first used. Invalid timestamp
 state rejects. All 310 tests pass on Node, Bun and Deno with strict checks.
 Integrated PFS e793a71 passed all nine runtime/OS jobs and gates in
 [run 40812109787](https://github.com/link-foundation/anygram/actions/runs/40812109787).
+
+Encrypted file transfer adds nine regressions after three failing-before API
+checks. Uploads use independent random keys/IVs, continuous AES-IGE across
+bounded parts, ciphertext checksums and the big-file path above 10 MiB.
+Downloads validate metadata/fingerprints and declared byte limits, use the
+file's DC, reject truncated/oversized/redirected chunks and strip only final
+padding. Cancellation, early iterator closure, owned key material, Blob/path
+sources and unchanged caller buffers have coverage. An independent GramJS IGE
+decryptor verifies ciphertext. Shared cloud upload behavior remains covered.
+
+All 319 tests pass on Node, Bun and Deno; strict lint, formatting, full types
+and the zero-clone scan of 63 production files pass. The package dry run has
+68 permitted entries. Key-age head d409008 passed every applicable CI gate and
+all nine runtime/OS jobs in run 40812653369. Durable attachment submission and
+incoming gap persistence remain open, as do controlled production peers and
+the wider issue requirements.
+
+The transfer implementation follows Telegram's [encrypted-file specification](https://core.telegram.org/api/end-to-end#sending-encrypted-files)
+and [file upload limits](https://core.telegram.org/api/files). The official
+Android [upload implementation at 3de37c8](https://github.com/DrKLO/Telegram/blob/3de37c8cfb039452be7398909461da6288babf15/TMessagesProj/src/main/java/org/telegram/messenger/FileUploadOperation.java)
+provides an additional primary-source check of continuous chaining, block
+padding, the 10 MiB threshold and signed MD5 key fingerprints. It is research
+material, not bundled code. IGE has no independent file authentication tag;
+the 32-bit fingerprint does not establish ciphertext integrity. File key
+metadata must travel inside the authenticated secret-chat envelope.

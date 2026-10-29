@@ -105,6 +105,10 @@ export class Anygram {
   async *iterDownload(media, options) {
     yield* await this.execute('iterDownload', media, options);
   }
+
+  async *iterDownloadEncryptedFile(file, options) {
+    yield* await this.execute('iterDownloadEncryptedFile', file, options);
+  }
 }
 
 for (const operation of [
@@ -124,6 +128,8 @@ for (const operation of [
   'sendFile',
   'sendAlbum',
   'uploadFile',
+  'uploadEncryptedFile',
+  'downloadEncryptedFile',
   'downloadMedia',
   'editMessage',
   'deleteMessages',

@@ -34,6 +34,11 @@ export { SecretChatSession } from './secret-session.js';
 export { SecretChatRekey } from './secret-rekey.js';
 export { SecretChatKeyRing } from './secret-key-ring.js';
 export {
+  uploadEncryptedFile,
+  iterDownloadEncryptedFile,
+  downloadEncryptedFile,
+} from './secret-files.js';
+export {
   SecretChatHandshake,
   createSecretChatRequest,
   createSecretChatAcceptance,
