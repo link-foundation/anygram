@@ -106,6 +106,10 @@ export class Anygram {
     yield* await this.execute('iterDownload', media, options);
   }
 
+  async *iterDialogs(options) {
+    yield* await this.execute('iterDialogs', options);
+  }
+
   async *iterDownloadEncryptedFile(file, options) {
     yield* await this.execute('iterDownloadEncryptedFile', file, options);
   }

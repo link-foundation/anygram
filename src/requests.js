@@ -5,6 +5,14 @@ const definitions = new Map(
     item,
   ])
 );
+const metadataFields = new Set([
+  '_',
+  'className',
+  'classType',
+  'CONSTRUCTOR_ID',
+  'SUBCLASS_OF_ID',
+  'originalArgs',
+]);
 const lowerFirst = (text) => text[0].toLowerCase() + text.slice(1);
 export const camel = (text) =>
   text.replace(/_([a-z])/g, (match, letter) => letter.toUpperCase());
@@ -28,16 +36,7 @@ export function requestOf(method, params = {}) {
     throw new TypeError('TL requests require _ or className');
   }
   const values = Object.fromEntries(
-    Object.entries(method).filter(
-      ([key]) =>
-        ![
-          '_',
-          'className',
-          'classType',
-          'CONSTRUCTOR_ID',
-          'SUBCLASS_OF_ID',
-        ].includes(key)
-    )
+    Object.entries(method).filter(([key]) => !metadataFields.has(key))
   );
   return { ...requestOf(name, values), original: method };
 }
@@ -110,13 +109,12 @@ export function objectRequest(request) {
     const fields = new Set(
       definitions.get(tag)?.params.map((field) => field.name)
     );
-    const result = {};
+    const result = tag ? { _: tag } : {};
     for (const [key, entry] of Object.entries(value)) {
-      if (key === 'className') {
-        result._ = requestOf(entry).method;
-      } else {
-        result[fields.has(key) ? key : snake(key)] = convert(entry);
+      if (metadataFields.has(key)) {
+        continue;
       }
+      result[fields.has(key) ? key : snake(key)] = convert(entry);
     }
     return result;
   }

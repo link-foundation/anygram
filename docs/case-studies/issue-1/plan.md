@@ -442,3 +442,21 @@ run 40819580958, created 2026-10-29T04:46:07Z and completed
 2026-10-29T04:50:58Z. Continue with
 remaining native/downstream coverage and preserve the original scope; do not
 mark the PR ready while any requirement remains unverified.
+
+Downstream account workflow audit:
+
+- Captured and read follow's complete Telegram library, follow/join CLIs,
+  private-link/error/message/session experiments and license at immutable head.
+- Added failing-before paged-dialog tests and an ownership regression, followed
+  by the shared iterator, typed group index and actual backend/native matrix.
+- Fixed the actual teleproto inherited-constructor-tag normalization failure
+  exposed by that matrix. All 374 tests pass on Node/Bun/Deno; strict lint,
+  formatting, types, the zero-clone scan of 69 sources and the 74-entry package
+  dry run pass. Preserve the checkpoint and await its new CI run.
+- Next: reproduce legacy invite URL failures and the layer-232 join-result
+  wrapper/cache behavior, then implement a bounded follow workflow using shared
+  operations. Preserve approval-required outcomes and server errors without
+  automatically replaying side effects.
+- Continue all other unmet protocol/runtime/compatibility/downstream criteria.
+  Controlled accounts and official-app-only passkeys remain externally blocked;
+  independent implementation work remains available. Keep PR #2 draft/unmerged.

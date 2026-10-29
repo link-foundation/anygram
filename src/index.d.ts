@@ -166,6 +166,26 @@ export type BotMethods = {
   ) => Promise<T>;
 };
 export type RawMethods = { [namespace: string]: BotMethods };
+/** Canonical TL objects with their peer-qualified top message. */
+export interface DialogEntry {
+  dialog: TlRequest & { _: 'dialog' };
+  entity: TlRequest & { _: string };
+  inputPeer: TlRequest & { _: string };
+  message?: TlRequest & { _: string };
+}
+export interface DialogOptions extends RequestOptions {
+  limit?: number;
+  /** Per-request dialog limit, from 1 to 100. Defaults to 100. */
+  pageSize?: number;
+  /** Request budget from 1 to 10000. Defaults to 1000. */
+  maxPages?: number;
+  offsetDate?: number;
+  offsetId?: number;
+  offsetPeer?: TlRequest;
+  excludePinned?: boolean;
+  /** Telegram peer folders: main (0) or archive (1); omitted includes both. */
+  folderId?: 0 | 1;
+}
 export declare class Anygram {
   constructor(options?: ClientOptions);
   adapters: Adapter[];
@@ -210,6 +230,7 @@ export declare class Anygram {
   getMe(): Promise<unknown>;
   getMessages(peer: unknown, options?: Parameters): Promise<unknown>;
   getDialogs(options?: Parameters): Promise<unknown>;
+  iterDialogs(options?: DialogOptions): AsyncIterableIterator<DialogEntry>;
   getEntity(peer: unknown): Promise<unknown>;
   getInputEntity(peer: unknown): Promise<TlRequest>;
   getContacts(options?: RequestOptions): Promise<Parameters>;

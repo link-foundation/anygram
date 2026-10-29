@@ -144,6 +144,18 @@ The [ordered secret RPC example](examples/typed-ordered-secret-rpc.ts) chains
 previously persisted encrypted frames. An ambiguous network failure still rejects
 without automatic replay; durable outbox recovery remains the caller's job.
 
+Use `for await (const entry of client.iterDialogs(options))` to stream account
+dialogs across pages through the shared MTProto implementation. Each entry has
+canonical TL `dialog`, `entity`, `inputPeer` and optional top `message` objects.
+Messages are matched by peer and ID; yielded objects are copied. `pageSize`
+defaults to 100 (maximum 100), `limit` bounds yielded entries, and `maxPages`
+defaults to 1000 (maximum 10000). Repeated cursors stop the scan; exhausting the
+request budget rejects with `DIALOG_PAGE_LIMIT`. `folderId: 0 | 1` selects main
+or archived chats. Date/ID/peer offsets, pinned exclusion, cancellation and
+early iterator closure are supported. `getDialogs` retains its existing backend
+return value. The [typed dialog example](examples/typed-dialogs.ts) builds a
+group membership index and applies mute/archive with the returned access hashes.
+
 `Session` can import Anygram, GramJS/teleproto, and Telethon string sessions.
 Use `session.save('gramjs')` to export an authorized portable session for
 GramJS/teleproto. The optional client factory uses in-memory string sessions,

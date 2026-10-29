@@ -3,6 +3,7 @@ import { objectRequest, requestOf } from './requests.js';
 import { MediaOperations } from './media.js';
 import { randomId } from './random.js';
 import { mtprotoTextParams } from './formatting.js';
+import { iterateDialogs } from './dialogs.js';
 // Normalize raw client objects without changing exact IDs or byte buffers.
 export function normalize(value) {
   if (Array.isArray(value)) {
@@ -346,6 +347,10 @@ export class RpcOperations extends MediaOperations {
       },
       options
     );
+  }
+
+  iterDialogs(options) {
+    return iterateDialogs(this, options);
   }
 
   async editMessage(peer, { id, text, message = text, ...options }) {

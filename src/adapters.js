@@ -123,6 +123,7 @@ export function createAdapter(
         adapter.supports('invoke') &&
         typeof operations[operation] === 'function' &&
         (style !== 'gramjs' ||
+          operation === 'iterDialogs' ||
           typeof client[method] !== 'function' ||
           hasFormattedEntities(operation, args))
       ) {

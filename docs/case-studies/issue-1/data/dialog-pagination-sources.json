@@ -1,0 +1,15 @@
+{
+  "capturedAt": "2026-10-29T05:01:31.092052+00:00",
+  "sources": [
+    {
+      "file": "dialogs-method.md",
+      "url": "https://core.telegram.org/method/messages.getDialogs.md",
+      "sha256": "e027a7f92dee3f38467dba952971e5d5ae70f1fa0e1dbd079db94d5385cf9c37"
+    },
+    {
+      "file": "dialogs-offsets.md",
+      "url": "https://core.telegram.org/api/offsets.md",
+      "sha256": "66c5f797272b1beacb219ebe079b6189e91dba680e032121ab734f27055fac5a"
+    }
+  ]
+}

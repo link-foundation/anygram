@@ -1156,3 +1156,39 @@ the feature. Production passkey acceptance therefore remains externally blocked
 for this third-party client. Raw schema entries and local tests cannot verify
 that missing account capability. Full feature-union, controlled-account,
 call-media, browser/runtime and downstream scenarios remain open.
+
+Account dialog checkpoint: `iterDialogs` streams canonical dialogs with their
+entity, input peer and peer-qualified top message. The cursor combines date,
+message ID and access-hash-bearing peer; later pages exclude pinned dialogs.
+Peer-qualified keys preserve distinct users, chats and channels with the same
+numeric IDs. Copies protect cursor/cache ownership from consumer mutations.
+Finite page budgets bound requests and retained duplicate keys; cancellation,
+early closure, repeated cursors, missing entities, empty histories and malformed
+responses have regressions. Existing `getDialogs` return shapes are retained.
+
+The executable matrix uses actual GramJS and teleproto request/response classes,
+the mtcute writer, a raw-only adapter and an encrypted native TCP peer. It found
+that inherited teleproto `className` properties disappeared from nested reply
+objects; normalization now retains their TL tags and excludes constructor
+bookkeeping. The native scenario uses returned access hashes for joining,
+muting and archiving. The typed group-index/settings example compiles.
+
+The full relevant sources and experiment scripts of `konard/follow` are captured
+at immutable commit `af8fbb80cec26a7b5b205c93314372d1d92cec1f`, with its Unlicense
+and per-file SHA-256 digests in `data/follow-source-manifest.json`. The repeatable
+collector is `experiments/collect-follow-source.mjs`. Its private-channel-link
+and channel-invalid scripts mainly print expected behavior; the session script
+modifies a real `.env`. They are archived evidence and are not executed as
+isolation-safe automated tests. Our dialog regressions use synthetic accounts
+and local peers. Telegram's getDialogs/offset specifications are archived with
+digests. Complete follow migration, invite parsing, new join wrappers, live
+membership/approval workflows and other downstream requirements remain open.
+
+All 374 tests pass on Node, Bun and Deno. Strict lint, formatting, full types
+and the zero-clone scan of 69 production sources pass; the npm dry run contains
+74 permitted entries. The ten added dialog tests include failing-before API,
+consumer-ownership and inherited teleproto constructor-tag regressions.
+Phone-code head 7f5b144 passed all nine OS/runtime jobs and applicable gates in
+[run 40820313069](https://github.com/link-foundation/anygram/actions/runs/40820313069),
+created 2026-10-29T04:54:07Z and completed 2026-10-29T04:57:05Z. A fresh run is
+required for this dialog checkpoint. All other unmet criteria remain open.
