@@ -752,6 +752,8 @@ Complete pinned Telegraf positional API work plan:
 - [x] Pass 1,140 core cases on Node/Bun/Deno, 151 focused Node 20 cases, strict
       gates, 26 native terminal checks, vendor wire/FIFO and the package audit.
 - [ ] Commit/push the reviewed atomic change and inspect fresh CI for this head.
+      Committed and pushed as 5b6b1a8; run 40877995122 was created
+      2026-10-29T13:00:13Z and remains pending.
 - [ ] Continue every other open criterion in this draft, unmerged PR.
 
 The independent proxy serialization head fdb6a2a passed every applicable CI job
@@ -759,3 +761,18 @@ in run 40874558130, created 2026-10-29T12:35:47Z and completed
 2026-10-29T12:39:07Z. The Telegraf context-file regression also preserves lazy
 middleware-only context construction, as verified by the existing composer/query
 regressions after an intermediate full-suite failure.
+
+Context update data work plan:
+
+- [x] Inventory actual pinned SDK aliases and compare every supported update,
+      source precedence, identifiers and message helper semantics.
+- [x] Reproduce 53 failures with a bounded loader for the preceding source;
+      preserve the complete assertions and original SDKs.
+- [x] Share the union of update aliases and style-specific aggregate resolution;
+      retain incoming update identity and detached Telegraf message helpers.
+- [x] Compile concrete alias/identifier declarations and a checked example;
+      exercise business/reaction HTTP requests over all four selected backends.
+- [x] Pass 1,202 tests on each runtime, 62 focused Node 20 cases, strict gates,
+      26 native terminal checks, vendor wire/FIFO and the 135-entry package audit.
+- [ ] Commit/push the reviewed atomic change and verify fresh CI by SHA/time.
+- [ ] Continue all remaining issue criteria in this single draft, unmerged PR.

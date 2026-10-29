@@ -8,6 +8,7 @@ import type {
 } from './mtproto.js';
 import type { GrammyPositionalApi } from './bot-positional.js';
 import type { TelegrafPositionalApi } from './telegraf-positional.js';
+import type { ContextUpdateAliases } from './bot-context-data.js';
 export { Api } from './api.js';
 export type {
   TlObject,
@@ -605,6 +606,32 @@ export interface BotUpdate extends Parameters {
   message?: BotMessage;
   edited_message?: BotMessage;
   channel_post?: BotMessage;
+  edited_channel_post?: BotMessage;
+  business_message?: BotMessage;
+  edited_business_message?: BotMessage;
+  guest_message?: BotMessage;
+  business_connection?: Parameters & {
+    id: string;
+    user_chat_id: number;
+    user?: Parameters;
+  };
+  deleted_business_messages?: Parameters & {
+    chat: BotMessage['chat'];
+    business_connection_id: string;
+  };
+  stopped_message_generation?: Parameters & { chat: BotMessage['chat'] };
+  message_reaction?: BotReactionUpdate;
+  message_reaction_count?: BotReactionUpdate;
+  poll?: Parameters;
+  poll_answer?: Parameters;
+  my_chat_member?: BotChatUpdate;
+  chat_member?: BotChatUpdate;
+  managed_bot?: Parameters;
+  chat_join_request?: BotChatUpdate;
+  chat_boost?: BotChatUpdate;
+  removed_chat_boost?: BotChatUpdate;
+  purchased_paid_media?: Parameters;
+  subscription?: Parameters;
   callback_query?: {
     id: string;
     data?: string;
@@ -622,6 +649,14 @@ export interface BotPaymentQuery extends Parameters {
   id: string;
   invoice_payload: string;
   from?: Parameters;
+}
+export interface BotChatUpdate extends Parameters {
+  chat: BotMessage['chat'];
+  from?: Parameters;
+}
+export interface BotReactionUpdate extends BotChatUpdate {
+  message_id: number;
+  user?: Parameters;
 }
 export interface BotContextApi {
   getFileLink: BotFileLink;
@@ -704,6 +739,7 @@ export interface TelegrafApi extends BotContextApi, TelegrafPositionalApi {
     request?: RequestOptions | AbortSignal
   ): Promise<unknown>;
 }
+export interface Context extends ContextUpdateAliases {}
 export declare class Context {
   constructor(
     update: BotUpdate,
@@ -718,17 +754,13 @@ export declare class Context {
   readonly botInfo?: Parameters;
   state: Parameters;
   match?: string | RegExpMatchArray;
-  readonly message?: BotMessage;
-  readonly editedMessage?: BotMessage;
-  readonly channelPost?: BotMessage;
-  readonly callbackQuery?: BotUpdate['callback_query'];
-  readonly inlineQuery?: BotUpdate['inline_query'];
-  readonly chosenInlineResult?: BotUpdate['chosen_inline_result'];
-  readonly preCheckoutQuery?: BotUpdate['pre_checkout_query'];
-  readonly shippingQuery?: BotUpdate['shipping_query'];
   readonly msg?: BotMessage;
+  readonly msgId?: number;
   readonly chat?: BotMessage['chat'];
   readonly chatId?: string | number | bigint;
+  readonly senderChat?: Parameters | false;
+  readonly inlineMessageId?: string;
+  readonly businessConnectionId?: string;
   readonly from?: Parameters;
   reply(
     text: string | TextWithEntities,
@@ -763,6 +795,10 @@ export type ContextMediaMethod = (
 ) => Promise<unknown>;
 export interface TelegrafContext extends Omit<Context, 'me'> {
   readonly me?: string;
+  readonly msg?: BotMessage & {
+    has(...keys: string[]): boolean;
+    isAccessible(): boolean;
+  };
 }
 export declare const TelegrafContext: {
   new (

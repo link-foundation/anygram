@@ -629,3 +629,14 @@ Node, Bun and Deno, and all 151 focused cases pass on Node 20.18.3. Strict gates
 and exact generation pass, with zero clones across 90 production sources and
 133 permitted package entries. Full contexts, SDK models, plugins, production
 semantics and all other unmet requirements remain open.
+
+The [context data comparison](bot-context-data.md) advances
+R01/R05/R08/R13/R16/R17/R19. A bounded loader reproduces 53 failures against the
+preceding owned source while retaining actual SDKs and complete assertions.
+All 62 cases now pass, covering the 27 grammY and 18 Telegraf aliases, aggregate
+source precedence, detached message helpers, business/reaction identifiers and
+selected-backend HTTP requests. All 1,202 core tests pass per runtime; focused
+Node 20 cases, strict gates and exact regeneration pass. The scan covers 92
+production sources with zero clones; the package has 135 permitted entries.
+Complete context methods, models, framework filtering and every broader open
+criterion remain unfinished.

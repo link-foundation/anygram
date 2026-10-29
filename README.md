@@ -57,6 +57,11 @@ including callback aliases, invoices, menu objects, game defaults and file URLs.
 and its configured file server. See the [Telegraf comparisons](docs/case-studies/issue-1/telegraf-positional-api.md)
 for request controls, custom file roots and declaration limits.
 
+Contexts expose the pinned update aliases, including business messages,
+reactions and boosts, with `msgId`, `inlineMessageId` and `businessConnectionId`.
+The two styles preserve their SDK source precedence. See the
+[context data comparisons](docs/case-studies/issue-1/bot-context-data.md).
+
 Query shortcuts such as `bot.callbackQuery('refresh').use(handler)` return a
 scoped composer. The six query shortcuts accept strings, regular expressions or
 arrays and share asynchronous `filter(predicate)` registration. See the

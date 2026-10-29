@@ -31,6 +31,11 @@ links. Its independent local HTTP cases exercise all four selected backends.
 The related [proxy serialization regression](proxy-serialization.md) prevents
 JSON inspection from dispatching synthetic raw RPC calls.
 
+The [context data comparison](bot-context-data.md) covers all 27 grammY and 18
+Telegraf update aliases, aggregate source precedence and detached message helpers.
+Fifty-three initial failures reproduce missing business, reaction, boost and
+edited-channel data. Sixty-two cases include actual selected-backend HTTP requests.
+
 The [query registration comparison](bot-query-composer.md) covers all six grammY
 query shortcuts, exact and regular-expression match values, asynchronous filters
 and returned scoped composers. Actual selected-backend HTTP cases acknowledge

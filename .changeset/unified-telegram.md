@@ -123,3 +123,7 @@ operations, retaining aliases, ordered options, formatted text and defaults.
 Add canonical file URLs with private server/token configuration, explicit custom
 file roots and metadata lookup through the selected backend. Preserve embedded
 request controls when a final options object supplies undefined controls.
+
+Share complete pinned context update aliases and aggregate source resolution,
+preserving grammY/Telegraf precedence, business/reaction identifiers and detached
+Telegraf message helpers without changing incoming updates.
