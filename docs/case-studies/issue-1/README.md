@@ -46,8 +46,10 @@ URLs, Node/web byte streams, iterators and reusable suppliers through bounded
 shared readers. Twenty scenarios include thirteen failing-before regressions;
 a separate bounded Linux FIFO probe checks late-open handle cleanup.
 The [optional-client upload checkpoint](vendor-bot-uploads.md) adds actual
-vendor conversion and wire checks. Account-media integration and the documented
-Telegraf runtime encoder incompatibility remain open.
+vendor conversion and wire checks. The [account-input checkpoint](account-file-inputs.md)
+shares explicit sources with cloud, album and encrypted uploads, including
+actual backend serialization and bounded deadlines. The documented Telegraf
+runtime encoder incompatibility and full feature union remain open.
 
 The [Bot API edit/error checkpoint](bot-api-compatibility.md) fixes the
 terminal's grammY edit argument mapping and structured failure handling, while

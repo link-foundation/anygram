@@ -52,7 +52,8 @@ This adapter change does not repair that vendor encoder. Its full runtime parity
 remains an unfinished R05/R08/R17/R19 criterion. Deno wire behavior for that vendor
 also remains unverified. No account or live Telegram token is used.
 
-This checkpoint advances R01/R03/R05/R08/R13/R16/R17/R18/R19. Account-media
-InputFile integration, unbuffered multipart and complete browser/Worker support
-remain open. Local validation and current CI are recorded in the work plan and
+This checkpoint advances R01/R03/R05/R08/R13/R16/R17/R18/R19. The later
+[account-input checkpoint](account-file-inputs.md) adds cloud/album/encrypted
+owned sources through raw backends. Unbuffered multipart, complete browser/Worker
+support and all other unmet criteria remain open. Local validation and current CI are recorded in the work plan and
 PR description; raw method support alone does not complete the feature union.

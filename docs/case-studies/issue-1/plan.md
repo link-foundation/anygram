@@ -600,3 +600,25 @@ thirteen native terminal cases and the separate FIFO probe, commit/push, inspect
 fresh CI, then continue account-media InputFile support and broader requirements.
 The preceding cleanup head c2fc60bf passed all CI jobs in run 40854061428
 (created 2026-10-29T10:00:21Z; completed 2026-10-29T10:03:02Z).
+
+Account InputFile work plan:
+
+- [x] Refresh the complete issue and all three PR feedback streams; no new comments.
+- [x] Reproduce ten failures before implementation, including secret-file native TCP.
+- [x] Share bounded readers with cloud and encrypted uploads without a module cycle.
+- [x] Route owned GramJS/teleproto files through the shared upload implementation.
+- [x] Verify actual serializer bytes, mtcute writer, albums, source forms and cleanup.
+- [x] Run all 670 tests on Node, Bun and Deno; strict checks and package audit.
+- [x] Run isolated native terminal, Telegraf Node 20 wire and FIFO probes.
+- [ ] Review the complete atomic diff, merge fresh main if needed, commit and push.
+- [ ] Verify fresh CI by timestamp and SHA; preserve/analyze any failing logs.
+- [ ] Continue all remaining criteria, including the newer-runtime vendor encoder
+      and complete downstream migrations. Keep PR #2 draft and unmerged.
+
+Account checkpoint validation: all 670 tests pass on Node, Bun and Deno; the
+nineteen new account cases also pass on Node 20.18.3. Strict lint, formatting,
+complete types and schema regeneration pass, with zero clones across 83 sources.
+The npm dry run has 126 permitted entries. Thirteen isolated native terminal
+cases, two actual Telegraf Node 20 wire cases and the separate bounded FIFO
+probe pass. Fresh main is an ancestor. Fresh CI is still required for this head;
+the preceding vendor head 0be0437 is queued/running without a failure observed.

@@ -7,6 +7,7 @@ import {
 } from '../src/mtproto.js';
 import { UpdateManager } from '../src/updates.js';
 import { secretRpcPeer } from '../experiments/secret-rpc-peer.mjs';
+import { InputFile } from '../src/input-file.js';
 
 const chat = { _: 'inputEncryptedChat', chat_id: 123, access_hash: 456n };
 
@@ -143,7 +144,7 @@ it('uploads, delivers, downloads and forwards secret files through native encryp
     const input = Uint8Array.from({ length: 1025 }, (_, i) => i % 251);
     const upload = await uploadEncryptedFile(
       alice.rpc.client.call.bind(alice.rpc.client),
-      input,
+      new InputFile(() => [input], 'secret.bin'),
       { partSize: 1024 }
     );
     const message = {

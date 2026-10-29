@@ -1,7 +1,7 @@
 import { TelegramError, UnsupportedError } from './errors.js';
 import { randomId } from './random.js';
 import { joinBytes } from './bytes.js';
-import { PART_SIZE, sourceOf, uploadSource } from './file-source.js';
+import { PART_SIZE, withFileSource, uploadSource } from './file-source.js';
 import {
   uploadEncryptedFile,
   downloadEncryptedFile,
@@ -92,13 +92,10 @@ export class MediaOperations {
     };
   }
 
-  async uploadFile(file, options = {}) {
-    const source = await sourceOf(file);
-    try {
-      return await uploadSource(this.rpc.bind(this), source, options);
-    } finally {
-      await source.close?.();
-    }
+  uploadFile(file, options = {}) {
+    return withFileSource(file, options, (source, settings) =>
+      uploadSource(this.rpc.bind(this), source, settings)
+    );
   }
 
   uploadEncryptedFile(file, options) {

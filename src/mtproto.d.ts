@@ -5,6 +5,7 @@ import type {
   LoginOptions,
   RunUpdatesOptions,
   UpdateState,
+  InputFile,
 } from './index.js';
 import type { TlCodec } from './tl.js';
 export declare class SecretChatCodec extends TlCodec {
@@ -51,6 +52,10 @@ export interface EncryptedFileUploadOptions extends RequestOptions {
   partSize?: number;
   maxParts?: number;
   filename?: string;
+  /** Owned InputFile preparation limit; defaults to 64 MiB and part capacity. */
+  maxBytes?: number;
+  /** Downloads explicit InputFile URLs; receives the caller's signal. */
+  fetch?: typeof fetch;
   onProgress?: (uploaded: number, total: number) => void | Promise<void>;
 }
 export interface EncryptedFileDownloadOptions extends RequestOptions {
@@ -58,6 +63,7 @@ export interface EncryptedFileDownloadOptions extends RequestOptions {
   onProgress?: (downloaded: number, total: number) => void | Promise<void>;
 }
 export type EncryptedFileInput =
+  | InputFile
   | Uint8Array
   | Blob
   | string

@@ -1,5 +1,5 @@
 import { abortable } from './cancellation.js';
-import { sourceOf } from './file-source.js';
+import { localFileSource } from './local-file-source.js';
 import { joinBytes } from './bytes.js';
 import { readResponseBytes, validateByteLimit } from './http.js';
 
@@ -104,7 +104,7 @@ async function readLocalSource(source, maxBytes, signal) {
 
 async function readLocalFile(path, maxBytes, signal) {
   const source = await suppliedSource(
-    () => sourceOf(path),
+    () => localFileSource(path),
     signal,
     (opened) => opened.close()
   );

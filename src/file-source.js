@@ -1,6 +1,10 @@
 import { createHash } from 'node:crypto';
 import { randomId } from './random.js';
 import { TelegramError } from './errors.js';
+import { InputFile, readInputFile } from './input-file.js';
+import { localFileSource } from './local-file-source.js';
+import { createRequestScope, validateByteLimit } from './http.js';
+import { abortable } from './cancellation.js';
 
 export const PART_SIZE = 512 * 1024;
 export function validatePartSize(size) {
@@ -32,7 +36,29 @@ export function uploadParts(size, partSize, maxParts) {
   return parts;
 }
 
-export async function sourceOf(file) {
+function ownedByteLimit({
+  partSize = PART_SIZE,
+  maxParts = 4000,
+  maxBytes = 64 * 1024 * 1024,
+}) {
+  validatePartSize(partSize);
+  validateByteLimit(maxBytes);
+  if (!Number.isSafeInteger(maxParts) || maxParts < 1) {
+    throw new RangeError('Invalid upload part limit');
+  }
+  return Math.min(maxBytes, partSize * maxParts);
+}
+
+export async function sourceOf(file, options = {}) {
+  if (file instanceof InputFile) {
+    const bytes = await readInputFile(file, {
+      maxBytes: ownedByteLimit(options),
+      signal: options.signal,
+      fetch: options.fetch,
+    });
+    const source = await sourceOf(bytes);
+    return { ...source, name: file.filename ?? source.name };
+  }
   if (file?.data instanceof Uint8Array) {
     const result = await sourceOf(file.data);
     return { ...result, name: file.filename ?? file.name ?? result.name };
@@ -53,40 +79,32 @@ export async function sourceOf(file) {
     };
   }
   if (typeof file === 'string') {
-    const { open } = await import('node:fs/promises');
-    const handle = await open(file, 'r');
-    try {
-      const { size } = await handle.stat();
-      return {
-        size,
-        name: file.split(/[\\/]/).at(-1),
-        read: async (offset, length) => {
-          const buffer = Buffer.alloc(length);
-          let bytesRead = 0;
-          while (bytesRead < length) {
-            const chunk = await handle.read(
-              buffer,
-              bytesRead,
-              length - bytesRead,
-              offset + bytesRead
-            );
-            if (!chunk.bytesRead) {
-              throw new Error('Upload file changed or ended unexpectedly');
-            }
-            bytesRead += chunk.bytesRead;
-          }
-          return buffer;
-        },
-        close: () => handle.close(),
-      };
-    } catch (error) {
-      await handle.close();
-      throw error;
-    }
+    return localFileSource(file);
   }
   throw new TypeError(
     'Upload requires bytes, a Blob, a local path or an InputFile'
   );
+}
+
+/** Own preparation, RPC and progress deadlines for explicit shared inputs. */
+export async function withFileSource(file, options, upload) {
+  options.signal?.throwIfAborted();
+  const scope =
+    file instanceof InputFile
+      ? createRequestScope(
+          { signal: options.signal, timeout: options.timeout ?? 30000 },
+          new TelegramError('Upload timed out', { type: 'NETWORK_ERROR' })
+        )
+      : undefined;
+  const settings = scope ? { ...options, signal: scope.signal } : options;
+  let source;
+  try {
+    source = await sourceOf(file, settings);
+    return await upload(source, settings);
+  } finally {
+    scope?.dispose();
+    await source?.close?.();
+  }
 }
 
 /** Sequential bounded upload, shared by cloud and independently encrypted files. */
@@ -110,15 +128,18 @@ export async function uploadSource(
     );
     options.signal?.throwIfAborted();
     const bytes = transform(plain);
-    const saved = await invoke(
-      big ? 'upload.saveBigFilePart' : 'upload.saveFilePart',
-      {
-        file_id: id,
-        file_part: part,
-        ...(big ? { file_total_parts: parts } : {}),
-        bytes,
-      },
-      options
+    const saved = await abortable(
+      invoke(
+        big ? 'upload.saveBigFilePart' : 'upload.saveFilePart',
+        {
+          file_id: id,
+          file_part: part,
+          ...(big ? { file_total_parts: parts } : {}),
+          bytes,
+        },
+        options
+      ),
+      options.signal
     );
     if (saved !== true) {
       throw new TelegramError('Telegram did not save file part');
@@ -126,7 +147,10 @@ export async function uploadSource(
     if (!big) {
       checksum.update(bytes);
     }
-    await onProgress?.(Math.min(offset + partSize, source.size), source.size);
+    await abortable(
+      onProgress?.(Math.min(offset + partSize, source.size), source.size),
+      options.signal
+    );
   }
   return {
     _: big ? 'inputFileBig' : 'inputFile',

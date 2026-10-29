@@ -1,7 +1,7 @@
 import { createHash, randomBytes } from 'node:crypto';
 import { aesIge } from './crypto.js';
 import { TelegramError } from './errors.js';
-import { PART_SIZE, sourceOf, uploadSource } from './file-source.js';
+import { PART_SIZE, withFileSource, uploadSource } from './file-source.js';
 
 export function secretFileFingerprint(key, iv) {
   if (
@@ -50,9 +50,13 @@ class FileCipher {
 }
 
 /** A fresh one-time key encrypts the entire file, independently of chat keys. */
-export async function uploadEncryptedFile(invoke, file, options = {}) {
-  options.signal?.throwIfAborted();
-  const source = await sourceOf(file);
+export function uploadEncryptedFile(invoke, file, options = {}) {
+  return withFileSource(file, options, (source, settings) =>
+    uploadEncryptedSource(invoke, source, settings)
+  );
+}
+
+async function uploadEncryptedSource(invoke, source, options) {
   const key = randomBytes(32);
   const iv = randomBytes(32);
   const cipher = new FileCipher(key, iv);
@@ -79,7 +83,6 @@ export async function uploadEncryptedFile(invoke, file, options = {}) {
     key.fill(0);
     iv.fill(0);
     cipher.destroy();
-    await source.close?.();
   }
 }
 

@@ -3,6 +3,7 @@ import { gramRequest, objectRequest, nativeTlObjects } from './requests.js';
 import { mtcuteRequest } from './mtcute.js';
 import { RpcOperations } from './operations.js';
 import { botRequester } from './bot-backend.js';
+import { InputFile } from './input-file.js';
 
 const styles = {
   gramjs: {
@@ -42,6 +43,23 @@ function hasFormattedEntities(operation, args) {
   return (
     operation === 'sendMessage' &&
     args[2]?.entities?.some((entity) => entity.type)
+  );
+}
+
+function hasOwnedUpload(operation, args) {
+  const file =
+    operation === 'uploadFile'
+      ? args[0]
+      : operation === 'sendFile'
+        ? args[1]?.file
+        : operation === 'sendAlbum'
+          ? args[1]
+          : undefined;
+  return (
+    file instanceof InputFile ||
+    (Array.isArray(file) &&
+      (file.length > 10 ||
+        file.some((entry) => (entry?.file ?? entry) instanceof InputFile)))
   );
 }
 
@@ -116,7 +134,8 @@ export function createAdapter(
         (style !== 'gramjs' ||
           canonicalOperations.has(operation) ||
           typeof client[method] !== 'function' ||
-          hasFormattedEntities(operation, args))
+          hasFormattedEntities(operation, args) ||
+          hasOwnedUpload(operation, args))
       ) {
         return operations[operation](...args);
       }

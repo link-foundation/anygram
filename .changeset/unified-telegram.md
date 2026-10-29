@@ -83,3 +83,7 @@ and retain plain file IDs and Passport error JSON fields.
 Convert owned file sources through selected grammY, Telegraf and current
 node-telegram-bot-api clients with one shared bounded reader and request scope.
 Preserve vendor file instances and support legacy multipart formData contracts.
+
+Share explicit InputFile source preparation with account cloud and encrypted
+uploads, including part-capacity/byte limits, cancellation, source cleanup and
+selected-backend serializers. Preserve legacy random-access upload behavior.

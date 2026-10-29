@@ -61,8 +61,19 @@ limit before multipart fetch. Selected grammY, Telegraf and
 node-telegram-bot-api adapters convert owned files to their vendor input types;
 `createAdapter` accepts `maxUploadBytes`, `timeout` and source-download `fetch`.
 The automatic factory forwards these options and can construct all three clients.
-Existing vendor InputFile instances retain vendor ownership and limits. Account-media
-InputFile conversion remains unfinished. Telegraf 4's multipart dependency stalls
+Existing vendor InputFile instances retain vendor ownership and limits.
+
+Account `uploadFile`, `sendFile`, albums and encrypted uploads also accept owned
+`InputFile` sources through raw-capable backends, including GramJS/teleproto
+serializers and mtcute. Their preparation defaults to 64 MiB, further bounded by
+`partSize * maxParts`; use upload options `{ maxBytes, partSize, maxParts, signal,
+fetch }`. This buffer limit applies to explicit owned inputs; existing direct
+bytes, Blobs and local paths retain their random-access upload behavior. Owned
+uploads share a 30-second default deadline across preparation, RPC and progress;
+`timeout` overrides it. See
+[account upload evidence](docs/case-studies/issue-1/account-file-inputs.md).
+
+Telegraf 4's multipart dependency stalls
 on newer Node and Bun; actual wire coverage currently passes on Node 20. See the
 [vendor upload evidence](docs/case-studies/issue-1/vendor-bot-uploads.md).
 

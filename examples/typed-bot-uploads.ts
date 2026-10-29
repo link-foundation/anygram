@@ -1,4 +1,10 @@
-import { BotApi, InputFile, type InputFileSource } from '../src/index.js';
+import {
+  Anygram,
+  BotApi,
+  InputFile,
+  type InputFileSource,
+} from '../src/index.js';
+import { uploadEncryptedFile, type SecretChatInvoke } from '../src/mtproto.js';
 
 export async function sendFrames(api: BotApi, chat: bigint) {
   const reusable: InputFileSource = () => new Blob(['a generated frame']);
@@ -6,4 +12,20 @@ export async function sendFrames(api: BotApi, chat: bigint) {
     chat_id: chat,
     document: new InputFile(reusable, 'frame.txt'),
   });
+}
+
+export async function uploadAccountFiles(
+  client: Anygram,
+  invoke: SecretChatInvoke
+) {
+  const reusable = new InputFile(
+    () => [new Uint8Array([1, 2, 3])],
+    'shared.bin'
+  );
+  await client.uploadFile(reusable, {
+    maxBytes: 1024,
+    partSize: 1024,
+    maxParts: 1,
+  });
+  await uploadEncryptedFile(invoke, reusable, { maxBytes: 1024 });
 }
