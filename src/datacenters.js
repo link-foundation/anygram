@@ -20,6 +20,9 @@ export class DatacenterPool {
     if (this.authorized.has(target.dc)) {
       return;
     }
+    // Dependency IDs belong to the application call's destination, not these
+    // authorization RPCs on another data center.
+    options = { ...options, afterMessageIds: undefined };
     try {
       const authorization = await this.home.rpc(
         { _: 'auth.exportAuthorization', dc_id: target.dc },
@@ -76,6 +79,7 @@ export class DatacenterPool {
           });
         }
         visited.add(dc);
+        options = { ...options, afterMessageIds: undefined };
         current = await this.client(dc);
         if (
           !['PHONE', 'NETWORK'].includes(migration[1]) ||

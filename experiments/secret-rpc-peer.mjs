@@ -27,13 +27,24 @@ export async function secretRpcPeer(handle) {
     if (request._ === 'msgs_ack') {
       return;
     }
-    while (['invokeWithLayer', 'initConnection'].includes(request._)) {
+    let dependencies = [];
+    while (
+      ['invokeWithLayer', 'initConnection', 'invokeAfterMsgs'].includes(
+        request._
+      )
+    ) {
+      if (request._ === 'invokeAfterMsgs') {
+        dependencies = request.msg_ids;
+      }
       request = request.query;
     }
     if (++count > 20) {
       throw new RangeError('Local secret-chat peer RPC limit exceeded');
     }
-    const response = handle(request);
+    const response = handle(request, {
+      messageId: envelope.messageId,
+      afterMessageIds: dependencies,
+    });
     const result = Buffer.alloc(12);
     result.writeUInt32LE(0xf35c6d01);
     result.writeBigInt64LE(envelope.messageId, 4);

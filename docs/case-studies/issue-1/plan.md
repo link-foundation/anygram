@@ -227,3 +227,13 @@ now preserves exact queued frames through restart without upgrading outgoing
 policy or relaxing outgoing-history validation. Focused sequence/layer tests
 pass. All 256 tests pass on Node, Bun and Deno; strict lint, formatting, full
 declaration/example checks and the zero-clone production scan also pass.
+
+Incoming-layer head 33600f9 passed all nine runtime/OS jobs and applicable gates
+in CI run 40803949654. The next checkpoint fixes generic-wrapper vector result
+decoding and adds successful native RPC receipts with bounded, copied
+`invokeAfterMsgs` dependencies. Five focused tests and a native encrypted TCP
+integration test pass, including salt retries, migration/authorization handling,
+failure preservation and finite invalid-input checks. All 262 tests pass on
+Node, Bun and Deno. Strict lint, formatting, full declaration/example checks
+and the zero-clone scan of 55 production files pass; the package dry run has
+60 permitted entries. Durable session delivery remains the next open step.

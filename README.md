@@ -133,6 +133,17 @@ Fake TLS and obfuscated full framing remain unfinished.
 The [typed transport example](examples/typed-transports.ts)
 shows the supported construction options.
 
+The native `Mtproto.callWithReceipt(method, params, options)` returns
+`{ value, messageId, dc }` after a successful RPC. Pass accepted client IDs from
+the selected data center in `afterMessageIds` to wrap the next call in
+`invokeAfterMsgs`. Lists are copied before queuing and limited to 1000 distinct
+IDs. The receipt identifies the accepted salt-retry attempt and final data center;
+explicit migration clears dependencies belonging to the previous data center.
+Generic wrappers retain the inner method's result type, including vectors.
+The [ordered secret RPC example](examples/typed-ordered-secret-rpc.ts) chains
+previously persisted encrypted frames. An ambiguous network failure still rejects
+without automatic replay; durable outbox recovery remains the caller's job.
+
 `Session` can import Anygram, GramJS/teleproto, and Telethon string sessions.
 Use `session.save('gramjs')` to export an authorized portable session for
 GramJS/teleproto. The optional client factory uses in-memory string sessions,

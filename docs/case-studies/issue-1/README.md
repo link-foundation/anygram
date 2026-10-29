@@ -798,3 +798,27 @@ cover both roles, exact queued bytes, large nested document sizes, restart and
 ordered delivery. The failing-before log is retained locally in
 `ci-logs/secret-incoming-layer-before.log`. Integrated durable delivery and the
 other open criteria remain unfinished.
+
+## Native RPC dependencies and receipts
+
+Telegram's [invokeAfterMsgs method](https://core.telegram.org/method/invokeAfterMsgs)
+returns the concrete type of its query. A minimal failing regression showed
+that nested generic wrappers instead decoded vector results as `X`, producing
+a trailing-byte failure. Native RPCs now resolve the innermost method type with
+a finite depth limit before any network activity.
+
+`callWithReceipt` returns the successful `{ value, messageId, dc }` and
+`afterMessageIds` creates a real `invokeAfterMsgs` wrapper, including before
+initial connection setup. Dependency lists are copied and bounded, validate
+client message-ID format and reject duplicates. Salt retries return the accepted
+attempt's ID. Explicit migration clears old data-center dependencies, including
+for authorization transfer calls. Unknown or cyclic generic queries fail before
+transmission. RPC failures preserve their typed error and are never replayed
+ambiguously.
+
+Five focused tests cover concrete vector results, nested initialization, copied
+dependencies, invalid IDs, finite query depth, salt retries and migration. A
+sixth test chains secret service calls over native encrypted framed TCP, verifies
+the actual message IDs and checks that an RPC error is reported once. The typed
+example compiles with the full declaration check. Integrated durable outbox,
+PFS and the other open issue requirements remain unfinished.

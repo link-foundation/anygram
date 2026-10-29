@@ -42,6 +42,194 @@ const rpcResult = (id, data) => {
   return Buffer.concat([header, data]);
 };
 
+it('decodes nested generic RPC results using the inner vector type', async () => {
+  const client = serverFor((client, envelope) => {
+    const request = client.codec.decode(envelope.body);
+    assert.equal(request._, 'invokeAfterMsgs');
+    assert.equal(request.query._, 'invokeWithoutUpdates');
+    assert.equal(request.query.query._, 'contacts.getContactIDs');
+    return rpcResult(
+      envelope.messageId,
+      client.codec.encode([1, -2, 3], 'Vector<int>')
+    );
+  });
+  assert.deepEqual(
+    await client.invoke({
+      _: 'invokeAfterMsgs',
+      msg_ids: [4n],
+      query: {
+        _: 'invokeWithoutUpdates',
+        query: { _: 'contacts.getContactIDs', hash: 0n },
+      },
+    }),
+    [1, -2, 3]
+  );
+});
+
+it('returns the successful RPC message receipt and chains the next request before initialization', async () => {
+  const received = [];
+  const client = serverFor((client, envelope) => {
+    let request = client.codec.decode(envelope.body);
+    while (['invokeWithLayer', 'initConnection'].includes(request._)) {
+      request = request.query;
+    }
+    received.push({ request, messageId: envelope.messageId });
+    return rpcResult(
+      envelope.messageId,
+      client.codec.encode([11n, 12n], 'Vector<long>')
+    );
+  });
+  client.apiId = 777;
+  const first = await client.callWithReceipt('messages.receivedQueue', {
+    max_qts: 1,
+  });
+  assert.deepEqual(first, {
+    value: [11n, 12n],
+    messageId: received[0].messageId,
+    dc: 2,
+  });
+  client.initialized = false;
+  const dependencies = [first.messageId];
+  const next = client.callWithReceipt(
+    'messages.receivedQueue',
+    { max_qts: 2 },
+    { afterMessageIds: dependencies }
+  );
+  dependencies[0] = 4n;
+  const second = await next;
+  assert.deepEqual(received[1].request, {
+    _: 'invokeAfterMsgs',
+    msg_ids: [first.messageId],
+    query: { _: 'messages.receivedQueue', max_qts: 2 },
+  });
+  assert.equal(second.messageId, received[1].messageId);
+  assert.ok(second.messageId > first.messageId);
+});
+
+it('bounds dependency IDs and generic query depth before any network activity', async () => {
+  const client = serverFor(() => assert.fail('Invalid RPC was transmitted'));
+  for (const ids of [
+    null,
+    '4',
+    [0n],
+    [-4n],
+    [1n],
+    [4],
+    [1n << 63n],
+    [4n, 4n],
+    new Array(1),
+    Array.from({ length: 1001 }, (_, index) => BigInt(index + 1) * 4n),
+  ]) {
+    await assert.rejects(
+      client.callWithReceipt('help.getConfig', {}, { afterMessageIds: ids }),
+      /dependency/i
+    );
+  }
+  for (const query of [undefined, { _: 'inputPeerSelf' }]) {
+    await assert.rejects(
+      client.rpc({ _: 'invokeWithoutUpdates', query }),
+      /Unknown Telegram RPC/
+    );
+  }
+  client.codec.maxDepth = 4;
+  const cyclic = { _: 'invokeWithoutUpdates' };
+  cyclic.query = cyclic;
+  await assert.rejects(client.rpc(cyclic), /query depth/);
+});
+
+it('returns the accepted salt-retry receipt and preserves RPC errors', async () => {
+  const ids = [];
+  const client = serverFor((client, envelope) => {
+    ids.push(envelope.messageId);
+    if (ids.length === 1) {
+      return client.codec.encode({
+        _: 'bad_server_salt',
+        bad_msg_id: envelope.messageId,
+        bad_msg_seqno: envelope.sequence,
+        error_code: 48,
+        new_server_salt: 12n,
+      });
+    }
+    return rpcResult(
+      envelope.messageId,
+      client.codec.encode(
+        ids.length === 2
+          ? true
+          : { _: 'rpc_error', error_code: 420, error_message: 'FLOOD_WAIT_17' },
+        ids.length === 2 ? 'Bool' : 'Object'
+      )
+    );
+  });
+  const receipt = await client.callWithReceipt('account.updateStatus', {
+    offline: false,
+  });
+  assert.equal(receipt.messageId, ids[1]);
+  assert.notEqual(receipt.messageId, ids[0]);
+  assert.equal(receipt.value, true);
+  await assert.rejects(
+    client.callWithReceipt('account.updateStatus', { offline: false }),
+    (error) => error.code === 420 && error.retryAfter === 17
+  );
+  assert.equal(ids.length, 3);
+});
+
+it('reports a migrated receipt and removes dependencies from destination authorization RPCs', async () => {
+  const dependencies = [4n];
+  const home = serverFor((client, envelope) => {
+    const request = client.codec.decode(envelope.body);
+    if (request._ === 'auth.exportAuthorization') {
+      return rpcResult(
+        envelope.messageId,
+        client.codec.encode({
+          _: 'auth.exportedAuthorization',
+          id: 1n,
+          bytes: new Uint8Array(1),
+        })
+      );
+    }
+    assert.equal(request._, 'invokeAfterMsgs');
+    assert.deepEqual(request.msg_ids, dependencies);
+    return rpcResult(
+      envelope.messageId,
+      client.codec.encode({
+        _: 'rpc_error',
+        error_code: 303,
+        error_message: 'USER_MIGRATE_4',
+      })
+    );
+  });
+  const destination = [];
+  const next = serverFor((client, envelope) => {
+    const request = client.codec.decode(envelope.body);
+    destination.push({ request, messageId: envelope.messageId });
+    return rpcResult(
+      envelope.messageId,
+      client.codec.encode(
+        request._ === 'auth.importAuthorization'
+          ? { _: 'auth.authorization', user: { _: 'userEmpty', id: 1n } }
+          : true,
+        request._ === 'auth.importAuthorization' ? 'Object' : 'Bool'
+      )
+    );
+  });
+  next.dc = 4;
+  home.datacenters.create = () => next;
+  const receipt = await home.callWithReceipt(
+    'account.updateStatus',
+    { offline: true },
+    { afterMessageIds: dependencies }
+  );
+  assert.deepEqual(
+    destination.map(({ request }) => request._),
+    ['auth.importAuthorization', 'account.updateStatus']
+  );
+  assert.deepEqual(receipt, {
+    value: true,
+    messageId: destination[1].messageId,
+    dc: 4,
+  });
+});
+
 describe('native MTProto session', () => {
   it('dispatches encrypted raw RPCs with exact request/result correlation', async () => {
     const client = serverFor((client, request) => {

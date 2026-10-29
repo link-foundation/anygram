@@ -9,6 +9,7 @@ import { Authentication } from './authentication.js';
 import { DatacenterPool } from './datacenters.js';
 import { UpdateManager } from './updates.js';
 import { objectRequest, requestOf } from './requests.js';
+import { rpcDependencies, rpcResultType } from './rpc-order.js';
 import { TcpTransport } from './tcp-transport.js';
 import { WebSocketTransport } from './websocket-transport.js';
 import { dcUrl } from './endpoints.js';
@@ -18,6 +19,7 @@ import {
   validateByteLimit,
   validateTimeout,
 } from './http.js';
+const receiptCallback = Symbol('MTProto successful receipt');
 export { TransportFraming } from './transport-framing.js';
 export { TcpTransport };
 export { WebSocketTransport };
@@ -255,10 +257,26 @@ export class Mtproto {
 
   call(method, params = {}, options) {
     const request = objectRequest(requestOf(method, params));
+    options = {
+      ...options,
+      afterMessageIds: rpcDependencies(options?.afterMessageIds),
+    };
     const run = () => this.datacenters.call(request, options);
     const result = this.queue.then(run, run);
     this.queue = result.catch(() => {});
     return result.finally(() => this.dispatchDatacenterUpdates());
+  }
+
+  /** The receipt identifies the accepted call, including salt retries/migrations. */
+  async callWithReceipt(method, params = {}, options = {}) {
+    let receipt;
+    const value = await this.call(method, params, {
+      ...options,
+      [receiptCallback]: (accepted) => {
+        receipt = accepted;
+      },
+    });
+    return { value, ...receipt };
   }
 
   dispatchDatacenterUpdates() {
@@ -632,32 +650,39 @@ export class Mtproto {
     return this.codec.decode(bytes, type);
   }
 
-  async rpc(request, options = {}) {
-    if (!this.codec.methods.has(request._)) {
-      throw new TypeError(`Unknown Telegram RPC ${request._}`);
+  initialQuery(query) {
+    if (this.initialized || !this.apiId) {
+      return query;
     }
+    return {
+      _: 'invokeWithLayer',
+      layer: this.codec.layer,
+      query: {
+        _: 'initConnection',
+        api_id: this.apiId,
+        device_model: 'Anygram',
+        system_version: 'JavaScript',
+        app_version: '0.5.0',
+        system_lang_code: 'en',
+        lang_pack: '',
+        lang_code: 'en',
+        query,
+      },
+    };
+  }
+
+  async rpc(request, options = {}) {
+    const type = rpcResultType(this.codec, request);
+    const dependencies = rpcDependencies(options.afterMessageIds);
     options = deadlineOptions(options, this.timeout);
     await this.connect(options);
     options.signal.throwIfAborted();
     await this.flushAcknowledgements(options);
-    let body = request;
-    if (!this.initialized && this.apiId) {
-      body = {
-        _: 'invokeWithLayer',
-        layer: this.codec.layer,
-        query: {
-          _: 'initConnection',
-          api_id: this.apiId,
-          device_model: 'Anygram',
-          system_version: 'JavaScript',
-          app_version: '0.5.0',
-          system_lang_code: 'en',
-          lang_pack: '',
-          lang_code: 'en',
-          query: request,
-        },
-      };
-    }
+    const body = this.initialQuery(
+      dependencies.length
+        ? { _: 'invokeAfterMsgs', msg_ids: dependencies, query: request }
+        : request
+    );
     const deadline = Date.now() + (options.timeout ?? this.timeout);
     for (let retry = 0; retry < 3; retry++) {
       const { messageId, response } = await this.exchange(
@@ -666,7 +691,7 @@ export class Mtproto {
       );
       const pending = {
         id: messageId,
-        type: this.codec.methods.get(request._).type,
+        type,
       };
       for (let polls = 0; polls < 100; polls++) {
         await this.processEnvelope(
@@ -676,6 +701,7 @@ export class Mtproto {
         if (pending.done) {
           this.initialized = true;
           await this.flushAcknowledgements(options);
+          options[receiptCallback]?.({ messageId, dc: this.dc });
           return pending.value;
         }
         if (pending.retry) {

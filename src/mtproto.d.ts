@@ -388,6 +388,15 @@ export declare class HttpTransport implements Transport {
   request(packet: Uint8Array, options?: RequestOptions): Promise<Uint8Array>;
   close(): void;
 }
+export interface MtprotoRequestOptions extends RequestOptions {
+  /** Accepted client message IDs on the selected data center (at most 1000). */
+  afterMessageIds?: readonly bigint[];
+}
+export interface MtprotoReceipt<T = unknown> {
+  value: T;
+  messageId: bigint;
+  dc: number;
+}
 export declare class Mtproto {
   constructor(options?: MtprotoOptions);
   codec: TlCodec;
@@ -417,7 +426,15 @@ export declare class Mtproto {
   call<T = unknown>(
     method: string,
     params?: Parameters,
-    options?: RequestOptions
+    options?: MtprotoRequestOptions
   ): Promise<T>;
-  invoke<T = unknown>(request: TlRequest, options?: RequestOptions): Promise<T>;
+  callWithReceipt<T = unknown>(
+    method: string,
+    params?: Parameters,
+    options?: MtprotoRequestOptions
+  ): Promise<MtprotoReceipt<T>>;
+  invoke<T = unknown>(
+    request: TlRequest,
+    options?: MtprotoRequestOptions
+  ): Promise<T>;
 }
