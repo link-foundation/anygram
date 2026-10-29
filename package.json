@@ -36,7 +36,8 @@
     "changeset:version": "node scripts/changeset-version.mjs",
     "changeset:publish": "changeset publish",
     "changeset:status": "changeset status --since=origin/main",
-    "schema:update": "node scripts/update-schema.mjs"
+    "schema:update": "node scripts/update-schema.mjs",
+    "schema:update:secret": "node scripts/update-secret-schema.mjs"
   },
   "keywords": [
     "telegram",

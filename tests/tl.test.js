@@ -95,4 +95,37 @@ describe('independent TL codec', () => {
       /type/i
     );
   });
+
+  it('reads historical constructor IDs while writing the latest definition of a name', () => {
+    const codec = new TlCodec({
+      registry: {
+        layer: 2,
+        methods: [],
+        constructors: [
+          {
+            id: '1',
+            predicate: 'versioned',
+            params: [{ name: 'value', type: 'int' }],
+            type: 'Versioned',
+          },
+          {
+            id: '2',
+            predicate: 'versioned',
+            params: [{ name: 'value', type: 'long' }],
+            type: 'Versioned',
+          },
+        ],
+      },
+    });
+    assert.deepEqual(codec.decode(new Uint8Array([1, 0, 0, 0, 7, 0, 0, 0])), {
+      _: 'versioned',
+      value: 7,
+    });
+    const latest = codec.encode({ _: 'versioned', value: 9007199254740993n });
+    assert.equal(
+      new DataView(latest.buffer, latest.byteOffset).getUint32(0, true),
+      2
+    );
+    assert.equal(codec.decode(latest).value, 9007199254740993n);
+  });
 });

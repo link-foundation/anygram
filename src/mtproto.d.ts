@@ -7,6 +7,14 @@ import type {
   UpdateState,
 } from './index.js';
 import type { TlCodec } from './tl.js';
+export declare class SecretChatCodec extends TlCodec {
+  constructor(options?: {
+    layer?: number;
+    maxVector?: number;
+    maxDepth?: number;
+    maxBytes?: number;
+  });
+}
 /** MTProto 2.0 envelopes only; callers manage chat keys, layers and sequence state. */
 export declare class SecretChatCipher {
   constructor(

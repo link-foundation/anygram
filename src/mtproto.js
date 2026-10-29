@@ -25,6 +25,7 @@ export { WebSocketFraming } from './websocket-framing.js';
 export { createSocks4Connector, createSocks5Connector } from './socks5.js';
 export { ObfuscatedFraming } from './obfuscated-framing.js';
 export { SecretChatCipher } from './secret-cipher.js';
+export { SecretChatCodec } from './secret-codec.js';
 
 export class HttpTransport {
   constructor({

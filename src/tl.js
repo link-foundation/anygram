@@ -31,7 +31,7 @@ export class TlCodec {
       registry.constructors.map((item) => [item.predicate, item])
     );
     this.ids = new Map(
-      [...this.methods.values(), ...this.constructors.values()].map((item) => [
+      [...registry.methods, ...registry.constructors].map((item) => [
         Number(item.id) >>> 0,
         item,
       ])

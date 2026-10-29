@@ -229,3 +229,23 @@ encryption, sequence-number and PFS documents have hashes/source URLs in
 `data/secret-sources.json`. The cipher alone does not establish secret-chat
 interoperability: negotiation, sequence/gap handling, re-keying and live
 controlled-account verification remain open.
+
+## Versioned end-to-end schema
+
+`SecretChatCodec` retains all 90 constructor versions in the captured primary
+[TL schema](https://core.telegram.org/schema/end-to-end), selecting the newest
+writer at the negotiated layer while accepting older constructor IDs. A failing
+regression exposed that the shared TL codec previously built its ID map from
+the latest-name map, discarding older IDs; it now retains the complete registry.
+The generator reads TL Markdown because the primary JSON omits four flag-only
+fields, including `silent` and `no_webpage`. A provenance test checks its SHA-256
+and compares every other field with the independently downloaded JSON.
+
+All 90 constructor versions round-trip at their defining layers. A handwritten
+layer-73 wire vector checks a text message independently, and regressions cover
+flags, UTF-16 entities, exact 64-bit document sizes, older layers, wrapper
+encryption and allocation limits. The shared fixture generator preserves the
+existing cloud comparisons with actual pinned clients. All 195 Node/Bun/Deno
+tests, strict lint, formatting, duplication and declaration checks pass. This
+establishes serialization and envelope behavior, not full peer interoperability
+or call-media support; sequence handling and key negotiation remain open.

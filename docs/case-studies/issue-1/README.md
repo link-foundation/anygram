@@ -515,3 +515,27 @@ and [run 40794298276](https://github.com/link-foundation/anygram/actions/runs/40
 Fresh CI is required for this envelope change. This is a byte primitive:
 complete secret-chat negotiation, sequencing, persistence, forward secrecy and
 live peer verification remain acceptance work.
+
+## Secret-schema checkpoint
+
+The independent end-to-end TL registry contains 90 constructor versions through
+layer 216. `SecretChatCodec` defaults to chat layer 144, writes the newest
+constructor at the selected layer and accepts all historical IDs through it.
+A failing regression showed that the shared codec had discarded older IDs while
+building its name map; its read map now retains every definition.
+
+The primary JSON omits four flag-only parameters present in the TL text,
+including `silent` and `no_webpage`. The bounded generator therefore reads the
+[primary TL text](https://core.telegram.org/schema/end-to-end), supports a local
+captured Markdown input and records its source hash. Tests compare all other
+fields with the independently archived JSON, round-trip every version, and
+check a handwritten wire vector, flags, exact long values, entities, wrappers,
+encrypted payloads and size/type/layer rejection. Layer-216 group-call message
+constructors serialize separately; this does not implement call-media transport.
+
+All 195 tests pass on Node, Bun and Deno, with strict lint, format, declaration
+and duplication checks. The detector scans 47 production JS/TS files with no
+clones; the npm dry run has 52 permitted entries. Cipher head 8e1b759 passed every
+applicable job in [run 40794806160](https://github.com/link-foundation/anygram/actions/runs/40794806160).
+This codec change requires fresh CI. Full secret-chat negotiation, sequence
+recovery, persistence, PFS and controlled-account interoperability remain open.

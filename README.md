@@ -190,13 +190,20 @@ fallback when a final difference omits its timeout. A standalone `UpdateManager`
 share chunking and bounds across raw MTProto backends. Downloads accept
 `refreshFileReference` to refetch an expired reference from its original message.
 
-`anygram/mtproto` also exports `SecretChatCipher` for MTProto 2.0 end-to-end
-envelopes over already serialized secret-chat TL bytes. Its constructor requires
+`anygram/mtproto` exports `SecretChatCodec` for the independently versioned
+end-to-end TL schema. It writes the constructor version for the selected
+`{ layer }` (default 144) and reads historical versions through that layer.
+`npm run schema:update:secret` regenerates it from Telegram's TL text, retaining
+flag-only fields omitted by the JSON schema. An optional captured Markdown path
+allows offline regeneration.
+
+`SecretChatCipher` provides MTProto 2.0 end-to-end
+envelopes over those serialized bytes. Its constructor requires
 a 256-byte shared key and `{ originator: boolean }`; the direction is relative
 to the original chat creator. It checks fingerprints, message integrity, length
 and padding, with a configurable `maxBytes` up to the default 16 MiB. `destroy()`
 clears its owned key bytes and disables further use. This primitive requires
-separate chat negotiation, layers, sequence tracking, persistence and re-keying;
+separate chat negotiation, layer agreement, sequence tracking, persistence and re-keying;
 the high-level secret-chat client remains unfinished.
 
 ## Select existing clients
