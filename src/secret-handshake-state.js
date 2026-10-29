@@ -32,7 +32,7 @@ export function secretPublic(value) {
   return Buffer.from(value);
 }
 
-function decoded(value, min, max, name) {
+export function secretDecodedBytes(value, min, max, name) {
   if (
     typeof value !== 'string' ||
     value.length > Math.ceil(max / 3) * 4 ||
@@ -67,7 +67,10 @@ export function secretRequestUser(user, selfId) {
 }
 
 export function secretDecodedUser(value) {
-  return codec.decode(decoded(value, 4, 1024, 'InputUser'), 'InputUser');
+  return codec.decode(
+    secretDecodedBytes(value, 4, 1024, 'InputUser'),
+    'InputUser'
+  );
 }
 
 export function bindSecretChat(chat, data) {
@@ -124,7 +127,12 @@ export function restoreSecretHandshake(state) {
       state.accessHash === null
         ? null
         : secretLong(state.accessHash, 'access hash'),
-    publicValue: decoded(state.publicValue, 256, 256, 'public value'),
+    publicValue: secretDecodedBytes(
+      state.publicValue,
+      256,
+      256,
+      'public value'
+    ),
     remotePublic: null,
     user: null,
     key: null,
@@ -156,10 +164,15 @@ function restoreMaterial(data, state) {
     throw new TypeError('Unexpected secret chat request user');
   }
   if (state.remotePublic !== null) {
-    data.remotePublic = decoded(state.remotePublic, 1, 256, 'remote public');
+    data.remotePublic = secretDecodedBytes(
+      state.remotePublic,
+      1,
+      256,
+      'remote public'
+    );
   }
   if (state.key !== null) {
-    data.key = decoded(state.key, 256, 256, 'key');
+    data.key = secretDecodedBytes(state.key, 256, 256, 'key');
     data.fingerprint = secretLong(state.fingerprint, 'key fingerprint');
     if (hash('sha1', data.key).readBigInt64LE(12) !== data.fingerprint) {
       throw new Error('Secret chat restored key fingerprint mismatch');
@@ -169,7 +182,7 @@ function restoreMaterial(data, state) {
   }
   if (state.exchange !== null) {
     const pending = state.exchange;
-    const p = decoded(pending?.p, 256, 256, 'DH prime');
+    const p = secretDecodedBytes(pending?.p, 256, 256, 'DH prime');
     data.exchange = new SecretChatKeyExchange({
       p,
       g: pending.g,

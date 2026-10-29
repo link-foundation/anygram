@@ -226,9 +226,104 @@ export declare class SecretChatSequence {
   receive(frame: SecretChatLayer): SecretChatSequenceResult;
   resendRequest(): SecretChatResend | undefined;
   unacknowledged(): SecretChatLayer[];
+  retained(): SecretChatLayer[];
+  pendingFrames(): SecretChatLayer[];
+  pruneAcknowledged(): number;
   exportState(): SecretChatSequenceState;
   destroy(): void;
 }
+export interface SecretChatSessionState {
+  version: 1;
+  phase: 'active' | 'aborted';
+  originator: boolean;
+  peer: { _: 'inputEncryptedChat'; chat_id: number; access_hash: string };
+  discardSubmitted: boolean;
+  key: string | null;
+  layers: SecretChatLayersState | null;
+  sequence: SecretChatSequenceState | null;
+  outbox: {
+    outSequence: number;
+    version: 1 | 2;
+    submitted: boolean;
+    data: string;
+  }[];
+  incomingVersions: [number, 1 | 2][];
+}
+export interface SecretChatSessionEffects {
+  messages: SecretChatLayer[];
+  aborted: boolean;
+}
+export interface SecretChatSessionSaveOptions {
+  /** Commit messages and private state in one transaction before returning. */
+  save: (
+    state: SecretChatSessionState,
+    effects: SecretChatSessionEffects
+  ) => void | Promise<void>;
+  signal?: AbortSignal;
+  timeout?: number;
+}
+export interface SecretChatPending {
+  outSequence: number;
+  version: 1 | 2;
+  request: TlRequest & { random_id: bigint; data: Uint8Array; peer: TlRequest };
+}
+/** Single-key active session. Compulsory PFS and encrypted media remain separate. */
+export declare class SecretChatSession {
+  constructor(
+    options:
+      | {
+          key: Uint8Array;
+          originator: boolean;
+          peer: TlRequest;
+          layer?: number;
+          remoteLayer?: number;
+          maxPending?: number;
+          maxHistory?: number;
+          maxBufferedBytes?: number;
+        }
+      | {
+          state: SecretChatSessionState;
+          maxPending?: number;
+          maxHistory?: number;
+          maxBufferedBytes?: number;
+        }
+  );
+  readonly state: {
+    phase: 'active' | 'aborted';
+    pending: number;
+    sequence: SecretChatSequence['state'] | null;
+    layers: SecretChatLayersState | null;
+    discardSubmitted: boolean;
+  };
+  queue(
+    message: TlRequest,
+    options: SecretChatSessionSaveOptions
+  ): Promise<SecretChatLayer>;
+  notify(
+    options: SecretChatSessionSaveOptions
+  ): Promise<SecretChatLayer | undefined>;
+  upgradeLayer(
+    layer: number,
+    options: SecretChatSessionSaveOptions
+  ): Promise<SecretChatLayer | undefined>;
+  deleteUnacknowledged(
+    outSequence: number,
+    deletionId: bigint | undefined,
+    options: SecretChatSessionSaveOptions
+  ): Promise<{ replacement: SecretChatLayer; deletion: SecretChatLayer }>;
+  receive(
+    data: Uint8Array,
+    options: SecretChatSessionSaveOptions
+  ): Promise<SecretChatSequenceResult>;
+  flush(
+    client: Pick<Mtproto, 'callWithReceipt'>,
+    options: SecretChatSessionSaveOptions
+  ): Promise<MtprotoReceipt[]>;
+  pending(): SecretChatPending[];
+  exportState(): SecretChatSessionState;
+  destroy(): void;
+}
+
 /** Defaults to MTProto 2.0. Legacy version 1 requires explicit selection. */
 export declare class SecretChatCipher {
   constructor(

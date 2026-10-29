@@ -374,6 +374,34 @@ export class SecretChatSequence {
       .map(([, bytes]) => this.#decode(bytes));
   }
 
+  /** Copied retained frames, including acknowledged retransmission history. */
+  retained() {
+    this.#assertActive();
+    return [...this.#history.values()].map((bytes) => this.#decode(bytes));
+  }
+
+  /** Copied incoming frames waiting for a sequence gap to be filled. */
+  pendingFrames() {
+    this.#assertActive();
+    return [...this.#pending.values()].map(({ bytes }) => this.#decode(bytes));
+  }
+
+  /** Release acknowledged history when an enclosing ciphertext budget is full. */
+  pruneAcknowledged() {
+    this.#assertActive();
+    let removed = 0;
+    for (const [index, bytes] of this.#history) {
+      if (index >= this.#acknowledged) {
+        break;
+      }
+      this.#history.delete(index);
+      this.#bufferedBytes -= bytes.length;
+      bytes.fill(0);
+      removed++;
+    }
+    return removed;
+  }
+
   exportState() {
     this.#assertActive();
     return {

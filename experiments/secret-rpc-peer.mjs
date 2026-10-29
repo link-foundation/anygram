@@ -48,7 +48,17 @@ export async function secretRpcPeer(handle) {
     const result = Buffer.alloc(12);
     result.writeUInt32LE(0xf35c6d01);
     result.writeBigInt64LE(envelope.messageId, 4);
-    send(Buffer.concat([result, client.codec.encode(response)]));
+    send(
+      Buffer.concat([
+        result,
+        client.codec.encode(
+          response,
+          response?._ === 'rpc_error'
+            ? 'Object'
+            : client.codec.methods.get(request._).type
+        ),
+      ])
+    );
   });
   const client = new Mtproto({
     apiId: 777,

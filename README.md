@@ -284,9 +284,34 @@ JSON snapshots restore through `new SecretChatHandshake({ state })`; lost
 requests retain their exact random ID/public value, and lost acceptances retain
 their key. An already-accepted RPC error needs the corresponding recovered
 encryption update before readiness can be verified. `destroy()` clears local
-owned key material; callers manage persisted copies. These initial handshakes
-still require layer/sequence/cipher integration, durable message effects, PFS,
-encrypted media and validation with controlled accounts.
+owned key material; callers manage persisted copies.
+
+`new SecretChatSession(handshake.credentials())` combines the key, sequence,
+layer policy and a durable encrypted outbox. Every operation requires a
+`save(state, effects)` callback: commit the snapshot and received message effects
+in one transaction. `queue(message, { save })` automatically queues a layer
+notification when needed. `flush(nativeClient, { save })` submits pending packets
+in order using actual RPC message receipts and `invokeAfterMsgs`. Network or
+post-RPC save failures retain the exact encrypted packet and its random ID for
+retry. Restore protected JSON through `new SecretChatSession({ state })`.
+
+For each `updateNewEncryptedMessage`, await
+`session.receive(update.message.bytes, { save })` before advancing the account
+qts cursor. Then flush any queued notifications or gap requests. Received
+messages may repeat after a failed save; the atomic transaction prevents their
+effects from being committed separately from sequence state. Authenticated
+protocol violations clear owned key/message state and save an aborted snapshot;
+`flush()` then durably retries `messages.discardEncryption`. Unauthenticated
+packets leave active state unchanged. Serialize operations on each session;
+overlapping operations reject. See `examples/typed-durable-secret-chat.ts`.
+
+The default limits retain at most 1000 incoming gaps, 1000 outgoing frames and
+16 MiB of combined plaintext/ciphertext. Acknowledged history can be released
+under pressure; unacknowledged frames cannot be silently evicted. Snapshots
+contain keys and plaintext and require protected storage. `destroy()` clears
+owned memory, while applications manage their stored and returned copies.
+This is currently a single-key session: compulsory PFS rotation, encrypted
+file handling and controlled live-account interoperability remain unfinished.
 
 ## Select existing clients
 

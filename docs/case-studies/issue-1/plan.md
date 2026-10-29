@@ -237,3 +237,19 @@ failure preservation and finite invalid-input checks. All 262 tests pass on
 Node, Bun and Deno. Strict lint, formatting, full declaration/example checks
 and the zero-clone scan of 55 production files pass; the package dry run has
 60 permitted entries. Durable session delivery remains the next open step.
+
+RPC head 8b72c1b passed all nine runtime/OS jobs and applicable gates in
+CI run 40804675053. The active session now combines the layer/cipher/sequence
+policies, exact encrypted retransmission history, atomic message effects and
+ordered native submission. Sixteen unit regressions cover retries, restart,
+gaps, deletion, corruption, downgrade aborts, cancellation and owned snapshots.
+A bilateral native encrypted TCP test verifies saving effects and sequence
+state before the real update manager saves qts or acknowledges the queue.
+Compulsory PFS, encrypted media and controlled live peers remain open; these
+checks do not establish full secret-chat or ecosystem parity.
+
+All 279 tests pass on Node, Bun and Deno. Strict ESLint, Prettier, complete
+declaration/example checking and the zero-clone scan of 57 production files
+pass. The package dry run has 62 permitted entries. Refreshed issue comments,
+sub-issues and all three PR feedback streams remain empty. Fresh CI is required
+after committing this checkpoint.

@@ -822,3 +822,46 @@ sixth test chains secret service calls over native encrypted framed TCP, verifie
 the actual message IDs and checks that an RPC error is reported once. The typed
 example compiles with the full declaration check. Integrated durable outbox,
 PFS and the other open issue requirements remain unfinished.
+
+## Durable active secret-chat sessions
+
+`SecretChatSession` now combines the initial handshake credentials with layer
+negotiation, authenticated envelopes, ordered sequence processing and a durable
+outbox. Transactions work on owned drafts. The mandatory save callback receives
+copied JSON state and copied message effects; live state changes only after it
+succeeds. Each outgoing sequence retains its exact ciphertext and random ID
+through ambiguous RPC failures, retransmissions and JSON restart. Successful
+native receipts order subsequent calls on the correct data center. Returned
+receipts cannot mutate that private dependency chain.
+
+Incoming gaps retain their authenticated envelope version. Restore validates
+that metadata against the saved layer/cutover policy and verifies every outgoing
+ciphertext against its cached plaintext. Count and combined byte limits bound
+both representations. A minimal failing-before test exposed a budget mismatch:
+acknowledged plaintext could remain within its limit while the corresponding
+ciphertext exceeded the enclosing budget. Both are now pruned together without
+evicting unacknowledged history. Further failing-before tests exposed receipt
+aliasing and noncanonical snapshot flags; their logs are preserved locally.
+
+Authenticated protocol errors clear owned key and message state immediately,
+even if saving the abort fails. A later flush must save the aborted state before
+discarding the chat remotely; post-RPC save failures retain that retry. Invalid
+unauthenticated packets and application persistence errors preserve active state.
+Cancellation, concurrent operations, exact deletion replacements, layer upgrades,
+malformed receipts and bounded restoration all have regressions.
+
+A finite bilateral native TCP test sends actual encrypted Telegram RPCs and TL
+updates through the real update manager. Each handler commits session state and
+message effects before qts is saved or `messages.receivedQueue` is sent. Ordinary
+messages cross both directions, including initial legacy-to-modern negotiation.
+This verifies the local wire and durability boundary; authenticated production
+peers still need controlled accounts. PFS, encrypted media, calls and the wider
+compatibility/scenario criteria remain unfinished.
+
+RPC head 8b72c1b passed all nine runtime/OS jobs and applicable gates in
+[run 40804675053](https://github.com/link-foundation/anygram/actions/runs/40804675053).
+
+The session checkpoint passes all 279 tests on Node, Bun and Deno, strict lint,
+formatting, full TypeScript checks and the zero-clone scan of 57 production
+files. The package dry run contains 62 permitted entries. Fresh CI remains
+required after committing it.

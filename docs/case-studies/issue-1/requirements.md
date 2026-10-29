@@ -36,3 +36,13 @@ The issue's unbounded superiority statements (R05–R08) require an explicit
 versioned comparison set and evidence; they cannot be inferred from a raw-RPC
 escape hatch. Bot API permissions do not grant user-account access. Full
 MTProto RPC coverage does not establish secret-chat or voice-media support.
+
+Latest R03/R06 checkpoint: the active `SecretChatSession` combines initial
+credentials with layer/cipher/sequence policy and exact durable encrypted
+retransmissions. Sixteen unit tests and a bilateral native TCP integration test
+verify atomic message effects, qts acknowledgement ordering, restart, gaps,
+downgrade aborts, deletion, budgets and private receipt ownership. All 279 tests
+pass on Node, Bun and Deno; strict checks scan 57 production files with no
+clones. The R09 package dry run has 62 permitted entries. Compulsory PFS,
+encrypted media, controlled production peers and the other open criteria remain
+unfinished.
