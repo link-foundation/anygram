@@ -34,11 +34,13 @@ Native HTTP requests validate deadlines before sending and cancel response-body
 reads when the deadline or caller's signal fires. Bot API JSON responses default
 to an 8 MiB limit (`maxResponseBytes` in the constructor); `downloadMedia` defaults
 to 64 MiB and accepts `{ maxBytes, signal, timeout }`. MTProto HTTPS responses
-default to 16 MiB (`maxBytes` in transport options).
-Request normalization checks nesting and vector limits before visiting child
-values (defaults: depth 64 and 100000 vector entries). Exceeding a limit raises
-`TelegramError` with type `RESPONSE_TOO_LARGE` and releases the body reader.
+default to 16 MiB (`maxBytes` in transport options). Exceeding a response limit
+raises `TelegramError` with type `RESPONSE_TOO_LARGE` and releases the body reader.
 Bot API servers and custom networking can be selected with `baseUrl` and `fetch`.
+
+Request normalization checks nesting and vector limits before visiting child
+values (defaults: depth 64 and 100000 vector entries). Invalid request limits,
+excessive nesting and oversized vectors raise `RangeError` during conversion.
 
 Use `bot.use(session({ initial: () => ({ count: 0 }), storage }))` to persist
 `ctx.session`. Storage accepts grammY's `read/write/delete` interface or Telegraf's
