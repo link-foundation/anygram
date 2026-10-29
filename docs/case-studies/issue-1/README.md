@@ -442,3 +442,14 @@ duplication and declaration/example checks pass; the package dry run contains
 applicable gates in
 [run 40791774228](https://github.com/link-foundation/anygram/actions/runs/40791774228).
 That run predates the repaired duplication gate; later heads need fresh CI.
+
+The first gate run at e56581a passed all nine runtime/OS jobs, but its duplication
+step failed in
+[run 40792559002](https://github.com/link-foundation/anygram/actions/runs/40792559002).
+The downloaded failed-job log reports `unknown option '--noTips'` at line 270
+(line 1039 of the full workflow log). Deno had replaced the local executable
+shim with jscpd 4.3.0, which accepts the flag, while npm CI correctly installed
+locked 4.0.5, which rejects it. The command now invokes the locked package's
+JavaScript entry point directly, omits the unsupported flag, and bounds its heap
+at 384 MiB. The detector fixture and production scan both pass with that exact
+entry point. Fresh CI is still required for the corrected head.

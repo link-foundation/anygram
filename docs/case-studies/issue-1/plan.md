@@ -82,6 +82,9 @@ examples/. No live credentials or sessions may be included in research data.
 - The inherited duplication configuration scanned no files. A failing-before
   fixture now guards the detector, and shared helpers consolidate eleven actual
   clones. The repaired gate scans all 45 production JS/TS files with zero clones.
+- The first repaired-gate CI run passed all runtime jobs but rejected a CLI flag
+  accepted by a newer Deno-created local shim. The check now invokes locked
+  jscpd 4.0.5 directly without that flag; its fixture and source scan pass locally.
 - Node/Bun/Deno each pass 166 tests; strict lint, format, the repaired duplication
   gate and declaration/example checks pass. Each later code change requires
   fresh checks. The package contains 49 permitted files.
