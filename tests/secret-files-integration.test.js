@@ -13,6 +13,7 @@ const chat = { _: 'inputEncryptedChat', chat_id: 123, access_hash: 456n };
 function acknowledgeQueue(side, maxQts) {
   assert.equal(side.qts, maxQts);
   assert.equal(side.durable.sequence.incoming, maxQts);
+  assert.equal(side.messages.at(-1).date, 1);
   if (maxQts === 2) {
     assert.equal(side.messages.at(-1).file.id, 90n);
   }
@@ -34,6 +35,7 @@ async function createSide(originator, sides, storage) {
     }),
     messages: [],
     files: [],
+    sent: [],
     qts: 0,
     nextQts: 0,
     durable: null,
@@ -44,6 +46,7 @@ async function createSide(originator, sides, storage) {
     side.durable = JSON.parse(JSON.stringify(state));
     side.messages.push(...(effects.messages ?? []));
     side.files.push(...(effects.files ?? []));
+    side.sent.push(...(effects.sent ?? []));
   };
   side.rpc = await secretRpcPeer((request) => {
     if (request._ === 'help.getNearestDc') {
@@ -118,6 +121,7 @@ async function createSide(originator, sides, storage) {
     onUpdate: (update) =>
       side.session.receive(update.message.bytes, {
         file: update.message.file,
+        date: update.message.date,
         save: side.save,
       }),
     onState: (state) => {
@@ -163,6 +167,10 @@ it('uploads, delivers, downloads and forwards secret files through native encryp
     await alice.session.queueFile(message, upload.file, { save: alice.save });
     await alice.session.flush(alice.rpc.client, { save: alice.save });
     assert.equal(alice.files.at(-1).file.id, 90n);
+    assert.equal(alice.sent.at(-1).date, 1);
+    assert.equal(alice.sent.at(-1).randomId, 12n);
+    assert.deepEqual(alice.sent.at(-1).message.media, message.media);
+    assert.equal(alice.sent.at(-1).message.ttl, message.ttl);
     await bob.rpc.client.pollUpdates();
     await bob.rpc.client.drainUpdates();
     assert.deepEqual(bob.acknowledged, [1, 2]);
@@ -185,6 +193,8 @@ it('uploads, delivers, downloads and forwards secret files through native encryp
       { save: bob.save }
     );
     await bob.session.flush(bob.rpc.client, { save: bob.save });
+    assert.equal(bob.sent.at(-1).date, 1);
+    assert.equal(bob.sent.at(-1).randomId, 14n);
     await alice.rpc.client.pollUpdates();
     await alice.rpc.client.drainUpdates();
     assert.deepEqual(alice.acknowledged, [1, 2]);

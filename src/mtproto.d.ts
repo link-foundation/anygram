@@ -431,6 +431,8 @@ export interface SecretChatSessionStateV2 extends SecretChatSessionStateBase {
   incomingKeys: [number, string][];
   /** Added by attachment-capable sessions; empty for older snapshots. */
   incomingFiles?: [number, string, string][];
+  /** Server dates retained with exact pending frames; absent in older state. */
+  incomingDates?: [number, number, string][];
   outbox: (SecretChatSessionStateBase['outbox'][number] & {
     digest: string;
     replacement: { data: string; digest: string } | null;
@@ -495,6 +497,13 @@ export type SecretChatSessionState =
 export interface SecretChatSessionEffects {
   messages: SecretChatReceivedLayer[];
   aborted: boolean;
+  /** Commit server dates and outgoing bodies with successful submitted state. */
+  sent?: {
+    outSequence: number;
+    randomId: bigint;
+    date: number;
+    message: TlRequest;
+  }[];
   /** Save returned outgoing file references with the submitted outbox state. */
   files?: {
     outSequence: number;
@@ -504,6 +513,7 @@ export interface SecretChatSessionEffects {
 }
 export interface SecretChatReceivedLayer extends SecretChatLayer {
   file?: EncryptedFileDownload['file'];
+  date?: number;
 }
 export interface SecretChatSessionResult extends Omit<
   SecretChatSequenceResult,
@@ -514,6 +524,8 @@ export interface SecretChatSessionResult extends Omit<
 export interface SecretChatSessionReceiveOptions extends SecretChatSessionSaveOptions {
   /** Pass update.message.file with update.message.bytes, including across gaps. */
   file?: TlRequest;
+  /** Pass update.message.date so history/expiry dates survive sequence gaps. */
+  date?: number;
 }
 export interface SecretChatSessionSaveOptions {
   /** Commit messages and private state in one transaction before returning. */

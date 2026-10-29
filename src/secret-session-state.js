@@ -13,6 +13,11 @@ import { TelegramError } from './errors.js';
 import { randomId } from './random.js';
 import { secretMessageTTL, secretObservedTTL } from './secret-services.js';
 import {
+  restoreSecretDates,
+  exportSecretDates,
+  secretPendingFrames,
+} from './secret-session-dates.js';
+import {
   encodeSecretAttachment,
   decodeSecretAttachment,
   restoreSecretAttachment,
@@ -75,6 +80,7 @@ export class SecretSessionState {
     this.incomingVersions = new Map();
     this.incomingKeys = new Map();
     this.incomingFiles = new Map();
+    this.incomingDates = new Map();
     const state = options.state;
     if (
       state !== undefined &&
@@ -143,12 +149,14 @@ export class SecretSessionState {
       this.restoreIncomingVersions(state);
       this.restoreIncomingKeys(state);
       this.restoreIncomingFiles(state);
+      restoreSecretDates(this, state);
       this.checkBounds();
     }
   }
 
   restoreAborted(state) {
     this.restoreIncomingFiles(state);
+    restoreSecretDates(this, state);
     if (state.messageTTL !== undefined && state.messageTTL !== null) {
       throw new TypeError('Aborted secret chat retains message TTL');
     }
@@ -186,9 +194,7 @@ export class SecretSessionState {
   }
 
   restoreIncomingVersions(state) {
-    const pending = new Map(
-      this.sequence.pendingFrames().map((frame) => [frame.out_seq_no, frame])
-    );
+    const pending = secretPendingFrames(this);
     if (
       !Array.isArray(state.incomingVersions) ||
       state.incomingVersions.length !== pending.size
@@ -216,9 +222,7 @@ export class SecretSessionState {
   }
 
   restoreIncomingKeys(state) {
-    const pending = new Map(
-      this.sequence.pendingFrames().map((frame) => [frame.out_seq_no, frame])
-    );
+    const pending = secretPendingFrames(this);
     const entries =
       state.version === 1
         ? [...pending.keys()].map((wire) => [
@@ -273,12 +277,7 @@ export class SecretSessionState {
   }
 
   restoreIncomingFiles(state) {
-    const pending = new Map(
-      (this.sequence?.pendingFrames() ?? []).map((frame) => [
-        frame.out_seq_no,
-        frame,
-      ])
-    );
+    const pending = secretPendingFrames(this);
     const entries =
       state.incomingFiles === undefined ? [] : state.incomingFiles;
     if (!Array.isArray(entries) || entries.length > pending.size) {
@@ -323,9 +322,7 @@ export class SecretSessionState {
     if (!this.incomingFiles.size) {
       return [];
     }
-    const pending = new Map(
-      this.sequence.pendingFrames().map((frame) => [frame.out_seq_no, frame])
-    );
+    const pending = secretPendingFrames(this);
     return [...this.incomingFiles].map(([wire, file]) => [
       wire,
       base64(file),
@@ -342,7 +339,7 @@ export class SecretSessionState {
   }
 
   bufferedBytes() {
-    let bytes = this.sequence.state.bufferedBytes;
+    let bytes = this.sequence.state.bufferedBytes + this.incomingDates.size * 4;
     for (const { data, replacement, file } of this.outbox.values()) {
       bytes +=
         data.length + (replacement?.data.length ?? 0) + (file?.length ?? 0);
@@ -526,7 +523,7 @@ export class SecretSessionState {
     this.keys.rotate(exchangeId, (action) => this.queueAction(action));
   }
 
-  receive(data, file) {
+  receive(data, file, date) {
     this.assertActive();
     const { body, version, fingerprint, candidate } = this.keys.decrypt(data);
     try {
@@ -535,7 +532,8 @@ export class SecretSessionState {
         version,
         fingerprint,
         candidate,
-        file
+        file,
+        date
       );
     } catch (cause) {
       if (cause.type === 'SECRET_CHAT_FILE_INVALID') {
@@ -550,7 +548,7 @@ export class SecretSessionState {
     }
   }
 
-  receiveFrame(frame, version, fingerprint, candidate, inputFile) {
+  receiveFrame(frame, version, fingerprint, candidate, inputFile, date) {
     const output = this.sequence.receive(frame);
     if (output.duplicate || output.ignored) {
       return output;
@@ -558,6 +556,9 @@ export class SecretSessionState {
     const file = encodeSecretAttachment(frame.message, inputFile, true);
     if (file) {
       this.incomingFiles.set(frame.out_seq_no, file);
+    }
+    if (date !== undefined) {
+      this.incomingDates.set(frame.out_seq_no, date);
     }
     this.layers.observe(frame, version, { ordered: false });
     this.incomingVersions.set(frame.out_seq_no, version);
@@ -575,6 +576,9 @@ export class SecretSessionState {
       if (attachment) {
         ordered.file = decodeSecretAttachment(attachment, true);
       }
+      if (this.incomingDates.has(ordered.out_seq_no)) {
+        ordered.date = this.incomingDates.get(ordered.out_seq_no);
+      }
     }
     for (const wire of this.incomingVersions.keys()) {
       if (
@@ -585,6 +589,7 @@ export class SecretSessionState {
         this.incomingKeys.delete(wire);
         this.incomingFiles.get(wire)?.fill(0);
         this.incomingFiles.delete(wire);
+        this.incomingDates.delete(wire);
       }
     }
     this.keys.ring.retire(this.sequence.state.incoming);
@@ -640,15 +645,26 @@ export class SecretSessionState {
 
   receiptEffects(outSequence, value) {
     const packet = this.outbox.get(outSequence);
-    if (!packet.file) {
-      return {};
-    }
     const frame = this.history().find(
       (entry) => entry.out_seq_no === outSequence
     );
+    const result = {
+      sent: [
+        {
+          outSequence,
+          randomId: frame.message.random_id,
+          date: value.date,
+          message: frame.message,
+        },
+      ],
+    };
+    if (!packet.file) {
+      return result;
+    }
     const bytes = encodeSecretAttachment(frame.message, value.file, true);
     try {
       return {
+        ...result,
         files: [
           {
             outSequence,
@@ -695,6 +711,7 @@ export class SecretSessionState {
         String(fingerprint),
       ]),
       incomingFiles: this.exportIncomingFiles(),
+      incomingDates: exportSecretDates(this),
     };
   }
 
@@ -719,5 +736,6 @@ export class SecretSessionState {
       file.fill(0);
     }
     this.incomingFiles.clear();
+    this.incomingDates.clear();
   }
 }

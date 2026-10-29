@@ -4,6 +4,7 @@ import {
 } from './secret-session-state.js';
 import { throwFailures } from './errors.js';
 import { secretLimit } from './secret-sequence-state.js';
+import { secretMessageDate } from './secret-session-dates.js';
 import {
   secretApplicationService,
   secretOutgoingMessage,
@@ -100,6 +101,7 @@ export class SecretChatSession {
         messages: output?.messages ?? [],
         aborted: false,
         ...(output?.files ? { files: output.files } : {}),
+        ...(output?.sent ? { sent: output.sent } : {}),
       });
       return output;
     } finally {
@@ -215,6 +217,9 @@ export class SecretChatSession {
 
   receive(data, options) {
     return this.#exclusive(options, async (save) => {
+      if (options?.date !== undefined) {
+        secretMessageDate(options.date);
+      }
       if (
         !(data instanceof Uint8Array) ||
         data.length >
@@ -227,7 +232,7 @@ export class SecretChatSession {
       try {
         return await this.#transaction(save, options?.signal, (draft) => {
           try {
-            return draft.receive(owned, options?.file);
+            return draft.receive(owned, options?.file, options?.date);
           } catch (error) {
             if (error.type === 'SECRET_CHAT_ABORTED') {
               protocolFailure = error;
@@ -354,5 +359,5 @@ function validateReceipt(receipt, method) {
   if (receipt.value?._ !== expected) {
     throw new TypeError('Invalid secret chat send response');
   }
-  secretLimit(receipt.value.date, 0, 0x7fffffff, 'message date');
+  secretMessageDate(receipt.value.date);
 }

@@ -397,3 +397,22 @@ declaration/example checks and the zero-clone scan of 67 production sources
 pass; the package dry run contains 72 permitted entries. Fresh CI is required
 for this checkpoint. Controlled production interoperability and all
 other unmet issue criteria remain open.
+
+Server-date persistence checkpoint: successful encrypted RPC saves now include
+`effects.sent` with the exact outgoing body, random ID, sequence and server date.
+Applications commit these with submitted state and history; failed saves keep
+exact ciphertext available for retry. Incoming `receive({ date })` metadata
+survives out-of-order delivery, duplicate updates and protected JSON restart.
+The first accepted date stays attached to its frame; ordered effects expose it
+before qts acknowledgement. Pending date metadata counts toward the combined
+buffer limit and snapshot digests reject mismatched frame/date tuples. Older
+snapshots without dates retain `undefined` rather than inventing history times.
+
+Six failing-before regressions cover outgoing receipts, failed persistence,
+restart, gap closure, duplicate dates, malformed snapshots and timer integration.
+The bilateral native TCP attachment scenario checks outgoing and incoming dates;
+the existing combined-budget test includes buffered dates. All 355 tests pass on
+Node, Bun and Deno, with strict lint, formatting, full types and zero clones
+across 68 production sources. The package dry run contains 73 permitted entries.
+Fresh CI is required for this checkpoint. Controlled production peer results and
+all remaining feature-union, runtime, call-media and downstream criteria stay open.

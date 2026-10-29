@@ -289,7 +289,8 @@ function buffered(state) {
         size(packet.file),
       0
     ) +
-    state.incomingFiles.reduce((sum, [, file]) => sum + size(file), 0)
+    state.incomingFiles.reduce((sum, [, file]) => sum + size(file), 0) +
+    state.incomingDates.length * 4
   );
 }
 
@@ -298,7 +299,11 @@ it('counts attachment metadata in the combined budget for outgoing and pending i
   const receiver = create(false);
   const { upload, message, file } = await attachment();
   await sender.queueFile(message, upload.file, { save });
-  await receiver.receive(sender.pending()[1].request.data, { file, save });
+  await receiver.receive(sender.pending()[1].request.data, {
+    file,
+    date: 1,
+    save,
+  });
   for (const state of [sender.exportState(), receiver.exportState()]) {
     const bytes = buffered(state);
     assert.deepEqual(

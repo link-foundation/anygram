@@ -14,7 +14,8 @@ interface SecretHistoryTransaction {
   saveSession(state: SecretChatSessionState): Promise<void>;
   saveMessage(
     message: TlRequest,
-    metadata: SecretChatLifetimeMetadata
+    metadata: SecretChatLifetimeMetadata,
+    file?: TlRequest
   ): Promise<void>;
   /** Delete plaintext, thumbnails and cached attachment keys/content together. */
   deleteMessages(ids: bigint[]): Promise<void>;
@@ -32,16 +33,23 @@ export function commitSecretHistoryEffects(
   state: SecretChatSessionState,
   effects: SecretChatSessionEffects,
   at: number,
-  metadataFor: (message: TlRequest) => SecretChatLifetimeMetadata
+  triggerFor: (message: TlRequest) => 'read' | 'open'
 ) {
   return database.transaction(async (tx) => {
     const draft = new SecretChatLifetimes({ state: await tx.loadLifetimes() });
     for (const frame of effects.messages) {
       const message = frame.message;
       if (message._ === 'decryptedMessage') {
-        const metadata = metadataFor(message);
+        if (frame.date === undefined) {
+          throw new Error('Pass update.message.date to session.receive()');
+        }
+        const metadata = {
+          outgoing: false,
+          date: frame.date,
+          startOn: triggerFor(message),
+        };
         draft.track(message, metadata);
-        await tx.saveMessage(message, metadata);
+        await tx.saveMessage(message, metadata, frame.file);
       } else if (message._ === 'decryptedMessageService') {
         const action = message.action as TlRequest;
         draft.applyService(action, { at });
@@ -51,6 +59,20 @@ export function commitSecretHistoryEffects(
         } else if (action._ === 'decryptedMessageActionFlushHistory') {
           await tx.clearMessages();
         }
+      }
+    }
+    for (const sent of effects.sent ?? []) {
+      if (sent.message._ === 'decryptedMessage') {
+        const metadata = {
+          outgoing: true,
+          date: sent.date,
+          startOn: triggerFor(sent.message),
+        };
+        draft.track(sent.message, metadata);
+        const file = effects.files?.find(
+          (entry) => entry.outSequence === sent.outSequence
+        )?.file;
+        await tx.saveMessage(sent.message, metadata, file);
       }
     }
     if (effects.aborted) {

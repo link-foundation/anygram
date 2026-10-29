@@ -296,7 +296,7 @@ post-RPC save failures retain the exact encrypted packet and its random ID for
 retry. Restore protected JSON through `new SecretChatSession({ state })`.
 
 For each `updateNewEncryptedMessage`, await
-`session.receive(update.message.bytes, { file: update.message.file, save })` before advancing the account
+`session.receive(update.message.bytes, { file: update.message.file, date: update.message.date, save })` before advancing the account
 qts cursor. Then flush any queued notifications or gap requests. Received
 messages may repeat after a failed save; the atomic transaction prevents their
 effects from being committed separately from sequence state. Authenticated
@@ -327,6 +327,12 @@ reset protocol sequence state.
 `SecretChatLifetimes` retains bounded expiry metadata separately from the
 protocol retransmission state. Track each expiring message with its server date,
 direction and a `startOn: 'read' | 'open'` trigger before processing receipts.
+Outgoing successful saves include `effects.sent` with each exact message body,
+random ID, sequence and server date; commit these with submitted state and
+application history. Incoming ordered message effects retain the original
+`date`, including through sequence gaps and JSON restart. Pass the update's
+server date to `receive()`; older snapshots without it preserve `undefined`.
+These server dates are outside the peer's end-to-end encrypted envelope.
 Use `readThrough(maxDate, { outgoing, at })` for history reads and
 `read(ids, { outgoing, at })` for opened content. Pass remote
 `updateEncryptedMessagesRead.max_date` and `.date` with `outgoing: true`; local
