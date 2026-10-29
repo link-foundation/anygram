@@ -1,5 +1,9 @@
 # Unified Telegram client: investigation and implementation
 
+The [account reaction/copy comparison](account-reactions.md) verifies bound
+reaction selection, paginated users and author-free forwarding against the pinned
+teleproto helper, including complete request bytes and encrypted native TCP.
+
 The [account peer comparison](account-peers.md) verifies shared forward metadata,
 bounded sender recovery, reduced-entity cache rules and message-context inputs
 against pinned SDKs and official contracts, including native encrypted TCP.

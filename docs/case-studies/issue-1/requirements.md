@@ -32,6 +32,15 @@ routes and independent encrypted TCP. Eight frozen declaration diagnostics verif
 the migration example. Persistent peer storage, bot zero-hash exceptions,
 userFull invalidation, production scenarios and full SDK parity remain open.
 
+The [account reaction/copy follow-up](account-reactions.md) advances these
+criteria with bound reactions, paginated reaction users and author-free copies.
+All 96 cases fail against frozen source and pass after implementation; eleven
+frozen declaration diagnostics reproduce the missing public contracts. Forty
+actual SDK request-byte comparisons, all five selected routes and independent
+encrypted TCP verify the finite helper behavior. SDK Date scheduling differences,
+paid-reaction errors and broadcast privacy limits remain explicit. Full SDK and
+production-account verification remain open.
+
 The [AES-IGE allocation regression](crypto-allocations.md) advances R05/R08
 with an immutable failing-before reproduction, independent ciphertext checks
 and a bounded public-buffer measurement. It retains the 10 MiB upload workload

@@ -1368,9 +1368,8 @@ Account button and poll interaction work plan:
       PR inventory has 943 files with no removals; GitHub's 300-file diff limit
       requires the complete local atomic diff for review.
 - [x] Commit and push button head 1d5a564 after all local gates pass.
-- [ ] Verify fresh exact-head CI. Run 40967861174, created
-      2026-10-29T22:42:13Z after the 22:41:58Z commit, remains queued.
-      Continue remaining criteria while GitHub schedules the run.
+- [x] Verify fresh exact-head CI. Run 40967861174, created
+      2026-10-29T22:42:13Z after the 22:41:58Z commit, passes all applicable jobs.
 
 Account peer metadata and sender recovery work plan:
 
@@ -1393,4 +1392,35 @@ Account peer metadata and sender recovery work plan:
       feedback streams remain unchanged. Main remains an ancestor. The paginated
       PR inventory contains 954 files with no removals; the complete atomic diff
       is reviewed locally because GitHub's diff API caps the response at 300 files.
-- [ ] Commit/push and verify fresh exact-head CI. Continue wider open criteria.
+- [x] Commit and push peer head 8da6cd7 after all local gates pass.
+- [x] Verify fresh exact-head peer CI. Run 40971176316 targets
+      8da6cd7d11d0229bf02a3c3ba3372aebc465a544, created 2026-10-29T23:09:37Z
+      after its 23:09:15Z commit. Every applicable job passes.
+
+Account reaction and copy helper work plan:
+
+- [x] Compare pinned teleproto helpers and official reaction/list/forward RPCs,
+      preserving source hashes and explicit paid-reaction limitations.
+- [x] Add failing tests and immutable before runners for bound message helpers
+      and canonical facade/style methods before implementing them.
+- [x] Share reaction conversion, source resolution and RPC execution across all
+      selected routes; preserve exact IDs, optional flags and page cursors.
+- [x] Reuse correlated forwarding for author-free copies without duplicating
+      delivery logic. Verify cancellation, typed errors and no side-effect replay.
+- [x] Compare actual SDK helper calls and full request bytes, five selected
+      backends and independent encrypted native TCP. Add checked public types.
+      All 96 focused tests pass. Frozen source fails all cases; frozen types yield
+      eleven diagnostics. Forty SDK byte comparisons match, and two Date tests
+      retain the SDK's millisecond serialization discrepancy while verifying
+      timestamp seconds. Post-response copy cancellation has two failing-before
+      regressions. Both public and actual SDK declaration fixtures compile.
+- [x] Run complete local gates and review. All 2,812 core tests pass on
+      Node/Bun/Deno. Strict gates scan 177 production sources with zero clones;
+      packaging has 220 permitted entries. The 71 framework cases pass per
+      runtime, with 27 native terminal, eight Node 20 wire, sixteen parser checks
+      and the bounded FIFO probe. Main remains an ancestor; refreshed feedback
+      and sub-issues are empty, and issue prose is unchanged. The paginated PR
+      inventory has 967 files with no removals. GitHub's 300-file diff limit
+      requires complete local atomic diff review.
+- [ ] Commit/push and verify exact-head CI. Continue formatting, rich messages
+      and all wider unfinished criteria.

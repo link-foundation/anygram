@@ -35,6 +35,8 @@ const styles = {
   },
 };
 const canonicalOperations = new Set([
+  'sendReaction',
+  'getReactionUsers',
   'iterDialogs',
   'checkChatInvite',
   'getNotifySettings',

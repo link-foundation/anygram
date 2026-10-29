@@ -247,3 +247,8 @@ Share bound forward, via-bot, service-action and identified destination metadata
 Recover missing senders with one bounded reload, merge reduced peers according
 to official field rules and retain bounded message-context inputs for min peers.
 Preserve each source hash through selected adapters and encrypted native TCP.
+
+Share account reaction conversion, paginated reaction-user lookup and bound
+author-free copies through canonical operations. Preserve exact custom emoji
+IDs, selected peers, correlated delivery, cancellation and typed errors; convert
+scheduled forwarding Dates to Telegram timestamp seconds.

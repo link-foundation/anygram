@@ -10,7 +10,12 @@ import type {
 } from './telegraf-server-types.js';
 export type * from './telegraf-server-types.js';
 import type { BotTextEditResult } from './bot-result-types.js';
-import type { AccountMessage } from './account-message-types.js';
+import type {
+  AccountMessage,
+  AccountReactionMethods,
+  AccountReactionList,
+  AccountReactionCanonicalList,
+} from './account-message-types.js';
 export type * from './account-message-types.js';
 import type {
   FrameworkWebhookCallback,
@@ -371,7 +376,10 @@ export interface GramStyleDialog {
   isChannel: boolean;
   isGroup: boolean;
 }
-export interface GramStyleClient {
+export interface GramStyleClient extends AccountReactionMethods<
+  GramStyleObject,
+  AccountReactionList
+> {
   invoke: Anygram['invoke'];
   sendMessage(peer: unknown, options: Parameters): Promise<unknown>;
   getMe(options?: RequestOptions): Promise<GramStyleObject>;
@@ -420,6 +428,10 @@ export interface ConnectionScopeOptions extends RequestOptions {
   cleanupAttempts?: 1 | 2 | 3;
   cleanupDelay?: number;
 }
+export interface Anygram extends AccountReactionMethods<
+  TlRequest,
+  AccountReactionCanonicalList
+> {}
 export declare class Anygram {
   constructor(options?: ClientOptions);
   adapters: Adapter[];

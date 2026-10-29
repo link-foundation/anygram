@@ -90,6 +90,10 @@ export function createGramStyle(client, kind = 'gramjs') {
   const wrap = context.wrap;
   const style = {
     invoke: async (...args) => wrap(await client.invoke(...args)),
+    sendReaction: async (...args) =>
+      wrap(await operations.sendReaction(...args)),
+    getReactionUsers: async (...args) =>
+      wrap(await operations.getReactionUsers(...args)),
     sendMessage: async (peer, options) =>
       wrap(await client.sendMessage(peer, options.message, options)),
     async getMe(options) {

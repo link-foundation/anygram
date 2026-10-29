@@ -13,6 +13,10 @@ import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new globalThis.URL('../', import.meta.url));
 const modes = {
+  '--account-reactions': [
+    ['typed-account-reactions.ts'],
+    '8da6cd7d11d0229bf02a3c3ba3372aebc465a544',
+  ],
   '--account-peers': [
     ['typed-account-peers.ts'],
     '1d5a564b133afa3e33ac22200f3caa29a219fa0a',
@@ -103,7 +107,9 @@ const mode =
 const [selected, revision] = modes[mode];
 const fixtures = Array.isArray(selected) ? selected : [selected];
 const frozen = new Set([
-  ...(['--account-buttons', '--account-peers'].includes(mode)
+  ...(['--account-buttons', '--account-peers', '--account-reactions'].includes(
+    mode
+  )
     ? ['src/account-message-types.d.ts']
     : []),
   ...(mode === '--media' ? ['src/api-classes.d.ts'] : []),

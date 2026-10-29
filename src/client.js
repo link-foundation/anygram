@@ -158,6 +158,8 @@ for (const operation of [
   'editMessage',
   'deleteMessages',
   'forwardMessages',
+  'sendReaction',
+  'getReactionUsers',
   'searchMessages',
   'resolvePeer',
   'joinChat',

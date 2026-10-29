@@ -269,6 +269,35 @@ class AccountMessage extends AccountPeerView {
       all: true,
     });
   }
+  async copy(peer, options = {}) {
+    const messages = await this.forwardTo(peer, {
+      ...options,
+      dropAuthor: true,
+    });
+    options.signal?.throwIfAborted();
+    return messages[0];
+  }
+  async react(reaction, big, addToRecent, options = {}) {
+    return scope(this).wrap(
+      await scope(this).operations.sendReaction(
+        await target(this, options),
+        this.id,
+        reaction,
+        big,
+        addToRecent,
+        options
+      )
+    );
+  }
+  async getReactions(limit, reaction, offset, options = {}) {
+    return scope(this).wrap(
+      await scope(this).operations.getReactionUsers(
+        await target(this, options),
+        this.id,
+        { ...options, limit, reaction, offset }
+      )
+    );
+  }
   downloadMedia(options = {}) {
     return scope(this).operations.downloadMedia(canonicalValue(this), options);
   }

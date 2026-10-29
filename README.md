@@ -797,6 +797,11 @@ lookups. Via-bot, service action and identified destination metadata share the
 bounded peer cache. Reduced entities retain source-message inputs, and missing
 senders use one bounded reload. See [typed peer examples](examples/typed-account-peers.ts)
 and [peer recovery evidence](docs/case-studies/issue-1/account-peers.md).
+Messages also expose `react`, paginated `getReactions` and author-free `copy`.
+Canonical clients and both styles share `sendReaction` and `getReactionUsers`.
+Custom emoji IDs retain exact integers, and scheduled copies accept timestamp
+seconds or Dates. See [typed reaction examples](examples/typed-account-reactions.ts)
+and [reaction/copy evidence](docs/case-studies/issue-1/account-reactions.md).
 Rich formatting/model parity, drafts, array totals,
 legacy big-integer methods and `instanceof Api.*` behavior remain open.
 Direct `client.invoke` keeps raw backend results.

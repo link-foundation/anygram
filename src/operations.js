@@ -6,6 +6,7 @@ import { mtprotoTextParams } from './formatting.js';
 import { iterateDialogs } from './dialogs.js';
 import { parseTelegramLink } from './chat-links.js';
 import { notificationOptions, notificationPeer } from './notifications.js';
+import { reactionOf, reactionList } from './account-reactions.js';
 import {
   hasMinAccessHash,
   rememberPeer,
@@ -488,6 +489,11 @@ export class RpcOperations extends MediaOperations {
   }
 
   async forwardMessages(peer, { fromPeer, messages, ...options }) {
+    let schedule =
+      options.scheduleDate ?? options.schedule_date ?? options.schedule;
+    if (schedule instanceof Date) {
+      schedule = Math.floor(schedule.getTime() / 1000);
+    }
     const ids = [].concat(messages);
     const nonces =
       options.randomId ?? options.random_id ?? ids.map(() => randomId());
@@ -498,6 +504,7 @@ export class RpcOperations extends MediaOperations {
       'messages.forwardMessages',
       {
         ...options,
+        schedule_date: schedule,
         from_peer: await this.resolvePeer(fromPeer, options),
         to_peer: await this.resolvePeer(peer, options),
         id: ids,
@@ -505,6 +512,45 @@ export class RpcOperations extends MediaOperations {
       },
       options
     );
+  }
+
+  async sendReaction(peer, id, reactions, big, addToRecent, options = {}) {
+    options.signal?.throwIfAborted();
+    const reaction = reactionList(reactions);
+    const result = await this.rpc(
+      'messages.sendReaction',
+      {
+        peer: await this.resolvePeer(peer, options),
+        msg_id: id,
+        reaction,
+        big,
+        add_to_recent: addToRecent,
+      },
+      options
+    );
+    options.signal?.throwIfAborted();
+    return result;
+  }
+
+  async getReactionUsers(peer, id, options = {}) {
+    options.signal?.throwIfAborted();
+    const reaction =
+      options.reaction === null || options.reaction === undefined
+        ? undefined
+        : reactionOf(options.reaction);
+    const result = await this.rpc(
+      'messages.getMessageReactionsList',
+      {
+        peer: await this.resolvePeer(peer, options),
+        id,
+        reaction,
+        limit: options.limit ?? 100,
+        offset: options.offset ?? '',
+      },
+      options
+    );
+    options.signal?.throwIfAborted();
+    return result;
   }
 
   async pinMessage(

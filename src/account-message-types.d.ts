@@ -4,7 +4,53 @@ import type {
   Parameters,
   RequestOptions,
   FormattedText,
+  TlRequest,
 } from './index.js';
+import type { LegacyInteger, LongValue } from './api-classes.js';
+
+export type AccountReactionInput =
+  | string
+  | bigint
+  | number
+  | LegacyInteger
+  | { className: string }
+  | { _: 'reactionEmoji'; emoticon: string }
+  | { _: 'reactionCustomEmoji'; document_id: LongValue }
+  | { _: 'reactionEmpty' | 'reactionPaid' };
+interface ReactionListData<Entity> {
+  count: number;
+  reactions: Entity[];
+  chats: Entity[];
+  users: Entity[];
+}
+export interface AccountReactionList
+  extends GramStyleObject, ReactionListData<GramStyleObject> {
+  nextOffset?: string;
+}
+export interface AccountReactionCanonicalList
+  extends TlRequest, ReactionListData<TlRequest> {
+  next_offset?: string;
+}
+export interface AccountReactionListOptions extends RequestOptions {
+  reaction?: AccountReactionInput;
+  limit?: number;
+  offset?: string;
+}
+export interface AccountReactionMethods<Updates, List> {
+  sendReaction(
+    peer: unknown,
+    id: number,
+    reaction?: readonly AccountReactionInput[] | null,
+    big?: boolean,
+    addToRecent?: boolean,
+    options?: RequestOptions
+  ): Promise<Updates>;
+  getReactionUsers(
+    peer: unknown,
+    id: number,
+    options?: AccountReactionListOptions
+  ): Promise<List>;
+}
 
 export interface AccountTextEntity extends GramStyleObject {
   offset: number;
@@ -184,6 +230,22 @@ export interface AccountMessage extends GramStyleObject, AccountPeerView {
     peer: unknown,
     options?: Parameters & RequestOptions
   ): Promise<AccountMessage[]>;
+  copy(
+    peer: unknown,
+    options?: Parameters & RequestOptions
+  ): Promise<AccountMessage | undefined>;
+  react(
+    reaction?: AccountReactionInput | readonly AccountReactionInput[] | null,
+    big?: boolean,
+    addToRecent?: boolean,
+    options?: RequestOptions
+  ): Promise<GramStyleObject>;
+  getReactions(
+    limit?: number,
+    reaction?: AccountReactionInput,
+    offset?: string,
+    options?: RequestOptions
+  ): Promise<AccountReactionList>;
   downloadMedia(options?: Parameters & RequestOptions): Promise<Uint8Array>;
   pin(options?: AccountMessagePinOptions): Promise<AccountMessage | undefined>;
   unpin(options?: AccountMessagePinOptions): Promise<void>;
