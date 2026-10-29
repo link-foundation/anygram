@@ -23,7 +23,10 @@ input/key/IV and enforce a public-buffer budget. Both fail against the frozen
 production source and pass after the change. The existing independent cipher,
 authenticated envelope, secret-file and native protocol tests cover surrounding
 behavior. A local Bun focused run completes the unchanged large-file case in
-356.33 ms; fresh macOS CI must verify that platform's result.
+356.33 ms. [Run 40956444029](https://github.com/link-foundation/anygram/actions/runs/40956444029)
+then passes every core runtime/OS job, including the unchanged macOS Bun case.
+Three independent Deno framework jobs still fail; the clean-checkout workflow
+correction is documented in [framework evidence](web-frameworks.md).
 
 Reproduce the bounded allocation failure and probe from a checkout containing
 the preserved commit:

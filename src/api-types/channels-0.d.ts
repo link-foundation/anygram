@@ -5,6 +5,7 @@ import type {
   LongValue,
   FixedInteger,
   ResolvablePeer,
+  ResolvableMedia,
 } from '../api-classes.js';
 export interface ChannelsClasses0 {
   ReadHistory: TlClass<
@@ -98,7 +99,7 @@ export interface ChannelsClasses0 {
     'Updates',
     {
       channel: ResolvablePeer<'InputChannel'>;
-      photo: TlObject<'InputChatPhoto'>;
+      photo: ResolvableMedia<'InputChatPhoto'>;
     }
   >;
   CheckUsername: TlClass<

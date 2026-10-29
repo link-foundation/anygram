@@ -5,8 +5,13 @@ import type {
   LongValue,
   FixedInteger,
   ResolvablePeer,
+  ResolvableMedia,
 } from '../api-classes.js';
 export interface RootClasses7 {
+  ProfileTabMedia: TlClass<'ProfileTabMedia', 'ProfileTab', {}>;
+  ProfileTabFiles: TlClass<'ProfileTabFiles', 'ProfileTab', {}>;
+  ProfileTabMusic: TlClass<'ProfileTabMusic', 'ProfileTab', {}>;
+  ProfileTabVoice: TlClass<'ProfileTabVoice', 'ProfileTab', {}>;
   ProfileTabLinks: TlClass<'ProfileTabLinks', 'ProfileTab', {}>;
   ProfileTabGifs: TlClass<'ProfileTabGifs', 'ProfileTab', {}>;
   InputChatThemeEmpty: TlClass<'InputChatThemeEmpty', 'InputChatTheme', {}>;
@@ -299,12 +304,12 @@ export interface RootClasses7 {
   InputRichFilePhoto: TlClass<
     'InputRichFilePhoto',
     'InputRichFile',
-    { id: string; photo: TlObject<'InputPhoto'> }
+    { id: string; photo: ResolvableMedia<'InputPhoto'> }
   >;
   InputRichFileDocument: TlClass<
     'InputRichFileDocument',
     'InputRichFile',
-    { id: string; document: TlObject<'InputDocument'> }
+    { id: string; document: ResolvableMedia<'InputDocument'> }
   >;
   InputRichMessage: TlClass<
     'InputRichMessage',
@@ -313,8 +318,8 @@ export interface RootClasses7 {
       rtl?: boolean;
       noautolink?: boolean;
       blocks: Array<TlObject<'PageBlock'>>;
-      photos?: Array<TlObject<'InputPhoto'>>;
-      documents?: Array<TlObject<'InputDocument'>>;
+      photos?: Array<ResolvableMedia<'InputPhoto'>>;
+      documents?: Array<ResolvableMedia<'InputDocument'>>;
       users?: Array<ResolvablePeer<'InputUser'>>;
     }
   >;

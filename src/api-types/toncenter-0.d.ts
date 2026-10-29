@@ -5,6 +5,7 @@ import type {
   LongValue,
   FixedInteger,
   ResolvablePeer,
+  ResolvableMedia,
 } from '../api-classes.js';
 export interface ToncenterClasses0 {
   PerformApiRequest: TlClass<

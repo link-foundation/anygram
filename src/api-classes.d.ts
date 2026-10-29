@@ -17,6 +17,37 @@ export type ResolvablePeer<Type extends string> =
       | 'InputUser'
       | 'InputChannel'
     >;
+type PhotoSource =
+  | 'Photo'
+  | 'Message'
+  | 'MessageMedia'
+  | 'photos.Photo'
+  | 'messages.ChatFull'
+  | 'ChatFull'
+  | 'UserFull'
+  | 'User'
+  | 'Chat';
+type MediaSources = {
+  InputPhoto: PhotoSource;
+  InputDocument: 'Document' | 'MessageMedia' | 'Message';
+  InputChatPhoto: PhotoSource | 'InputPhoto' | 'InputFile';
+  InputMedia:
+    | 'Photo'
+    | 'Document'
+    | 'InputPhoto'
+    | 'InputDocument'
+    | 'InputFile'
+    | 'Message'
+    | 'MessageMedia'
+    | 'photos.Photo'
+    | 'ChatPhoto'
+    | 'UserProfilePhoto'
+    | 'Poll';
+};
+/** Uploaded/reusable TL values accepted by schema-aware request resolution. */
+export type ResolvableMedia<Type extends keyof MediaSources> = TlObject<
+  Type | MediaSources[Type]
+>;
 export type ResolutionOptions = { signal?: AbortSignal };
 export interface PeerResolver {
   getInputEntity(peer: unknown, options?: ResolutionOptions): Promise<unknown>;

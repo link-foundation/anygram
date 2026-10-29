@@ -5,6 +5,7 @@ import type {
   LongValue,
   FixedInteger,
   ResolvablePeer,
+  ResolvableMedia,
 } from '../api-classes.js';
 export interface MessagesClasses1 {
   RequestSimpleWebView: TlClass<
@@ -596,7 +597,7 @@ export interface MessagesClasses1 {
   ReportMusicListen: TlClass<
     'messages.ReportMusicListen',
     'Bool',
-    { id: TlObject<'InputDocument'>; listenedDuration: number }
+    { id: ResolvableMedia<'InputDocument'>; listenedDuration: number }
   >;
   AddPollAnswer: TlClass<
     'messages.AddPollAnswer',

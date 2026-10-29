@@ -254,7 +254,10 @@ await client.invoke(
 Constructors accept camelCase fields and serialize through the shared TL codec.
 Numeric request random IDs are generated once when omitted; explicit zero IDs
 are retained. Owned requests resolve username/ID peer shortcuts through the
-selected backend, including nested requests and numeric message IDs. To serialize
+selected backend, including nested requests and numeric message IDs. Media fields
+also accept reusable response photos/documents, supported message media and
+already-uploaded TL file handles; see the [checked media example](examples/typed-media-casts.ts)
+and [conversion contracts](docs/case-studies/issue-1/media-casts.md). To serialize
 a request yourself, first call `await request.resolve(client)`. Vendor custom
 models and vendor reader methods remain separate compatibility work. The same
 requests convert to actual GramJS/teleproto classes when those

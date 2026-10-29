@@ -894,3 +894,15 @@ replies. Installed integration on other framework/provider families, complete
 SDK models/plugins, controlled delivery and all wider unfinished criteria remain
 open. The new CI matrix verifies the listed frameworks across three runtimes and
 three operating systems; its result is recorded after the commit.
+
+Account request media conversion now shares the four missing automatic TL input
+families from the pinned GramJS/teleproto registries. The 143 new cases include
+106 independent SDK argument comparisons, 20 filename metadata comparisons, five
+selected adapter routes, native encrypted TCP, nested requests and invalid input.
+The frozen preceding resolver fails 129 cases; the checked shortcut example
+produces five preceding declaration diagnostics. Layer-232 quiz indices and
+response answer media retain the official schema despite two pinned teleproto
+helper differences. See [media conversion evidence](media-casts.md) and its
+hashed primary inventory. Broad helper options/MIME inference, account custom
+models, live production interoperability and all other open acceptance criteria
+remain unfinished.

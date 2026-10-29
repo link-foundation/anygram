@@ -13,6 +13,10 @@ import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new globalThis.URL('../', import.meta.url));
 const modes = {
+  '--media': [
+    ['typed-media-casts.ts'],
+    '67f631532971f4d38adb265948960d2a8432fa57',
+  ],
   '--telegraf-agents': [
     [
       'typed-telegraf-agents.ts',
@@ -87,6 +91,7 @@ const mode =
 const [selected, revision] = modes[mode];
 const fixtures = Array.isArray(selected) ? selected : [selected];
 const frozen = new Set([
+  ...(mode === '--media' ? ['src/api-classes.d.ts'] : []),
   ...(mode === '--telegraf-agents'
     ? ['src/telegraf-server-types.d.ts', 'src/bot-input-types.d.ts']
     : []),
@@ -136,7 +141,9 @@ async function declarations(relative) {
         mode === '--telegraf-agents' &&
         path === 'src/telegraf-api.d.ts'
           ? 'export {};\n'
-          : before && frozen.has(path)
+          : before &&
+              (frozen.has(path) ||
+                (mode === '--media' && path.startsWith('src/api-types/')))
             ? execFileSync('git', ['show', `${revision}:${path}`], {
                 cwd: root,
                 maxBuffer: 128 * 1024,

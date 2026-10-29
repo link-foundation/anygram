@@ -1,0 +1,5 @@
+{
+  "extends": "./tsconfig.bot-filters.json",
+  "compilerOptions": { "skipLibCheck": false },
+  "include": ["typed-media-sdk-differences.ts"]
+}

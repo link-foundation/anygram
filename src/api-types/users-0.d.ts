@@ -5,6 +5,7 @@ import type {
   LongValue,
   FixedInteger,
   ResolvablePeer,
+  ResolvableMedia,
 } from '../api-classes.js';
 export interface UsersClasses0 {
   GetUsers: TlClass<
@@ -45,7 +46,7 @@ export interface UsersClasses0 {
     'users.SavedMusic',
     {
       id: ResolvablePeer<'InputUser'>;
-      documents: Array<TlObject<'InputDocument'>>;
+      documents: Array<ResolvableMedia<'InputDocument'>>;
     }
   >;
   SuggestBirthday: TlClass<

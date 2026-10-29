@@ -5,6 +5,7 @@ import type {
   LongValue,
   FixedInteger,
   ResolvablePeer,
+  ResolvableMedia,
 } from '../api-classes.js';
 export interface CommunitiesClasses0 {
   Create: TlClass<

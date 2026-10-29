@@ -5,6 +5,7 @@ import type {
   LongValue,
   FixedInteger,
   ResolvablePeer,
+  ResolvableMedia,
 } from '../api-classes.js';
 export interface AccountClasses0 {
   RegisterDevice: TlClass<
@@ -319,7 +320,7 @@ export interface AccountClasses0 {
     {
       slug: string;
       title: string;
-      document?: TlObject<'InputDocument'>;
+      document?: ResolvableMedia<'InputDocument'>;
       settings?: Array<TlObject<'InputThemeSettings'>>;
     }
   >;
@@ -331,7 +332,7 @@ export interface AccountClasses0 {
       theme: TlObject<'InputTheme'>;
       slug?: string;
       title?: string;
-      document?: TlObject<'InputDocument'>;
+      document?: ResolvableMedia<'InputDocument'>;
       settings?: Array<TlObject<'InputThemeSettings'>>;
     }
   >;
@@ -390,7 +391,7 @@ export interface AccountClasses0 {
     'Bool',
     {
       peer: ResolvablePeer<'InputPeer'>;
-      photoId: TlObject<'InputPhoto'>;
+      photoId: ResolvableMedia<'InputPhoto'>;
       reason: TlObject<'ReportReason'>;
       message: string;
     }
@@ -429,7 +430,7 @@ export interface AccountClasses0 {
   SaveRingtone: TlClass<
     'account.SaveRingtone',
     'account.SavedRingtone',
-    { id: TlObject<'InputDocument'>; unsave: boolean }
+    { id: ResolvableMedia<'InputDocument'>; unsave: boolean }
   >;
   UploadRingtone: TlClass<
     'account.UploadRingtone',
@@ -660,8 +661,8 @@ export interface AccountClasses0 {
     'Bool',
     {
       unsave?: boolean;
-      id: TlObject<'InputDocument'>;
-      afterId?: TlObject<'InputDocument'>;
+      id: ResolvableMedia<'InputDocument'>;
+      afterId?: ResolvableMedia<'InputDocument'>;
     }
   >;
   GetSavedMusicIds: TlClass<

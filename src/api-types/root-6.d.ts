@@ -5,6 +5,7 @@ import type {
   LongValue,
   FixedInteger,
   ResolvablePeer,
+  ResolvableMedia,
 } from '../api-classes.js';
 export interface RootClasses6 {
   ExportedChatlistInvite: TlClass<
@@ -554,7 +555,11 @@ export interface RootClasses6 {
   InputBusinessIntro: TlClass<
     'InputBusinessIntro',
     'InputBusinessIntro',
-    { title: string; description: string; sticker?: TlObject<'InputDocument'> }
+    {
+      title: string;
+      description: string;
+      sticker?: ResolvableMedia<'InputDocument'>;
+    }
   >;
   BusinessIntro: TlClass<
     'BusinessIntro',
@@ -1303,8 +1308,4 @@ export interface RootClasses6 {
   >;
   ProfileTabPosts: TlClass<'ProfileTabPosts', 'ProfileTab', {}>;
   ProfileTabGifts: TlClass<'ProfileTabGifts', 'ProfileTab', {}>;
-  ProfileTabMedia: TlClass<'ProfileTabMedia', 'ProfileTab', {}>;
-  ProfileTabFiles: TlClass<'ProfileTabFiles', 'ProfileTab', {}>;
-  ProfileTabMusic: TlClass<'ProfileTabMusic', 'ProfileTab', {}>;
-  ProfileTabVoice: TlClass<'ProfileTabVoice', 'ProfileTab', {}>;
 }

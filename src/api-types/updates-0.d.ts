@@ -5,6 +5,7 @@ import type {
   LongValue,
   FixedInteger,
   ResolvablePeer,
+  ResolvableMedia,
 } from '../api-classes.js';
 export interface UpdatesClasses0 {
   GetState: TlClass<'updates.GetState', 'updates.State', {}>;

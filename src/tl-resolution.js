@@ -4,7 +4,10 @@ import {
   requestOf,
   schemaDefinition,
   requestLimits,
+  valueMapper,
+  mapObjectValues,
 } from './requests.js';
+import { castInputMedia, mediaInputTypes } from './tl-media.js';
 
 export const resolvableTypes = new Set([
   'InputPeer',
@@ -13,6 +16,7 @@ export const resolvableTypes = new Set([
   'InputDialogPeer',
   'InputNotifyPeer',
   'InputMessage',
+  ...mediaInputTypes,
 ]);
 
 function canonical(value) {
@@ -36,6 +40,23 @@ async function resolveInput(value, type, client, construct, options, depth) {
   }
   if (type === 'InputMessage') {
     return inputMessage(value, input, definition, construct);
+  }
+  if (mediaInputTypes.has(type)) {
+    const materialize = valueMapper(
+      (entry, next) => {
+        if (
+          !entry ||
+          typeof entry !== 'object' ||
+          entry instanceof Uint8Array
+        ) {
+          return entry;
+        }
+        const fields = mapObjectValues(entry, next);
+        return entry._ ? construct(entry._, fields) : fields;
+      },
+      { maxDepth: requestLimits.maxDepth - depth }
+    );
+    return materialize(castInputMedia(input, type, depth));
   }
   const peer = canonical(
     await client.getInputEntity(

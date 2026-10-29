@@ -5,6 +5,7 @@ import type {
   LongValue,
   FixedInteger,
   ResolvablePeer,
+  ResolvableMedia,
 } from '../api-classes.js';
 export interface PaymentsClasses0 {
   GetPaymentForm: TlClass<
@@ -52,7 +53,7 @@ export interface PaymentsClasses0 {
   ExportInvoice: TlClass<
     'payments.ExportInvoice',
     'payments.ExportedInvoice',
-    { invoiceMedia: TlObject<'InputMedia'> }
+    { invoiceMedia: ResolvableMedia<'InputMedia'> }
   >;
   AssignAppStoreTransaction: TlClass<
     'payments.AssignAppStoreTransaction',

@@ -230,3 +230,7 @@ Express/Koa/Fastify/Hono HTTP integration with isolated pinned dependencies.
 
 Reduce AES-IGE temporary buffer copies while retaining independent ciphertext
 comparisons, caller data and the existing encrypted large-file upload deadline.
+
+Resolve reusable photo/document/chat-photo/media request arguments through shared
+schema conversion, with selected backend routing, checked shortcut types,
+layer-232 poll answer indices and preserved response answer media.

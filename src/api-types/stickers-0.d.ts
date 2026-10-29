@@ -5,6 +5,7 @@ import type {
   LongValue,
   FixedInteger,
   ResolvablePeer,
+  ResolvableMedia,
 } from '../api-classes.js';
 export interface StickersClasses0 {
   CreateStickerSet: TlClass<
@@ -17,7 +18,7 @@ export interface StickersClasses0 {
       userId: ResolvablePeer<'InputUser'>;
       title: string;
       shortName: string;
-      thumb?: TlObject<'InputDocument'>;
+      thumb?: ResolvableMedia<'InputDocument'>;
       stickers: Array<TlObject<'InputStickerSetItem'>>;
       software?: string;
     }
@@ -25,12 +26,12 @@ export interface StickersClasses0 {
   RemoveStickerFromSet: TlClass<
     'stickers.RemoveStickerFromSet',
     'messages.StickerSet',
-    { sticker: TlObject<'InputDocument'> }
+    { sticker: ResolvableMedia<'InputDocument'> }
   >;
   ChangeStickerPosition: TlClass<
     'stickers.ChangeStickerPosition',
     'messages.StickerSet',
-    { sticker: TlObject<'InputDocument'>; position: number }
+    { sticker: ResolvableMedia<'InputDocument'>; position: number }
   >;
   AddStickerToSet: TlClass<
     'stickers.AddStickerToSet',
@@ -45,7 +46,7 @@ export interface StickersClasses0 {
     'messages.StickerSet',
     {
       stickerset: TlObject<'InputStickerSet'>;
-      thumb?: TlObject<'InputDocument'>;
+      thumb?: ResolvableMedia<'InputDocument'>;
       thumbDocumentId?: LongValue;
     }
   >;
@@ -63,7 +64,7 @@ export interface StickersClasses0 {
     'stickers.ChangeSticker',
     'messages.StickerSet',
     {
-      sticker: TlObject<'InputDocument'>;
+      sticker: ResolvableMedia<'InputDocument'>;
       emoji?: string;
       maskCoords?: TlObject<'MaskCoords'>;
       keywords?: string;
@@ -83,7 +84,7 @@ export interface StickersClasses0 {
     'stickers.ReplaceSticker',
     'messages.StickerSet',
     {
-      sticker: TlObject<'InputDocument'>;
+      sticker: ResolvableMedia<'InputDocument'>;
       newSticker: TlObject<'InputStickerSetItem'>;
     }
   >;

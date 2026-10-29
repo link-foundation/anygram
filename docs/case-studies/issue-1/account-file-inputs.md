@@ -50,7 +50,7 @@ node --test tests/account-input-file.test.js tests/secret-files-integration.test
 ```
 
 This is bounded preparation before account upload, not unbuffered source upload.
-Local peers do not establish production interoperability. Full input-media
-autocasting, broader competitor feature union, downstream scenarios and runtime
-criteria remain open. The optional Telegraf encoder's newer-runtime failure is
+Local peers do not establish production interoperability. Request media shortcuts are covered in [media conversion evidence](media-casts.md).
+Broader media-helper options, competitor feature union, downstream scenarios and
+runtime criteria remain open. The optional Telegraf encoder's newer-runtime failure is
 tracked separately in [vendor upload evidence](vendor-bot-uploads.md).

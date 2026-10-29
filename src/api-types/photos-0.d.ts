@@ -5,6 +5,7 @@ import type {
   LongValue,
   FixedInteger,
   ResolvablePeer,
+  ResolvableMedia,
 } from '../api-classes.js';
 export interface PhotosClasses0 {
   UpdateProfilePhoto: TlClass<
@@ -13,7 +14,7 @@ export interface PhotosClasses0 {
     {
       fallback?: boolean;
       bot?: ResolvablePeer<'InputUser'>;
-      id: TlObject<'InputPhoto'>;
+      id: ResolvableMedia<'InputPhoto'>;
     }
   >;
   UploadProfilePhoto: TlClass<
@@ -31,7 +32,7 @@ export interface PhotosClasses0 {
   DeletePhotos: TlClass<
     'photos.DeletePhotos',
     'Vector<long>',
-    { id: Array<TlObject<'InputPhoto'>> }
+    { id: Array<ResolvableMedia<'InputPhoto'>> }
   >;
   GetUserPhotos: TlClass<
     'photos.GetUserPhotos',

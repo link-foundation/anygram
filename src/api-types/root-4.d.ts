@@ -5,6 +5,7 @@ import type {
   LongValue,
   FixedInteger,
   ResolvablePeer,
+  ResolvableMedia,
 } from '../api-classes.js';
 export interface RootClasses4 {
   InputPageBlockMap: TlClass<
@@ -175,7 +176,7 @@ export interface RootClasses4 {
     'InputWebFileLocation',
     {
       small?: boolean;
-      document?: TlObject<'InputDocument'>;
+      document?: ResolvableMedia<'InputDocument'>;
       title?: string;
       performer?: string;
     }
@@ -209,7 +210,7 @@ export interface RootClasses4 {
     'InputStickerSetItem',
     'InputStickerSetItem',
     {
-      document: TlObject<'InputDocument'>;
+      document: ResolvableMedia<'InputDocument'>;
       emoji: string;
       maskCoords?: TlObject<'MaskCoords'>;
       keywords?: string;
@@ -749,7 +750,7 @@ export interface RootClasses4 {
     'InputSingleMedia',
     'InputSingleMedia',
     {
-      media: TlObject<'InputMedia'>;
+      media: ResolvableMedia<'InputMedia'>;
       randomId: LongValue;
       message: string;
       entities?: Array<TlObject<'MessageEntity'>>;
@@ -1209,7 +1210,10 @@ export interface RootClasses4 {
   InputPollAnswer: TlClass<
     'InputPollAnswer',
     'PollAnswer',
-    { text: TlObject<'TextWithEntities'>; media?: TlObject<'InputMedia'> }
+    {
+      text: TlObject<'TextWithEntities'>;
+      media?: ResolvableMedia<'InputMedia'>;
+    }
   >;
   Poll: TlClass<
     'Poll',

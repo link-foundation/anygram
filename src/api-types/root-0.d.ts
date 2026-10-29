@@ -5,6 +5,7 @@ import type {
   LongValue,
   FixedInteger,
   ResolvablePeer,
+  ResolvableMedia,
 } from '../api-classes.js';
 export interface RootClasses0 {
   InvokeAfterMsg: TlClass<
@@ -179,7 +180,7 @@ export interface RootClasses0 {
   InputFileStoryDocument: TlClass<
     'InputFileStoryDocument',
     'InputFile',
-    { id: TlObject<'InputDocument'> }
+    { id: ResolvableMedia<'InputDocument'> }
   >;
   InputMediaEmpty: TlClass<'InputMediaEmpty', 'InputMedia', {}>;
   InputMediaUploadedPhoto: TlClass<
@@ -189,9 +190,9 @@ export interface RootClasses0 {
       spoiler?: boolean;
       livePhoto?: boolean;
       file: TlObject<'InputFile'>;
-      stickers?: Array<TlObject<'InputDocument'>>;
+      stickers?: Array<ResolvableMedia<'InputDocument'>>;
       ttlSeconds?: number;
-      video?: TlObject<'InputDocument'>;
+      video?: ResolvableMedia<'InputDocument'>;
     }
   >;
   InputMediaPhoto: TlClass<
@@ -200,9 +201,9 @@ export interface RootClasses0 {
     {
       spoiler?: boolean;
       livePhoto?: boolean;
-      id: TlObject<'InputPhoto'>;
+      id: ResolvableMedia<'InputPhoto'>;
       ttlSeconds?: number;
-      video?: TlObject<'InputDocument'>;
+      video?: ResolvableMedia<'InputDocument'>;
     }
   >;
   InputMediaGeoPoint: TlClass<
@@ -226,8 +227,8 @@ export interface RootClasses0 {
       thumb?: TlObject<'InputFile'>;
       mimeType: string;
       attributes: Array<TlObject<'DocumentAttribute'>>;
-      stickers?: Array<TlObject<'InputDocument'>>;
-      videoCover?: TlObject<'InputPhoto'>;
+      stickers?: Array<ResolvableMedia<'InputDocument'>>;
+      videoCover?: ResolvableMedia<'InputPhoto'>;
       videoTimestamp?: number;
       ttlSeconds?: number;
     }
@@ -237,8 +238,8 @@ export interface RootClasses0 {
     'InputMedia',
     {
       spoiler?: boolean;
-      id: TlObject<'InputDocument'>;
-      videoCover?: TlObject<'InputPhoto'>;
+      id: ResolvableMedia<'InputDocument'>;
+      videoCover?: ResolvableMedia<'InputPhoto'>;
       videoTimestamp?: number;
       ttlSeconds?: number;
       query?: string;
@@ -268,7 +269,7 @@ export interface RootClasses0 {
       spoiler?: boolean;
       url: string;
       ttlSeconds?: number;
-      videoCover?: TlObject<'InputPhoto'>;
+      videoCover?: ResolvableMedia<'InputPhoto'>;
       videoTimestamp?: number;
     }
   >;
@@ -289,7 +290,7 @@ export interface RootClasses0 {
       provider?: string;
       providerData: TlObject<'DataJSON'>;
       startParam?: string;
-      extendedMedia?: TlObject<'InputMedia'>;
+      extendedMedia?: ResolvableMedia<'InputMedia'>;
     }
   >;
   InputMediaGeoLive: TlClass<
@@ -309,10 +310,10 @@ export interface RootClasses0 {
     {
       poll: TlObject<'Poll'>;
       correctAnswers?: Array<number>;
-      attachedMedia?: TlObject<'InputMedia'>;
+      attachedMedia?: ResolvableMedia<'InputMedia'>;
       solution?: string;
       solutionEntities?: Array<TlObject<'MessageEntity'>>;
-      solutionMedia?: TlObject<'InputMedia'>;
+      solutionMedia?: ResolvableMedia<'InputMedia'>;
     }
   >;
   InputMediaDice: TlClass<'InputMediaDice', 'InputMedia', { emoticon: string }>;
@@ -336,7 +337,7 @@ export interface RootClasses0 {
     'InputMedia',
     {
       starsAmount: LongValue;
-      extendedMedia: Array<TlObject<'InputMedia'>>;
+      extendedMedia: Array<ResolvableMedia<'InputMedia'>>;
       payload?: string;
     }
   >;
@@ -364,7 +365,7 @@ export interface RootClasses0 {
   InputChatPhoto: TlClass<
     'InputChatPhoto',
     'InputChatPhoto',
-    { id: TlObject<'InputPhoto'> }
+    { id: ResolvableMedia<'InputPhoto'> }
   >;
   InputGeoPointEmpty: TlClass<'InputGeoPointEmpty', 'InputGeoPoint', {}>;
   InputGeoPoint: TlClass<

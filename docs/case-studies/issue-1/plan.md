@@ -1287,15 +1287,26 @@ Encrypted-upload CI follow-up work plan:
 
 Account input-media conversion work plan:
 
-- [ ] Inventory actual GramJS/teleproto request autocasts and shared media helpers;
+- [x] Inventory actual GramJS/teleproto request autocasts and shared media helpers;
       compare every supported media family and record schema-version differences.
-- [ ] Add minimal failing regressions for photo/document/chat-photo/media inputs,
+- [x] Add minimal failing regressions for photo/document/chat-photo/media inputs,
       including nested constructors, reusable files, empty values and invalid data.
-- [ ] Implement bounded schema-aware conversion without implicit network uploads,
+- [x] Implement bounded schema-aware conversion without implicit network uploads,
       preserving specified inputs, selected backends and request cancellation.
-- [ ] Verify actual-client argument bytes, selected adapters and encrypted native
+- [x] Verify actual-client argument bytes, selected adapters and encrypted native
       TCP; retain immutable before/after runtime and declaration reproductions.
-- [ ] Generate checked public shortcut types and add reusable migration examples;
-      archive primary SDK evidence and exact remaining limitations.
-- [ ] Run all local runtime/static/package/integration gates, review and commit
-      the atomic change, then verify fresh exact-head CI. Continue wider criteria.
+- [x] Generate checked public shortcut types and add reusable migration examples;
+      archive primary SDK evidence and exact remaining limitations. All 160 focused
+      cases pass; the frozen source reproduces 129 failures in 143 new cases and
+      frozen declarations produce five diagnostics. Both actual SDK declarations
+      verify explicit helper alternatives and their omitted shortcut types. The
+      layer-232 quiz differences have independent wire regressions.
+- [x] Run all local runtime/static/package/integration gates and review the
+      atomic change. All 2,408 core tests pass
+      on Node/Bun/Deno. Static gates scan 169 sources with zero clones; package
+      contents have 212 permitted entries. Native terminal 27, Node 20 wire eight,
+      fact-parser sixteen and bounded FIFO checks pass. Main remains an ancestor;
+      refreshed feedback and sub-issues are empty, and issue prose is unchanged.
+      All 71 installed-framework checks pass on Node/Bun/Deno, and the final
+      actual SDK request-resolution comparisons pass on all three runtimes.
+- [ ] Commit/push and verify fresh exact-head CI. Continue wider criteria.

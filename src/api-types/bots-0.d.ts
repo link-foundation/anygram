@@ -5,6 +5,7 @@ import type {
   LongValue,
   FixedInteger,
   ResolvablePeer,
+  ResolvableMedia,
 } from '../api-classes.js';
 export interface BotsClasses0 {
   SendCustomRequest: TlClass<
@@ -112,7 +113,7 @@ export interface BotsClasses0 {
     {
       bot: ResolvablePeer<'InputUser'>;
       langCode: string;
-      media: TlObject<'InputMedia'>;
+      media: ResolvableMedia<'InputMedia'>;
     }
   >;
   EditPreviewMedia: TlClass<
@@ -121,8 +122,8 @@ export interface BotsClasses0 {
     {
       bot: ResolvablePeer<'InputUser'>;
       langCode: string;
-      media: TlObject<'InputMedia'>;
-      newMedia: TlObject<'InputMedia'>;
+      media: ResolvableMedia<'InputMedia'>;
+      newMedia: ResolvableMedia<'InputMedia'>;
     }
   >;
   DeletePreviewMedia: TlClass<
@@ -131,7 +132,7 @@ export interface BotsClasses0 {
     {
       bot: ResolvablePeer<'InputUser'>;
       langCode: string;
-      media: Array<TlObject<'InputMedia'>>;
+      media: Array<ResolvableMedia<'InputMedia'>>;
     }
   >;
   ReorderPreviewMedias: TlClass<
@@ -140,7 +141,7 @@ export interface BotsClasses0 {
     {
       bot: ResolvablePeer<'InputUser'>;
       langCode: string;
-      order: Array<TlObject<'InputMedia'>>;
+      order: Array<ResolvableMedia<'InputMedia'>>;
     }
   >;
   GetPreviewInfo: TlClass<

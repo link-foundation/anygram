@@ -146,6 +146,7 @@ export type {
   LongValue,
   FixedInteger,
   ResolvablePeer,
+  ResolvableMedia,
   PeerResolver,
   ResolutionOptions,
 } from './api-classes.js';

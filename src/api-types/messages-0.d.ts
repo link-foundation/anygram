@@ -5,6 +5,7 @@ import type {
   LongValue,
   FixedInteger,
   ResolvablePeer,
+  ResolvableMedia,
 } from '../api-classes.js';
 export interface MessagesClasses0 {
   GetMessages: TlClass<
@@ -138,7 +139,7 @@ export interface MessagesClasses0 {
       allowPaidFloodskip?: boolean;
       peer: ResolvablePeer<'InputPeer'>;
       replyTo?: TlObject<'InputReplyTo'>;
-      media: TlObject<'InputMedia'>;
+      media: ResolvableMedia<'InputMedia'>;
       message: string;
       randomId: LongValue;
       replyMarkup?: TlObject<'ReplyMarkup'>;
@@ -220,7 +221,7 @@ export interface MessagesClasses0 {
   EditChatPhoto: TlClass<
     'messages.EditChatPhoto',
     'Updates',
-    { chatId: LongValue; photo: TlObject<'InputChatPhoto'> }
+    { chatId: LongValue; photo: ResolvableMedia<'InputChatPhoto'> }
   >;
   AddChatUser: TlClass<
     'messages.AddChatUser',
@@ -444,7 +445,7 @@ export interface MessagesClasses0 {
   SaveGif: TlClass<
     'messages.SaveGif',
     'Bool',
-    { id: TlObject<'InputDocument'>; unsave: boolean }
+    { id: ResolvableMedia<'InputDocument'>; unsave: boolean }
   >;
   GetInlineBotResults: TlClass<
     'messages.GetInlineBotResults',
@@ -505,7 +506,7 @@ export interface MessagesClasses0 {
       peer: ResolvablePeer<'InputPeer'>;
       id: number;
       message?: string;
-      media?: TlObject<'InputMedia'>;
+      media?: ResolvableMedia<'InputMedia'>;
       replyMarkup?: TlObject<'ReplyMarkup'>;
       entities?: Array<TlObject<'MessageEntity'>>;
       scheduleDate?: number;
@@ -522,7 +523,7 @@ export interface MessagesClasses0 {
       invertMedia?: boolean;
       id: TlObject<'InputBotInlineMessageID'>;
       message?: string;
-      media?: TlObject<'InputMedia'>;
+      media?: ResolvableMedia<'InputMedia'>;
       replyMarkup?: TlObject<'ReplyMarkup'>;
       entities?: Array<TlObject<'MessageEntity'>>;
       richMessage?: TlObject<'InputRichMessage'>;
@@ -565,7 +566,7 @@ export interface MessagesClasses0 {
       peer: ResolvablePeer<'InputPeer'>;
       message: string;
       entities?: Array<TlObject<'MessageEntity'>>;
-      media?: TlObject<'InputMedia'>;
+      media?: ResolvableMedia<'InputMedia'>;
       effect?: LongValue;
       suggestedPost?: TlObject<'SuggestedPost'>;
       richMessage?: TlObject<'InputRichMessage'>;
@@ -590,7 +591,11 @@ export interface MessagesClasses0 {
   SaveRecentSticker: TlClass<
     'messages.SaveRecentSticker',
     'Bool',
-    { attached?: boolean; id: TlObject<'InputDocument'>; unsave: boolean }
+    {
+      attached?: boolean;
+      id: ResolvableMedia<'InputDocument'>;
+      unsave: boolean;
+    }
   >;
   ClearRecentStickers: TlClass<
     'messages.ClearRecentStickers',
@@ -701,7 +706,7 @@ export interface MessagesClasses0 {
     {
       businessConnectionId?: string;
       peer: ResolvablePeer<'InputPeer'>;
-      media: TlObject<'InputMedia'>;
+      media: ResolvableMedia<'InputMedia'>;
     }
   >;
   SendScreenshotNotification: TlClass<
@@ -722,7 +727,7 @@ export interface MessagesClasses0 {
   FaveSticker: TlClass<
     'messages.FaveSticker',
     'Bool',
-    { id: TlObject<'InputDocument'>; unfave: boolean }
+    { id: ResolvableMedia<'InputDocument'>; unfave: boolean }
   >;
   GetUnreadMentions: TlClass<
     'messages.GetUnreadMentions',
@@ -1031,7 +1036,7 @@ export interface MessagesClasses0 {
       peer: ResolvablePeer<'InputPeer'>;
       importId: LongValue;
       fileName: string;
-      media: TlObject<'InputMedia'>;
+      media: ResolvableMedia<'InputMedia'>;
     }
   >;
   StartHistoryImport: TlClass<

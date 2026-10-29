@@ -5,6 +5,7 @@ import type {
   LongValue,
   FixedInteger,
   ResolvablePeer,
+  ResolvableMedia,
 } from '../api-classes.js';
 export interface EphemeralClasses0 {
   SendMessage: TlClass<
@@ -20,7 +21,7 @@ export interface EphemeralClasses0 {
       queryId?: LongValue;
       message: string;
       entities?: Array<TlObject<'MessageEntity'>>;
-      media?: TlObject<'InputMedia'>;
+      media?: ResolvableMedia<'InputMedia'>;
       replyMarkup?: TlObject<'ReplyMarkup'>;
       richMessage?: TlObject<'InputRichMessage'>;
       randomId: LongValue;
@@ -62,7 +63,7 @@ export interface EphemeralClasses0 {
       receiverId: ResolvablePeer<'InputUser'>;
       id: number;
       message?: string;
-      media?: TlObject<'InputMedia'>;
+      media?: ResolvableMedia<'InputMedia'>;
       entities?: Array<TlObject<'MessageEntity'>>;
       replyMarkup?: TlObject<'ReplyMarkup'>;
       richMessage?: TlObject<'InputRichMessage'>;

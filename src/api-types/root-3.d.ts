@@ -5,6 +5,7 @@ import type {
   LongValue,
   FixedInteger,
   ResolvablePeer,
+  ResolvableMedia,
 } from '../api-classes.js';
 export interface RootClasses3 {
   ChatInviteExported: TlClass<
@@ -594,7 +595,7 @@ export interface RootClasses3 {
     {
       id: string;
       type: string;
-      photo: TlObject<'InputPhoto'>;
+      photo: ResolvableMedia<'InputPhoto'>;
       sendMessage: TlObject<'InputBotInlineMessage'>;
     }
   >;
@@ -606,7 +607,7 @@ export interface RootClasses3 {
       type: string;
       title?: string;
       description?: string;
-      document: TlObject<'InputDocument'>;
+      document: ResolvableMedia<'InputDocument'>;
       sendMessage: TlObject<'InputBotInlineMessage'>;
     }
   >;
@@ -856,7 +857,7 @@ export interface RootClasses3 {
       replyTo?: TlObject<'InputReplyTo'>;
       message: string;
       entities?: Array<TlObject<'MessageEntity'>>;
-      media?: TlObject<'InputMedia'>;
+      media?: ResolvableMedia<'InputMedia'>;
       date: number;
       effect?: LongValue;
       suggestedPost?: TlObject<'SuggestedPost'>;
@@ -896,12 +897,12 @@ export interface RootClasses3 {
   InputStickeredMediaPhoto: TlClass<
     'InputStickeredMediaPhoto',
     'InputStickeredMedia',
-    { id: TlObject<'InputPhoto'> }
+    { id: ResolvableMedia<'InputPhoto'> }
   >;
   InputStickeredMediaDocument: TlClass<
     'InputStickeredMediaDocument',
     'InputStickeredMedia',
-    { id: TlObject<'InputDocument'> }
+    { id: ResolvableMedia<'InputDocument'> }
   >;
   Game: TlClass<
     'Game',

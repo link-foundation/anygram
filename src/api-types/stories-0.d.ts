@@ -5,6 +5,7 @@ import type {
   LongValue,
   FixedInteger,
   ResolvablePeer,
+  ResolvableMedia,
 } from '../api-classes.js';
 export interface StoriesClasses0 {
   CanSendStory: TlClass<
@@ -20,7 +21,7 @@ export interface StoriesClasses0 {
       noforwards?: boolean;
       fwdModified?: boolean;
       peer: ResolvablePeer<'InputPeer'>;
-      media: TlObject<'InputMedia'>;
+      media: ResolvableMedia<'InputMedia'>;
       mediaAreas?: Array<TlObject<'MediaArea'>>;
       caption?: string;
       entities?: Array<TlObject<'MessageEntity'>>;
@@ -30,7 +31,7 @@ export interface StoriesClasses0 {
       fwdFromId?: ResolvablePeer<'InputPeer'>;
       fwdFromStory?: number;
       albums?: Array<number>;
-      music?: TlObject<'InputDocument'>;
+      music?: ResolvableMedia<'InputDocument'>;
     },
     'randomId'
   >;
@@ -40,12 +41,12 @@ export interface StoriesClasses0 {
     {
       peer: ResolvablePeer<'InputPeer'>;
       id: number;
-      media?: TlObject<'InputMedia'>;
+      media?: ResolvableMedia<'InputMedia'>;
       mediaAreas?: Array<TlObject<'MediaArea'>>;
       caption?: string;
       entities?: Array<TlObject<'MessageEntity'>>;
       privacyRules?: Array<TlObject<'InputPrivacyRule'>>;
-      music?: TlObject<'InputDocument'>;
+      music?: ResolvableMedia<'InputDocument'>;
     }
   >;
   DeleteStories: TlClass<
