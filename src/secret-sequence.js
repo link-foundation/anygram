@@ -1,6 +1,7 @@
 import { randomBytes } from 'node:crypto';
 import { SecretChatCodec } from './secret-codec.js';
 import { TelegramError } from './errors.js';
+import { randomId } from './random.js';
 import {
   MAX_SECRET_COUNTER as MAX_COUNTER,
   secretLimit as limit,
@@ -108,28 +109,36 @@ export class SecretChatSequence {
   }
 
   #reserve(bytes) {
+    let count = this.#history.size;
+    let buffered = this.#bufferedBytes;
+    const entries = this.#history.entries();
+    const evicted = [];
     while (
-      this.#history.size >= this.#maxHistory ||
-      this.#bufferedBytes + bytes > this.#maxBufferedBytes
+      count >= this.#maxHistory ||
+      buffered + bytes > this.#maxBufferedBytes
     ) {
-      const entry = this.#history.entries().next().value;
+      const entry = entries.next().value;
       if (!entry || entry[0] >= this.#acknowledged) {
         throw new RangeError(
           'Secret chat history limit or buffer byte limit exceeded'
         );
       }
-      this.#history.delete(entry[0]);
-      this.#bufferedBytes -= entry[1].length;
-      entry[1].fill(0);
+      evicted.push(entry);
+      count--;
+      buffered -= entry[1].length;
+    }
+    for (const [index, cached] of evicted) {
+      this.#history.delete(index);
+      this.#bufferedBytes -= cached.length;
+      cached.fill(0);
     }
   }
 
-  create(message) {
-    this.#assertActive();
+  #encodeNext(message) {
     if (this.#outgoing >= MAX_COUNTER) {
       throw new RangeError('Secret chat sequence counter exhausted');
     }
-    const bytes = this.#codec.encode(
+    return this.#codec.encode(
       {
         _: 'decryptedMessageLayer',
         random_bytes: randomBytes(16),
@@ -140,10 +149,56 @@ export class SecretChatSequence {
       },
       'DecryptedMessageLayer'
     );
+  }
+
+  create(message) {
+    this.#assertActive();
+    const bytes = this.#encodeNext(message);
     this.#reserve(bytes.length);
     this.#history.set(this.#outgoing++, bytes);
     this.#bufferedBytes += bytes.length;
     return this.#decode(bytes);
+  }
+
+  deleteUnacknowledged(outSequence, deletionId = randomId()) {
+    this.#assertActive();
+    const index = secretCounter(outSequence, this.#originator ? 1 : 0);
+    const cached = this.#history.get(index);
+    if (!cached || index < this.#acknowledged) {
+      throw new RangeError('No unacknowledged secret chat message at sequence');
+    }
+    const original = this.#decode(cached);
+    if (original.message._ !== 'decryptedMessage') {
+      throw new TypeError(
+        'Only outgoing secret text/media messages can be deleted'
+      );
+    }
+    if (BigInt(deletionId) === original.message.random_id) {
+      throw new RangeError('Deletion service needs a distinct random ID');
+    }
+    const service = (id) => ({
+      _: 'decryptedMessageService',
+      random_id: id,
+      action: {
+        _: 'decryptedMessageActionDeleteMessages',
+        random_ids: [original.message.random_id],
+      },
+    });
+    const replacement = this.#codec.encode({
+      ...original,
+      message: service(original.message.random_id),
+    });
+    const deletion = this.#encodeNext(service(deletionId));
+    const additional = replacement.length + deletion.length - cached.length;
+    this.#reserve(additional);
+    this.#history.set(index, replacement);
+    this.#history.set(this.#outgoing++, deletion);
+    this.#bufferedBytes += additional;
+    cached.fill(0);
+    return {
+      replacement: this.#decode(replacement),
+      deletion: this.#decode(deletion),
+    };
   }
 
   #counter(wire, parity) {

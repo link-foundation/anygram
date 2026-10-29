@@ -66,6 +66,11 @@ export declare class SecretChatSequence {
     aborted: boolean;
   };
   create(message: TlRequest): SecretChatLayer;
+  /** Replaces cached plaintext and creates a new deletion; persist both atomically. */
+  deleteUnacknowledged(
+    outSequence: number,
+    deletionId?: bigint
+  ): { replacement: SecretChatLayer; deletion: SecretChatLayer };
   receive(frame: SecretChatLayer): SecretChatSequenceResult;
   resendRequest(): SecretChatResend | undefined;
   unacknowledged(): SecretChatLayer[];

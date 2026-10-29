@@ -216,8 +216,12 @@ abort the tracker. `exportState()` produces a JSON snapshot for the constructor'
 Persist each snapshot together with its returned effects atomically before
 sending or acknowledging them. `unacknowledged()` and `resendRequest()` recover
 outgoing work after restart. See `examples/typed-secret-chat.ts` for a send using
-a separately negotiated chat/key. Key negotiation, re-keying and the complete
-secret-chat client remain unfinished.
+a separately negotiated chat/key. `deleteUnacknowledged(outSequence, deletionId?)`
+replaces the cached outgoing text/media with a self-deletion at its original
+sequence and returns a second deletion service at the next sequence. Persist
+both effects with the new snapshot, remove old persisted plaintext and release
+application-owned copies. Capacity failures leave cached state unchanged.
+Key negotiation, re-keying and the complete secret-chat client remain unfinished.
 
 ## Select existing clients
 

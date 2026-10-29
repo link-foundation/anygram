@@ -136,7 +136,7 @@ local tests and strict checks pass; fresh CI is required after committing it.
 1. [x] Authenticate bounded MTProto 2.0 envelopes and retain historical TL IDs.
 2. [x] Track ordered sequence/acknowledgement state and bounded resend caches.
 3. [x] Export/validate copied snapshots and recover unsent frames/gap requests.
-4. [ ] Replace deleted unacknowledged frames with protocol deletion services.
+4. [x] Replace deleted unacknowledged frames with protocol deletion services.
 5. [ ] Negotiate/accept DH keys, agree layers and support initial peer exchange.
 6. [ ] Implement compulsory PFS rotation and simultaneous key-exchange rules.
 7. [ ] Integrate encrypted RPC ordering, durable effects/cursors and file media.
@@ -145,3 +145,9 @@ local tests and strict checks pass; fresh CI is required after committing it.
 The subsequent TL ownership regression exposes Buffer.slice view aliasing.
 Copied byte/fixed-integer fields pass all 216 tests on each runtime and strict
 checks. Sequence head 236e916 passed all nine CI runtime/OS jobs in 40797579548.
+
+Deleted unacknowledged messages now become self-deletion services with immutable
+original headers and a second outgoing deletion. Five regressions cover both
+roles, already-delivered and missing originals, restart state, resend content,
+invalid targets and atomic capacity failures. All 221 tests pass on each runtime
+with strict checks. TL byte-ownership head 07d27f9 passed CI run 40797847810.

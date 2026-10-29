@@ -601,3 +601,24 @@ with strict lint, format and duplication checks.
 Sequence head 236e916 passed all nine runtime/OS jobs and applicable gates in
 [run 40797579548](https://github.com/link-foundation/anygram/actions/runs/40797579548).
 The byte ownership repair requires its own fresh CI evidence.
+
+## Unacknowledged secret-message deletion
+
+Telegram's [sequence specification](https://core.telegram.org/api/end-to-end/seq_no#deleting-unacknowledged-messages)
+requires preserving a deleted outgoing message's position as a self-deletion
+service, then sending a second deletion in case the peer already saw the
+original. `deleteUnacknowledged` implements both effects, keeps original sequence
+headers and clears the replaced owned cache bytes. Resends and restored snapshots
+contain the deletion service. Applications still own previously returned frames
+and persisted snapshots and must remove those old plaintext copies themselves.
+
+Three initial regressions failed before the method existed. Five passing tests
+cover both chat roles, delivery/omission, exact retransmissions, independent
+returned frames, restart state, invalid/already-acknowledged targets and capacity
+limits. Capacity is checked before evicting or replacing any cache entry; failed
+deletions leave snapshots unchanged even when acknowledged history cannot free
+enough space. All 221 tests pass on Node, Bun and Deno, alongside strict lint,
+format, duplication and full declaration/example checking. The package retains
+54 permitted entries. Byte-ownership head 07d27f9 passed all applicable jobs in
+[run 40797847810](https://github.com/link-foundation/anygram/actions/runs/40797847810).
+Negotiation, PFS, durable RPC integration and live peer verification remain open.

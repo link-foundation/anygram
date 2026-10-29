@@ -29,3 +29,5 @@ Track secret-chat sequence parity, ordered acknowledgements, duplicate/gap
 recovery and exact cached retransmissions with bounded private state. Validate
 portable snapshots and recover unsent messages and active gaps after restart.
 Copy decoded TL byte/fixed-integer fields independently of Buffer input storage.
+Replace deleted unacknowledged secret messages with self-deletion services and
+create follow-up deletions, reserving bounded cache capacity before mutation.
