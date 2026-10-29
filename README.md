@@ -777,11 +777,18 @@ result conversion. Their TL data uses camelCase fields,
 `className` tags and exact native bigint IDs. Dialogs include `entity`,
 `inputEntity`, peer-qualified `message`, marked `id`, names, folder/unread fields
 and user/group/channel flags. Dialog collection uses bounded shared pagination;
-request options and cancellation reach the selected backend. These are plain
-data views; vendor custom model methods, drafts, array totals, legacy big-integer
-methods and `instanceof Api.*` behavior require the original `backend()` API.
-Direct `client.invoke` keeps raw backend results. Native send results can still
-be Updates containers; complete vendor message-result correlation remains open.
+request options and cancellation reach the selected backend. Account messages
+have origin-bound `respond`, `reply`, `edit`, `delete`, `forwardTo`, `downloadMedia`,
+`pin`, `unpin`, `markAsRead` and `getReplyMessage` methods, plus chat/sender,
+media and file metadata getters. Helpers extract correlated sent/edit responses;
+the general `invoke` and `sendMessage` facades retain detached response containers.
+The GramJS message deletion default is `revoke: false`; teleproto uses `true`.
+Their separate contexts share the same canonical operation implementation.
+See [typed message examples](examples/typed-account-messages.ts) and the
+[message compatibility evidence](docs/case-studies/issue-1/account-messages.md).
+Button interactions, rich formatting/model parity, drafts, array totals,
+legacy big-integer methods and `instanceof Api.*` behavior remain open.
+Direct `client.invoke` keeps raw backend results.
 
 The [follow migration bridge](examples/follow-client.js) adapts a configured
 account to follow's application helpers, preserving owned connection cleanup,

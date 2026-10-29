@@ -1260,8 +1260,9 @@ Installed web-framework integration work plan:
       gates scan 168 production sources with zero clones; packaging permits 211
       entries. Main remains an ancestor and feedback is empty. The complete atomic
       diff and new files are reviewed; the 899-file PR inventory has no removals.
-- [ ] Commit/push the atomic checkpoint and verify fresh exact-head CI, including
-      all nine new framework runtime/OS jobs. Keep wider criteria open.
+- [x] Commit/push the atomic checkpoint and verify fresh exact-head CI, including
+      all nine new framework runtime/OS jobs. Corrected head 67f631532971f4d38adb265948960d2a8432fa57
+      passes every applicable job in run 40957417459. Keep wider criteria open.
 
 Encrypted-upload CI follow-up work plan:
 
@@ -1278,12 +1279,13 @@ Encrypted-upload CI follow-up work plan:
       checkpoint tests pass on Node/Bun/Deno, with 27 native and eight wire
       checks. Strict gates scan 168 sources with zero clones and packaging has
       211 entries. Main is an ancestor and all feedback streams remain empty.
-- [ ] Push both corrections and verify fresh exact-head CI, including all nine
+- [x] Push both corrections and verify fresh exact-head CI, including all nine
       framework jobs and the previously failing macOS Bun core job.
       Run 40956444029 verifies the unchanged macOS Bun test, but three Deno
       framework jobs still fail. A clean archived npm-ci checkout reproduces the
       root invocation failure and passes all 71 cases from the fixture directory.
-      Correct the workflow's working directory and verify a fresh complete matrix.
+      The corrected working directory passes all nine framework and all nine core
+      jobs in run 40957417459, including the previously failing macOS Bun test.
 
 Account input-media conversion work plan:
 
@@ -1309,4 +1311,33 @@ Account input-media conversion work plan:
       refreshed feedback and sub-issues are empty, and issue prose is unchanged.
       All 71 installed-framework checks pass on Node/Bun/Deno, and the final
       actual SDK request-resolution comparisons pass on all three runtimes.
-- [ ] Commit/push and verify fresh exact-head CI. Continue wider criteria.
+- [x] Commit/push and verify fresh exact-head CI. Run 40959885595 targets
+      8a37c45d45edeea94a62ed0afbaa1f4677fea151, created 2026-10-29T21:41:21Z
+      after the 21:40:48Z commit; every applicable job passes. Continue wider criteria.
+
+Client-bound account message work plan:
+
+- [x] Inventory actual GramJS/teleproto message, chat/sender and media-view
+      contracts, including library-specific defaults and source mutation.
+- [x] Reproduce missing origin-bound respond/reply/edit/delete/forward/download
+      behavior and metadata getters before changing production code.
+- [x] Add shared message views over existing bounded operations and selected
+      adapters; preserve copied response data, cancellation and exact peer IDs.
+- [x] Compare actual SDK model calls and schema bytes, exercise independent
+      encrypted native TCP, and preserve frozen runtime/type reproductions.
+      All 101 cases pass; frozen source reproduces 94 failures. Six intermediate
+      origin-hash failures also verify request peer priority over response entities.
+      Zero-length history retains lazy peer resolution. Frozen declarations yield
+      ten diagnostics; actual entity constructors and canonical entity records
+      compile alongside five negative argument checks.
+- [x] Add checked migration examples and primary source inventories. Document
+      every remaining custom-model, formatting and button interaction difference.
+- [x] Run all local/runtime/static/integration gates and review the atomic change.
+      All 2,509 core tests pass on Node/Bun/Deno. Strict gates scan 173 production
+      sources with zero clones; packaging has 216 permitted entries. The 71
+      framework cases pass on all three runtimes; 27 native terminal, eight Node 20
+      wire, sixteen fact-parser and bounded FIFO checks pass. Main remains an
+      ancestor; refreshed issue, sub-issue and all feedback streams are unchanged.
+      The paginated PR inventory has 929 files with no removals; the complete
+      atomic diff is reviewed locally because GitHub limits diffs to 300 files.
+- [ ] Commit/push and verify fresh exact-head CI. Continue wider model work.

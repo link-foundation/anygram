@@ -117,7 +117,7 @@ for (const [label, Api, Dialog] of [
     dialogs[0].entity.accessHash = 0n;
     assert.equal(reply.chats[0].accessHash.toString(), '-7');
     assert.equal((await client.gramjs.getInputEntity('-1007')).accessHash, -7n);
-    assert.equal(client.teleproto, client.gramjs);
+    assert.notEqual(client.teleproto, client.gramjs);
   });
 }
 

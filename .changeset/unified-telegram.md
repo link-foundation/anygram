@@ -234,3 +234,7 @@ comparisons, caller data and the existing encrypted large-file upload deadline.
 Resolve reusable photo/document/chat-photo/media request arguments through shared
 schema conversion, with selected backend routing, checked shortcut types,
 layer-232 poll answer indices and preserved response answer media.
+
+Bind detached account messages to shared source-peer operations, retaining each
+style's deletion default, correlated reply/edit results, bounded reply lookup,
+media metadata and checked helper declarations without a vendor runtime.

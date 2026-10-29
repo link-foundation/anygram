@@ -21,7 +21,7 @@ export class Anygram {
     this.api = methodProxy(this.callBotApi.bind(this));
     this.telegram = this.api;
     this.gramjs = createGramStyle(this);
-    this.teleproto = this.gramjs;
+    this.teleproto = createGramStyle(this, 'teleproto');
     this.mtcute = {
       call: this.invoke.bind(this),
       sendText: this.sendMessage.bind(this),

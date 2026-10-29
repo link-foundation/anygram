@@ -5,6 +5,15 @@ a mock alone does not demonstrate protocol or compatibility parity. The issue
 has no required sub-issues at the initial snapshot. `data/issue.json` preserves
 the complete original prose. New feedback must be incorporated here.
 
+The [client-bound account message checkpoint](account-messages.md) advances
+R01/R02/R05/R17/R19 with shared origin-bound helpers, distinct SDK deletion
+defaults, metadata getters, bounded reply lookup, selected routing and native
+encrypted TCP evidence. Full formatting, buttons, model and application parity
+remain open in that inventory and the work plan. The 101 focused cases pass;
+the immutable preceding implementation fails 94. All 2,509 core tests pass on
+Node/Bun/Deno, with strict checks, zero clones in 173 production sources, the
+216-entry package gate and all 71 installed-framework cases per runtime.
+
 The [AES-IGE allocation regression](crypto-allocations.md) advances R05/R08
 with an immutable failing-before reproduction, independent ciphertext checks
 and a bounded public-buffer measurement. It retains the 10 MiB upload workload

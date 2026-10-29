@@ -1,33 +1,37 @@
 import { RpcOperations, iterateHistory, normalize } from './operations.js';
 import { camel, gramClassName } from './requests.js';
+import { bindAccountMessage } from './account-message.js';
 
-function convert(value) {
+function convert(value, context, origin) {
   if (value instanceof Uint8Array) {
     return Uint8Array.from(value);
   }
   if (Array.isArray(value)) {
-    return value.map(convert);
+    return value.map((entry) => convert(entry, context, origin));
   }
   if (!value || typeof value !== 'object') {
     return value;
   }
-  return Object.fromEntries([
+  const result = Object.fromEntries([
     ...Object.entries(value).map(([key, entry]) => [
       camel(key),
-      convert(entry),
+      convert(entry, context, origin),
     ]),
     ...(value._ ? [['className', gramClassName(value._)]] : []),
   ]);
+  return context && ['message', 'messageService'].includes(value._)
+    ? bindAccountMessage(result, context, origin && convert(origin))
+    : result;
 }
 
 export function gramView(value) {
   return convert(normalize(value));
 }
 
-function dialogView(entry) {
-  const entity = gramView(entry.entity);
-  const dialog = gramView(entry.dialog);
-  const message = gramView(entry.message);
+function dialogView(entry, wrap) {
+  const entity = wrap(entry.entity);
+  const dialog = wrap(entry.dialog);
+  const message = wrap(entry.message, entry.inputPeer);
   const type = entry.entity._;
   const id = type.startsWith('channel')
     ? BigInt(`-100${entity.id}`)
@@ -40,7 +44,7 @@ function dialogView(entry) {
   return {
     dialog,
     entity,
-    inputEntity: gramView(entry.inputPeer),
+    inputEntity: wrap(entry.inputPeer),
     message,
     id,
     name: title,
@@ -59,38 +63,63 @@ function dialogView(entry) {
   };
 }
 
-/** Data views share canonical operations; vendor custom model methods stay extended. */
-export function createGramStyle(client) {
+/** Data views and origin-bound messages share the selected canonical operations. */
+export function createGramStyle(client, kind = 'gramjs') {
   const operations = new RpcOperations((request, options) =>
     client.invoke(request.method, request.params, options)
   );
+  const entityViews = new WeakMap();
+  const context = {
+    client,
+    kind,
+    operations,
+    wrap(value, origin) {
+      const canonical = normalize(value);
+      operations.remember(canonical);
+      return convert(canonical, context, origin && normalize(origin));
+    },
+    viewEntity(value) {
+      if (!entityViews.has(value)) {
+        entityViews.set(value, context.wrap(value));
+      }
+      return entityViews.get(value);
+    },
+  };
+  const wrap = context.wrap;
   const style = {
-    invoke: async (...args) => gramView(await client.invoke(...args)),
+    invoke: async (...args) => wrap(await client.invoke(...args)),
     sendMessage: async (peer, options) =>
-      gramView(await client.sendMessage(peer, options.message, options)),
+      wrap(await client.sendMessage(peer, options.message, options)),
     async getMe(options) {
-      return gramView(await operations.getMe(options));
+      return wrap(await operations.getMe(options));
     },
     async getEntity(peer, options) {
-      return gramView(await operations.getEntity(peer, options));
+      return wrap(await operations.getEntity(peer, options));
     },
     async getInputEntity(peer, options) {
-      return gramView(await operations.getInputEntity(peer, options));
+      return wrap(await operations.getInputEntity(peer, options));
     },
     async getMessages(peer, options) {
-      return gramView(await operations.getMessages(peer, options));
+      const input = await operations.resolvePeer(peer, options);
+      return wrap(await operations.getMessages(input, options), input).map(
+        (message) => (message._ === 'messageEmpty' ? undefined : message)
+      );
     },
     async *iterMessages(peer, options) {
-      for await (const message of iterateHistory(
-        (page) => operations.getMessages(peer, page),
-        options
-      )) {
-        yield gramView(message);
+      let input;
+      const getPage = async (page) => {
+        input ??= await operations.resolvePeer(peer, page);
+        return operations.getMessages(input, page);
+      };
+      for await (const message of iterateHistory(getPage, options)) {
+        if (message._ !== 'messageEmpty') {
+          yield wrap(message, input);
+        }
       }
     },
     async *iterDialogs(options) {
       for await (const entry of operations.iterDialogs(options)) {
-        yield dialogView(entry);
+        yield dialogView(entry, wrap);
       }
     },
     async getDialogs(options) {
@@ -101,5 +130,6 @@ export function createGramStyle(client) {
       return dialogs;
     },
   };
+  context.style = style;
   return style;
 }

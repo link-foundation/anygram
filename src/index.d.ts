@@ -10,6 +10,8 @@ import type {
 } from './telegraf-server-types.js';
 export type * from './telegraf-server-types.js';
 import type { BotTextEditResult } from './bot-result-types.js';
+import type { AccountMessage } from './account-message-types.js';
+export type * from './account-message-types.js';
 import type {
   FrameworkWebhookCallback,
   WebhookAdapter,
@@ -346,7 +348,7 @@ export interface DialogOptions extends RequestOptions {
   /** Telegram peer folders: main (0) or archive (1); omitted includes both. */
   folderId?: 0 | 1;
 }
-/** Detached camelCase TL data; extended vendor model methods are not included. */
+/** Detached camelCase TL data; account messages additionally expose owned helpers. */
 export interface GramStyleObject extends Parameters {
   _: string;
   className: string;
@@ -355,7 +357,7 @@ export interface GramStyleDialog {
   dialog: GramStyleObject;
   entity: GramStyleObject;
   inputEntity: GramStyleObject;
-  message?: GramStyleObject;
+  message?: AccountMessage;
   id: bigint;
   name: string;
   title: string;
@@ -378,11 +380,14 @@ export interface GramStyleClient {
     peer: unknown,
     options?: RequestOptions
   ): Promise<GramStyleObject>;
-  getMessages(peer: unknown, options?: Parameters): Promise<GramStyleObject[]>;
+  getMessages(
+    peer: unknown,
+    options?: Parameters
+  ): Promise<(AccountMessage | undefined)[]>;
   iterMessages(
     peer: unknown,
     options?: Parameters
-  ): AsyncIterable<GramStyleObject>;
+  ): AsyncIterable<AccountMessage>;
   getDialogs(options?: DialogOptions): Promise<GramStyleDialog[]>;
   iterDialogs(options?: DialogOptions): AsyncIterable<GramStyleDialog>;
 }

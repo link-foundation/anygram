@@ -318,9 +318,26 @@ export class RpcOperations extends MediaOperations {
     const input = await this.resolvePeer(peer, options);
     const params = objectRequest(requestOf('messages.getHistory', options));
     if (options.ids) {
-      const id = []
-        .concat(options.ids)
-        .map((id) => ({ _: 'inputMessageID', id }));
+      const id = [].concat(options.ids).map((id) => {
+        if (id && typeof id === 'object') {
+          const input = normalize(id);
+          if (
+            [
+              'inputMessageID',
+              'inputMessageReplyTo',
+              'inputMessagePinned',
+              'inputMessageCallbackQuery',
+            ].includes(input._)
+          ) {
+            return input;
+          }
+          id = input.id;
+        }
+        if (!Number.isSafeInteger(id) || id < 1 || id > 0x7fffffff) {
+          throw new RangeError('Message IDs must be positive 32-bit integers');
+        }
+        return { _: 'inputMessageID', id };
+      });
       const result =
         input._ === 'inputPeerChannel'
           ? await this.rpc(
@@ -404,6 +421,11 @@ export class RpcOperations extends MediaOperations {
 
   async forwardMessages(peer, { fromPeer, messages, ...options }) {
     const ids = [].concat(messages);
+    const nonces =
+      options.randomId ?? options.random_id ?? ids.map(() => randomId());
+    if (!Array.isArray(nonces) || nonces.length !== ids.length) {
+      throw new RangeError('Forward random ID count must match message IDs');
+    }
     return this.rpc(
       'messages.forwardMessages',
       {
@@ -411,10 +433,45 @@ export class RpcOperations extends MediaOperations {
         from_peer: await this.resolvePeer(fromPeer, options),
         to_peer: await this.resolvePeer(peer, options),
         id: ids,
-        random_id: ids.map(() => randomId()),
+        random_id: nonces,
       },
       options
     );
+  }
+
+  async pinMessage(
+    peer,
+    id,
+    { notify = false, pmOneSide = false, unpin = false, ...options } = {}
+  ) {
+    return this.rpc(
+      'messages.updatePinnedMessage',
+      {
+        peer: await this.resolvePeer(peer, options),
+        id,
+        silent: !notify,
+        pm_oneside: pmOneSide,
+        unpin,
+      },
+      options
+    );
+  }
+
+  async markAsRead(peer, id, options) {
+    const input = await this.resolvePeer(peer, options);
+    if (input._ === 'inputPeerChannel') {
+      return this.rpc(
+        'channels.readHistory',
+        { channel: this.channel(input), max_id: id },
+        options
+      );
+    }
+    await this.rpc(
+      'messages.readHistory',
+      { peer: input, max_id: id },
+      options
+    );
+    return true;
   }
 
   async searchMessages(peer, query, options = {}) {
