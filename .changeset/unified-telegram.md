@@ -50,3 +50,6 @@ retaining all exhausted cleanup causes alongside the original failure.
 Normalize GramJS/teleproto protocol class aliases and fixed-width big integers
 through the shared request path; compare compatible schema layouts in both
 directions against independent serializers.
+Add shared GramJS/teleproto-style account data views, including camelCase TL
+objects, exact marked dialog IDs, peer-qualified top messages and bounded
+pagination, without requiring vendor model classes on native backends.

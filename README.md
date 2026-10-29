@@ -529,6 +529,16 @@ or `client.raw.users.getUsers({ id: [...] })`. Integers outside the safe Number
 range require bigint or decimal strings. Original-library return objects can
 differ; full cross-library return-model compatibility is not claimed.
 
+`client.gramjs` and `client.teleproto` share account migration helpers:
+`getMe`, `getEntity`, `getInputEntity`, `getMessages`, `iterMessages`,
+`getDialogs` and `iterDialogs`. Their detached TL data uses camelCase fields,
+`className` tags and exact native bigint IDs. Dialogs include `entity`,
+`inputEntity`, peer-qualified `message`, marked `id`, names, folder/unread fields
+and user/group/channel flags. Dialog collection uses bounded shared pagination;
+request options and cancellation reach the selected backend. These are plain
+data views; vendor custom model methods, drafts, array totals, legacy big-integer
+methods and `instanceof Api.*` behavior require the original `backend()` API.
+
 ## Development and evidence
 
 Compose text with Telegram entities without parsing user input as markup:

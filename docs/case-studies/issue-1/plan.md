@@ -115,11 +115,12 @@ cancellation. Use the immutable follow source as the migration contract; write
 reproducing tests before implementing missing behavior. Controlled-account
 validation remains blocked without credentials; independent work continues.
 
-The fixed-integer checkpoint passes 431 tests on each runtime and strict checks,
-with zero clones across 72 production sources and a 77-entry package dry run.
-The bidirectional corpus covers 2,623 teleproto and 1,931 GramJS layouts. All
-nine runtime/OS jobs and applicable gates passed for connection head 29e780e in
-run 40825860170. Commit/push the new step and verify exact CI SHA and timestamps.
+The account-style checkpoint passes 439 tests on each runtime and strict checks,
+with zero clones across 73 production sources and a 78-entry package dry run.
+Actual GramJS/teleproto dialog models and request constructors plus native TCP
+verify the shared data views; extended models remain open. Fixed-integer head
+036fa35 passed all nine runtime/OS jobs and applicable gates in run 40826739905.
+Commit/push the new step and verify exact CI SHA and timestamps.
 
 Keep protocol completion (secret chats/call media/transports), complete backend
 return/event/style compatibility and actual downstream scenarios open in the

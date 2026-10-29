@@ -345,3 +345,25 @@ gates in [run 40825860170](https://github.com/link-foundation/anygram/actions/ru
 created 2026-10-29T05:52:15Z and completed 2026-10-29T05:54:03Z. Fresh CI is
 required for this compatibility checkpoint. Full return/event/style parity,
 follow wrapper/CLI migration and all other open requirements remain unfinished.
+
+## Account style data checkpoint
+
+Eight migration regressions cover detached camelCase TL views, exact marked peer
+IDs, peer-qualified top messages, folder/unread fields and group flags. The views
+match actual GramJS and teleproto Dialog objects. Actual backend request classes
+exercise overlapping paginated pages; cancellation stops between yielded dialogs.
+An encrypted native TCP scenario returns the same data fields. The initial five
+tests failed because these facade helpers were absent. Entity/history helpers
+share canonical operations and preserve raw response objects.
+
+All 439 tests pass on Node, Bun and Deno. Strict lint, formatting, full declaration
+and typed example checks pass; the clone detector scans 73 production sources
+with zero clones and the package dry run contains 78 permitted entries.
+Vendor custom methods, drafts, array totals, legacy integer methods and instanceof
+behavior remain available through the original backend, and are not implemented
+by these plain data views. Full return/event/style parity and follow wrapper/CLI
+migration remain open, alongside all other unmet requirements.
+
+Fixed-integer head 036fa35 passed every applicable gate and all nine runtime/OS
+jobs in [run 40826739905](https://github.com/link-foundation/anygram/actions/runs/40826739905).
+Fresh CI is required for the account-style checkpoint.

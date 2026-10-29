@@ -186,6 +186,46 @@ export interface DialogOptions extends RequestOptions {
   /** Telegram peer folders: main (0) or archive (1); omitted includes both. */
   folderId?: 0 | 1;
 }
+/** Detached camelCase TL data; extended vendor model methods are not included. */
+export interface GramStyleObject extends Parameters {
+  _: string;
+  className: string;
+}
+export interface GramStyleDialog {
+  dialog: GramStyleObject;
+  entity: GramStyleObject;
+  inputEntity: GramStyleObject;
+  message?: GramStyleObject;
+  id: bigint;
+  name: string;
+  title: string;
+  pinned: boolean;
+  folderId?: number;
+  archived: boolean;
+  date?: number;
+  unreadCount: number;
+  unreadMentionsCount: number;
+  isUser: boolean;
+  isChannel: boolean;
+  isGroup: boolean;
+}
+export interface GramStyleClient {
+  invoke: Anygram['invoke'];
+  sendMessage(peer: unknown, options: Parameters): Promise<unknown>;
+  getMe(options?: RequestOptions): Promise<GramStyleObject>;
+  getEntity(peer: unknown, options?: RequestOptions): Promise<GramStyleObject>;
+  getInputEntity(
+    peer: unknown,
+    options?: RequestOptions
+  ): Promise<GramStyleObject>;
+  getMessages(peer: unknown, options?: Parameters): Promise<GramStyleObject[]>;
+  iterMessages(
+    peer: unknown,
+    options?: Parameters
+  ): AsyncIterable<GramStyleObject>;
+  getDialogs(options?: DialogOptions): Promise<GramStyleDialog[]>;
+  iterDialogs(options?: DialogOptions): AsyncIterable<GramStyleDialog>;
+}
 export type TelegramChatLink =
   | { type: 'public'; username: string; messageId?: number; threadId?: number }
   | { type: 'invite'; hash: string }
@@ -222,10 +262,7 @@ export declare class Anygram {
   raw: RawMethods;
   api: BotMethods;
   telegram: BotMethods;
-  gramjs: {
-    invoke: Anygram['invoke'];
-    sendMessage(peer: unknown, options: Parameters): Promise<unknown>;
-  };
+  gramjs: GramStyleClient;
   teleproto: Anygram['gramjs'];
   mtcute: { call: Anygram['invoke']; sendText: Anygram['sendMessage'] };
   mtproto: { call: Anygram['invoke'] };

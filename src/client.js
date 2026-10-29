@@ -3,6 +3,7 @@ import { methodProxy, requestOf } from './requests.js';
 import { iterateHistory } from './operations.js';
 import { botTextParams } from './formatting.js';
 import { withConnection } from './lifecycle.js';
+import { createGramStyle } from './gram-style.js';
 
 export class Anygram {
   constructor({ adapters = [], backend, debug } = {}) {
@@ -19,11 +20,7 @@ export class Anygram {
     this.raw = methodProxy(this.invoke.bind(this));
     this.api = methodProxy(this.callBotApi.bind(this));
     this.telegram = this.api;
-    this.gramjs = {
-      invoke: this.invoke.bind(this),
-      sendMessage: (peer, options) =>
-        this.sendMessage(peer, options.message, options),
-    };
+    this.gramjs = createGramStyle(this);
     this.teleproto = this.gramjs;
     this.mtcute = {
       call: this.invoke.bind(this),
