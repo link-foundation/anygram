@@ -1,4 +1,5 @@
 import schema from './schema/telegram.json' with { type: 'json' };
+import { fixedIntegerBytes } from './bytes.js';
 const definitions = new Map(
   [...schema.methods, ...schema.constructors].map((item) => [
     item.method ?? item.predicate,
@@ -14,6 +15,29 @@ const metadataFields = new Set([
   'originalArgs',
 ]);
 const lowerFirst = (text) => text[0].toLowerCase() + text.slice(1);
+export const gramClassName = (name) =>
+  name
+    .split('.')
+    .map((part, index, path) =>
+      index === path.length - 1
+        ? part
+            .split('_')
+            .map((word) => word[0].toUpperCase() + word.slice(1))
+            .join('')
+        : part
+    )
+    .join('.');
+const aliases = new Map(
+  [...definitions.keys()].flatMap((name) => {
+    const className = gramClassName(name);
+    const path = className.split('.');
+    path[path.length - 1] = lowerFirst(path.at(-1));
+    return [
+      [className, name],
+      [path.join('.'), name],
+    ];
+  })
+);
 export const camel = (text) =>
   text.replace(/_([a-z])/g, (match, letter) => letter.toUpperCase());
 export const snake = (text) =>
@@ -26,7 +50,7 @@ export function requestOf(method, params = {}) {
     }
     const parts = method.split('.');
     parts[parts.length - 1] = lowerFirst(parts.at(-1));
-    return { method: parts.join('.'), params };
+    return { method: aliases.get(method) ?? parts.join('.'), params };
   }
   if (!method || typeof method !== 'object') {
     throw new TypeError('Expected a method name or TL request');
@@ -69,9 +93,7 @@ export function gramRequest(Api, request) {
     return name ? construct(name, fields) : fields;
   }
   function construct(name, fields) {
-    const path = name.split('.');
-    const last = path.pop();
-    path.push(last[0].toUpperCase() + last.slice(1));
+    const path = gramClassName(name).split('.');
     const Constructor = path.reduce((scope, key) => scope?.[key], Api);
     if (!Constructor) {
       throw new TypeError(`The backend schema has no constructor ${name}`);
@@ -79,10 +101,13 @@ export function gramRequest(Api, request) {
     const definition = definitions.get(requestOf(name).method);
     for (const field of definition?.params ?? []) {
       if (
-        /^int(128|256)$/.test(field.type) &&
+        integerWidth(field.type) &&
         fields[camel(field.name)] instanceof Uint8Array
       ) {
-        const bytes = fields[camel(field.name)];
+        const bytes = fixedIntegerBytes(
+          fields[camel(field.name)],
+          integerWidth(field.type)
+        );
         fields[camel(field.name)] = BigInt(
           `0x${Buffer.from(bytes).reverse().toString('hex')}`
         );
@@ -104,21 +129,34 @@ export function objectRequest(request) {
     if (typeof value.toJSNumber === 'function' || value.__isLong__) {
       return BigInt(value.toString());
     }
-    const tag =
-      name ?? value._ ?? (value.className && requestOf(value.className).method);
-    const fields = new Set(
-      definitions.get(tag)?.params.map((field) => field.name)
+    const rawTag = name ?? value._ ?? value.className;
+    const tag = rawTag && requestOf(rawTag).method;
+    const fields = new Map(
+      definitions.get(tag)?.params.map((field) => [field.name, field.type])
     );
     const result = tag ? { _: tag } : {};
     for (const [key, entry] of Object.entries(value)) {
       if (metadataFields.has(key)) {
         continue;
       }
-      result[fields.has(key) ? key : snake(key)] = convert(entry);
+      const field = fields.has(key) ? key : snake(key);
+      result[field] = canonicalField(fields.get(field), convert(entry));
     }
     return result;
   }
   return { _: request.method, ...convert(request.params, request.method) };
+}
+
+function canonicalField(type, value) {
+  const width = integerWidth(type);
+  return width && value !== undefined && value !== null
+    ? fixedIntegerBytes(value, width)
+    : value;
+}
+
+function integerWidth(type) {
+  const match = /^(?:\w+\.\d+\?)?int(128|256)$/.exec(type);
+  return match && Number(match[1]) / 8;
 }
 
 export function methodProxy(invoke, path = []) {

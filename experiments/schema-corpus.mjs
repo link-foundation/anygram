@@ -1,6 +1,6 @@
 // Finite schema coverage and independent serialization comparison.
 import { TlCodec } from '../src/tl.js';
-import { gramRequest, requestOf } from '../src/requests.js';
+import { gramClassName, gramRequest, requestOf } from '../src/requests.js';
 import { Api } from 'teleproto/tl/index.js';
 import { Api as GramApi } from 'telegram/tl/index.js';
 import assert from 'node:assert/strict';
@@ -23,8 +23,6 @@ export function runCorpus() {
       const bytes = codec.encode(input);
       assert.deepEqual(codec.encode(codec.decode(bytes)), bytes);
       counts[definition.method ? 'methods' : 'constructors']++;
-      // MTProto string fields carry binary data. Competitors' API registries
-      // intentionally omit these handshake definitions.
       for (const [label, api] of [
         ['teleproto', Api],
         ['gramjs', GramApi],
@@ -49,6 +47,11 @@ export function runCorpus() {
           oracle.getBytes(),
           `${label}: ${name}`
         );
+        assert.deepEqual(
+          codec.encode(oracle),
+          bytes,
+          `${label} request to native: ${name}`
+        );
         counts[label]++;
       }
     } catch (error) {
@@ -66,9 +69,7 @@ function compatible(value, api) {
     return value.every((item) => compatible(item, api));
   }
   if (value._) {
-    const path = value._.split('.');
-    const name = path.pop();
-    path.push(name[0].toUpperCase() + name.slice(1));
+    const path = gramClassName(value._).split('.');
     const constructor = path.reduce((scope, key) => scope?.[key], api);
     const definition =
       codec.methods.get(value._) ?? codec.constructors.get(value._);

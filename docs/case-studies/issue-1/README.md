@@ -67,7 +67,9 @@ still open.
 The exact revisions are in `data/test-inventory.json`. Executable comparisons pin
 GramJS 2.26.22, teleproto 1.232.0, mtcute/core 0.32.7 and tl-runtime 0.32.6. The
 schema corpus checks all 869 layer-232 methods and 1,758 non-Bool constructors
-against independent serializers where their schemas overlap. Recursive sample
+against independent serializers where their schemas overlap. The current
+bidirectional comparison covers 1,931 GramJS and 2,623 teleproto layouts,
+including underscored MTProto protocol names. Recursive sample
 construction is bounded. This verifies serialization, not permission to invoke
 every method or correctness of every high-level return model.
 
@@ -1291,3 +1293,33 @@ in [run 40824428315](https://github.com/link-foundation/anygram/actions/runs/408
 created 2026-10-29T05:37:03Z and completed 2026-10-29T05:39:34Z. Fresh CI is
 required for this connection checkpoint. Full downstream wrapper/CLI migration,
 controlled-account scenarios and every other unmet requirement remain open.
+
+## Fixed-width request migration checkpoint
+
+Actual GramJS/teleproto objects exposed two independent request-path gaps:
+`ReqPqMulti`/`PQInnerData` class names did not resolve to underscored protocol
+names, and legacy/native big integers remained scalars where native/mtcute
+writers require fixed-width bytes. Six failing-before regressions reproduce
+these failures with the actual client constructors. A further assertion caught
+optional `int256` fields not being converted back to teleproto big integers.
+
+Schema-derived aliases now preserve protocol acronyms and underscores in both
+directions. One shared fixed-integer encoder preserves signed values and
+unsigned nonce bit patterns, rejects overflow and JavaScript numbers, and keeps
+decoded fields as owned little-endian byte arrays. It handles both required and
+optional fields. Tests include high-bit 128/256-bit values, signed boundaries,
+legacy GramJS big integers and actual mtcute group-call request serialization.
+This verifies request bytes, not call-media operation.
+
+The complete schema corpus now compares both canonical-to-client and
+client-to-native encoding. Resolving the protocol names adds 43 layouts per
+client: 2,623 teleproto and 1,931 GramJS comparisons, alongside all 869 methods
+and 1,758 non-Bool constructors. All 431 tests pass on Node, Bun and Deno.
+Strict lint, formatting, full types and zero clones across 72 production sources
+pass; the npm dry run contains 77 permitted entries.
+
+Connection-scope head 29e780e passed all nine runtime/OS jobs and applicable
+gates in [run 40825860170](https://github.com/link-foundation/anygram/actions/runs/40825860170),
+created 2026-10-29T05:52:15Z and completed 2026-10-29T05:54:03Z. Fresh CI is
+required for this compatibility checkpoint. Full return/event/style parity,
+follow wrapper/CLI migration and all other open requirements remain unfinished.

@@ -1,6 +1,6 @@
 import schema from './schema/telegram.json' with { type: 'json' };
 import { requestOf, objectRequest } from './requests.js';
-import { joinBytes } from './bytes.js';
+import { fixedIntegerBytes, joinBytes } from './bytes.js';
 
 const VECTOR = 0x1cb5c415;
 const optional = (type) => /^(\w+)\.(\d+)\?(.+)$/.exec(type);
@@ -299,10 +299,7 @@ const writers = {
 };
 
 function fixedBytes(writer, value, length) {
-  if (!(value instanceof Uint8Array) || value.length !== length) {
-    throw new TypeError('Invalid fixed-width TL integer');
-  }
-  writer.push(value);
+  writer.push(fixedIntegerBytes(value, length));
 }
 
 const readers = {

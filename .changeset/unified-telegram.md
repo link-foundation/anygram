@@ -43,3 +43,10 @@ cutovers, preserving initial negotiation races and rejecting late downgrades.
 Prepare initial secret-chat request/accept RPCs with protected recoverable state,
 participant/key validation and mandatory persistence before sending or exposing
 ready credentials. Discard invalid exchanges and preserve independent failures.
+Add shared invite-membership inspection and bounded follow-group workflows,
+including exact peer matching, notification settings and archival. Own account
+connections through application work and bounded disconnect/destroy cleanup,
+retaining all exhausted cleanup causes alongside the original failure.
+Normalize GramJS/teleproto protocol class aliases and fixed-width big integers
+through the shared request path; compare compatible schema layouts in both
+directions against independent serializers.

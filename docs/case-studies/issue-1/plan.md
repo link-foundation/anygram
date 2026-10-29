@@ -108,17 +108,18 @@ examples/. No live credentials or sessions may be included in research data.
 
 ## Next steps
 
-Current downstream work: preserve the verified connection ownership checkpoint,
-then complete follow's wrapper/CLI migration. The unified scope now retains all
+Current downstream work: preserve the verified connection and fixed-integer
+compatibility checkpoints, then complete follow's wrapper/CLI migration. The unified scope now retains all
 cleanup causes and the original work failure, including partial setup and
 cancellation. Use the immutable follow source as the migration contract; write
 reproducing tests before implementing missing behavior. Controlled-account
 validation remains blocked without credentials; independent work continues.
 
-The connection checkpoint passes 425 tests on each runtime and strict checks,
+The fixed-integer checkpoint passes 431 tests on each runtime and strict checks,
 with zero clones across 72 production sources and a 77-entry package dry run.
-All nine runtime/OS jobs and applicable gates passed for follow head 5baa0c3 in
-run 40824428315. Commit/push the new step and verify exact CI SHA and timestamps.
+The bidirectional corpus covers 2,623 teleproto and 1,931 GramJS layouts. All
+nine runtime/OS jobs and applicable gates passed for connection head 29e780e in
+run 40825860170. Commit/push the new step and verify exact CI SHA and timestamps.
 
 Keep protocol completion (secret chats/call media/transports), complete backend
 return/event/style compatibility and actual downstream scenarios open in the

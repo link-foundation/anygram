@@ -572,12 +572,19 @@ npm test
 npm run check
 npm run typecheck
 bun test
-deno test --allow-read --allow-write --allow-env --allow-net=127.0.0.1
+deno test --allow-read --allow-write --allow-env --allow-net=127.0.0.1 --allow-run=git
 ```
 
 The pinned schema corpus exercises all 869 methods and 1,758 non-boolean
 constructors, comparing compatible layouts against actual GramJS and teleproto
-serializers. Other tests cover real mtcute serialization, session import, SRP,
+serializers in both directions: 1,931 GramJS layouts and 2,623 teleproto layouts.
+Protocol class names such as `ReqPqMulti` and `PQInnerData` resolve to their
+schema names. Fixed-width `int128`/`int256` fields accept exact byte arrays or
+big integers, including legacy GramJS values. Signed values and unsigned nonce
+bit patterns are preserved; overflow and JavaScript numbers are rejected.
+Decoded fixed-width fields remain owned little-endian byte arrays. These wire
+comparisons do not establish call-media or production account interoperability.
+Other tests cover real mtcute serialization, session import, SRP,
 encrypted fake-peer exchanges, routing, Bot API requests, and bot dispatch.
 Research, source snapshots, limitations, and the execution plan are in
 [docs/case-studies/issue-1](docs/case-studies/issue-1).
