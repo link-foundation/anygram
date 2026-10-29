@@ -205,6 +205,11 @@ and padding, with a configurable `maxBytes` up to the default 16 MiB. `destroy()
 clears its owned key bytes and disables further use. This primitive requires
 separate chat negotiation, layer agreement, sequence tracking, persistence and re-keying;
 the high-level secret-chat client remains unfinished.
+The default envelope `version` is 2. Explicit `{ version: 1 }` supports the
+deprecated format required during initial negotiation with a peer whose layer
+is below 73. Each cipher accepts only its selected version. The integrated
+client must enforce Telegram's sequence-based switch to version 2 and reject
+later downgrades; selecting the legacy primitive does not perform that policy.
 
 `SecretChatSequence` tracks role-specific sequence numbers and acknowledgements,
 buffers gaps, requests missing ranges once and returns exact cached frames for

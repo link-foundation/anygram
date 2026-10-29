@@ -118,11 +118,11 @@ export declare class SecretChatSequence {
   exportState(): SecretChatSequenceState;
   destroy(): void;
 }
-/** MTProto 2.0 envelopes only; callers manage chat keys, layers and sequence state. */
+/** Defaults to MTProto 2.0. Legacy version 1 requires explicit selection. */
 export declare class SecretChatCipher {
   constructor(
     key: Uint8Array,
-    options: { originator: boolean; maxBytes?: number }
+    options: { originator: boolean; maxBytes?: number; version?: 1 | 2 }
   );
   encrypt(body: Uint8Array): Uint8Array;
   decrypt(packet: Uint8Array): Uint8Array;

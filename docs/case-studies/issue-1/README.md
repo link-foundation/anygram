@@ -670,3 +670,25 @@ and envelope-version negotiation still require the integrated client.
 All 232 tests pass on each runtime with strict checks; package contents remain
 55 permitted entries. DH head 29f274e passed all nine runtime/OS jobs and gates
 in [run 40799647031](https://github.com/link-foundation/anygram/actions/runs/40799647031).
+
+## Initial legacy secret envelopes
+
+The current [upgrade rules](https://core.telegram.org/api/end-to-end#upgrading-to-mtproto-2-0-from-mtproto-1-0)
+require version 2 after both peers support layer 73, while permitting version-1
+messages during initial negotiation and older unresolved gaps. The separately
+archived [deprecated format specification](https://core.telegram.org/api/end-to-end_v1)
+defines SHA-1-derived keys, x=0 in both directions and zero-to-fifteen padding
+bytes excluded from the message-key hash.
+
+`SecretChatCipher` now accepts an explicit version-1 option and keeps version 2
+as its default. It performs no automatic fallback between formats. The future
+integrated layer policy must track sequence cutovers and reject downgrades.
+Three initial regressions failed before the option existed. Six tests now cover
+independent GramJS AES verification in both directions, all aligned padding
+lengths, a fixed no-padding wire vector, malformed/authentication failures,
+strict version separation, bounds, key ownership and destruction.
+
+All 238 tests pass on Node, Bun and Deno with strict checks. The clone detector
+scans 51 production files with no clones; the package has 56 permitted entries.
+Layer-upgrade head 2d9b3d5 passed every applicable job in
+[run 40800006291](https://github.com/link-foundation/anygram/actions/runs/40800006291).

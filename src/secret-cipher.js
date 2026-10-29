@@ -1,20 +1,28 @@
 import { randomBytes } from 'node:crypto';
 import { hash, encryptAuthenticated, decryptAuthenticated } from './crypto.js';
+import { encryptLegacySecret, decryptLegacySecret } from './secret-legacy.js';
 
-/** MTProto 2.0 secret-chat envelopes; sequencing and key exchange are separate. */
+/** Secret-chat envelopes; sequencing, version negotiation and keys are separate. */
 export class SecretChatCipher {
   #key;
   #fingerprint;
   #originator;
   #maxBytes;
+  #version;
   #destroyed = false;
 
-  constructor(key, { originator, maxBytes = 16 * 1024 * 1024 } = {}) {
+  constructor(
+    key,
+    { originator, maxBytes = 16 * 1024 * 1024, version = 2 } = {}
+  ) {
     if (!(key instanceof Uint8Array) || key.length !== 256) {
       throw new RangeError('Secret chat key must contain 256 bytes');
     }
     if (typeof originator !== 'boolean') {
       throw new TypeError('Secret chat originator must be specified');
+    }
+    if (version !== 1 && version !== 2) {
+      throw new RangeError('Invalid secret chat envelope version');
     }
     if (
       !Number.isSafeInteger(maxBytes) ||
@@ -27,6 +35,7 @@ export class SecretChatCipher {
     this.#fingerprint = hash('sha1', this.#key).subarray(-8);
     this.#originator = originator;
     this.#maxBytes = maxBytes;
+    this.#version = version;
   }
 
   #assertActive() {
@@ -43,11 +52,15 @@ export class SecretChatCipher {
     if (body.length > this.#maxBytes) {
       throw new RangeError('Secret chat body exceeds byte limit');
     }
-    const padding = 12 + ((16 - ((4 + body.length + 12) % 16)) % 16);
+    const minimum = this.#version === 1 ? 0 : 12;
+    const padding = minimum + ((16 - ((4 + body.length + minimum) % 16)) % 16);
     const plain = Buffer.alloc(4 + body.length + padding);
     plain.writeInt32LE(body.length);
     plain.set(body, 4);
     plain.set(randomBytes(padding), 4 + body.length);
+    if (this.#version === 1) {
+      return encryptLegacySecret(this.#key, this.#fingerprint, plain);
+    }
     return encryptAuthenticated(
       this.#key,
       this.#fingerprint,
@@ -61,16 +74,21 @@ export class SecretChatCipher {
     if (packet?.length > this.#maxBytes + 4 + 1024 + 24) {
       throw new RangeError('Secret chat packet exceeds byte limit');
     }
-    const plain = decryptAuthenticated(
-      this.#key,
-      this.#fingerprint,
-      packet,
-      this.#originator ? 8 : 0,
-      'secret chat'
-    );
+    const plain =
+      this.#version === 1
+        ? decryptLegacySecret(this.#key, this.#fingerprint, packet)
+        : decryptAuthenticated(
+            this.#key,
+            this.#fingerprint,
+            packet,
+            this.#originator ? 8 : 0,
+            'secret chat'
+          );
     const size = plain.readInt32LE();
     const padding = plain.length - 4 - size;
-    if (size < 0 || size % 4 || padding < 12 || padding > 1024) {
+    const minimum = this.#version === 1 ? 0 : 12;
+    const maximum = this.#version === 1 ? 15 : 1024;
+    if (size < 0 || size % 4 || padding < minimum || padding > maximum) {
       throw new Error('Invalid secret chat packet');
     }
     if (size > this.#maxBytes) {

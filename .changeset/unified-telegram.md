@@ -36,3 +36,5 @@ bounded safe-prime validation caching, local entropy, public-value bounds,
 fingerprint verification and owned private-exponent destruction.
 Upgrade outgoing secret-chat layers while preserving historical cached bytes,
 headers and deletion serialization through retransmission and restart.
+Support explicitly selected legacy secret-chat envelopes for initial layer
+negotiation, retaining MTProto 2.0 as the default without automatic fallback.
