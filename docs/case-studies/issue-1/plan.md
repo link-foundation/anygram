@@ -93,9 +93,9 @@ examples/. No live credentials or sessions may be included in research data.
 - All 90 independently versioned secret-schema constructors round-trip. The
   codec retains historical IDs and flag-only fields missing from primary JSON;
   a handwritten wire vector and source-hash comparison verify serialization.
-- Node/Bun/Deno each pass 215 tests; strict lint, format, the repaired duplication
+- Node/Bun/Deno each pass 229 tests; strict lint, format, the repaired duplication
   gate and declaration/example checks pass. Each later code change requires
-  fresh checks. The package contains 54 permitted files.
+  fresh checks. The package contains 55 permitted files.
 - Refreshed issue/sub-issue and all three PR feedback streams are empty. Main is
   an ancestor of the branch. CI for 2598e6d passed all nine runtime/OS jobs and
   release gates in run 40791774228, including email authentication. Later heads
@@ -155,3 +155,14 @@ with strict checks. TL byte-ownership head 07d27f9 passed CI run 40797847810.
 Strict declaration/example checking is now an explicit `npm run typecheck` gate
 in both `npm run check` and CI. The project includes every declaration and typed
 example and keeps library checking enabled. The new gate passes locally.
+
+The DH primitive now refreshes configuration before each initial exchange,
+validates safe primes/generators/public values, mixes local entropy and consumes
+private exponents on completion. Eight regressions cover bilateral and independent
+platform DH, malformed inputs, fingerprints, restart snapshots, configuration
+refresh/copying and cancellation. All 229 tests and strict checks pass on each
+runtime. Deno's independent DH API restricts generators to 2/5, so the comparison
+uses the valid RFC 3526 group with generator 2; Telegram's published generator-3
+parameters remain covered by the bilateral tests. Request/accept RPC integration,
+layer agreement and PFS remain open. Head 192d011 passed all nine runtime/OS jobs
+and applicable gates in CI run 40798442235.

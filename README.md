@@ -223,6 +223,17 @@ both effects with the new snapshot, remove old persisted plaintext and release
 application-owned copies. Capacity failures leave cached state unchanged.
 Key negotiation, re-keying and the complete secret-chat client remain unfinished.
 
+`createSecretChatKeyExchange(invoke, { config? })` refreshes Telegram's DH
+configuration before generating a pending exchange. It validates the 2048-bit
+safe prime, generator and peer public value, and mixes local CSPRNG bytes with
+server randomness. `exchange.publicValue` is the value sent to the peer;
+`exchange.complete(peerPublic, expectedFingerprint?)` returns the 256-byte key
+and signed 64-bit fingerprint, then destroys its owned private exponent.
+`exchange.exportState()` supports pending-exchange recovery through the
+`SecretChatKeyExchange` constructor's `state` option. This snapshot contains a
+private exponent and requires protected storage. The primitive does not yet
+perform request/accept RPCs, layer agreement or PFS rotation.
+
 ## Select existing clients
 
 ```js

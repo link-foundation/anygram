@@ -3,9 +3,20 @@ import {
   SecretChatCipher,
   SecretChatCodec,
   SecretChatSequence,
+  createSecretChatKeyExchange,
+  type SecretChatDhConfig,
   type SecretChatSequenceState,
 } from 'anygram/mtproto';
 import type { TlRequest } from 'anygram';
+
+// Refresh DH parameters before generating each new initial exchange. Protect
+// exchange.exportState() as private key material until negotiation completes.
+export function prepareSecretExchange(
+  client: Mtproto,
+  config?: SecretChatDhConfig
+) {
+  return createSecretChatKeyExchange(client.call.bind(client), { config });
+}
 
 // Requires a separately negotiated chat/key. Persist the snapshot before RPCs;
 // after a network failure, recover the outbox with sequence.unacknowledged().

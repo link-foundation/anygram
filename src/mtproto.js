@@ -27,6 +27,10 @@ export { ObfuscatedFraming } from './obfuscated-framing.js';
 export { SecretChatCipher } from './secret-cipher.js';
 export { SecretChatCodec } from './secret-codec.js';
 export { SecretChatSequence } from './secret-sequence.js';
+export {
+  SecretChatKeyExchange,
+  createSecretChatKeyExchange,
+} from './secret-key-exchange.js';
 
 export class HttpTransport {
   constructor({

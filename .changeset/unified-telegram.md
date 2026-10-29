@@ -31,3 +31,6 @@ portable snapshots and recover unsent messages and active gaps after restart.
 Copy decoded TL byte/fixed-integer fields independently of Buffer input storage.
 Replace deleted unacknowledged secret messages with self-deletion services and
 create follow-up deletions, reserving bounded cache capacity before mutation.
+Generate recoverable secret-chat DH exchanges with refreshed configuration,
+bounded safe-prime validation caching, local entropy, public-value bounds,
+fingerprint verification and owned private-exponent destruction.

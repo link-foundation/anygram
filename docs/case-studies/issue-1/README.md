@@ -622,3 +622,32 @@ format, duplication and full declaration/example checking. The package retains
 54 permitted entries. Byte-ownership head 07d27f9 passed all applicable jobs in
 [run 40797847810](https://github.com/link-foundation/anygram/actions/runs/40797847810).
 Negotiation, PFS, durable RPC integration and live peer verification remain open.
+
+## Secret-chat DH primitive
+
+The initial exchange follows Telegram's [key-generation rules](https://core.telegram.org/api/end-to-end#key-generation):
+refresh configuration for every new exchange, validate the 2048-bit safe prime
+and generator, mix server entropy with local CSPRNG bytes, bound public values
+and left-pad the shared key to 256 bytes. The fingerprint uses the last eight
+SHA-1 bytes as a signed little-endian long. A fixed sixteen-entry cache retains
+only successful prime proofs; generator and public-value checks still run.
+
+Seven initial regressions failed before the implementation existed. Eight
+passing tests now cover both parties, independent platform DH, invalid
+parameters/public values, fingerprint mismatches, consumed private exponents,
+JSON restart state, server-entropy independence, configuration refresh, copied
+inputs and cancellation. Pending snapshots contain the private exponent and
+require protected storage. Failed or successful completion clears the owned
+exponent. Request/accept RPC integration, layer agreement and compulsory PFS
+remain separate unfinished work.
+
+The first full Deno run found a limitation in its independent Node-compatible
+DH oracle: it accepts generators 2 and 5, rejecting Telegram's valid generator 3.
+The comparison now uses RFC 3526's 2048-bit group with generator 2 on every
+runtime, while bilateral tests continue using Telegram's published prime and
+generator 3. This retains independent verification without skipping Deno.
+All 229 tests pass on Node, Bun and Deno; strict lint, formatting, duplication
+and declaration/example checks pass. The detector scans 50 production files
+with zero clones, and the package has 55 permitted entries. Declaration-gate
+head 192d011 passed all nine runtime/OS jobs and applicable gates in
+[run 40798442235](https://github.com/link-foundation/anygram/actions/runs/40798442235).

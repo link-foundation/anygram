@@ -15,6 +15,45 @@ export declare class SecretChatCodec extends TlCodec {
     maxBytes?: number;
   });
 }
+export interface SecretChatDhConfig {
+  p: Uint8Array;
+  g: number;
+  version: number;
+}
+/** Contains a private exponent; protect persisted pending exchanges. */
+export interface SecretChatKeyExchangeState {
+  version: 1;
+  p: string;
+  g: number;
+  privateValue: string;
+}
+export declare class SecretChatKeyExchange {
+  constructor(options: {
+    p: Uint8Array;
+    g: number;
+    serverRandom?: Uint8Array;
+    state?: SecretChatKeyExchangeState;
+  });
+  readonly publicValue: Uint8Array;
+  complete(
+    peerPublic: Uint8Array,
+    expectedFingerprint?: bigint
+  ): { key: Uint8Array; fingerprint: bigint };
+  exportState(): SecretChatKeyExchangeState;
+  destroy(): void;
+}
+export declare function createSecretChatKeyExchange(
+  invoke: (
+    method: string,
+    parameters: Parameters,
+    options?: RequestOptions
+  ) => Promise<unknown>,
+  options?: {
+    config?: SecretChatDhConfig;
+    signal?: AbortSignal;
+    timeout?: number;
+  }
+): Promise<{ exchange: SecretChatKeyExchange; config: SecretChatDhConfig }>;
 export interface SecretChatLayer extends TlRequest {
   _: 'decryptedMessageLayer';
   random_bytes: Uint8Array;

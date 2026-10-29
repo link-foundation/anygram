@@ -129,9 +129,20 @@ export function decryptAuthenticated(
   return plain;
 }
 
-export function validateDh(primeBytes, generator, publicBytes) {
+// Only successful 2048-bit prime proofs are retained, with a fixed cache bound.
+const verifiedDhPrimes = new Map();
+
+export function validateDhParameters(primeBytes, generator) {
+  if (
+    !(primeBytes instanceof Uint8Array) ||
+    primeBytes.length !== 256 ||
+    !Number.isInteger(generator) ||
+    generator < 2 ||
+    generator > 7
+  ) {
+    throw new Error('Invalid DH prime or generator');
+  }
   const prime = integer(primeBytes);
-  const g = BigInt(generator);
   const residues = {
     2: [8n, [7n]],
     3: [3n, [2n]],
@@ -141,30 +152,44 @@ export function validateDh(primeBytes, generator, publicBytes) {
     7: [7n, [3n, 5n, 6n]],
   };
   const condition = residues[generator];
-  if (
-    primeBytes.length !== 256 ||
-    prime <= 1n << 2047n ||
-    !condition ||
-    !condition[1].includes(prime % condition[0])
-  ) {
+  if (prime <= 1n << 2047n || !condition[1].includes(prime % condition[0])) {
     throw new Error('Invalid DH prime or generator');
   }
-  if (
-    !checkPrimeSync(primeBytes, { checks: 64 }) ||
-    !checkPrimeSync(bigEndian((prime - 1n) / 2n), { checks: 64 })
-  ) {
-    throw new Error('DH modulus is not a safe prime');
+  const identity = Buffer.from(primeBytes).toString('hex');
+  if (!verifiedDhPrimes.has(identity)) {
+    if (
+      !checkPrimeSync(primeBytes, { checks: 64 }) ||
+      !checkPrimeSync(bigEndian((prime - 1n) / 2n), { checks: 64 })
+    ) {
+      throw new Error('DH modulus is not a safe prime');
+    }
+    if (verifiedDhPrimes.size >= 16) {
+      verifiedDhPrimes.delete(verifiedDhPrimes.keys().next().value);
+    }
+    verifiedDhPrimes.set(identity, true);
   }
-  const publicValue = integer(publicBytes);
-  const bound = 1n << 1984n;
+  return prime;
+}
+
+export function validateDhPublic(prime, publicBytes) {
   if (
-    g < 2n ||
-    g > 7n ||
-    publicValue <= bound ||
-    publicValue >= prime - bound
+    !(publicBytes instanceof Uint8Array) ||
+    !publicBytes.length ||
+    publicBytes.length > 256
   ) {
     throw new Error('Invalid DH public value');
   }
+  const publicValue = integer(publicBytes);
+  const bound = 1n << 1984n;
+  if (publicValue <= bound || publicValue >= prime - bound) {
+    throw new Error('Invalid DH public value');
+  }
+  return publicValue;
+}
+
+export function validateDh(primeBytes, generator, publicBytes) {
+  const prime = validateDhParameters(primeBytes, generator);
+  validateDhPublic(prime, publicBytes);
   return prime;
 }
 
