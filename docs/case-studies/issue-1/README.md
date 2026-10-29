@@ -1123,3 +1123,36 @@ They belong to the outer server envelope, outside end-to-end authentication.
 The snapshot digest checks consistency and does not authenticate server metadata.
 The typed expiry example now saves both directions with their returned server
 dates and attachment references in the same history/timer/session transaction.
+
+Phone-code delivery checkpoint: `onCode(challenge)` receives a copied server
+challenge before phone/email prompts. Applications can continue, explicitly
+request the advertised next method, or cancel the current code remotely.
+Resends retain the current hash and subsequent sign-in uses the newly returned
+hash. They share the finite login-step bound. Callback cancellation and server
+failures propagate without replay; no session is saved for cancellation or a
+malformed authorization result. The application owns timeout-aware UI decisions.
+
+Seven failing-before regressions cover hash ownership, resend success, current
+code cancellation, email/Firebase fallback selection, malformed actions,
+challenge limits, cancellation and server errors. A separate failing-before
+regression catches session persistence before a malformed success is rejected.
+A bounded native encrypted TCP test executes both the successful and cancelled
+flows, and request bytes match actual pinned teleproto. All 364 tests pass on
+Node, Bun and Deno, with strict lint, formatting, full types and zero clones
+across 68 production sources; the npm dry run contains 73 permitted entries.
+The typed delivery example compiles. Fresh CI is required for this checkpoint.
+
+The primary [authorization flow](https://core.telegram.org/api/auth) defines
+`next_type`, code hashes, resend timeouts and explicit cancellation; the
+[resend](https://core.telegram.org/method/auth.resendCode) and
+[cancel](https://core.telegram.org/method/auth.cancelCode) method pages specify
+these requests. `data/login-delivery-sources.json` preserves source-byte hashes.
+A valid fallback cannot be manufactured when Telegram supplies no `next_type`.
+Official-app Firebase SMS and paid login still require eligible applications;
+this checkpoint implements selection of an advertised fallback, not those flows.
+The current [passkey specification](https://core.telegram.org/api/passkeys)
+explicitly restricts RP IDs to telegram.org and says unofficial apps cannot use
+the feature. Production passkey acceptance therefore remains externally blocked
+for this third-party client. Raw schema entries and local tests cannot verify
+that missing account capability. Full feature-union, controlled-account,
+call-media, browser/runtime and downstream scenarios remain open.

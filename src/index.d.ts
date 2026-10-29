@@ -322,6 +322,9 @@ export interface LoginChallenge extends TlRequest {
 export type LoginCodeInput =
   | string
   | ((challenge: LoginChallenge) => string | Promise<string>);
+export type LoginCodeDeliveryAction =
+  | { action: 'resend'; reason?: string }
+  | { action: 'cancel' };
 export interface LoginOptions {
   signal?: AbortSignal;
   timeout?: number;
@@ -335,6 +338,10 @@ export interface LoginOptions {
   qrTimeout?: number;
   phoneNumber?: string | (() => string | Promise<string>);
   phoneCode?: LoginCodeInput;
+  /** Return nothing to prompt normally, or explicitly resend/cancel this code. */
+  onCode?: (
+    challenge: LoginChallenge
+  ) => LoginCodeDeliveryAction | void | Promise<LoginCodeDeliveryAction | void>;
   email?: LoginCodeInput;
   emailCode?: LoginCodeInput;
   emailVerification?:

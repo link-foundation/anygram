@@ -113,18 +113,14 @@ export class Authentication {
         );
       }
     }
+    if (result?.user?.id === undefined) {
+      throw new TelegramError('Invalid login authorization response');
+    }
     await this.client.onSession?.(this.client.saveSession());
     return result.user;
   }
   async phoneLogin(options) {
-    const { maxLoginSteps = 10 } = options;
-    if (
-      !Number.isSafeInteger(maxLoginSteps) ||
-      maxLoginSteps < 1 ||
-      maxLoginSteps > 1000
-    ) {
-      throw new RangeError('Invalid login challenge step limit');
-    }
+    const maxLoginSteps = loginStepLimit(options);
     const phoneNumber = await input(options.phoneNumber, 'phoneNumber');
     let code = await this.sendCode(phoneNumber, options.codeSettings, options);
     for (let step = 0; step <= maxLoginSteps; step++) {
@@ -141,6 +137,11 @@ export class Authentication {
       }
       if (typeof code.phone_code_hash !== 'string' || !code.phone_code_hash) {
         throw new TelegramError('Invalid login code hash');
+      }
+      const next = await this.codeDelivery(phoneNumber, code, options);
+      if (next !== undefined) {
+        code = next;
+        continue;
       }
       if (code.type?._ === 'auth.sentCodeTypeSetUpEmailRequired') {
         code = await this.setupEmail(phoneNumber, code, options);
@@ -168,6 +169,50 @@ export class Authentication {
     throw new TelegramError('Login challenge step limit exceeded', {
       type: 'LOGIN_STEP_LIMIT',
     });
+  }
+
+  async codeDelivery(phoneNumber, code, options) {
+    const decision = deliveryAction(
+      await options.onCode?.(globalThis.structuredClone(code))
+    );
+    options.signal?.throwIfAborted();
+    if (decision === undefined) {
+      return undefined;
+    }
+    const params = {
+      phone_number: phoneNumber,
+      phone_code_hash: code.phone_code_hash,
+    };
+    if (decision.action === 'cancel') {
+      const result = await this.call('auth.cancelCode', params, options);
+      if (typeof result !== 'boolean') {
+        throw new TelegramError('Invalid login cancellation response');
+      }
+      throw new TelegramError('Login cancelled', { type: 'LOGIN_CANCELLED' });
+    }
+    if (
+      typeof code.next_type?._ !== 'string' ||
+      !code.next_type._.startsWith('auth.codeType')
+    ) {
+      throw new TelegramError(
+        'Telegram did not advertise another code delivery method',
+        {
+          type: 'LOGIN_CODE_RESEND_UNAVAILABLE',
+        }
+      );
+    }
+    const result = await this.call(
+      'auth.resendCode',
+      {
+        ...params,
+        ...(decision.reason === undefined ? {} : { reason: decision.reason }),
+      },
+      options
+    );
+    if (!result || typeof result._ !== 'string') {
+      throw new TelegramError('Invalid login resend response');
+    }
+    return result;
   }
 
   async emailVerification(challenge, options) {
@@ -321,6 +366,37 @@ export class Authentication {
     }
     throw new TelegramError('QR login attempt limit exceeded');
   }
+}
+
+function loginStepLimit({ maxLoginSteps = 10, onCode }) {
+  if (
+    !Number.isSafeInteger(maxLoginSteps) ||
+    maxLoginSteps < 1 ||
+    maxLoginSteps > 1000
+  ) {
+    throw new RangeError('Invalid login challenge step limit');
+  }
+  if (onCode !== undefined && typeof onCode !== 'function') {
+    throw new TypeError('onCode must be a function');
+  }
+  return maxLoginSteps;
+}
+
+function deliveryAction(value) {
+  if (value === undefined) {
+    return undefined;
+  }
+  if (
+    !value ||
+    typeof value !== 'object' ||
+    !['resend', 'cancel'].includes(value.action) ||
+    Object.keys(value).some((key) => !['action', 'reason'].includes(key)) ||
+    (value.reason !== undefined &&
+      (value.action !== 'resend' || typeof value.reason !== 'string'))
+  ) {
+    throw new TypeError('Invalid login code delivery action');
+  }
+  return { action: value.action, reason: value.reason };
 }
 
 function validateEmailProof(proof, type) {

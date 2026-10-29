@@ -416,3 +416,29 @@ Node, Bun and Deno, with strict lint, formatting, full types and zero clones
 across 68 production sources. The package dry run contains 73 permitted entries.
 Fresh CI is required for this checkpoint. Controlled production peer results and
 all remaining feature-union, runtime, call-media and downstream criteria stay open.
+
+Phone-code delivery checkpoint: `onCode(challenge)` receives a copied server
+challenge before phone/email prompts. Applications can continue, explicitly
+request the advertised next method, or cancel the current code remotely.
+Resends retain the current hash and subsequent sign-in uses the newly returned
+hash. They share the finite login-step bound. Callback cancellation and server
+failures propagate without replay; no session is saved for cancellation or a
+malformed authorization result. The application owns timeout-aware UI decisions.
+
+Seven failing-before regressions cover hash ownership, resend success, current
+code cancellation, email/Firebase fallback selection, malformed actions,
+challenge limits, cancellation and server errors. A separate failing-before
+regression catches session persistence before a malformed success is rejected.
+A bounded native encrypted TCP test executes both the successful and cancelled
+flows, and request bytes match actual pinned teleproto. All 364 tests pass on
+Node, Bun and Deno, with strict lint, formatting, full types and zero clones
+across 68 production sources; the npm dry run contains 73 permitted entries.
+The typed delivery example compiles. Fresh CI is required for this checkpoint.
+
+The expiry head 19a4d57 passed all nine runtime/OS jobs and applicable gates in
+run 40818522634, created 2026-10-29T04:34:36Z and completed
+2026-10-29T04:47:33Z. Date head 6514127 passed all nine runtime/OS jobs and applicable gates in
+run 40819580958, created 2026-10-29T04:46:07Z and completed
+2026-10-29T04:50:58Z. Continue with
+remaining native/downstream coverage and preserve the original scope; do not
+mark the PR ready while any requirement remains unverified.

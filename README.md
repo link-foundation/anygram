@@ -165,6 +165,14 @@ the new code hash returned by Telegram. `emailVerification` accepts a code proof
 or a callback returning a Google/Apple ID token proof when Telegram allows that
 provider. The application obtains provider tokens. `maxLoginSteps` (default 10,
 maximum 1000) bounds successive setup challenges; `signal` cancels network steps.
+Use `onCode(challenge)` to choose code delivery before any phone/email prompt.
+Return nothing to continue, `{ action: 'resend', reason? }` to request Telegram's
+advertised `next_type`, or `{ action: 'cancel' }` to cancel the current code and
+reject with `LOGIN_CANCELLED`. The callback receives a copy; resends retain the
+current code hash and subsequent sign-in uses the new returned hash. Each resend
+counts toward `maxLoginSteps`. The application honors `challenge.timeout` before
+offering another delivery method; server errors propagate without replay.
+See `examples/typed-code-delivery.ts` for the UI callback boundary.
 The [typed email login example](examples/typed-email-login.ts) shows private
 application prompts. Official-app-only payment and Firebase flows remain outside
 this high-level helper.

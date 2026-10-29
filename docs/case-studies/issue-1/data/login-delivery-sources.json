@@ -1,0 +1,25 @@
+{
+  "capturedAt": "2026-10-29T04:50:22.788852+00:00",
+  "sources": [
+    {
+      "file": "login-delivery.md",
+      "url": "https://core.telegram.org/api/auth.md",
+      "sha256": "330c263ada06cc5c5a7a8ac1dd96f60320d88c11026f794f587c824a53b8dfec"
+    },
+    {
+      "file": "login-resend.md",
+      "url": "https://core.telegram.org/method/auth.resendCode.md",
+      "sha256": "d7a45686edd73a7fc696bb141578ca7fe1d2175430b99a2968548fb90aa4a29e"
+    },
+    {
+      "file": "login-cancel.md",
+      "url": "https://core.telegram.org/method/auth.cancelCode.md",
+      "sha256": "fdb2fcaff2934b43924457e020bd745faf4076fd25d14254411b940c3c4801d0"
+    },
+    {
+      "file": "login-passkeys.md",
+      "url": "https://core.telegram.org/api/passkeys.md",
+      "sha256": "39e2a2de99f45520fb0b64320c06e085711ef07a5127743af22559ce0ef73806"
+    }
+  ]
+}
