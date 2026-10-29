@@ -54,6 +54,12 @@ lost audio, edit and album fields. Current portable examples and the complete
 of Node, Bun and Deno. The local static gate passes, scans 154 production
 sources with zero duplicate clones, and packaging permits 197 entries.
 
+Initial CI at `5d3232a5b8cbe393f81d268bd9acecd2100bd4bb` passed its runtime
+matrix but failed declaration generation because the two checked source examples
+were omitted from that commit. Preserved run 40925315092 reports the missing
+`examples/typed-grammy-message-subtypes.ts` at log line 1800. The follow-up commit
+includes both already-verified examples; this was a commit inventory defect.
+
 ## Remaining acceptance criteria
 
 Other SDK namespaces and conditional server constraints, full chat/update result
