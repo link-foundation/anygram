@@ -351,13 +351,56 @@ jobs:
       - name: Verify vendor and terminal multipart requests on Node 20
         run: node --test experiments/vendor-bot-wire.integration.js experiments/terminal-runtime/terminal-wire.integration.js
 
+  web-framework-integration:
+    name: Web frameworks (${{ matrix.runtime }} on ${{ matrix.os }})
+    timeout-minutes: 10
+    runs-on: ${{ matrix.os }}
+    needs: [detect-changes, changeset-check]
+    if: always() && (github.event_name == 'push' || github.event_name == 'pull_request') && (needs.changeset-check.result == 'success' || needs.changeset-check.result == 'skipped')
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-15-intel, windows-latest]
+        runtime: [node, bun, deno]
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+      - name: Install shared and isolated framework dependencies
+        run: |
+          npm ci
+          npm ci --prefix experiments/bot-framework-runtime --ignore-scripts
+      - name: Set up Bun
+        if: matrix.runtime == 'bun'
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+      - name: Set up Deno
+        if: matrix.runtime == 'deno'
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Verify installed frameworks on Node
+        if: matrix.runtime == 'node'
+        run: node --test experiments/bot-framework-runtime/*.integration.js
+      - name: Verify installed frameworks on Bun
+        if: matrix.runtime == 'bun'
+        run: bun test ./experiments/bot-framework-runtime/*.integration.js
+      - name: Verify installed frameworks on Deno
+        if: matrix.runtime == 'deno'
+        run: deno test --no-config --node-modules-dir=manual --allow-read --allow-env --allow-net=127.0.0.1 experiments/bot-framework-runtime/*.integration.js
+
   # Release - only runs on main after tests pass (for push events)
   release:
     name: Release
-    needs: [lint, test, terminal-integration]
+    needs: [lint, test, terminal-integration, web-framework-integration]
     # Use always() to ensure this job runs even if changeset-check was skipped
     # This is needed because lint/test jobs have a transitive dependency on changeset-check
-    if: always() && github.ref == 'refs/heads/main' && github.event_name == 'push' && needs.lint.result == 'success' && needs.test.result == 'success' && needs.terminal-integration.result == 'success'
+    if: always() && github.ref == 'refs/heads/main' && github.event_name == 'push' && needs.lint.result == 'success' && needs.test.result == 'success' && needs.terminal-integration.result == 'success' && needs.web-framework-integration.result == 'success'
     timeout-minutes: 20
     runs-on: ubuntu-latest
     # Permissions required for npm OIDC trusted publishing

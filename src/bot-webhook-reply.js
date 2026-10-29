@@ -25,12 +25,13 @@ export function webhookReplyScope(
   const canSend =
     typeof response.send === 'function' || typeof response.end === 'function';
   const send =
-    typeof response.send === 'function'
-      ? (payload) => response.send(payload)
-      : (payload) => {
+    typeof response.end === 'function' &&
+    typeof response.setHeader === 'function'
+      ? (payload) => {
           response.setHeader('content-type', 'application/json');
           return response.end(payload);
-        };
+        }
+      : (payload) => response.send(payload);
   const scoped = (base, style) => {
     const callApi = async (method, params, options) => {
       const available =

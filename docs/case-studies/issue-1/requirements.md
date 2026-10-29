@@ -877,3 +877,15 @@ constructor, with subclass overrides and `super` delegation. Frozen sources
 reproduce 34 failures among 37 cases; frozen declarations reproduce 21 diagnostics. These local
 contracts leave the recorded selected-SDK runtime limitations, complete proxy
 families and all wider unfinished acceptance criteria open.
+
+The [installed web-framework comparison](web-frameworks.md) advances the same
+R01/R05/R08/R13/R16/R17/R19 contracts through real Express, Koa, Fastify and Hono
+HTTP servers. Seventy-one comparisons and lifecycle cases pass locally on Node
+20/26, Bun and Deno. A frozen source runner reproduces four failures among 24
+cases, including enhanced Node responses accidentally sent as HTML; Node JSON
+ownership now takes precedence. Tested example bridges preserve explicit Koa and
+Fastify response ownership, and Hono can use the Fetch adapter for JSON object
+replies. Installed integration on other framework/provider families, complete
+SDK models/plugins, controlled delivery and all wider unfinished criteria remain
+open. The new CI matrix verifies the listed frameworks across three runtimes and
+three operating systems; its result is recorded after the commit.

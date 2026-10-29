@@ -912,3 +912,9 @@ scope. The constructor preserves the existing `Telegram.Message` and other
 model namespaces in TypeScript. [Agent examples and limits](docs/case-studies/issue-1/telegraf-agents.md)
 include portable declarations, finite TLS comparisons and recorded SDK/runtime
 differences.
+
+Installed Express/Koa/Fastify/Hono HTTP comparisons verify replies, authorization,
+parser limits, failures, concurrent requests and deadlines. Node JSON responses
+retain authority when frameworks also add a `send` method.
+[Framework migration examples and limits](docs/case-studies/issue-1/web-frameworks.md)
+include explicit Koa/Fastify response ownership and a Hono Fetch reply bridge.

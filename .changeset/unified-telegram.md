@@ -223,3 +223,7 @@ polling ownership.
 Control native Telegraf API and attachment connections through Node agents,
 retain bounded URL uploads and expose standalone Telegram construction with
 shared webhook scopes, subclass behavior and existing model namespaces.
+
+Preserve Node JSON response authority on framework-enhanced webhook responses,
+including Express responses that also expose a send method. Verify installed
+Express/Koa/Fastify/Hono HTTP integration with isolated pinned dependencies.

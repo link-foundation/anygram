@@ -1,5 +1,9 @@
 # Unified Telegram client: investigation and implementation
 
+The [installed framework comparison](web-frameworks.md) exercises actual
+Express/Koa/Fastify/Hono HTTP servers, reproduces and fixes enhanced Node response
+selection, and preserves checked migration bridges and SDK-specific differences.
+
 The [Telegraf agent and constructor comparison](telegraf-agents.md) exercises
 real API/attachment agents, bounded URL uploads and standalone Telegram views,
 while preserving model namespaces and recording actual SDK runtime differences.

@@ -1234,5 +1234,31 @@ Telegraf agent and standalone construction work plan:
       gates scan 168 production sources with zero clones; packaging permits 211
       entries. Main remains an ancestor, feedback is empty, and the 881-file
       paginated PR inventory has no deletions. Actual SDK declarations compile.
-- [ ] Commit/push only the prepared branch and verify exact-head CI.
+- [x] Commit/push only the prepared branch and verify exact-head CI. Head
+      88f3c2e4a501169cecf4a6ad8476c942104040dc passed every applicable job in
+      run 40951648982, created 2026-10-29T20:44:02Z after the 20:43:30Z commit.
 - [ ] Continue every unfinished framework, application and protocol criterion.
+
+Installed web-framework integration work plan:
+
+- [x] Review primary Express/Koa/Fastify/Hono server and routing contracts and pin
+      exact isolated test dependencies; production retains no framework dependency.
+- [x] Execute actual grammY and owned callbacks inside installed frameworks over
+      finite local HTTP servers, starting with reply/empty/unauthorized behavior.
+- [x] Reproduce and fix any integration failures before expanding to malformed
+      input, bounded bodies, concurrent responses and handler failures/deadlines.
+- [x] Verify Telegraf middleware inside applicable installed frameworks, add
+      automated CI execution and archive versions, primary sources and limits.
+      All 71 installed cases pass locally on Node 20/26, Bun and Deno. Four of 24
+      frozen cases reproduce the enhanced Node response bug. Common boundaries
+      explicitly retain known catcher/initialization differences; executable
+      Koa/Fastify/Hono bridges are verified against both actual SDKs.
+- [x] Run full runtime/static/native/wire/parser checks and review the change.
+      All 2,263 core tests pass per runtime; 71 installed-framework cases pass on
+      Node 20/26, Bun and Deno. The 27 native, eight wire and sixteen parser checks
+      pass, along with actual-SDK compilation and the bounded FIFO probe. Strict
+      gates scan 168 production sources with zero clones; packaging permits 211
+      entries. Main remains an ancestor and feedback is empty. The complete atomic
+      diff and new files are reviewed; the 899-file PR inventory has no removals.
+- [ ] Commit/push the atomic checkpoint and verify fresh exact-head CI, including
+      all nine new framework runtime/OS jobs. Keep wider criteria open.
