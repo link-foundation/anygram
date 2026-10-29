@@ -829,3 +829,11 @@ comparisons against the pinned SDK. Together with message/chat/update names,
 the eight modern model namespaces expose all 130 public names.
 [Component evidence](bot-component-types.md) preserves checked examples and
 recursive-label constraints; complete SDK/framework/application parity stays open.
+
+R01/R05/R08/R13/R16/R17/R19 webhook response follow-up adds per-update JSON
+response ownership, the actual SDK reply policies, selected-backend fallback,
+retired-scope cleanup and Fetch JSON responses. Thirty-one portable cases include
+sixteen actual-SDK comparisons, eight selected-client HTTP cases and three real
+incoming Node response cases. [Webhook evidence](bot-webhook-replies.md) retains
+the immutable failing-before reproduction. Full framework/server lifecycle and
+controlled delivery criteria remain unfinished.

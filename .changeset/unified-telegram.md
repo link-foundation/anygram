@@ -206,3 +206,6 @@ the complete downstream migration, with capture cancellation and upload recovery
 
 Expose public entity and button subtype names with required payloads and
 recursive rich-label constraints, retaining the general wire-model aliases.
+
+Own one JSON webhook response per update, preserve grammY and Telegraf reply
+policies, retain selected-client HTTP fallback and close retired response scopes.

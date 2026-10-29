@@ -6,6 +6,18 @@ const options = JSON.parse(
 );
 for (const [sourceName, targetName, sdk, namespace] of [
   [
+    'typed-grammy-webhook.ts',
+    'typed-grammy-webhook-fixture.ts',
+    'grammy',
+    '@grammyjs/types',
+  ],
+  [
+    'typed-telegraf-webhook.ts',
+    'typed-telegraf-webhook-fixture.ts',
+    'telegraf',
+    'telegraf/types',
+  ],
+  [
     'typed-grammy-components.ts',
     'typed-grammy-components-fixture.ts',
     'grammy',

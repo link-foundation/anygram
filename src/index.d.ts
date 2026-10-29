@@ -979,6 +979,7 @@ export interface PollingOptions {
   onStart?: (me?: Parameters) => unknown | Promise<unknown>;
 }
 export interface BotOptions extends Partial<BotApiOptions> {
+  client?: { canUseWebhookReply?: (method: string) => boolean };
   api?: BotApi | Anygram;
   botInfo?: Parameters;
   offset?: number;
@@ -989,6 +990,17 @@ export interface BotOptions extends Partial<BotApiOptions> {
     telegram?: TelegrafApi
   ) => CommonContext;
   polling?: boolean | PollingOptions;
+}
+/** A grammY-compatible, single-use JSON response sender for one update. */
+export interface WebhookReplyEnvelope {
+  send?: (payload: string) => void | Promise<void>;
+}
+/** Structural Node response contract; no Node ambient types are required. */
+export interface WebhookResponse {
+  readonly writableEnded?: boolean;
+  readonly headersSent?: boolean;
+  setHeader(name: string, value: string): unknown;
+  end(payload?: string): unknown;
 }
 export type MiddlewareLike<C extends CommonContext = Context> =
   | Middleware<C>
@@ -1110,7 +1122,10 @@ export declare class Bot<
   offset: number;
   catch(handler: BotErrorHandler<C>): this;
   init(): Promise<Parameters>;
-  handleUpdate(update: BotUpdate): Promise<void>;
+  handleUpdate(
+    update: BotUpdate,
+    response?: WebhookReplyEnvelope | WebhookResponse
+  ): Promise<void>;
   isRunning(): boolean;
   stop(): void;
   start(options?: PollingOptions): Promise<void>;
@@ -1141,7 +1156,10 @@ export declare class TelegramBot {
   api: ContextApi;
   telegram: TelegrafApi;
   catch(handler: BotErrorHandler): this;
-  handleUpdate(update: BotUpdate): Promise<void>;
+  handleUpdate(
+    update: BotUpdate,
+    response?: WebhookReplyEnvelope | WebhookResponse
+  ): Promise<void>;
   stop(): void;
   isRunning(): boolean;
   on(event: string, callback: (value: any) => unknown): this;

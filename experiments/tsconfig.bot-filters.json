@@ -14,6 +14,9 @@
     }
   },
   "include": [
+    "typed-webhook-response.ts",
+    "typed-grammy-webhook-fixture.ts",
+    "typed-telegraf-webhook-fixture.ts",
     "typed-grammy-filter-oracle.ts",
     "typed-filter-sdk-fixture.ts",
     "typed-telegraf-sdk-fixture.ts",

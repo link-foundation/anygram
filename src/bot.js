@@ -8,6 +8,7 @@ import { pollingKey, acquirePolling, validatePolling } from './polling.js';
 import { joinBytes } from './bytes.js';
 import { taskContext } from './task-context.js';
 import { callBotOperation } from './bot-operations.js';
+import { webhookReplyScope } from './bot-webhook-reply.js';
 
 /** Shared middleware runner usable with a native or adapted Bot API transport. */
 export class Bot extends Composer {
@@ -16,6 +17,7 @@ export class Bot extends Composer {
     const transport = options.api ?? new BotApi({ ...options, token });
     this.api = botApi(transport);
     this.telegram = botApi(transport, 'telegraf');
+    this.canUseWebhookReply = options.client?.canUseWebhookReply;
     this.botInfo = options.botInfo;
     this.offset = options.offset ?? 0;
     this.seen = new Set();
@@ -34,7 +36,7 @@ export class Bot extends Composer {
     this.botInfo ??= await this.api.getMe();
     return this.botInfo;
   }
-  handleUpdate(update) {
+  handleUpdate(update, response) {
     const context = this.dispatchContext.current();
     const depth = context ? context.value + 1 : 0;
     if (depth > 64) {
@@ -43,7 +45,7 @@ export class Bot extends Composer {
       );
     }
     const run = () =>
-      this.dispatchContext.run(depth, () => this.dispatch(update));
+      this.dispatchContext.run(depth, () => this.dispatch(update, response));
     if (context) {
       return run();
     }
@@ -51,25 +53,40 @@ export class Bot extends Composer {
     this.queue = task.catch(() => {});
     return task;
   }
-  async dispatch(update) {
-    if (!Number.isSafeInteger(update?.update_id)) {
-      throw new TypeError('Invalid Telegram update_id');
-    }
-    if (
-      this.seen.has(update.update_id) ||
-      this.processing.has(update.update_id)
-    ) {
-      return;
-    }
-    this.processing.add(update.update_id);
+  async dispatch(update, response) {
+    const scope = webhookReplyScope(
+      this.api,
+      this.telegram,
+      response,
+      this.canUseWebhookReply
+    );
     try {
-      return await this.#dispatchUpdate(update);
+      if (!Number.isSafeInteger(update?.update_id)) {
+        throw new TypeError('Invalid Telegram update_id');
+      }
+      if (
+        this.seen.has(update.update_id) ||
+        this.processing.has(update.update_id)
+      ) {
+        return;
+      }
+      this.processing.add(update.update_id);
+      try {
+        return await this.#dispatchUpdate(update, scope);
+      } finally {
+        this.processing.delete(update.update_id);
+      }
     } finally {
-      this.processing.delete(update.update_id);
+      scope.close();
     }
   }
-  async #dispatchUpdate(update) {
-    const ctx = new this.Context(update, this.api, this.botInfo, this.telegram);
+  async #dispatchUpdate(update, scope) {
+    const ctx = new this.Context(
+      update,
+      scope.api,
+      this.botInfo,
+      scope.telegram
+    );
     let result;
     try {
       await this.emitUpdate?.(update);
@@ -301,8 +318,17 @@ export function webhookCallback(
       return new Response('Invalid update', { status: 400 });
     }
     try {
-      await bot.handleUpdate(update);
-      return new Response('OK');
+      let payload;
+      await bot.handleUpdate(update, {
+        send: (body) => {
+          payload = body;
+        },
+      });
+      return payload === undefined
+        ? new Response('OK')
+        : new Response(payload, {
+            headers: { 'content-type': 'application/json' },
+          });
     } catch {
       return new Response('Update processing failed', { status: 500 });
     }

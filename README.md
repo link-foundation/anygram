@@ -880,3 +880,9 @@ Message replies and raw calls retain their content fields through public
 documents. [Checked examples](examples/typed-grammy-message-subtypes.ts) and
 [comparison evidence](docs/case-studies/issue-1/bot-message-subtype-types.md)
 describe the supported result refinements.
+
+`handleUpdate(update, response)` supports scoped JSON webhook replies and
+selected-backend HTTP fallback. grammY replies are opt-in; Telegraf uses its
+method allowlist and context-local flag. The Fetch callback can return the
+selected JSON operation. [Webhook evidence and limits](docs/case-studies/issue-1/bot-webhook-replies.md)
+includes actual-SDK comparisons and real Node response checks.

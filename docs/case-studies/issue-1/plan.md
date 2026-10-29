@@ -1106,5 +1106,30 @@ Entity and button subtype work plan:
       assignment/presence comparisons compile. Strict checks scan 155 sources
       with zero clones; packaging permits 198 entries. Main is an ancestor
       and all four feedback streams remain empty.
-- [ ] Commit/push the reviewed declaration change.
-- [ ] Update PR evidence and verify exact-head CI before continuing wider work.
+- [x] Commit/push the reviewed declaration change.
+- [x] Update PR evidence and verify exact-head CI before continuing wider work.
+      Head d4c76ce80b21943390dd4f762f247e0301194069 passed run 40930284379,
+      created 2026-10-29T18:23:04Z, including every applicable static, native
+      integration and runtime/OS check.
+
+Webhook response ownership work plan:
+
+- [x] Reproduce missing response envelopes against both actual SDKs before
+      implementation: 12 of 13 initial cases fail, including one-shot ownership,
+      nested/concurrent updates, policy selection and response failures.
+- [x] Preserve an immutable preceding-source reproduction and implement scoped
+      JSON replies without consuming uploads or replaying a claimed operation.
+- [x] Verify selected backends, retired scopes, errors and real HTTP responses;
+      add checked examples for the public response contracts.
+- [x] Run all appropriate static/runtime/package checks and review the change.
+      Frozen final tests reproduce 27 failures out of 31 and frozen declarations
+      produce five diagnostics. Current and actual-SDK fixtures compile. All
+      2,053 core tests pass on each of Node, Bun and Deno, as do 27 isolated native
+      checks and six Node 20 wire cases. Strict gates scan 156 production sources
+      with zero clones; packaging permits 199 entries. Main is an ancestor and
+      all four feedback streams remain empty. GitHub's 300-file diff limit is
+      preserved and handled with its paginated inventory and the local atomic
+      diff, including the new source, examples, tests and reproduction loader.
+- [ ] Commit/push the reviewed response-ownership change.
+- [ ] Update PR evidence and verify fresh exact-head CI.
+- [ ] Continue framework adapters and all wider unfinished acceptance criteria.
