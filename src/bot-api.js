@@ -2,6 +2,7 @@ import { TelegramError, botApiError } from './errors.js';
 import { methodProxy } from './requests.js';
 import { botTextParams } from './formatting.js';
 import { uploadBody } from './bot-api-upload.js';
+import { BotOperations } from './bot-operations.js';
 import {
   readResponseBytes,
   createRequestScope,
@@ -12,7 +13,7 @@ import {
 export { stringify } from './bot-api-upload.js';
 
 /** Dependency-free transport for every Bot API method, including local servers. */
-export class BotApi {
+export class BotApi extends BotOperations {
   #token;
   constructor({
     token,
@@ -22,6 +23,7 @@ export class BotApi {
     maxResponseBytes = 8 * 1024 * 1024,
     maxUploadBytes = 64 * 1024 * 1024,
   } = {}) {
+    super();
     if (typeof token !== 'string' || !token || /[\s/?#]/.test(token)) {
       throw new TypeError('A bot token without URL delimiters is required');
     }
@@ -139,45 +141,6 @@ export class BotApi {
       );
     }
     return envelope.result;
-  }
-
-  getMe(options) {
-    return this.callApi('getMe', {}, options);
-  }
-
-  sendMessage(chat, text, options = {}) {
-    return this.callApi('sendMessage', { ...options, chat_id: chat, text });
-  }
-
-  editMessage(chat, { id, text, ...options }) {
-    return this.callApi('editMessageText', {
-      ...options,
-      chat_id: chat,
-      message_id: id,
-      text,
-    });
-  }
-
-  deleteMessages(chat, ids) {
-    return this.callApi('deleteMessages', { chat_id: chat, message_ids: ids });
-  }
-
-  forwardMessages(chat, { fromPeer, messages, ...options }) {
-    return this.callApi('forwardMessages', {
-      ...options,
-      chat_id: chat,
-      from_chat_id: fromPeer,
-      message_ids: messages,
-    });
-  }
-
-  sendFile(chat, { file, caption, ...options }) {
-    return this.callApi('sendDocument', {
-      ...options,
-      chat_id: chat,
-      document: file,
-      caption,
-    });
   }
 
   async downloadMedia(fileId, options = {}) {

@@ -7,6 +7,11 @@ superiority requested in [issue #1](https://github.com/link-foundation/anygram/i
 The [requirement ledger](requirements.md) keeps those acceptance criteria open.
 All work is in [PR #2](https://github.com/link-foundation/anygram/pull/2).
 
+The [shared bot operation checkpoint](bot-operations.md) verifies identity, text
+send/edit, batch deletion/forwarding and document sends through all four actual
+bot transports. Fifteen regressions cover exact wire parameters, cancellation,
+preparation deadlines, object options and grammY zero-payload signatures.
+
 Historical checkpoints below reported duplication-check exit status. A later
 investigation found the inherited configuration selected the nonexistent source
 format `console`, so those checks scanned no files. They did not establish

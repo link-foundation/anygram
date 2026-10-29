@@ -87,3 +87,8 @@ Preserve vendor file instances and support legacy multipart formData contracts.
 Share explicit InputFile source preparation with account cloud and encrypted
 uploads, including part-capacity/byte limits, cancellation, source cleanup and
 selected-backend serializers. Preserve legacy random-access upload behavior.
+
+Share canonical bot identity, send, edit, delete, forward and document operations
+across all four bot transports. Separate cancellation/deadline controls from
+payload fields, preserve explicit object-message options, and retain grammY's
+zero-payload raw method signatures.

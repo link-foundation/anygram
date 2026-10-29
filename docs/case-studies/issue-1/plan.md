@@ -610,8 +610,10 @@ Account InputFile work plan:
 - [x] Verify actual serializer bytes, mtcute writer, albums, source forms and cleanup.
 - [x] Run all 670 tests on Node, Bun and Deno; strict checks and package audit.
 - [x] Run isolated native terminal, Telegraf Node 20 wire and FIFO probes.
-- [ ] Review the complete atomic diff, merge fresh main if needed, commit and push.
-- [ ] Verify fresh CI by timestamp and SHA; preserve/analyze any failing logs.
+- [x] Review the complete atomic diff, merge fresh main if needed, commit and push.
+      Account checkpoint: 79d5645916e55d802b289e9a1601ca015e672893.
+- [x] Verify fresh CI by timestamp and SHA; preserve/analyze any failing logs.
+      All jobs passed in run 40858010735, completed 2026-10-29T10:37:46Z.
 - [ ] Continue all remaining criteria, including the newer-runtime vendor encoder
       and complete downstream migrations. Keep PR #2 draft and unmerged.
 
@@ -621,4 +623,27 @@ complete types and schema regeneration pass, with zero clones across 83 sources.
 The npm dry run has 126 permitted entries. Thirteen isolated native terminal
 cases, two actual Telegraf Node 20 wire cases and the separate bounded FIFO
 probe pass. Fresh main is an ancestor. Fresh CI is still required for this head;
-the preceding vendor head 0be0437 is queued/running without a failure observed.
+the preceding vendor head 0be0437 passed all gates in run 40856101337,
+created 2026-10-29T10:15:22Z. The account head passed every job in run
+40858010735, created 2026-10-29T10:29:50Z and completed 2026-10-29T10:37:46Z.
+
+Shared high-level bot operation work plan:
+
+- [x] Refresh the complete issue and all three feedback streams; no comments.
+- [x] Reproduce fourteen failures before implementation, plus grammY raw signatures.
+- [x] Share six canonical translations across all four selected bot transports.
+- [x] Verify actual automatic SDK construction and finite local HTTP requests.
+- [x] Separate request controls and preserve explicit object-message options.
+- [x] Run 685 tests on all runtimes, Node 20 focused tests and strict gates.
+- [ ] Review the atomic diff, audit the package, commit/push and inspect fresh CI.
+- [ ] Continue full backend/framework/downstream criteria; keep PR draft/unmerged.
+
+See [bot operation evidence](bot-operations.md). Node, Bun and Deno pass all 685
+cases; the focused fifteen cases also pass Node 20.18.3. Strict gates pass with
+zero clones across 84 production sources. The full Bun rerun passes after
+correcting declared gzip decoding in the independent oracle. This checkpoint
+does not close any broader open criterion.
+
+Thirteen native terminal integrations, two actual Telegraf Node 20 multipart
+cases and the bounded Linux FIFO probe pass. The package audit has 127 permitted
+entries. Fresh main is an ancestor; every atomic production change was reviewed.

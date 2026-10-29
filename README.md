@@ -44,6 +44,15 @@ to 64 MiB and accepts `{ maxBytes, signal, timeout }`. MTProto HTTPS responses
 default to 16 MiB (`maxBytes` in transport options). Exceeding a response limit
 raises `TelegramError` with type `RESPONSE_TOO_LARGE` and releases the body reader.
 Bot API servers and custom networking can be selected with `baseUrl` and `fetch`.
+
+The unified `getMe`, `sendMessage`, `editMessage`, `deleteMessages`,
+`forwardMessages` and `sendFile` methods share their translation across native,
+grammY, Telegraf and node-telegram-bot-api transports. Request options `signal`
+and `timeout` control preparation and dispatch without entering Telegram payloads.
+For object-form `sendMessage` text, explicit third-argument options override
+embedded options. Raw and extended vendor APIs remain available. See the
+[actual-backend wire comparisons](docs/case-studies/issue-1/bot-operations.md).
+
 Native Bot API uploads accept bytes, Blobs, `{ data, filename }` and
 `{ source, filename }`, including nested albums and thumbnails. Use
 `new InputFile(source, filename)` for explicit local paths, file/HTTP URL objects,

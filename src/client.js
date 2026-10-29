@@ -108,7 +108,11 @@ export class Anygram {
 
   sendMessage(peer, text, options = {}) {
     if (text && typeof text === 'object') {
-      return this.execute('sendMessage', peer, text.message ?? text.text, text);
+      const { message, text: content, ...embedded } = text;
+      return this.execute('sendMessage', peer, message ?? content, {
+        ...embedded,
+        ...options,
+      });
     }
     return this.execute('sendMessage', peer, text, options);
   }

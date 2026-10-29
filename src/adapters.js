@@ -3,6 +3,7 @@ import { gramRequest, objectRequest, nativeTlObjects } from './requests.js';
 import { mtcuteRequest } from './mtcute.js';
 import { RpcOperations } from './operations.js';
 import { botRequester } from './bot-backend.js';
+import { BotOperations } from './bot-operations.js';
 import { InputFile } from './input-file.js';
 
 const styles = {
@@ -63,6 +64,16 @@ function hasOwnedUpload(operation, args) {
   );
 }
 
+function useCanonical(style, client, method, operation, args) {
+  return (
+    style !== 'gramjs' ||
+    canonicalOperations.has(operation) ||
+    typeof client[method] !== 'function' ||
+    hasFormattedEntities(operation, args) ||
+    hasOwnedUpload(operation, args)
+  );
+}
+
 export function createAdapter(
   name,
   client,
@@ -95,7 +106,7 @@ export function createAdapter(
       }
       return (
         typeof client[methods[operation] ?? operation] === 'function' ||
-        (adapter.supports('invoke') &&
+        ((bot || adapter.supports('invoke')) &&
           typeof operations[operation] === 'function')
       );
     },
@@ -129,13 +140,9 @@ export function createAdapter(
     async execute(operation, args) {
       const method = methods[operation] ?? operation;
       if (
-        adapter.supports('invoke') &&
+        (bot || adapter.supports('invoke')) &&
         typeof operations[operation] === 'function' &&
-        (style !== 'gramjs' ||
-          canonicalOperations.has(operation) ||
-          typeof client[method] !== 'function' ||
-          hasFormattedEntities(operation, args) ||
-          hasOwnedUpload(operation, args))
+        useCanonical(style, client, method, operation, args)
       ) {
         return operations[operation](...args);
       }
@@ -155,6 +162,8 @@ export function createAdapter(
       },
     }),
   };
-  const operations = new RpcOperations(adapter.invoke.bind(adapter));
+  const operations = bot
+    ? new BotOperations(adapter.bot)
+    : new RpcOperations(adapter.invoke.bind(adapter));
   return adapter;
 }

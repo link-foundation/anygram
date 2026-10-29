@@ -14,6 +14,16 @@ export async function sendFrames(api: BotApi, chat: bigint) {
   });
 }
 
+export async function botOperations(
+  client: Anygram,
+  api: BotApi,
+  signal: AbortSignal
+) {
+  await client.getMe({ signal, timeout: 1000 });
+  await client.deleteMessages(7n, [2, 3], { signal, timeout: 1000 });
+  await api.deleteMessages(7n, [2, 3], { signal });
+}
+
 export async function uploadAccountFiles(
   client: Anygram,
   invoke: SecretChatInvoke

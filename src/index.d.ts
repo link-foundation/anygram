@@ -327,7 +327,7 @@ export declare class Anygram {
   connect(): Promise<unknown>;
   disconnect(): Promise<unknown>;
   start(options?: Parameters): Promise<unknown>;
-  getMe(): Promise<unknown>;
+  getMe(options?: RequestOptions): Promise<unknown>;
   getMessages(peer: unknown, options?: Parameters): Promise<unknown>;
   getDialogs(options?: Parameters): Promise<unknown>;
   iterDialogs(options?: DialogOptions): AsyncIterableIterator<DialogEntry>;
@@ -363,7 +363,11 @@ export declare class Anygram {
   iterDownload(media: unknown, options?: Parameters): AsyncIterable<Uint8Array>;
   downloadMedia(media: unknown, options?: Parameters): Promise<unknown>;
   editMessage(peer: unknown, options: Parameters): Promise<unknown>;
-  deleteMessages(peer: unknown, ids: number[]): Promise<unknown>;
+  deleteMessages(
+    peer: unknown,
+    ids: number[],
+    options?: RequestOptions
+  ): Promise<unknown>;
   forwardMessages(peer: unknown, options: Parameters): Promise<unknown>;
   iterMessages(peer: unknown, options?: Parameters): AsyncIterable<Parameters>;
   searchMessages(
@@ -434,7 +438,11 @@ export declare class BotApi {
     options?: Parameters
   ): Promise<unknown>;
   editMessage(chat: unknown, options: Parameters): Promise<unknown>;
-  deleteMessages(chat: unknown, ids: number[]): Promise<unknown>;
+  deleteMessages(
+    chat: unknown,
+    ids: number[],
+    options?: RequestOptions
+  ): Promise<unknown>;
   forwardMessages(chat: unknown, options: Parameters): Promise<unknown>;
   sendFile(chat: unknown, options: Parameters): Promise<unknown>;
   downloadMedia(
