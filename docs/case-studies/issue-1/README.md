@@ -1,5 +1,11 @@
 # Unified Telegram client: investigation and implementation
 
+The [context inspection comparison](bot-context-filters.md) covers all 1,140
+concrete grammY filter paths, 11 checker factories, SDK-specific entity/text
+extraction and reaction summaries/views. Its 104 cases include immutable
+reproduction, public hooks and Telegraf context data aliases. Full Composer
+semantics and SDK type narrowing remain open.
+
 The [context message action comparison](bot-context-message-actions.md) verifies
 29 grammY and 14 Telegraf scoped helpers plus persistent chat action lifecycle.
 It compares inline/business edits, copying/forwarding, reaction formats,

@@ -1,0 +1,52 @@
+// Public filter-key facts; independently compiled by bot-filter-query.js.
+// Regenerate: node experiments/generate-context-filter-facts.mjs
+export const filterRoot = 24;
+export const filterNodes = Object.freeze([
+  '',
+  'user@0 hidden_user@0 chat@0 channel@0',
+  'is_video@0 is_animated@0 premium_animation@0',
+  'mention@0 hashtag@0 cashtag@0 bot_command@0 url@0 email@0 phone_number@0 bold@0 italic@0 underline@0 strikethrough@0 spoiler@0 blockquote@0 expandable_blockquote@0 code@0 pre@0 text_link@0 text_mention@0 custom_emoji@0 date_time@0',
+  'url@0 prefer_small_media@0 prefer_large_media@0 show_above_text@0',
+  'only_new_members@0 has_public_winners@0',
+  'only_new_members@0 was_refunded@0',
+  'can_be_upgraded@0 is_upgrade_separate@0 is_private@0',
+  'transfer_star_count@0 text@0 is_private@0',
+  'new_owner@0',
+  'me@0 is_bot@0 is_premium@0 added_to_attachment_menu@0',
+  'is_name_implicit@0',
+  'name@0 icon_custom_emoji_id@0',
+  'others_can_add_tasks@0 others_can_mark_tasks_as_done@0',
+  'forward_origin@1 is_topic_message@0 is_automatic_forward@0 guest_query_id@0 business_connection_id@0 text@0 rich_message@0 animation@0 audio@0 document@0 live_photo@0 paid_media@0 photo@0 sticker@2 story@0 video@0 video_note@0 voice@0 contact@0 dice@0 game@0 poll@0 venue@0 location@0 entities@3 caption_entities@3 caption@0 link_preview_options@4 effect_id@0 paid_star_count@0 has_media_spoiler@0 new_chat_title@0 new_chat_photo@0 delete_chat_photo@0 message_auto_delete_timer_changed@0 pinned_message@0 invoice@0 proximity_alert_triggered@0 chat_background_set@0 giveaway_created@0 giveaway@5 giveaway_winners@6 giveaway_completed@0 gift@7 gift_upgrade_sent@7 unique_gift@8 paid_message_price_changed@0 video_chat_scheduled@0 video_chat_started@0 video_chat_ended@0 video_chat_participants_invited@0 web_app_data@0 direct_messages_topic@0 chat_owner_left@9 chat_owner_changed@0 new_chat_members@10 community_chat_joined@0 left_chat_member@10 group_chat_created@0 supergroup_chat_created@0 migrate_to_chat_id@0 migrate_from_chat_id@0 successful_payment@0 refunded_payment@0 users_shared@0 chat_shared@0 connected_website@0 managed_bot_created@0 write_access_allowed@0 passport_data@0 boost_added@0 forum_topic_created@11 forum_topic_edited@12 forum_topic_closed@0 forum_topic_reopened@0 general_forum_topic_hidden@0 general_forum_topic_unhidden@0 checklist@13 checklist_tasks_done@0 checklist_tasks_added@0 community_chat_added@0 community_chat_removed@0 poll_option_added@0 poll_option_deleted@0 suggested_post_info@0 suggested_post_approved@0 suggested_post_approval_failed@0 suggested_post_declined@0 suggested_post_paid@0 suggested_post_refunded@0 sender_boost_count@0',
+  'forward_origin@1 is_topic_message@0 is_automatic_forward@0 guest_query_id@0 business_connection_id@0 text@0 rich_message@0 animation@0 audio@0 document@0 live_photo@0 paid_media@0 photo@0 sticker@2 story@0 video@0 video_note@0 voice@0 contact@0 dice@0 game@0 poll@0 venue@0 location@0 entities@3 caption_entities@3 caption@0 link_preview_options@4 effect_id@0 paid_star_count@0 has_media_spoiler@0 new_chat_title@0 new_chat_photo@0 delete_chat_photo@0 message_auto_delete_timer_changed@0 pinned_message@0 invoice@0 proximity_alert_triggered@0 chat_background_set@0 giveaway_created@0 giveaway@5 giveaway_winners@6 giveaway_completed@0 gift@7 gift_upgrade_sent@7 unique_gift@8 paid_message_price_changed@0 video_chat_scheduled@0 video_chat_started@0 video_chat_ended@0 video_chat_participants_invited@0 web_app_data@0 channel_chat_created@0 direct_message_price_changed@0 is_paid_post@0',
+  'can_reply@0 is_enabled@0',
+  'data@0 game_short_name@0',
+  'from@10',
+  'emoji@0 custom_emoji@0 paid@0',
+  'old_reaction@19 new_reaction@19',
+  'reactions@19',
+  'canceled@0 active@0 failed@0',
+  'state@22',
+  'message@14 edited_message@14 channel_post@15 edited_channel_post@15 business_connection@16 business_message@14 edited_business_message@14 deleted_business_messages@0 guest_message@14 stopped_message_generation@0 inline_query@0 chosen_inline_result@0 callback_query@17 shipping_query@0 pre_checkout_query@0 poll@0 poll_answer@0 my_chat_member@18 chat_member@18 managed_bot@0 chat_join_request@0 message_reaction@20 message_reaction_count@21 chat_boost@0 removed_chat_boost@0 purchased_paid_media@0 subscription@23',
+]);
+export const filterShortcuts = [
+  {
+    '': ['message', 'channel_post'],
+    msg: ['message', 'channel_post'],
+    edit: ['edited_message', 'edited_channel_post'],
+  },
+  {
+    '': ['entities', 'caption_entities'],
+    media: ['photo', 'live_photo', 'video'],
+    file: [
+      'photo',
+      'live_photo',
+      'animation',
+      'audio',
+      'document',
+      'video',
+      'video_note',
+      'voice',
+      'sticker',
+    ],
+  },
+];

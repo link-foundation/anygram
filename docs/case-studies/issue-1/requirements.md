@@ -694,3 +694,18 @@ All 1,780 core cases pass on Node, Bun and Deno; the 119 focused Node 20 cases,
 gates report zero clones across 102 production sources, exact regeneration
 and 145 permitted package entries. Context filters/entities, complete models,
 framework compatibility and every other open criterion remain unfinished.
+
+The [context inspection comparison](bot-context-filters.md) advances
+R01/R05/R08/R13/R16/R17/R19 with all 1,140 pinned concrete grammY filter paths,
+11 checker factories and their instance helpers, SDK-specific entity sources
+and reaction summaries/views. Its final 104-case suite reproduces 102 failures
+with the fixed preceding context entry. It preserves static checker hooks,
+registration snapshots, exact validation errors, Telegraf raw-update predicates,
+text/passport/web-app data and webhook-control aliases. A shared independent
+compiler uses archived public facts with finite registration/cache limits.
+All 1,884 core tests pass on Node, Bun and Deno; all 104 focused Node 20 cases
+pass. Strict gates report zero clones across 111 production sources, exact
+regeneration and 154 permitted package entries. Every pinned context member
+has runtime inventory coverage. Full SDK type narrowing, Composer scoping,
+webhook fast responses, plugin/model parity and every other open acceptance
+criterion remain unfinished.

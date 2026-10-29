@@ -7,6 +7,9 @@ import { installContextDelivery } from './bot-context-delivery.js';
 import { installContextAdministration } from './bot-context-admin.js';
 import { installContextServices } from './bot-context-services.js';
 import { installContextMessageActions } from './bot-context-message-actions.js';
+import { installContextCheckers } from './bot-context-checkers.js';
+import { installContextContent } from './bot-context-content.js';
+import { installTelegrafData } from './bot-context-telegraf-data.js';
 import { contextRequired } from './bot-context-scope.js';
 import {
   botNoPayloadMethods,
@@ -33,6 +36,7 @@ export function botApi(transport, style = 'grammy') {
   const operation = (method, params, options, signal) =>
     callBotOperation({ callApi: invoke }, method, params, options, signal);
   const positional = {
+    ...(style === 'telegraf' && { webhookReply: true }),
     raw,
     callApi: call,
     getFileLink: (...args) => transport.getFileLink(...args),
@@ -118,8 +122,8 @@ export class Context {
 export class TelegrafContext extends Context {
   constructor(update, api, me, telegram) {
     super(update, api, me, telegram);
-    Object.defineProperty(this, 'me', { value: me?.username, writable: false });
-    Object.defineProperty(this, 'botInfo', { value: me });
+    Object.defineProperty(this, 'botInfo', { value: me, writable: true });
+    Object.defineProperty(this, 'me', { get: () => this.botInfo?.username });
   }
   get updateType() {
     for (const field in this.update) {
@@ -146,6 +150,11 @@ installContextServices(Context);
 installContextServices(TelegrafContext, 'telegraf');
 installContextMessageActions(Context);
 installContextMessageActions(TelegrafContext, 'telegraf');
+installContextCheckers(Context);
+installContextCheckers(TelegrafContext, 'telegraf');
+installContextContent(Context);
+installContextContent(TelegrafContext, 'telegraf');
+installTelegrafData(TelegrafContext);
 
 export function compose(middleware) {
   return (ctx, last = () => Promise.resolve()) => {

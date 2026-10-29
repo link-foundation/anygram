@@ -47,6 +47,8 @@ export {
   WizardContextWizard,
 } from './scenes.js';
 export { Context, TelegrafContext } from './bot-context.js';
+export { matchFilter } from './bot-filter-query.js';
+export { ReactionList, MessageReactions } from './bot-reactions.js';
 export {
   session,
   grammySession,

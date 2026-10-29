@@ -25,6 +25,31 @@ import type {
   GrammyContextMessageActions,
   TelegrafContextMessageActions,
 } from './bot-context-message-actions.js';
+import type {
+  ContextCheckers,
+  GrammyContextCheckers,
+  TelegrafContextCheckers,
+  FilterQuery,
+} from './bot-context-checkers.js';
+import type {
+  GrammyContextContent,
+  TelegrafContextContent,
+} from './bot-context-content.js';
+export type {
+  FilterQuery,
+  ReactionTrigger,
+  TelegrafUpdateFilter,
+} from './bot-context-checkers.js';
+export type { ReactionSummary } from './bot-context-content.js';
+export {
+  ReactionList,
+  MessageReactions,
+  type Reaction,
+  type ReactionArgument,
+} from './bot-reactions.js';
+export declare function matchFilter(
+  filter: FilterQuery
+): (ctx: Context) => boolean;
 export { Api } from './api.js';
 export type {
   TlObject,
@@ -746,6 +771,7 @@ export interface ContextApi extends BotContextApi, GrammyPositionalApi {
   ): Promise<unknown>;
 }
 export interface TelegrafApi extends BotContextApi, TelegrafPositionalApi {
+  webhookReply: boolean;
   editMessageText(
     chat: unknown,
     id: number | undefined,
@@ -761,8 +787,11 @@ export interface Context
     GrammyContextDelivery,
     GrammyContextAdministration,
     GrammyContextServices,
-    GrammyContextMessageActions {}
+    GrammyContextMessageActions,
+    GrammyContextCheckers,
+    GrammyContextContent {}
 export declare class Context {
+  static has: ContextCheckers;
   constructor(
     update: BotUpdate,
     api: ContextApi,
@@ -823,6 +852,9 @@ export type CommonContext = Omit<
   | keyof GrammyContextAdministration
   | keyof GrammyContextServices
   | keyof GrammyContextMessageActions
+  | keyof GrammyContextCheckers
+  | keyof GrammyContextContent
+  | 'botInfo'
 >;
 export interface TelegrafContext
   extends
@@ -831,6 +863,8 @@ export interface TelegrafContext
     TelegrafContextAdministration,
     TelegrafContextServices,
     TelegrafContextMessageActions,
+    TelegrafContextCheckers,
+    TelegrafContextContent,
     Omit<GrammyContextAdministration, keyof TelegrafContextAdministration>,
     Omit<GrammyContextServices, keyof TelegrafContextServices>,
     Omit<GrammyContextMessageActions, keyof TelegrafContextMessageActions> {

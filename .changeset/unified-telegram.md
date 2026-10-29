@@ -150,3 +150,9 @@ checklist targets, ephemeral recipients and SDK-specific reaction formats.
 Preserve public override calls and explicit deletion/request extensions. Add
 Telegraf persistent chat action lifecycle and optional disabled-by-default error
 tracing, clearing timers after callback completion or failure.
+
+Compile pinned public grammY filter facts independently, with bounded query
+registration/cache state, context checker factories and SDK validation semantics.
+Preserve SDK-specific entity/text sources, reaction summaries/views and Telegraf
+passport/web-app/telegram/webhook aliases, including dynamic bot usernames.
+Expose the standalone filter predicate and indexed reaction-list utilities.

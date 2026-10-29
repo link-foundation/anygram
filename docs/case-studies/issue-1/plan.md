@@ -869,5 +869,28 @@ Context message actions work plan:
       declaration regeneration; packaging permits 145 entries. All 26 native
       checks, two vendor wire cases and bounded FIFO cleanup pass. Main remains
       an ancestor. Source, tests, declarations and atomic diff were reviewed.
-- [ ] Commit/push message actions and inspect exact-head CI.
+- [x] Commit/push message actions and inspect exact-head CI. Head a008885
+      passed run 40891270390, created 2026-10-29T14:25:12Z and completed
+      2026-10-29T14:27:48Z.
 - [ ] Continue all remaining independent issue requirements.
+
+Context filters and entities work plan:
+
+- [x] Inventory the pinned grammY filter keys, shortcuts and context checker
+      factories; compare Telegraf raw-update predicates, text and entities.
+- [x] Write actual-SDK oracle regressions before implementation, covering all
+      public paths, shortcut/error semantics, match state and source precedence.
+- [x] Implement an independent bounded filter compiler from archived public
+      facts, context checker factories and SDK-specific entity extraction.
+- [x] Add declarations, checked examples, immutable reproduction and evidence.
+      All 104 focused cases pass. The fixed preceding entry reproduces 102
+      failures. All 1,140 concrete filter paths and every pinned context member
+      have oracle/inventory coverage; complete type narrowing remains open.
+- [x] Pass local runtime/static/native/vendor/FIFO/package gates and review.
+      All 1,884 core cases pass on Node, Bun and Deno; 104 focused cases pass
+      on Node 20. Strict checks scan 111 production sources with zero clones,
+      compile declarations/examples and regenerate exactly. All 26 native
+      checks, two vendor wire cases and the bounded FIFO probe pass.
+      Packaging permits 154 entries, and main remains an ancestor.
+- [ ] Commit/push context inspection and inspect fresh CI by exact SHA/time.
+- [ ] Continue the Composer filter/scoping and all wider issue requirements.
