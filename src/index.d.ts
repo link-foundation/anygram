@@ -186,6 +186,21 @@ export interface DialogOptions extends RequestOptions {
   /** Telegram peer folders: main (0) or archive (1); omitted includes both. */
   folderId?: 0 | 1;
 }
+export type TelegramChatLink =
+  | { type: 'public'; username: string; messageId?: number; threadId?: number }
+  | { type: 'invite'; hash: string }
+  | { type: 'phone'; phone: string }
+  | {
+      type: 'privateMessage';
+      channelId: bigint;
+      messageId: number;
+      threadId?: number;
+    };
+/** Parse chat destinations without performing network requests or granting membership. */
+export declare function parseTelegramLink(
+  input: string,
+  options?: { domains?: readonly string[] }
+): TelegramChatLink;
 export declare class Anygram {
   constructor(options?: ClientOptions);
   adapters: Adapter[];
@@ -231,8 +246,8 @@ export declare class Anygram {
   getMessages(peer: unknown, options?: Parameters): Promise<unknown>;
   getDialogs(options?: Parameters): Promise<unknown>;
   iterDialogs(options?: DialogOptions): AsyncIterableIterator<DialogEntry>;
-  getEntity(peer: unknown): Promise<unknown>;
-  getInputEntity(peer: unknown): Promise<TlRequest>;
+  getEntity(peer: unknown, options?: RequestOptions): Promise<unknown>;
+  getInputEntity(peer: unknown, options?: RequestOptions): Promise<TlRequest>;
   getContacts(options?: RequestOptions): Promise<Parameters>;
   getGreetingStickers(options?: RequestOptions): Promise<Parameters[]>;
   downloadFile(location: TlRequest, options?: Parameters): Promise<Uint8Array>;
@@ -271,9 +286,9 @@ export declare class Anygram {
     query: string,
     options?: Parameters
   ): Promise<Parameters[]>;
-  resolvePeer(peer: unknown): Promise<TlRequest>;
-  joinChat(peer: unknown): Promise<unknown>;
-  leaveChat(peer: unknown): Promise<unknown>;
+  resolvePeer(peer: unknown, options?: RequestOptions): Promise<TlRequest>;
+  joinChat(peer: unknown, options?: RequestOptions): Promise<unknown>;
+  leaveChat(peer: unknown, options?: RequestOptions): Promise<unknown>;
   archiveChat(peer: unknown, options?: Parameters): Promise<unknown>;
   muteChat(peer: unknown, options?: Parameters): Promise<unknown>;
   addContact(peer: unknown, options?: Parameters): Promise<unknown>;

@@ -156,6 +156,19 @@ early iterator closure are supported. `getDialogs` retains its existing backend
 return value. The [typed dialog example](examples/typed-dialogs.ts) builds a
 group membership index and applies mute/archive with the returned access hashes.
 
+`parseTelegramLink(text, { domains })` identifies public usernames, invite hashes,
+phone links and public/private message links without network requests. It handles
+`t.me`, `telegram.me`, `telegram.dog`, valid username subdomains and `tg:` forms;
+`domains` explicitly allows additional hosts from Telegram's `me_url_prefix`.
+Message/thread IDs are validated integers and private channel IDs remain bigint.
+Unsupported link kinds and malformed or untrusted URLs raise `TypeError`.
+Shared `joinChat` and peer resolution use this parser. Private message links
+resolve only through a previously loaded access hash and cannot grant membership;
+`joinChat` raises `INVITE_REQUIRED`. Numeric phone links resolve through
+`contacts.resolvePhone` and cannot be imported as invites. Layer-232 successful
+join replies retain their wrapper and cache the nested peers for later settings.
+Approval errors and verification replies remain explicit server outcomes.
+
 `Session` can import Anygram, GramJS/teleproto, and Telethon string sessions.
 Use `session.save('gramjs')` to export an authorized portable session for
 GramJS/teleproto. The optional client factory uses in-memory string sessions,

@@ -4,6 +4,7 @@ import { MediaOperations } from './media.js';
 import { randomId } from './random.js';
 import { mtprotoTextParams } from './formatting.js';
 import { iterateDialogs } from './dialogs.js';
+import { parseTelegramLink } from './chat-links.js';
 // Normalize raw client objects without changing exact IDs or byte buffers.
 export function normalize(value) {
   if (Array.isArray(value)) {
@@ -86,6 +87,7 @@ export class RpcOperations extends MediaOperations {
   }
 
   async rpc(method, params = {}, options) {
+    options?.signal?.throwIfAborted();
     const result = normalize(
       await this.invoke(requestOf(method, mtprotoTextParams(params)), options)
     );
@@ -94,6 +96,9 @@ export class RpcOperations extends MediaOperations {
   }
 
   remember(result) {
+    if (result?._ === 'messages.chatInviteJoinResultOk') {
+      result = result.updates;
+    }
     if (!result || typeof result !== 'object') {
       return;
     }
@@ -161,7 +166,8 @@ export class RpcOperations extends MediaOperations {
     return this.inputPeer(peer);
   }
 
-  async resolvePeer(peer) {
+  async resolvePeer(peer, options) {
+    options?.signal?.throwIfAborted();
     if (peer === 'me' || peer === 'self') {
       return { _: 'inputPeerSelf' };
     }
@@ -169,8 +175,8 @@ export class RpcOperations extends MediaOperations {
       return this.resolveObjectPeer(peer);
     }
     const text = String(peer);
-    if (/^(?:@|https:\/\/t.me\/)?[a-zA-Z][\w]{2,}$/.test(text)) {
-      return await this.resolveUsername(text);
+    if (!/^-?\d+$/.test(text)) {
+      return await this.resolveLink(parseTelegramLink(text), options);
     }
     if (typeof peer === 'number' && !Number.isSafeInteger(peer)) {
       throw new RangeError('Peer IDs require exact bigint or decimal strings');
@@ -191,13 +197,36 @@ export class RpcOperations extends MediaOperations {
     );
   }
 
-  async resolveUsername(text) {
-    const username = text.replace(/^(?:@|https:\/\/t.me\/)/, '').toLowerCase();
+  async resolveLink(link, options) {
+    if (link.type === 'public') {
+      return this.resolveUsername(link.username, options);
+    }
+    if (link.type === 'privateMessage') {
+      return this.resolvePeer(
+        { _: 'peerChannel', channel_id: link.channelId },
+        options
+      );
+    }
+    if (link.type === 'phone') {
+      return this.resolvedPeer(
+        await this.rpc('contacts.resolvePhone', { phone: link.phone }, options)
+      );
+    }
+    throw new TypeError('Invite links must be imported with joinChat');
+  }
+
+  async resolveUsername(username, options) {
+    username = username.toLowerCase();
     const cached = this.peers.get(`@${username}`);
     if (cached) {
       return this.inputPeer(cached);
     }
-    const result = await this.rpc('contacts.resolveUsername', { username });
+    return this.resolvedPeer(
+      await this.rpc('contacts.resolveUsername', { username }, options)
+    );
+  }
+
+  resolvedPeer(result) {
     const tag = result.peer._.replace('peer', '').toLowerCase();
     return this.inputPeer(this.peers.get(`${tag}:${result.peer[`${tag}_id`]}`));
   }
@@ -212,14 +241,14 @@ export class RpcOperations extends MediaOperations {
     )[0];
   }
 
-  getInputEntity(peer) {
-    return this.resolvePeer(peer);
+  getInputEntity(peer, options) {
+    return this.resolvePeer(peer, options);
   }
 
   async getEntity(peer, options) {
-    const resolved = await this.resolvePeer(peer);
+    const resolved = await this.resolvePeer(peer, options);
     if (resolved._ === 'inputPeerSelf') {
-      return this.getMe();
+      return this.getMe(options);
     }
     const type = resolved._.replace('inputPeer', '').toLowerCase();
     const id = resolved[`${type}_id`];
@@ -272,7 +301,7 @@ export class RpcOperations extends MediaOperations {
       {
         _: 'inputPeerPhotoFileLocation',
         big,
-        peer: await this.resolvePeer(entity),
+        peer: await this.resolvePeer(entity, options),
         photo_id: entity.photo.photo_id,
       },
       { dc: entity.photo.dc_id, ...options }
@@ -291,7 +320,7 @@ export class RpcOperations extends MediaOperations {
       'messages.sendMessage',
       {
         ...params,
-        peer: await this.resolvePeer(peer),
+        peer: await this.resolvePeer(peer, options),
         message: text,
         random_id: params.random_id ?? randomId(),
       },
@@ -300,7 +329,7 @@ export class RpcOperations extends MediaOperations {
   }
 
   async getMessages(peer, options = {}) {
-    const input = await this.resolvePeer(peer);
+    const input = await this.resolvePeer(peer, options);
     const params = objectRequest(requestOf('messages.getHistory', options));
     if (options.ids) {
       const id = []
@@ -356,7 +385,7 @@ export class RpcOperations extends MediaOperations {
   async editMessage(peer, { id, text, message = text, ...options }) {
     return this.rpc(
       'messages.editMessage',
-      { ...options, peer: await this.resolvePeer(peer), id, message },
+      { ...options, peer: await this.resolvePeer(peer, options), id, message },
       options
     );
   }
@@ -373,7 +402,7 @@ export class RpcOperations extends MediaOperations {
   }
 
   async deleteMessages(peer, ids, options = {}) {
-    const input = await this.resolvePeer(peer);
+    const input = await this.resolvePeer(peer, options);
     return input._ === 'inputPeerChannel'
       ? this.rpc(
           'channels.deleteMessages',
@@ -393,8 +422,8 @@ export class RpcOperations extends MediaOperations {
       'messages.forwardMessages',
       {
         ...options,
-        from_peer: await this.resolvePeer(fromPeer),
-        to_peer: await this.resolvePeer(peer),
+        from_peer: await this.resolvePeer(fromPeer, options),
+        to_peer: await this.resolvePeer(peer, options),
         id: ids,
         random_id: ids.map(() => randomId()),
       },
@@ -416,7 +445,7 @@ export class RpcOperations extends MediaOperations {
         hash: 0n,
         filter: { _: 'inputMessagesFilterEmpty' },
         ...options,
-        peer: await this.resolvePeer(peer),
+        peer: await this.resolvePeer(peer, options),
         q: query,
       },
       options
@@ -425,7 +454,7 @@ export class RpcOperations extends MediaOperations {
   }
 
   async getParticipants(peer, options = {}) {
-    const input = await this.resolvePeer(peer);
+    const input = await this.resolvePeer(peer, options);
     if (input._ === 'inputPeerChat') {
       const result = await this.rpc(
         'messages.getFullChat',
@@ -449,18 +478,36 @@ export class RpcOperations extends MediaOperations {
   }
 
   async joinChat(peer, options) {
-    const invite = /(?:t.me\/(?:joinchat\/|\+)|^\+)([\w-]+)/.exec(String(peer));
-    return invite
-      ? this.rpc('messages.importChatInvite', { hash: invite[1] }, options)
-      : this.rpc(
-          'channels.joinChannel',
-          { channel: this.channel(await this.resolvePeer(peer)) },
+    if (typeof peer === 'string' && !/^-?\d+$/.test(peer)) {
+      const link = parseTelegramLink(peer);
+      if (link.type === 'invite') {
+        return this.rpc(
+          'messages.importChatInvite',
+          { hash: link.hash },
           options
         );
+      }
+      if (link.type !== 'public') {
+        throw new TelegramError('This link cannot grant channel membership', {
+          type:
+            link.type === 'privateMessage'
+              ? 'INVITE_REQUIRED'
+              : 'CHAT_LINK_NOT_JOINABLE',
+        });
+      }
+      peer = await this.resolveLink(link, options);
+    }
+    return this.rpc(
+      'channels.joinChannel',
+      {
+        channel: this.channel(await this.resolvePeer(peer, options)),
+      },
+      options
+    );
   }
 
   async leaveChat(peer, options) {
-    const input = await this.resolvePeer(peer);
+    const input = await this.resolvePeer(peer, options);
     return input._ === 'inputPeerChat'
       ? this.rpc(
           'messages.deleteChatUser',
@@ -481,7 +528,7 @@ export class RpcOperations extends MediaOperations {
         folder_peers: [
           {
             _: 'inputFolderPeer',
-            peer: await this.resolvePeer(peer),
+            peer: await this.resolvePeer(peer, options),
             folder_id: archive ? 1 : 0,
           },
         ],
@@ -494,7 +541,10 @@ export class RpcOperations extends MediaOperations {
     return this.rpc(
       'account.updateNotifySettings',
       {
-        peer: { _: 'inputNotifyPeer', peer: await this.resolvePeer(peer) },
+        peer: {
+          _: 'inputNotifyPeer',
+          peer: await this.resolvePeer(peer, options),
+        },
         settings: { _: 'inputPeerNotifySettings', mute_until: until },
       },
       options
@@ -505,7 +555,7 @@ export class RpcOperations extends MediaOperations {
     peer,
     { firstName = '', lastName = '', phone = '', ...options } = {}
   ) {
-    const input = await this.resolvePeer(peer);
+    const input = await this.resolvePeer(peer, options);
     const id =
       input._ === 'inputPeerSelf'
         ? { _: 'inputUserSelf' }

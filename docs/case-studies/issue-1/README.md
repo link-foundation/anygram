@@ -1192,3 +1192,37 @@ Phone-code head 7f5b144 passed all nine OS/runtime jobs and applicable gates in
 [run 40820313069](https://github.com/link-foundation/anygram/actions/runs/40820313069),
 created 2026-10-29T04:54:07Z and completed 2026-10-29T04:57:05Z. A fresh run is
 required for this dialog checkpoint. All other unmet criteria remain open.
+
+Chat-link and join checkpoint: thirteen failing-before regressions expose missing
+legacy invite support, unanchored host matching, lost nested join entities and
+cancellation failing to stop the join after username resolution. The shared chat
+parser handles official HTTP aliases, username subdomains, tg forms and exact
+message/thread/channel IDs. It rejects unsupported routes and malformed or
+ambiguous targets. Configured extra hosts can be parsed explicitly. Numeric phone
+links use contacts.resolvePhone; private message links require an existing access
+hash and report INVITE_REQUIRED when used to join. No access hash is invented.
+
+Layer-232 messages.chatInviteJoinResultOk replies retain their public wrapper
+while their nested update entities enter the bounded peer cache. Old Updates
+responses remain supported. Approval errors, expired invites, flood waits and
+verification-required replies propagate without replay or fabricated membership.
+Request signals now reach shared peer lookup, and an abort between lookup and a
+side effect stops that side effect before RPC invocation.
+
+All 388 tests pass on Node, Bun and Deno, including actual GramJS/teleproto
+request and response objects and an encrypted native TCP private join followed
+by mute/archive. Strict lint, formatting, full types and the zero-clone scan of
+70 production sources pass; the package dry run has 75 permitted entries. The
+chat-link example compiles. data/chat-link-sources.json preserves the primary
+link/join sources with SHA-256 digests. Their public method pages still describe
+the older Updates return; the pinned layer-232 schema and teleproto serializer
+provide the new wrapper's wire evidence. This is not a claim that verification
+has completed or that a pending approval has granted membership.
+
+Dialog head fdaefb0 passed all nine OS/runtime CI jobs and applicable gates in
+[run 40821882974](https://github.com/link-foundation/anygram/actions/runs/40821882974),
+created 2026-10-29T05:10:47Z and completed 2026-10-29T05:13:43Z. Fresh CI is
+required for the chat-link checkpoint. Full follow scenarios, complete migration,
+controlled accounts, calls, remaining backends/runtimes and all other unmet
+requirements remain open. Issue comments and all three PR feedback streams were
+refreshed after the dialog commit and remain empty.

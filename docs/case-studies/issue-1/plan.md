@@ -453,10 +453,14 @@ Downstream account workflow audit:
   exposed by that matrix. All 374 tests pass on Node/Bun/Deno; strict lint,
   formatting, types, the zero-clone scan of 69 sources and the 74-entry package
   dry run pass. Preserve the checkpoint and await its new CI run.
-- Next: reproduce legacy invite URL failures and the layer-232 join-result
-  wrapper/cache behavior, then implement a bounded follow workflow using shared
-  operations. Preserve approval-required outcomes and server errors without
-  automatically replaying side effects.
+- Reproduced and fixed legacy invite links, host anchoring, layer-232 nested
+  join caching and cancellation across lookup/join. All 388 tests pass on
+  Node/Bun/Deno with strict lint, formatting, types, zero clones across 70
+  sources and a 75-entry package dry run. Actual clients and native TCP cover
+  private import followed by settings; approval/verification outcomes stay explicit.
+- Next: add shared invite/notification inspection and complete the bounded follow
+  workflow scenario, including existing membership, approval, settings, leave,
+  private history and rate limits, without replaying side effects.
 - Continue all other unmet protocol/runtime/compatibility/downstream criteria.
   Controlled accounts and official-app-only passkeys remain externally blocked;
   independent implementation work remains available. Keep PR #2 draft/unmerged.
