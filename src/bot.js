@@ -9,6 +9,8 @@ import { joinBytes } from './bytes.js';
 import { taskContext } from './task-context.js';
 import { callBotOperation } from './bot-operations.js';
 import { webhookReplyScope } from './bot-webhook-reply.js';
+import { frameworkWebhook } from './bot-webhook.js';
+import { sameWebhookSecret, webhookMode } from './bot-webhook-common.js';
 
 /** Shared middleware runner usable with a native or adapted Bot API transport. */
 export class Bot extends Composer {
@@ -25,6 +27,7 @@ export class Bot extends Composer {
     this.dispatchContext = taskContext();
     this.queue = Promise.resolve();
     this.running = false;
+    this[webhookMode] = false;
     this.Context = options.Context ?? Context;
     this.pollingKey = pollingKey(token, options);
   }
@@ -132,6 +135,9 @@ export class Bot extends Composer {
     allowed_updates,
     onStart,
   } = {}) {
+    if (this[webhookMode]) {
+      throw new Error('Bot already uses webhooks; long polling is unavailable');
+    }
     if (this.running) {
       throw new Error('Bot is already running');
     }
@@ -270,28 +276,36 @@ export class TelegramBot extends Bot {
   }
 }
 
-function sameSecret(actual, expected) {
-  const encode = new globalThis.TextEncoder();
-  const a = encode.encode(actual ?? '');
-  const b = encode.encode(expected);
-  let mismatch = a.length ^ b.length;
-  for (let i = 0; i < b.length; i++) {
-    mismatch |= (a[i] ?? 0) ^ b[i];
-  }
-  return mismatch === 0;
-}
-
 export function webhookCallback(
   bot,
-  { secretToken, maxBytes = 1024 * 1024 } = {}
+  adapter,
+  options,
+  timeoutMilliseconds,
+  token
 ) {
+  const configuration =
+    typeof options === 'object'
+      ? options
+      : { onTimeout: options, timeoutMilliseconds, secretToken: token };
+  if (adapter === undefined) {
+    const native = webhookCallback(bot, configuration);
+    const express = frameworkWebhook(bot, 'express', configuration);
+    return (...args) =>
+      typeof args[0]?.headers?.get === 'function'
+        ? native(...args)
+        : express(...args);
+  }
+  if (typeof adapter === 'string' || typeof adapter === 'function') {
+    return frameworkWebhook(bot, adapter, configuration);
+  }
+  const { secretToken, maxBytes = 1024 * 1024 } = adapter;
   return async (request) => {
     if (request.method !== 'POST') {
       return new Response('POST required', { status: 405 });
     }
     if (
       secretToken &&
-      !sameSecret(
+      !sameWebhookSecret(
         request.headers.get('x-telegram-bot-api-secret-token'),
         secretToken
       )

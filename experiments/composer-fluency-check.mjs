@@ -13,6 +13,10 @@ import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new globalThis.URL('../', import.meta.url));
 const modes = {
+  '--frameworks': [
+    ['typed-grammy-frameworks.ts', 'typed-webhook-defaults.ts'],
+    'b73f33041ba5ac00895d4b808ecd48947c33de4f',
+  ],
   '--webhooks': [
     ['typed-grammy-webhook.ts', 'typed-telegraf-webhook.ts'],
     'd4c76ce80b21943390dd4f762f247e0301194069',

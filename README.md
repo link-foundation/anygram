@@ -886,3 +886,9 @@ selected-backend HTTP fallback. grammY replies are opt-in; Telegraf uses its
 method allowlist and context-local flag. The Fetch callback can return the
 selected JSON operation. [Webhook evidence and limits](docs/case-studies/issue-1/bot-webhook-replies.md)
 includes actual-SDK comparisons and real Node response checks.
+
+`webhookCallback(bot, 'express', options)` and 21 other named framework adapters
+share initialization, secret checks, response deadlines and bounded update
+collection. Custom adapter argument and result types are retained.
+[Adapter examples and limits](docs/case-studies/issue-1/bot-webhook-frameworks.md)
+document framework response conventions and the existing Fetch API.

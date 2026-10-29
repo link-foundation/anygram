@@ -14,6 +14,8 @@
     }
   },
   "include": [
+    "typed-framework-differences.ts",
+    "typed-grammy-frameworks-fixture.ts",
     "typed-webhook-response.ts",
     "typed-grammy-webhook-fixture.ts",
     "typed-telegraf-webhook-fixture.ts",

@@ -45,7 +45,7 @@ export function webhookReplyScope(
             : facade.webhookReply && telegrafReplies.has(method);
         if (permitted) {
           claimed = true;
-          await send(stringify({ method, ...params }));
+          await send(stringify({ ...params, method }));
           return true;
         }
       }

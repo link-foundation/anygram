@@ -209,3 +209,6 @@ recursive rich-label constraints, retaining the general wire-model aliases.
 
 Own one JSON webhook response per update, preserve grammY and Telegraf reply
 policies, retain selected-client HTTP fallback and close retired response scopes.
+
+Support all pinned grammY webhook adapter names and typed custom adapters with
+shared initialization, authorization, bounded bodies, deadlines and cleanup.

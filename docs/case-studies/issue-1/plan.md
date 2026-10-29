@@ -1130,6 +1130,49 @@ Webhook response ownership work plan:
       all four feedback streams remain empty. GitHub's 300-file diff limit is
       preserved and handled with its paginated inventory and the local atomic
       diff, including the new source, examples, tests and reproduction loader.
-- [ ] Commit/push the reviewed response-ownership change.
-- [ ] Update PR evidence and verify fresh exact-head CI.
+- [x] Commit/push the reviewed response-ownership change.
+      Head b73f33041ba5ac00895d4b808ecd48947c33de4f was committed at
+      2026-10-29T18:38:05Z; run 40932709045 was created 18:38:28Z.
+- [x] Update PR evidence and verify fresh exact-head CI. Run 40932709045 passed
+      every applicable job at exact head b73f33041ba5ac00895d4b808ecd48947c33de4f.
 - [ ] Continue framework adapters and all wider unfinished acceptance criteria.
+
+Webhook framework adapter work plan:
+
+- [x] Inventory every public pinned grammY adapter and reproduce missing named
+      adapters against actual SDK callbacks before changing production code.
+- [x] Implement shared dispatch/authentication and bounded timeout ownership,
+      preserving the existing Fetch callback API and selected transports.
+- [x] Cover all named adapters and custom adapters with reply/empty/unauthorized
+      comparisons; verify errors, concurrent initialization and timeout cleanup.
+- [x] Publish checked adapter signatures and compare portable fixtures against
+      actual SDK types without adding framework runtime dependencies.
+- [x] Preserve immutable before/after evidence and review the adapter change.
+      Frozen sources reproduce 67 failures; frozen declarations produce 35
+      diagnostics. All 90 focused cases and both current/actual-SDK examples
+      pass, including real Node request/response types. Review caught timer
+      overflow; a failing regression now verifies rejection before dispatch.
+- [x] Complete final local runtime/static/package evidence. All 2,143 core tests
+      pass on Node, Bun and Deno; 27 native checks and six Node 20 wire checks
+      pass. Strict gates scan 162 sources with zero clones; packaging permits
+      205 entries. The bounded blocked-input probe also passes. Main remains an
+      ancestor and all four feedback streams are empty. GitHub's 300-file diff
+      limit is recorded; the 842-file paginated inventory has no deletions, and
+      the complete atomic source diff and every new fixture/example were reviewed.
+- [ ] Commit/push the reviewed adapter change and verify exact-head CI before
+      wider unfinished work.
+
+Telegraf construction and webhook/server lifecycle work plan:
+
+- [ ] Inventory the pinned public callback/filter/createWebhook/launch APIs and
+      construction options; compare observable behavior through actual SDKs.
+- [ ] First add minimal failing regressions for accepted body forms, filtering,
+      initialization, URL/secret construction and API request normalization.
+- [ ] Implement shared bounded parsing and scoped dispatch, preserving custom
+      context/error behavior and the existing polling controls.
+- [ ] Exercise HTTP/TLS startup, fallback requests, shutdown, registration and
+      bind failures with real finite sockets; prevent leaked servers on failure.
+- [ ] Add checked public types and immutable reproductions, review the change,
+      run local gates, commit/push and verify exact-head CI.
+- [ ] Continue complete installed-framework/application/protocol coverage and
+      every wider criterion still marked unfinished in the acceptance ledger.

@@ -837,3 +837,14 @@ sixteen actual-SDK comparisons, eight selected-client HTTP cases and three real
 incoming Node response cases. [Webhook evidence](bot-webhook-replies.md) retains
 the immutable failing-before reproduction. Full framework/server lifecycle and
 controlled delivery criteria remain unfinished.
+
+R01/R05/R08/R13/R16/R17/R19 framework follow-up covers all 22 pinned grammY
+adapter names plus custom adapter arguments/results. Sixty-six actual-SDK
+reply/empty/authorization comparisons, method authority and 23 lifecycle/stream
+cases pass, including five real Node socket scenarios. Owned body limits and
+deadlines include initialization and retire late response ownership. Checked
+examples compile against actual SDK declarations; the frozen runtime reproduces
+67 failures and frozen declarations produce 35 diagnostics.
+[Framework evidence and limits](bot-webhook-frameworks.md) distinguish these
+callback contracts from complete framework/server/cloud integration, which
+remains unfinished alongside every wider open criterion.

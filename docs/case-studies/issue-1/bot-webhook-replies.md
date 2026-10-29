@@ -48,9 +48,11 @@ the remaining cases cover retired/error scopes and the Fetch response.
 Checked portable examples compile against both the owned declarations and
 actual SDKs. A separate fixture verifies that the structural response contract
 accepts current Node `ServerResponse` types without introducing Node ambient
-types into the public package. Broader webhook framework adapters, server
-lifecycle APIs, controlled Telegram delivery and every wider unfinished issue
-criterion remain open; these response tests do not establish full SDK parity.
+types into the public package. The subsequent
+[framework adapter work](bot-webhook-frameworks.md) covers all named grammY
+entries. Complete server lifecycle APIs, controlled Telegram delivery and every
+wider unfinished issue criterion remain open; these response tests do not
+establish full SDK parity.
 
 `node experiments/composer-fluency-check.mjs --webhooks --before` preserves the
 declaration reproduction; the preceding types produce five diagnostics. Run the

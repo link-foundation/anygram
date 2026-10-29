@@ -1,4 +1,17 @@
 import type { BotTextEditResult } from './bot-result-types.js';
+import type {
+  FrameworkWebhookCallback,
+  WebhookAdapter,
+  WebhookOptions,
+} from './bot-webhook-types.js';
+export type {
+  ReqResHandler,
+  FrameworkAdapter,
+  WebhookOptions,
+  WebhookFrameworkAdapters,
+  WebhookAdapter,
+  FrameworkWebhookCallback,
+} from './bot-webhook-types.js';
 import type * as Telegram from './bot-types/index.js';
 export type * as Telegram from './bot-types/index.js';
 import type {
@@ -1187,6 +1200,32 @@ export declare class TelegramBot {
 }
 export declare function webhookCallback(
   bot: Pick<Bot, 'handleUpdate'>,
-  options?: { secretToken?: string; maxBytes?: number }
+  adapter?: undefined,
+  options?: WebhookOptions
+): ((request: Request) => Promise<Response>) &
+  FrameworkWebhookCallback<'express'>;
+export declare function webhookCallback(
+  bot: Pick<Bot, 'handleUpdate'>,
+  adapter: undefined,
+  onTimeout: WebhookOptions['onTimeout'],
+  timeoutMilliseconds?: number,
+  secretToken?: string
+): ((request: Request) => Promise<Response>) &
+  FrameworkWebhookCallback<'express'>;
+export declare function webhookCallback<A extends WebhookAdapter>(
+  bot: Pick<Bot, 'handleUpdate'>,
+  adapter: A,
+  options?: WebhookOptions
+): FrameworkWebhookCallback<A>;
+export declare function webhookCallback<A extends WebhookAdapter>(
+  bot: Pick<Bot, 'handleUpdate'>,
+  adapter: A,
+  onTimeout: WebhookOptions['onTimeout'],
+  timeoutMilliseconds?: number,
+  secretToken?: string
+): FrameworkWebhookCallback<A>;
+export declare function webhookCallback(
+  bot: Pick<Bot, 'handleUpdate'>,
+  options: { secretToken?: string; maxBytes?: number }
 ): (request: Request) => Promise<Response>;
 export * from './scenes.js';
