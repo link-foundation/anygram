@@ -45,6 +45,13 @@ explicit-ID form. Raw calls keep Telegram payload fields intact, so use
 `bot.api.raw.getUpdates({ timeout: 30 }, signal)` for Telegram's long-poll timeout
 in seconds. See the [context control comparisons](docs/case-studies/issue-1/bot-context-controls.md).
 
+Register recovery with `bot.catch(({ error, ctx }) => ...)` for shared `Bot`
+and `TelegramBot` instances, or `telegraf.catch((error, ctx) => ...)` for the
+Telegraf view. Dispatch awaits the catcher before acknowledging an update or
+admitting the next queued update. Unhandled errors and catcher failures reject;
+failed updates remain available for an explicit retry. See the
+[handler recovery comparisons](docs/case-studies/issue-1/bot-handler-errors.md).
+
 Native HTTP requests validate deadlines before sending and cancel response-body
 reads when the deadline or caller's signal fires. Bot API JSON responses default
 to an 8 MiB limit (`maxResponseBytes` in the constructor); `downloadMedia` defaults

@@ -806,6 +806,9 @@ export interface BotOptions extends Partial<BotApiOptions> {
 export type MiddlewareLike<C extends Omit<Context, 'me'> = Context> =
   | Middleware<C>
   | { middleware(): Middleware<C> };
+export type BotErrorHandler<C extends Omit<Context, 'me'> = Context> = (
+  error: Error & { error: unknown; ctx: C }
+) => unknown | Promise<unknown>;
 export declare class Composer<C extends Omit<Context, 'me'> = Context> {
   constructor(...middleware: MiddlewareLike<C>[]);
   use(...middleware: MiddlewareLike<C>[]): this;
@@ -823,11 +826,7 @@ export declare class Bot<
   telegram: TelegrafApi;
   botInfo?: Parameters;
   offset: number;
-  catch(
-    handler: (
-      error: Error & { error: unknown; ctx: C }
-    ) => unknown | Promise<unknown>
-  ): this;
+  catch(handler: BotErrorHandler<C>): this;
   init(): Promise<Parameters>;
   handleUpdate(update: BotUpdate): Promise<void>;
   isRunning(): boolean;
@@ -837,8 +836,9 @@ export declare class Bot<
 }
 export interface Telegraf<
   C extends Omit<Context, 'me'> = TelegrafContext,
-> extends Omit<Bot<C>, 'start'> {
+> extends Omit<Bot<C>, 'start' | 'catch'> {
   start(...middleware: Middleware<C>[]): this;
+  catch(handler: (error: unknown, ctx: C) => unknown | Promise<unknown>): this;
 }
 export declare const Telegraf: {
   new <C extends Omit<Context, 'me'> = TelegrafContext>(
@@ -850,6 +850,7 @@ export declare class TelegramBot {
   constructor(token: string, options?: BotOptions);
   api: ContextApi;
   telegram: TelegrafApi;
+  catch(handler: BotErrorHandler): this;
   handleUpdate(update: BotUpdate): Promise<void>;
   stop(): void;
   isRunning(): boolean;

@@ -101,3 +101,7 @@ connections and shutdown through cancellation and bounded local persistence.
 Preserve positional and context cancellation signals, separate embedded bot
 request controls through the shared translator, and retain raw Telegram timeout
 fields and explicit message deletion across bot framework views.
+
+Route event listener failures through the shared update recovery boundary and
+preserve Telegraf's original-error/context callback contract. Await recovery
+before acknowledging updates, retaining failures and queue ownership.

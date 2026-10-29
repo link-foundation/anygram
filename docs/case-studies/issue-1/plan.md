@@ -677,5 +677,19 @@ Bot context cancellation work plan:
 - [x] Verify context/event aliases, owned-source deadlines and selected backends.
 - [x] Update checked declarations/examples and pass all 747 tests per runtime,
       23 Node 20 cases, strict gates, native terminal/wire cases and package audit.
-- [ ] Commit the reviewed bot context-control change, push and inspect fresh CI.
+- [x] Commit the reviewed bot context-control change, push and inspect fresh CI.
+      Head f3c544e passed every applicable job in run 40864702944, created
+      2026-10-29T11:21:04Z and completed 11:29:36Z.
 - [ ] Continue the complete feature union and all other open requirements.
+
+Bot handler recovery work plan:
+
+- [x] Compare actual Telegraf error/callback context identity and return behavior.
+- [x] Reproduce event listener failures bypassing registered catchers.
+- [x] Cover async catchers, nested updates, retryable failures and queue release.
+- [x] Keep shared wrapped errors and add Telegraf's two-argument contract.
+- [x] Share catch boundaries across event and middleware dispatch without replay.
+- [x] Check declarations, all 757 cases on each runtime, strict static gates,
+      25 focused Node 20 cases, 13 native terminal cases and package contents.
+- [ ] Commit the reviewed recovery change, push and verify fresh CI by SHA/time.
+- [ ] Continue every other open acceptance criterion in this single draft PR.

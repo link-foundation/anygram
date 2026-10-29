@@ -217,6 +217,8 @@ it('preserves grammY cancellation signatures for all pinned zero-payload methods
           method,
           {},
           {
+            // Match the wire tests' budget instead of the short fixture default.
+            timeout: 2000,
             signal: globalThis.AbortSignal.timeout(3000),
           }
         ),

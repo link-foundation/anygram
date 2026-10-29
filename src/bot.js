@@ -67,15 +67,16 @@ export class Bot extends Composer {
     }
   }
   async #dispatchUpdate(update) {
-    await this.emitUpdate?.(update);
     const ctx = new this.Context(update, this.api, this.botInfo, this.telegram);
+    let result;
     try {
+      await this.emitUpdate?.(update);
       await this.middleware()(ctx);
     } catch (error) {
       if (!this.errorHandler) {
         throw error;
       }
-      await this.errorHandler(
+      result = await this.errorHandler(
         Object.assign(
           new Error('Bot update handler failed', { cause: error }),
           { error, ctx }
@@ -86,6 +87,7 @@ export class Bot extends Composer {
     if (this.seen.size > 10000) {
       this.seen.delete(this.seen.values().next().value);
     }
+    return result;
   }
   isRunning() {
     return this.running;
@@ -148,6 +150,9 @@ export class Bot extends Composer {
 export class Telegraf extends Bot {
   constructor(token, options = {}) {
     super(token, { ...options, Context: options.Context ?? TelegrafContext });
+  }
+  catch(handler) {
+    return super.catch(({ error, ctx }) => handler(error, ctx));
   }
   start(...middleware) {
     return this.command('start', ...middleware);
