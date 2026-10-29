@@ -1,4 +1,4 @@
-import { valueMapper } from './requests.js';
+import { valueMapper, mapObjectValues } from './requests.js';
 import { InputFile, readInputFile } from './input-file.js';
 import { validateByteLimit } from './http.js';
 
@@ -25,29 +25,62 @@ export const stringify = (value) =>
   );
 
 /** Validate the entire shape before opening any of its finite upload sources. */
-export async function uploadBody(params, { maxBytes, signal, fetch }) {
-  validateByteLimit(maxBytes);
+export function collectUploads(
+  params,
+  { reference = ({ name }) => `attach://${name}`, opaque = () => false } = {}
+) {
   const files = [];
   const visit = valueMapper(
     (value, next) => {
+      if (!(value instanceof InputFile) && opaque(value)) {
+        return value;
+      }
       const input = attachment(value);
       if (input) {
         if (files.length >= 1000) {
           throw new RangeError('Bot API upload exceeds file limit');
         }
         const name = `file${files.length}`;
-        files.push({ name, input, mimeType: value.mimeType });
-        return `attach://${name}`;
+        const file = { name, input, mimeType: value.mimeType };
+        file.reference = reference(file);
+        files.push(file);
+        return file.reference;
       }
       return value && typeof value === 'object'
-        ? Object.fromEntries(
-            Object.entries(value).map(([key, entry]) => [key, next(entry)])
-          )
+        ? mapObjectValues(value, next)
         : value;
     },
     { label: 'Bot API' }
   );
-  const fields = visit(params);
+  return { fields: visit(params), files };
+}
+
+/** Sequential consumption shares one aggregate byte budget across attachments. */
+export async function* readUploads(files, { maxBytes, signal, fetch }) {
+  validateByteLimit(maxBytes);
+  let used = 0;
+  for (const file of files) {
+    const bytes = await readInputFile(file.input, {
+      maxBytes: maxBytes - used,
+      signal,
+      fetch,
+    });
+    used += bytes.byteLength;
+    yield {
+      ...file,
+      bytes,
+      mimeType:
+        file.mimeType ??
+        file.input.fileData?.type ??
+        'application/octet-stream',
+    };
+  }
+  signal?.throwIfAborted();
+}
+
+export async function uploadBody(params, settings) {
+  validateByteLimit(settings.maxBytes);
+  const { fields, files } = collectUploads(params);
   if (!files.length) {
     return {
       body: stringify(fields),
@@ -63,22 +96,15 @@ export async function uploadBody(params, { maxBytes, signal, fetch }) {
       );
     }
   }
-  let used = 0;
-  for (const { name, input, mimeType } of files) {
-    const bytes = await readInputFile(input, {
-      maxBytes: maxBytes - used,
-      signal,
-      fetch,
-    });
-    used += bytes.byteLength;
+  for await (const { name, input, mimeType, bytes } of readUploads(
+    files,
+    settings
+  )) {
     body.append(
       name,
-      new globalThis.Blob([bytes], {
-        type: mimeType ?? input.fileData?.type ?? 'application/octet-stream',
-      }),
+      new globalThis.Blob([bytes], { type: mimeType }),
       input.filename ?? 'file'
     );
   }
-  signal?.throwIfAborted();
   return { body };
 }

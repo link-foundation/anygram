@@ -45,7 +45,9 @@ The [Bot API file-input checkpoint](bot-file-inputs.md) adds explicit paths,
 URLs, Node/web byte streams, iterators and reusable suppliers through bounded
 shared readers. Twenty scenarios include thirteen failing-before regressions;
 a separate bounded Linux FIFO probe checks late-open handle cleanup.
-Optional vendor-backend and account-media InputFile integration remain open.
+The [optional-client upload checkpoint](vendor-bot-uploads.md) adds actual
+vendor conversion and wire checks. Account-media integration and the documented
+Telegraf runtime encoder incompatibility remain open.
 
 The [Bot API edit/error checkpoint](bot-api-compatibility.md) fixes the
 terminal's grammY edit argument mapping and structured failure handling, while

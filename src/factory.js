@@ -39,10 +39,14 @@ async function optionalLibrary(name, options) {
       new MTProto({ api_id: apiId, api_hash: apiHash, ...clientOptions })
     );
   }
-  if (name === 'grammy' || name === 'telegraf') {
+  if (['grammy', 'telegraf', 'node-telegram-bot-api'].includes(name)) {
     const module = await import(name);
     const Constructor = module.Bot ?? module.Telegraf;
-    return createAdapter(name, new Constructor(token, clientOptions));
+    return createAdapter(name, new Constructor(token, clientOptions), {
+      maxUploadBytes: options.maxUploadBytes,
+      timeout: options.timeout,
+      fetch: options.fetch,
+    });
   }
   throw new UnsupportedError(
     `Automatic construction for ${name}; pass an initialized adapter`

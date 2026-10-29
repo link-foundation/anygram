@@ -57,8 +57,14 @@ up to 1000 files. Preparation uses the shared depth/vector guards and validates
 the complete shape before opening sources. Deadlines and cancellation cover
 preparation too. Suppliers unwrap at most sixteen steps and stream/body reading
 permits at most 100000 reads. These inputs are buffered within the configured byte
-limit before multipart fetch. Optional vendor bot backends and account-media
-InputFile conversion remain unfinished.
+limit before multipart fetch. Selected grammY, Telegraf and
+node-telegram-bot-api adapters convert owned files to their vendor input types;
+`createAdapter` accepts `maxUploadBytes`, `timeout` and source-download `fetch`.
+The automatic factory forwards these options and can construct all three clients.
+Existing vendor InputFile instances retain vendor ownership and limits. Account-media
+InputFile conversion remains unfinished. Telegraf 4's multipart dependency stalls
+on newer Node and Bun; actual wire coverage currently passes on Node 20. See the
+[vendor upload evidence](docs/case-studies/issue-1/vendor-bot-uploads.md).
 
 Request normalization checks nesting and vector limits before visiting child
 values (defaults: depth 64 and 100000 vector entries). Invalid request limits,

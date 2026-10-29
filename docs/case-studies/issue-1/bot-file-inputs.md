@@ -51,9 +51,9 @@ The typed usage example is `examples/typed-bot-uploads.ts`. No account or extern
 network is used by these tests. A finite empty-chunk probe catches unbounded
 stream bookkeeping; a late-supplier probe catches an undestroyed Node stream.
 
-This advances R05/R08/R13/R16/R19. It covers native BotApi and owned bot facades;
-conversion of owned InputFile objects for optional vendor Bot API backends,
-account-media InputFile integration, streaming multipart without buffering and
+This advances R05/R08/R13/R16/R19. It covers native BotApi and owned bot facades.
+[Optional vendor conversion](vendor-bot-uploads.md) now has a separate checkpoint.
+Account-media InputFile integration, streaming multipart without buffering and
 complete browser/Worker parity remain open. It does not establish the complete
 file/media feature union or downstream keyboard/photo coverage.
 

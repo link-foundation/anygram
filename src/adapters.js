@@ -2,6 +2,7 @@ import { UnsupportedError } from './errors.js';
 import { gramRequest, objectRequest, nativeTlObjects } from './requests.js';
 import { mtcuteRequest } from './mtcute.js';
 import { RpcOperations } from './operations.js';
+import { botRequester } from './bot-backend.js';
 
 const styles = {
   gramjs: {
@@ -47,7 +48,7 @@ function hasFormattedEntities(operation, args) {
 export function createAdapter(
   name,
   client,
-  { Api, kind = name, onSession } = {}
+  { Api, kind = name, onSession, ...botOptions } = {}
 ) {
   if (!client || typeof client !== 'object') {
     throw new TypeError('An initialized backend client is required');
@@ -56,7 +57,6 @@ export function createAdapter(
   const bot = ['bot', 'grammy', 'telegraf', 'node-telegram-bot-api'].includes(
     style
   );
-  const api = client.api ?? client.telegram ?? client;
   const methods = styles[style] ?? {};
   const raw = style === 'mtproto' ? 'call' : 'invoke';
   const adapter = {
@@ -107,24 +107,7 @@ export function createAdapter(
       void tag;
       return client.call(request.method, params, options);
     },
-    bot(method, params, options) {
-      if (typeof client.callApi === 'function') {
-        return client.callApi(method, params, options);
-      }
-      if (style === 'grammy') {
-        return api.raw[method](params, options?.signal);
-      }
-      if (typeof api.callApi === 'function') {
-        return api.callApi(method, params, options);
-      }
-      if (typeof api.call === 'function') {
-        return api.call(method, params, options);
-      }
-      if (typeof client._request === 'function') {
-        return client._request(method, { form: params });
-      }
-      throw new UnsupportedError(method, name);
-    },
+    bot: botRequester(name, client, style, botOptions),
     async execute(operation, args) {
       const method = methods[operation] ?? operation;
       if (

@@ -338,6 +338,8 @@ jobs:
         run: npm test --prefix experiments/terminal-runtime
       - name: Verify blocked file-open cancellation and late descriptor cleanup
         run: node --max-old-space-size=64 --stack-size=512 experiments/input-file-blocked-path.mjs
+      - name: Verify actual Telegraf multipart encoding on Node 20
+        run: node --test experiments/vendor-bot-wire.integration.js
 
   # Release - only runs on main after tests pass (for push events)
   release:

@@ -140,6 +140,9 @@ export declare function createAdapter(
     Api?: object;
     kind?: string;
     onSession?: (session: string) => void | Promise<void>;
+    maxUploadBytes?: number;
+    timeout?: number;
+    fetch?: typeof fetch;
   }
 ): Adapter;
 export declare class UnsupportedError extends Error {
@@ -401,7 +404,7 @@ export declare class InputFile {
   filename?: string;
   consumed: boolean;
   toJSON(): never;
-  /** Internal bounded conversion used by the Bot API transport. */
+  /** Bounded source conversion shared by owned and optional Bot API transports. */
   toRaw(options?: {
     maxBytes?: number;
     signal?: AbortSignal;

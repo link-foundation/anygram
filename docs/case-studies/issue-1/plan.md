@@ -588,3 +588,15 @@ further failing-before portable test covers cancellation of a URL body returned
 after cancellation. Verify 634 portable cases, thirteen native integrations and
 the separate FIFO probe, then preserve the atomic fix and continue optional
 vendor/account InputFile integration. Every broader unmet criterion remains open.
+
+Optional vendor uploads: seventeen portable cases now exercise owned file
+conversion, actual grammY/node-telegram-bot-api multipart, existing vendor inputs,
+aggregate/structural guards, late cleanup, automatic construction, legacy formData
+and deadlines through dispatch. Actual Telegraf wire tests pass on Node 20.18.3;
+two newer-runtime attempts reproduce its original encoder stall independently of
+owned files. Preserve the finite standalone reproducer and leave that criterion
+open. Verify 651 core cases on all runtimes, strict gates, the two wire cases,
+thirteen native terminal cases and the separate FIFO probe, commit/push, inspect
+fresh CI, then continue account-media InputFile support and broader requirements.
+The preceding cleanup head c2fc60bf passed all CI jobs in run 40854061428
+(created 2026-10-29T10:00:21Z; completed 2026-10-29T10:03:02Z).

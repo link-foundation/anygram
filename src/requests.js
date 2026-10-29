@@ -71,6 +71,11 @@ export function requestOf(method, params = {}) {
 }
 
 export const requestLimits = Object.freeze({ maxDepth: 64, maxVector: 100000 });
+export const mapObjectValues = (value, next) =>
+  Object.fromEntries(
+    Object.entries(value).map(([key, entry]) => [key, next(entry)])
+  );
+
 export function valueMapper(
   visit,
   {

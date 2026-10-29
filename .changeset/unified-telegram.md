@@ -79,3 +79,7 @@ Add explicit native Bot API InputFile paths, URLs, byte iterators, Node/web
 streams and reusable suppliers. Share bounded file/HTTP readers and cancellation,
 start request deadlines before upload preparation, close rejected/late sources,
 and retain plain file IDs and Passport error JSON fields.
+
+Convert owned file sources through selected grammY, Telegraf and current
+node-telegram-bot-api clients with one shared bounded reader and request scope.
+Preserve vendor file instances and support legacy multipart formData contracts.
