@@ -81,7 +81,7 @@ examples/. No live credentials or sessions may be included in research data.
   Fragmented replies, rejection codes, deadlines and TLS WebSocket tunnels pass.
 - The inherited duplication configuration scanned no files. A failing-before
   fixture now guards the detector, and shared helpers consolidate eleven actual
-  clones. The repaired gate scans all 51 production JS/TS files with zero clones.
+  clones. The repaired gate scans all 52 production JS/TS files with zero clones.
 - The first repaired-gate CI run passed all runtime jobs but rejected a CLI flag
   accepted by a newer Deno-created local shim. The check now invokes locked
   jscpd 4.0.5 directly without that flag; its fixture and source scan pass locally.
@@ -93,9 +93,9 @@ examples/. No live credentials or sessions may be included in research data.
 - All 90 independently versioned secret-schema constructors round-trip. The
   codec retains historical IDs and flag-only fields missing from primary JSON;
   a handwritten wire vector and source-hash comparison verify serialization.
-- Node/Bun/Deno each pass 238 tests; strict lint, format, the repaired duplication
+- Node/Bun/Deno each pass 244 tests; strict lint, format, the repaired duplication
   gate and declaration/example checks pass. Each later code change requires
-  fresh checks. The package contains 56 permitted files.
+  fresh checks. The package contains 57 permitted files.
 - Refreshed issue/sub-issue and all three PR feedback streams are empty. Main is
   an ancestor of the branch. CI for 2598e6d passed all nine runtime/OS jobs and
   release gates in run 40791774228, including email authentication. Later heads
@@ -184,3 +184,14 @@ downgrade policy remain integration work.
 Legacy-envelope checks pass all 238 tests on each runtime, strict lint, format,
 duplication and type checking. The package has 56 permitted entries. Layer
 upgrade head 2d9b3d5 passed all nine runtime/OS jobs and gates in 40800006291.
+
+Layer/version policy regressions cover notification races, sequence cutovers,
+older gaps, queued downgrade violations, ordered service interpretation, local
+upgrades and portable state. The policy is ready for integration with the
+sequence/cipher primitives; initial request/accept RPCs, durable state/effects
+and compulsory re-keying remain open.
+
+The layer-policy checkpoint passes all 244 tests on Node, Bun and Deno, strict
+lint, formatting, full declaration/example checks and the zero-clone scan of
+52 production files. The package contains 57 permitted entries. Legacy envelope
+head c465b65 passed all nine runtime/OS jobs and applicable gates in CI run 40800440156. Fresh CI is required for the policy commit.

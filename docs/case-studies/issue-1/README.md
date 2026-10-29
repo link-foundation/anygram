@@ -692,3 +692,34 @@ All 238 tests pass on Node, Bun and Deno with strict checks. The clone detector
 scans 51 production files with no clones; the package has 56 permitted entries.
 Layer-upgrade head 2d9b3d5 passed every applicable job in
 [run 40800006291](https://github.com/link-foundation/anygram/actions/runs/40800006291).
+
+## Layer and envelope transition policy
+
+`SecretChatLayers` starts with peer layer 46 and selects the compatible outgoing
+layer/version. It tracks maximal remote support, local notification requirements
+and a persisted incoming sequence boundary. Receiving a legacy wrapper carrying
+a modern-layer notification does not itself prove the peer has received our
+notification: additional legacy messages may already be in flight. A modern
+envelope or a wrapper at layer 73 establishes the actual sequence cutover; older
+unresolved gaps remain eligible for legacy decryption.
+
+Six failing-before regressions cover the initial notification race, earlier
+unresolved gaps, modern cutovers found out of order, invalid queued legacy
+messages, immediate wrapper metadata versus ordered service interpretation,
+local upgrades, persisted state, strict agreed starting layers and bounded
+metadata. A scalar highest-seen legacy sequence detects a queued violation when
+an earlier modern boundary is discovered, without retaining a per-message list.
+Rejected observations leave policy state unchanged; the integrated client must
+abort the chat on protocol errors.
+
+The policy consumes authenticated frames already accepted by sequence checks;
+duplicates must be excluded. Queued frames update wrapper/version metadata
+immediately, while notify actions wait for ordered delivery. Applications must
+persist policy, sequence state and effects together. Request/accept RPCs, durable
+client integration, PFS and live peer validation remain unfinished.
+
+All 244 tests pass on Node, Bun and Deno with strict lint, formatting and full
+type checking. The clone detector scans 52 production files with no clones;
+the package has 57 permitted entries. Legacy-envelope head c465b65 passed
+every applicable job in
+[run 40800440156](https://github.com/link-foundation/anygram/actions/runs/40800440156).

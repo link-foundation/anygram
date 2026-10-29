@@ -20,6 +20,36 @@ export interface SecretChatDhConfig {
   g: number;
   version: number;
 }
+export interface SecretChatLayersState {
+  version: 1;
+  localLayer: number;
+  remoteLayer: number;
+  notifiedLayer: number;
+  minimumV2Sequence: number | null;
+  highestLegacySequence: number;
+}
+/** Call observe only for authenticated frames accepted by sequence checks. */
+export declare class SecretChatLayers {
+  constructor(options?: {
+    layer?: number;
+    remoteLayer?: number;
+    state?: SecretChatLayersState;
+  });
+  readonly outgoing: { layer: number; version: 1 | 2 };
+  readonly needsNotification: boolean;
+  notification(): TlRequest & {
+    _: 'decryptedMessageActionNotifyLayer';
+    layer: number;
+  };
+  markNotified(layer?: number): void;
+  upgradeLayer(layer: number): void;
+  observe(
+    frame: SecretChatLayer,
+    version: 1 | 2,
+    options?: { ordered?: boolean }
+  ): void;
+  exportState(): SecretChatLayersState;
+}
 /** Contains a private exponent; protect persisted pending exchanges. */
 export interface SecretChatKeyExchangeState {
   version: 1;

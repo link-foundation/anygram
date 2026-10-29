@@ -243,6 +243,16 @@ and signed 64-bit fingerprint, then destroys its owned private exponent.
 private exponent and requires protected storage. The primitive does not yet
 perform request/accept RPCs, layer agreement or PFS rotation.
 
+`SecretChatLayers` tracks a peer's highest known layer, required notifications
+and the sequence boundary after which only version-2 envelopes are valid.
+It starts with peer layer 46; `outgoing` selects the compatible layer/version.
+Call `observe(frame, version)` only for authenticated frames accepted by sequence
+checks, excluding duplicates. Pass `{ ordered: false }` for a queued gap, then
+observe its service action when delivered in order. Queue `notification()` in
+durable outgoing state before `markNotified()`. Persist `exportState()` with
+sequence state. Downgrade errors require aborting the chat. The policy does not
+perform RPCs or replace the complete secret-chat client.
+
 ## Select existing clients
 
 ```js

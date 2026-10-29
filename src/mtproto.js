@@ -27,6 +27,7 @@ export { ObfuscatedFraming } from './obfuscated-framing.js';
 export { SecretChatCipher } from './secret-cipher.js';
 export { SecretChatCodec } from './secret-codec.js';
 export { SecretChatSequence } from './secret-sequence.js';
+export { SecretChatLayers } from './secret-layers.js';
 export {
   SecretChatKeyExchange,
   createSecretChatKeyExchange,
