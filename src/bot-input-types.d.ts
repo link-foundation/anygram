@@ -6,6 +6,11 @@ export type BotFileInput =
   | Uint8Array
   | Blob
   | {
+      url: string;
+      filename?: string;
+      mimeType?: string;
+    }
+  | {
       source: InputFileSource;
       filename?: string;
       mimeType?: string;

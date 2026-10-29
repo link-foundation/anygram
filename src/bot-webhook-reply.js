@@ -52,16 +52,15 @@ export function webhookReplyScope(
       }
       return base.callApi(method, params, options);
     };
-    const facade = botApi(
+    let facade = botApi(
       { callApi, getFileLink: (...args) => base.getFileLink(...args) },
       style
     );
     if (style === 'telegraf') {
       facade.webhookReply = base.webhookReply;
+      facade = inheritTelegramMetadata(facade, base, response);
     }
-    return style === 'telegraf'
-      ? inheritTelegramMetadata(facade, base)
-      : facade;
+    return facade;
   };
   return {
     api: scoped(api, 'grammy'),

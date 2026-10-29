@@ -76,7 +76,8 @@ ancestor, all four feedback streams are empty, and the paginated PR inventory
 has no deletions. GitHub's 300-file diff limit is recorded; the complete atomic
 source diff and every new fixture/example were reviewed locally.
 
-HTTP `agent`/`attachmentAgent` options, standalone Telegram construction,
-complete installed-framework/cloud integration, controlled Telegram delivery
-and every wider unfinished acceptance criterion remain open. These comparisons
-establish the four documented nested settings and local context contracts.
+[HTTP agents and standalone Telegram construction](telegraf-agents.md) are
+verified in the subsequent follow-up. Complete installed-framework/cloud
+integration, controlled Telegram delivery and every wider unfinished acceptance
+criterion remain open. These comparisons establish the four documented nested
+settings and local context contracts.

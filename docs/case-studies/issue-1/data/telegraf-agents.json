@@ -1,0 +1,48 @@
+{
+  "retrieved": "2026-10-29T20:28:31.661Z",
+  "telegraf": "4.16.3",
+  "sources": [
+    "https://github.com/telegraf/telegraf/blob/v4.16.3/src/core/network/client.ts",
+    "https://nodejs.org/download/release/v20.18.3/docs/api/http.html#class-httpagent",
+    "https://nodejs.org/download/release/v20.18.3/docs/api/stream.html#streamreadabletowebstreamreadable-options"
+  ],
+  "installed": [
+    {
+      "file": "node_modules/telegraf/lib/core/network/client.js",
+      "sha256": "207a16c4fc3370e4c79c02aeae97661a2590c903f1cbb18e3f5bd5279361410d"
+    },
+    {
+      "file": "node_modules/telegraf/typings/core/network/client.d.ts",
+      "sha256": "858519e205d33d456aa2cd57c1bd4737f2331ae4d224ac3c2c29acc52c8c7a3c"
+    },
+    {
+      "file": "node_modules/telegraf/lib/telegram.js",
+      "sha256": "664b6feea3b89d2490bdd6c3bfc9887568d4907c7eb58e2a94afeae67b6bb788"
+    }
+  ],
+  "contracts": {
+    "defaultAgent": {
+      "protocol": "https:",
+      "keepAlive": true,
+      "keepAliveMsecs": 10000,
+      "shared": true
+    },
+    "httpApiRoot": "Clears the API agent during construction, including supplied agents",
+    "attachmentAgent": "Independent agent or URL selector used for client-side URL uploads",
+    "constructor": "Telegram(token, options?, response?) exposes per-view settings and response",
+    "nativeBridge": "Node request agents, cancellation and byte-counted Web stream backpressure"
+  },
+  "observedDifferences": [
+    {
+      "runtime": "Bun 1.4.4",
+      "library": "Telegraf 4.16.3",
+      "evidence": "tests/telegraf-agent.test.js",
+      "result": "The actual SDK node-fetch shim sends JSON without Agent.addRequest; the owned bridge invokes the selected agent"
+    },
+    {
+      "runtime": "Node 20.18.3",
+      "evidence": "experiments/vendor-bot-wire.integration.js",
+      "result": "Actual SDK and owned top-level/nested URL uploads use the attachment URL selector and CA agent, with equal filenames and bytes"
+    }
+  ]
+}

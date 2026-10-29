@@ -102,7 +102,11 @@ export function valueMapper(
       }
       return value.map((item) => map(item, depth + 1));
     }
-    return visit(value, (entry) => map(entry, depth + 1), name);
+    return visit(
+      value,
+      (entry, childName) => map(entry, depth + 1, childName),
+      name
+    );
   }
   return map;
 }

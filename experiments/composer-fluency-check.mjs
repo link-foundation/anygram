@@ -13,6 +13,14 @@ import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new globalThis.URL('../', import.meta.url));
 const modes = {
+  '--telegraf-agents': [
+    [
+      'typed-telegraf-agents.ts',
+      'typed-telegram-constructor.ts',
+      'typed-telegram-namespace.ts',
+    ],
+    'ce24156ce1d785a995036d1557fae97962df21d6',
+  ],
   '--telegraf-options': [
     ['typed-telegraf-options.ts'],
     '8874fdbc9e59261c337e3482116e7dfadd676c31',
@@ -79,6 +87,9 @@ const mode =
 const [selected, revision] = modes[mode];
 const fixtures = Array.isArray(selected) ? selected : [selected];
 const frozen = new Set([
+  ...(mode === '--telegraf-agents'
+    ? ['src/telegraf-server-types.d.ts', 'src/bot-input-types.d.ts']
+    : []),
   ...(mode === '--telegraf-options' ? ['src/telegraf-server-types.d.ts'] : []),
   'src/index.d.ts',
   'src/telegraf-composer.d.ts',
@@ -121,12 +132,16 @@ async function declarations(relative) {
       await declarations(path);
     } else if (entry.name.endsWith('.d.ts')) {
       const content =
-        before && frozen.has(path)
-          ? execFileSync('git', ['show', `${revision}:${path}`], {
-              cwd: root,
-              maxBuffer: 128 * 1024,
-            })
-          : await readFile(join(root, path));
+        before &&
+        mode === '--telegraf-agents' &&
+        path === 'src/telegraf-api.d.ts'
+          ? 'export {};\n'
+          : before && frozen.has(path)
+            ? execFileSync('git', ['show', `${revision}:${path}`], {
+                cwd: root,
+                maxBuffer: 128 * 1024,
+              })
+            : await readFile(join(root, path));
       await writeFile(join(workspace, path), content);
     }
   }

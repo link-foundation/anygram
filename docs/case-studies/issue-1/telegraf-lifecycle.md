@@ -92,7 +92,7 @@ Review additionally reproduced a custom context constructor identity failure;
 the SDK three-argument constructor now retains its supplied Telegram instance.
 
 [Nested Telegram roots and scoped settings](telegraf-transport-options.md) are
-verified separately. HTTP agent options, standalone Telegram construction,
-fully installed framework/cloud integration, controlled Telegram delivery and
+verified separately, followed by [agents and standalone construction](telegraf-agents.md).
+Fully installed framework/cloud integration, controlled Telegram delivery and
 all wider unfinished acceptance criteria remain open. These tests establish
 local callback/server contracts.

@@ -1208,6 +1208,31 @@ Telegraf nested transport settings work plan:
       with zero clones; packaging permits 209 entries. Main remains an ancestor
       and feedback is empty. Current/actual-SDK declarations compile; the
       complete atomic diff and all new sources, fixtures and examples are reviewed.
-- [ ] Commit/push and verify fresh exact-head CI before continuing.
-- [ ] Continue HTTP agents, standalone Telegram construction and every wider
-      unfinished application/framework/protocol acceptance criterion.
+- [x] Commit/push and verify fresh exact-head CI. Head
+      ce24156ce1d785a995036d1557fae97962df21d6 passed every applicable job in
+      run 40945592989, created 2026-10-29T20:03:26Z after its 20:02:47Z commit.
+- [ ] Continue every wider unfinished application/framework/protocol criterion;
+      HTTP agents and standalone construction are covered in the next follow-up.
+
+Telegraf agent and standalone construction work plan:
+
+- [x] Inventory SDK agent/attachment-agent and standalone Telegram contracts,
+      including metadata defaults and context copies, against actual pinned code.
+- [x] Write failing local HTTP/TLS regressions before implementing connections,
+      independent source agents and public construction; keep probes finite.
+- [x] Share native request deadlines, byte bounds, upload readers and selected
+      backend routing. Verify cancellation, failed responses and resource cleanup.
+- [x] Preserve immutable reproductions and compile portable current/actual-SDK
+      examples; archive primary API evidence and record remaining limitations.
+      Review additionally reproduced subclass method shadowing, missing `super`
+      delegation and bypassed callApi/getFile overrides. Shared prototype methods
+      retain the receiving view and its webhook scope. Final frozen comparisons
+      reproduce 34 failures among 37 cases and 21 declaration diagnostics.
+- [x] Run all relevant local/static/package/native checks and review the atomic
+      diff. All 2,260 core tests pass per runtime, with 27 native, eight Node 20
+      wire and sixteen parser-fact checks plus the bounded FIFO probe. Strict
+      gates scan 168 production sources with zero clones; packaging permits 211
+      entries. Main remains an ancestor, feedback is empty, and the 881-file
+      paginated PR inventory has no deletions. Actual SDK declarations compile.
+- [ ] Commit/push only the prepared branch and verify exact-head CI.
+- [ ] Continue every unfinished framework, application and protocol criterion.

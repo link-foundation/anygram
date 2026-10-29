@@ -24,7 +24,7 @@ export type {
   FrameworkWebhookCallback,
 } from './bot-webhook-types.js';
 import type * as Telegram from './bot-types/index.js';
-export type * as Telegram from './bot-types/index.js';
+export { Telegram } from './telegraf-api.js';
 import type {
   TcpTransportOptions,
   EncryptedFileUpload,
@@ -551,6 +551,7 @@ export interface BotApiOptions {
   apiMode?: 'bot' | 'user';
   testEnv?: boolean;
   fetch?: typeof fetch;
+  attachmentFetch?: typeof fetch;
   timeout?: number;
   maxResponseBytes?: number;
   maxUploadBytes?: number;

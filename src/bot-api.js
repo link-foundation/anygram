@@ -21,6 +21,7 @@ export class BotApi extends BotOperations {
     apiMode = 'bot',
     testEnv = false,
     fetch: fetcher = globalThis.fetch,
+    attachmentFetch = fetcher,
     timeout = 30000,
     maxResponseBytes = 8 * 1024 * 1024,
     maxUploadBytes = 64 * 1024 * 1024,
@@ -47,6 +48,7 @@ export class BotApi extends BotOperations {
     this.testEnv = testEnv;
     this.baseUrl = baseUrl.replace(/\/$/, '');
     this.fetch = fetcher;
+    this.attachmentFetch = attachmentFetch;
     this.timeout = timeout;
     this.maxResponseBytes = maxResponseBytes;
     this.maxUploadBytes = maxUploadBytes;
@@ -106,7 +108,7 @@ export class BotApi extends BotOperations {
         ...(await uploadBody(botTextParams(params), {
           maxBytes: this.maxUploadBytes,
           signal,
-          fetch: this.fetch,
+          fetch: this.attachmentFetch,
         })),
       }),
       options,

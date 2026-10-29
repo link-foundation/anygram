@@ -863,5 +863,17 @@ advance R01/R05/R08/R13/R16/R17/R19 with four nested Telegram settings, SDK
 relative roots, per-update metadata/options isolation and shared endpoint
 ownership. Frozen sources reproduce 21 of 25 cases and frozen declarations
 produce ten diagnostics; actual SDK comparisons cover HTTP paths, defaults,
-file links and webhook policy. Agents, standalone Telegram construction and
-all wider unfinished acceptance criteria remain open.
+file links and webhook policy. Agents and standalone construction are verified
+in the subsequent follow-up; all wider unfinished criteria remain open.
+
+The [Telegraf agent and constructor comparisons](telegraf-agents.md) advance the
+same R01/R05/R08/R13/R16/R17/R19 contracts with API/attachment connection control,
+URL uploads, per-context agent settings and standalone Telegram views. Real TLS
+fixtures verify selected CA agents, redirect selectors and cancellation/overflow
+socket cleanup. Actual SDK multipart URL uploads match on Node 20; the Bun
+reference shim's agent bypass is asserted as a difference. Checked declarations
+retain all 402 model/interface names and nested namespaces beside the runtime
+constructor, with subclass overrides and `super` delegation. Frozen sources
+reproduce 34 failures among 37 cases; frozen declarations reproduce 21 diagnostics. These local
+contracts leave the recorded selected-SDK runtime limitations, complete proxy
+families and all wider unfinished acceptance criteria open.

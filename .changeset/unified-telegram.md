@@ -219,3 +219,7 @@ bounded input and startup cleanup, SDK custom contexts and handler deadlines.
 Preserve Telegraf nested API roots, mode/test routing and per-update mutable
 Telegram settings through selected backends, canonical file links and shared
 polling ownership.
+
+Control native Telegraf API and attachment connections through Node agents,
+retain bounded URL uploads and expose standalone Telegram construction with
+shared webhook scopes, subclass behavior and existing model namespaces.

@@ -39,17 +39,39 @@ export interface TelegrafFilterOptions {
   path: string;
   secretToken?: string;
 }
+/** Accepts Node HTTP/HTTPS and proxy agents without requiring Node ambient types. */
+export interface TelegrafHttpAgent {
+  destroy(): void;
+}
 export interface TelegrafTelegramOptions {
   apiRoot: string;
   apiMode: 'bot' | 'user';
   testEnv: boolean;
   webhookReply: boolean;
+  agent?: TelegrafHttpAgent;
+  attachmentAgent?:
+    | TelegrafHttpAgent
+    | ((url: URL) => TelegrafHttpAgent | undefined);
 }
 /** Configured SDK views expose settings while the shared legacy facade stays portable. */
 export interface TelegrafTelegramApi extends TelegrafApi {
   readonly token: string;
   readonly options: TelegrafTelegramOptions;
+  readonly response?: WebhookResponse;
 }
+export type TelegrafTelegramConstructorOptions =
+  Partial<TelegrafTelegramOptions> &
+    Pick<
+      BotOptions,
+      | 'api'
+      | 'fetch'
+      | 'attachmentFetch'
+      | 'timeout'
+      | 'maxResponseBytes'
+      | 'maxUploadBytes'
+      | 'baseUrl'
+      | 'fileOptions'
+    >;
 export interface TelegrafOptions<C extends CommonContext> extends BotOptions {
   telegram?: Partial<TelegrafTelegramOptions>;
   contextType?: new (

@@ -1,0 +1,11 @@
+import { Telegram, type TelegrafTelegramApi } from '../src/index.js';
+const api: Telegram = new Telegram('123:example');
+declare const configured: TelegrafTelegramApi;
+const structural: Telegram = configured;
+declare const message: Telegram.Message.TextMessage;
+declare const entity: Telegram.MessageEntity.TextLinkMessageEntity;
+declare const chat: Telegram.Chat.PrivateChat;
+const text: string = message.text;
+const url: string = entity.url;
+const first: string = chat.first_name;
+void [api, structural, text, url, first];

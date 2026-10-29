@@ -904,3 +904,11 @@ Telegraf's nested `telegram` options support `apiRoot`, `apiMode`, `testEnv` and
 its calls while global settings apply to subsequent updates. Selected backends
 remain authoritative. [Transport examples and limits](docs/case-studies/issue-1/telegraf-transport-options.md)
 describe relative roots, canonical file links and endpoint polling ownership.
+
+Telegraf API and attachment agents control real HTTP connections, including
+client-side URL uploads and per-redirect attachment selectors. Standalone
+`new Telegram(token, options, response)` shares the same transport and webhook
+scope. The constructor preserves the existing `Telegram.Message` and other
+model namespaces in TypeScript. [Agent examples and limits](docs/case-studies/issue-1/telegraf-agents.md)
+include portable declarations, finite TLS comparisons and recorded SDK/runtime
+differences.

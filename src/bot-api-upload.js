@@ -1,10 +1,36 @@
-import { valueMapper, mapObjectValues } from './requests.js';
+import { valueMapper } from './requests.js';
 import { InputFile, readInputFile } from './input-file.js';
 import { validateByteLimit } from './http.js';
 
-function attachment(value) {
+// Upload-bearing field names from the pinned official method/model facts.
+const uploadFields = new Set([
+  'animation',
+  'audio',
+  'certificate',
+  'cover',
+  'document',
+  'live_photo',
+  'media',
+  'photo',
+  'sticker',
+  'thumbnail',
+  'video',
+  'video_note',
+  'voice',
+]);
+
+function attachment(value, field) {
   if (value instanceof InputFile) {
     return value;
+  }
+  if (
+    uploadFields.has(field) &&
+    typeof value?.url === 'string' &&
+    Object.keys(value).every((key) =>
+      ['url', 'filename', 'mimeType'].includes(key)
+    )
+  ) {
+    return new InputFile({ url: value.url }, value.filename);
   }
   const source = value?.data ?? value?.source ?? value;
   if (
@@ -31,11 +57,11 @@ export function collectUploads(
 ) {
   const files = [];
   const visit = valueMapper(
-    (value, next) => {
+    (value, next, field) => {
       if (!(value instanceof InputFile) && opaque(value)) {
         return value;
       }
-      const input = attachment(value);
+      const input = attachment(value, field);
       if (input) {
         if (files.length >= 1000) {
           throw new RangeError('Bot API upload exceeds file limit');
@@ -47,7 +73,9 @@ export function collectUploads(
         return file.reference;
       }
       return value && typeof value === 'object'
-        ? mapObjectValues(value, next)
+        ? Object.fromEntries(
+            Object.entries(value).map(([key, entry]) => [key, next(entry, key)])
+          )
         : value;
     },
     { label: 'Bot API' }
