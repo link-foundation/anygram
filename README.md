@@ -874,3 +874,9 @@ own licenses; @mtproto/core is GPL-3.0 and is not bundled. The template's `add`,
 
 `npm run check` includes strict declaration and typed-example checking through
 `tsconfig.json`, with library checking enabled. CI runs the same type check.
+
+Message replies and raw calls retain their content fields through public
+`Telegram.Message` subtype names, including photo sizes, text and animation
+documents. [Checked examples](examples/typed-grammy-message-subtypes.ts) and
+[comparison evidence](docs/case-studies/issue-1/bot-message-subtype-types.md)
+describe the supported result refinements.

@@ -76,7 +76,11 @@ files.set(
     .join(
       '\n'
     )}\nexport interface BotModels extends ${groups.join(', ')} {}\nexport interface RichTextArray extends Array<RichText> {}\n${facts.models
-    .map((model) => `export type ${model.name} = BotModels['${model.name}'];`)
+    .map((model) =>
+      ['Message', 'Chat', 'ChatFullInfo', 'Update'].includes(model.name)
+        ? `export type { ${model.name} } from '../bot-message-types.js';`
+        : `export type ${model.name} = BotModels['${model.name}'];`
+    )
     .join('\n')}`
 );
 await mkdir(directory, { recursive: true });

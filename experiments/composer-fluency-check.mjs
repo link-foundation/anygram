@@ -13,6 +13,10 @@ import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new globalThis.URL('../', import.meta.url));
 const modes = {
+  '--message-subtypes': [
+    ['typed-grammy-message-subtypes.ts', 'typed-telegraf-message-subtypes.ts'],
+    'cb9f92cfdb401628e1a2f6aef392a1696427c61a',
+  ],
   '--delivery-arguments': [
     [
       'typed-grammy-delivery-arguments.ts',
@@ -57,6 +61,9 @@ const fixtures = Array.isArray(selected) ? selected : [selected];
 const frozen = new Set([
   'src/index.d.ts',
   'src/telegraf-composer.d.ts',
+  ...(mode === '--message-subtypes'
+    ? ['src/bot-api-types.d.ts', 'src/bot-types/index.d.ts']
+    : []),
   ...(mode === '--delivery-arguments'
     ? ['src/bot-context-delivery.d.ts', 'src/bot-api-types.d.ts']
     : []),

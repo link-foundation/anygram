@@ -1,15 +1,18 @@
 import type { Parameters, RequestOptions, TextWithEntities } from './index.js';
 import type { BotApiMethodMap } from './bot-method-types/index.js';
 import type { InputPollOption, InputRichMessage } from './bot-types/index.js';
+import type { BotMessageResults } from './bot-result-types.js';
 import type { BotRequestInput } from './bot-input-types.js';
 
 export type BotApiMethod = keyof BotApiMethodMap;
 export type BotApiParams<M extends BotApiMethod> = BotRequestInput<
   BotApiMethodMap[M]['params']
 >;
-export type BotApiResult<M extends string> = M extends BotApiMethod
-  ? BotApiMethodMap[M]['result']
-  : unknown;
+export type BotApiResult<M extends string> = M extends keyof BotMessageResults
+  ? BotMessageResults[M]
+  : M extends BotApiMethod
+    ? BotApiMethodMap[M]['result']
+    : unknown;
 type RequiredKeys<T> = {
   [K in keyof T]-?: object extends Pick<T, K> ? never : K;
 }[keyof T];

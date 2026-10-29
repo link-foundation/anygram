@@ -1,0 +1,684 @@
+{
+  "sdk": "@grammyjs/types@5.0.0",
+  "source": "node_modules/@grammyjs/types/message.d.ts",
+  "sha256": "5c4769e477995354bd8b8592a034cec914c0528cf7791e6420dc98aa5a178e1f",
+  "bases": {
+    "ServiceMessage": [
+      "message_id",
+      "message_thread_id",
+      "from",
+      "sender_chat",
+      "date",
+      "guest_query_id",
+      "business_connection_id",
+      "chat",
+      "is_topic_message",
+      "direct_messages_topic"
+    ],
+    "CommonMessage": [
+      "message_id",
+      "message_thread_id",
+      "from",
+      "sender_chat",
+      "date",
+      "guest_query_id",
+      "business_connection_id",
+      "chat",
+      "is_topic_message",
+      "direct_messages_topic",
+      "sender_tag",
+      "receiver_user",
+      "ephemeral_message_id",
+      "sender_boost_count",
+      "sender_business_bot",
+      "forward_origin",
+      "is_automatic_forward",
+      "reply_to_message",
+      "reply_to_checklist_task_id",
+      "reply_to_poll_option_id",
+      "is_paid_post",
+      "external_reply",
+      "quote",
+      "reply_to_story",
+      "via_bot",
+      "guest_bot_caller_user",
+      "guest_bot_caller_chat",
+      "edit_date",
+      "has_protected_content",
+      "show_caption_above_media",
+      "is_from_offline",
+      "author_signature",
+      "link_preview_options",
+      "effect_id",
+      "paid_star_count",
+      "reply_markup"
+    ],
+    "CaptionableMessage": [
+      "message_id",
+      "message_thread_id",
+      "from",
+      "sender_chat",
+      "date",
+      "guest_query_id",
+      "business_connection_id",
+      "chat",
+      "is_topic_message",
+      "direct_messages_topic",
+      "sender_tag",
+      "receiver_user",
+      "ephemeral_message_id",
+      "sender_boost_count",
+      "sender_business_bot",
+      "forward_origin",
+      "is_automatic_forward",
+      "reply_to_message",
+      "reply_to_checklist_task_id",
+      "reply_to_poll_option_id",
+      "is_paid_post",
+      "external_reply",
+      "quote",
+      "reply_to_story",
+      "via_bot",
+      "guest_bot_caller_user",
+      "guest_bot_caller_chat",
+      "edit_date",
+      "has_protected_content",
+      "show_caption_above_media",
+      "is_from_offline",
+      "author_signature",
+      "link_preview_options",
+      "effect_id",
+      "paid_star_count",
+      "reply_markup",
+      "caption",
+      "caption_entities"
+    ],
+    "MediaMessage": [
+      "message_id",
+      "message_thread_id",
+      "from",
+      "sender_chat",
+      "date",
+      "guest_query_id",
+      "business_connection_id",
+      "chat",
+      "is_topic_message",
+      "direct_messages_topic",
+      "sender_tag",
+      "receiver_user",
+      "ephemeral_message_id",
+      "sender_boost_count",
+      "sender_business_bot",
+      "forward_origin",
+      "is_automatic_forward",
+      "reply_to_message",
+      "reply_to_checklist_task_id",
+      "reply_to_poll_option_id",
+      "is_paid_post",
+      "external_reply",
+      "quote",
+      "reply_to_story",
+      "via_bot",
+      "guest_bot_caller_user",
+      "guest_bot_caller_chat",
+      "edit_date",
+      "has_protected_content",
+      "show_caption_above_media",
+      "is_from_offline",
+      "author_signature",
+      "link_preview_options",
+      "effect_id",
+      "paid_star_count",
+      "reply_markup",
+      "caption",
+      "caption_entities",
+      "media_group_id",
+      "has_media_spoiler"
+    ]
+  },
+  "aliases": {
+    "TextMessage": {
+      "base": "CommonMessage",
+      "required": [
+        "text"
+      ],
+      "optional": [
+        "entities"
+      ]
+    },
+    "RichMessageMessage": {
+      "base": "CommonMessage",
+      "required": [
+        "rich_message"
+      ],
+      "optional": []
+    },
+    "AnimationMessage": {
+      "base": "CaptionableMessage",
+      "required": [
+        "animation",
+        "document"
+      ],
+      "optional": []
+    },
+    "AudioMessage": {
+      "base": "CaptionableMessage",
+      "required": [
+        "audio"
+      ],
+      "optional": []
+    },
+    "DocumentMessage": {
+      "base": "CaptionableMessage",
+      "required": [
+        "document"
+      ],
+      "optional": []
+    },
+    "LivePhotoMessage": {
+      "base": "MediaMessage",
+      "required": [
+        "live_photo"
+      ],
+      "optional": []
+    },
+    "PaidMediaMessage": {
+      "base": "CommonMessage",
+      "required": [
+        "paid_media"
+      ],
+      "optional": []
+    },
+    "PhotoMessage": {
+      "base": "MediaMessage",
+      "required": [
+        "photo"
+      ],
+      "optional": []
+    },
+    "StickerMessage": {
+      "base": "CommonMessage",
+      "required": [
+        "sticker"
+      ],
+      "optional": []
+    },
+    "StoryMessage": {
+      "base": "CommonMessage",
+      "required": [
+        "story"
+      ],
+      "optional": []
+    },
+    "VideoMessage": {
+      "base": "MediaMessage",
+      "required": [
+        "video"
+      ],
+      "optional": []
+    },
+    "VideoNoteMessage": {
+      "base": "CommonMessage",
+      "required": [
+        "video_note"
+      ],
+      "optional": []
+    },
+    "VoiceMessage": {
+      "base": "CaptionableMessage",
+      "required": [
+        "voice"
+      ],
+      "optional": []
+    },
+    "ContactMessage": {
+      "base": "CommonMessage",
+      "required": [
+        "contact"
+      ],
+      "optional": []
+    },
+    "DiceMessage": {
+      "base": "CommonMessage",
+      "required": [
+        "dice"
+      ],
+      "optional": []
+    },
+    "GameMessage": {
+      "base": "CommonMessage",
+      "required": [
+        "game"
+      ],
+      "optional": []
+    },
+    "PollMessage": {
+      "base": "CommonMessage",
+      "required": [
+        "poll"
+      ],
+      "optional": []
+    },
+    "VenueMessage": {
+      "base": "CommonMessage",
+      "required": [
+        "venue",
+        "location"
+      ],
+      "optional": []
+    },
+    "LocationMessage": {
+      "base": "CommonMessage",
+      "required": [
+        "location"
+      ],
+      "optional": []
+    },
+    "DirectMessagePriceChangedMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "direct_message_price_changed"
+      ],
+      "optional": []
+    },
+    "ChecklistMessage": {
+      "base": "CommonMessage",
+      "required": [
+        "checklist"
+      ],
+      "optional": []
+    },
+    "ChecklistTasksDoneMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "checklist_tasks_done"
+      ],
+      "optional": []
+    },
+    "ChecklistTasksAddedMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "checklist_tasks_added"
+      ],
+      "optional": []
+    },
+    "SuggestedPostInfoMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "suggested_post_info"
+      ],
+      "optional": []
+    },
+    "SuggestedPostApprovedMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "suggested_post_approved"
+      ],
+      "optional": []
+    },
+    "SuggestedPostApprovalFailedMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "suggested_post_approval_failed"
+      ],
+      "optional": []
+    },
+    "SuggestedPostDeclinedMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "suggested_post_declined"
+      ],
+      "optional": []
+    },
+    "SuggestedPostPaidMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "suggested_post_paid"
+      ],
+      "optional": []
+    },
+    "SuggestedPostRefundedMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "suggested_post_refunded"
+      ],
+      "optional": []
+    },
+    "ChatOwnerLeftMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "chat_owner_left"
+      ],
+      "optional": []
+    },
+    "ChatOwnerChangedMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "chat_owner_changed"
+      ],
+      "optional": []
+    },
+    "NewChatMembersMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "new_chat_members"
+      ],
+      "optional": []
+    },
+    "CommunityChatJoinedMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "community_chat_joined"
+      ],
+      "optional": []
+    },
+    "LeftChatMemberMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "left_chat_member"
+      ],
+      "optional": []
+    },
+    "NewChatTitleMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "new_chat_title"
+      ],
+      "optional": []
+    },
+    "NewChatPhotoMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "new_chat_photo"
+      ],
+      "optional": []
+    },
+    "DeleteChatPhotoMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "delete_chat_photo"
+      ],
+      "optional": []
+    },
+    "GroupChatCreatedMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "group_chat_created"
+      ],
+      "optional": []
+    },
+    "SupergroupChatCreated": {
+      "base": "ServiceMessage",
+      "required": [
+        "supergroup_chat_created"
+      ],
+      "optional": []
+    },
+    "ChannelChatCreatedMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "channel_chat_created"
+      ],
+      "optional": []
+    },
+    "ManagedBotCreatedMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "managed_bot_created"
+      ],
+      "optional": []
+    },
+    "PollOptionAddedMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "poll_option_added"
+      ],
+      "optional": []
+    },
+    "PollOptionDeletedMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "poll_option_deleted"
+      ],
+      "optional": []
+    },
+    "MessageAutoDeleteTimerChangedMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "message_auto_delete_timer_changed"
+      ],
+      "optional": []
+    },
+    "MigrateToChatIdMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "migrate_to_chat_id"
+      ],
+      "optional": []
+    },
+    "MigrateFromChatIdMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "migrate_from_chat_id"
+      ],
+      "optional": []
+    },
+    "PinnedMessageMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "pinned_message"
+      ],
+      "optional": []
+    },
+    "InvoiceMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "invoice"
+      ],
+      "optional": []
+    },
+    "SuccessfulPaymentMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "successful_payment"
+      ],
+      "optional": []
+    },
+    "RefundedPaymentMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "refunded_payment"
+      ],
+      "optional": []
+    },
+    "UsersSharedMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "users_shared"
+      ],
+      "optional": []
+    },
+    "ChatSharedMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "chat_shared"
+      ],
+      "optional": []
+    },
+    "ConnectedWebsiteMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "connected_website"
+      ],
+      "optional": []
+    },
+    "WriteAccessAllowedMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "write_access_allowed"
+      ],
+      "optional": []
+    },
+    "PassportDataMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "passport_data"
+      ],
+      "optional": []
+    },
+    "ProximityAlertTriggeredMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "proximity_alert_triggered"
+      ],
+      "optional": []
+    },
+    "BoostAddedMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "boost_added"
+      ],
+      "optional": []
+    },
+    "ChatBackgroundSetMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "chat_background_set"
+      ],
+      "optional": []
+    },
+    "ForumTopicCreatedMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "forum_topic_created"
+      ],
+      "optional": []
+    },
+    "ForumTopicEditedMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "forum_topic_edited"
+      ],
+      "optional": []
+    },
+    "ForumTopicClosedMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "forum_topic_closed"
+      ],
+      "optional": []
+    },
+    "ForumTopicReopenedMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "forum_topic_reopened"
+      ],
+      "optional": []
+    },
+    "GeneralForumTopicHiddenMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "general_forum_topic_hidden"
+      ],
+      "optional": []
+    },
+    "GeneralForumTopicUnhiddenMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "general_forum_topic_unhidden"
+      ],
+      "optional": []
+    },
+    "GiveawayCreatedMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "giveaway_created"
+      ],
+      "optional": []
+    },
+    "GiveawayMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "giveaway"
+      ],
+      "optional": []
+    },
+    "GiveawayWinnersMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "giveaway_winners"
+      ],
+      "optional": []
+    },
+    "GiveawayCompletedMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "giveaway_completed"
+      ],
+      "optional": []
+    },
+    "GiftMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "gift"
+      ],
+      "optional": []
+    },
+    "UniqueGiftMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "unique_gift"
+      ],
+      "optional": []
+    },
+    "GiftUpgradeSentMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "gift_upgrade_sent"
+      ],
+      "optional": []
+    },
+    "PaidMessagePriceChangedMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "paid_message_price_changed"
+      ],
+      "optional": []
+    },
+    "VideoChatScheduledMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "video_chat_scheduled"
+      ],
+      "optional": []
+    },
+    "VideoChatStartedMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "video_chat_started"
+      ],
+      "optional": []
+    },
+    "VideoChatEndedMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "video_chat_ended"
+      ],
+      "optional": []
+    },
+    "VideoChatParticipantsInvitedMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "video_chat_participants_invited"
+      ],
+      "optional": []
+    },
+    "WebAppDataMessage": {
+      "base": "ServiceMessage",
+      "required": [
+        "web_app_data"
+      ],
+      "optional": []
+    }
+  }
+}

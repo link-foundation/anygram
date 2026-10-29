@@ -197,3 +197,6 @@ Type media, scoped delivery, reply/edit options and native canonical Bot API
 arguments from shared operation contracts. Preserve recognized binary/source
 upload inputs recursively in requests and top-level formatted captions without
 changing response models; compare portable fixtures against actual pinned SDKs.
+
+Retain public Bot API message subtype names and method-specific content/edit
+results through raw methods, positional APIs and scoped replies.

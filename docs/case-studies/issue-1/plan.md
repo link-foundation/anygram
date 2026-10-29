@@ -1051,5 +1051,21 @@ Delivery/edit argument declaration work plan:
       tests pass per runtime; current and actual-SDK fixtures compile. Strict
       checks scan 152 sources with zero clones and packaging permits 195 entries.
       Main remains an ancestor and all four feedback streams remain empty.
-- [ ] Commit/push the reviewed change and verify exact-head CI.
+- [x] Commit/push the reviewed change and verify exact-head CI.
+      Head cb9f92cfdb401628e1a2f6aef392a1696427c61a passed run 40923162079,
+      created 2026-10-29T17:37:52Z, including every applicable runtime and gate.
 - [ ] Continue all wider unmet criteria in the same draft PR.
+
+Message subtype and result refinement work plan:
+
+- [x] Reproduce missing public subtype names and erased method-specific fields
+      with portable positive/negative checked examples before implementation.
+- [x] Derive subtype fields from owned official models, retain SDK names and
+      propagate result refinements through raw, positional and scoped helpers.
+- [x] Compile equivalent fixtures against both actual SDKs with strict checking.
+- [x] Run local gates and review the atomic change. Frozen declarations produce
+      27 diagnostics; current and actual-SDK examples and the complete 81-name
+      presence oracle compile. All 2,007 core tests pass per runtime; the static
+      gate scans 154 production sources with zero clones, packaging 197 entries.
+- [ ] Commit/push and inspect exact-head CI.
+- [ ] Continue every wider unfinished acceptance criterion in the same draft PR.

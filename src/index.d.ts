@@ -1,3 +1,4 @@
+import type { BotTextEditResult } from './bot-result-types.js';
 import type * as Telegram from './bot-types/index.js';
 export type * as Telegram from './bot-types/index.js';
 import type {
@@ -550,14 +551,14 @@ export declare class BotApi {
     chat: string | number | bigint,
     text: string | TextWithEntities,
     options?: BotSendMessageOptions
-  ): Promise<BotMessage>;
+  ): Promise<BotApiResult<'sendMessage'>>;
   editMessage(
     chat: BotArgument<'editMessageText', 'chat_id'>,
     options: BotEditOptions & {
       id: number;
       text: string | TextWithEntities;
     }
-  ): Promise<BotMessage | true>;
+  ): Promise<BotTextEditResult>;
   deleteMessages(
     chat: BotArgument<'deleteMessages', 'chat_id'>,
     ids: readonly number[],
@@ -578,7 +579,7 @@ export declare class BotApi {
     options: BotOther<'sendDocument', 'chat_id' | 'document'> & {
       file: BotArgument<'sendDocument', 'document'>;
     }
-  ): Promise<BotMessage>;
+  ): Promise<BotApiResult<'sendDocument'>>;
   downloadMedia(
     fileId: string,
     options?: RequestOptions & { maxBytes?: number }
@@ -752,7 +753,7 @@ export interface BotContextApi {
     text: string | TextWithEntities,
     options?: BotSendMessageOptions,
     signal?: AbortSignal
-  ): Promise<BotMessage>;
+  ): Promise<BotApiResult<'sendMessage'>>;
   deleteMessage(
     chat: string | number | bigint,
     id: number,
@@ -800,7 +801,7 @@ export interface ContextApi extends BotContextApi, GrammyPositionalApi {
     text: BotArgument<'editMessageText', 'text_or_rich_message'>,
     options?: BotEditOptions,
     signal?: AbortSignal
-  ): Promise<BotMessage | true>;
+  ): Promise<BotApiResult<'editMessageText'>>;
   editMessageTextInline(
     inlineId: string,
     text: BotArgument<'editMessageText', 'text_or_rich_message'>,
@@ -817,7 +818,7 @@ export interface TelegrafApi extends BotContextApi, TelegrafPositionalApi {
     text: string | TextWithEntities,
     options?: BotEditOptions,
     request?: RequestOptions | AbortSignal
-  ): Promise<BotMessage | true>;
+  ): Promise<BotTextEditResult>;
 }
 export interface Context
   extends
@@ -856,7 +857,7 @@ export declare class Context {
     text: BotArgument<'editMessageText', 'text_or_rich_message'>,
     options?: BotEditOptions,
     signal?: AbortSignal
-  ): Promise<BotMessage | true>;
+  ): Promise<BotApiResult<'editMessageText'>>;
   answerCallbackQuery(
     options?: string | Parameters,
     signal?: AbortSignal
@@ -908,7 +909,7 @@ export interface TelegrafContext
     text: string | TextWithEntities,
     options?: BotEditOptions,
     request?: RequestOptions | AbortSignal
-  ): Promise<BotMessage | true>;
+  ): Promise<BotTextEditResult>;
   readonly me?: string;
   readonly updateType: string;
   command?: string;

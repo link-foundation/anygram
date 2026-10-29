@@ -30,6 +30,18 @@ for (const [sourceName, targetName, sdk, namespace] of [
     'telegraf/types',
   ],
   [
+    'typed-grammy-message-subtypes.ts',
+    'typed-grammy-subtypes-fixture.ts',
+    'grammy',
+    '@grammyjs/types',
+  ],
+  [
+    'typed-telegraf-message-subtypes.ts',
+    'typed-telegraf-subtypes-fixture.ts',
+    'telegraf',
+    'telegraf/types',
+  ],
+  [
     'typed-grammy-delivery-arguments.ts',
     'typed-grammy-delivery-fixture.ts',
     'grammy',

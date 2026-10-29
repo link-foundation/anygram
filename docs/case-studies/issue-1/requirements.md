@@ -805,3 +805,12 @@ change; the two portable fixtures also compile against actual pinned SDKs.
 Complete SDK subtypes/refinements, remaining manual helpers, vendor-private input
 conversion, framework/webhook integrations and every wider unmet criterion remain
 unfinished.
+
+Message subtype declarations advance R01/R05/R08/R13/R16/R17/R19: all 81 pinned
+modern message namespace names and twelve chat/update aliases are available.
+Twenty-nine content/edit result contracts retain their fields through raw,
+positional and scoped helpers. Portable examples compile against both actual
+SDKs; a separate oracle checks the entire modern message namespace and required
+field sets. [Subtype evidence](bot-message-subtype-types.md) records the scope
+and remaining namespaces, chat/update refinement and conditional server limits.
+Every wider acceptance criterion remains open.

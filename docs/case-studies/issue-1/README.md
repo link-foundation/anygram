@@ -1603,3 +1603,8 @@ ancestor of this branch. Fresh CI is required for this constructor checkpoint.
 
 The [bounded local persistence checkpoint](storage-limits.md) adds seven
 regressions and brings local verification to 514 passing tests per runtime.
+
+[Message subtype declarations](bot-message-subtype-types.md) retain 81 public
+message subtype names, twelve chat/update aliases and 29 content/edit result
+contracts. Portable examples and an exhaustive message field-presence oracle
+compile against actual pinned SDKs; wider compatibility remains unfinished.

@@ -23,6 +23,9 @@
     "typed-telegraf-context-fixture.ts",
     "typed-grammy-delivery-fixture.ts",
     "typed-telegraf-delivery-fixture.ts",
-    "typed-context-result-differences.ts"
+    "typed-context-result-differences.ts",
+    "typed-grammy-subtypes-fixture.ts",
+    "typed-telegraf-subtypes-fixture.ts",
+    "typed-bot-subtype-oracle.ts"
   ]
 }

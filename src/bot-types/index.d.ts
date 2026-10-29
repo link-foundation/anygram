@@ -19,12 +19,12 @@ export interface BotModels
     Models6,
     Models7 {}
 export interface RichTextArray extends Array<RichText> {}
-export type Update = BotModels['Update'];
+export type { Update } from '../bot-message-types.js';
 export type WebhookInfo = BotModels['WebhookInfo'];
 export type User = BotModels['User'];
-export type Chat = BotModels['Chat'];
-export type ChatFullInfo = BotModels['ChatFullInfo'];
-export type Message = BotModels['Message'];
+export type { Chat } from '../bot-message-types.js';
+export type { ChatFullInfo } from '../bot-message-types.js';
+export type { Message } from '../bot-message-types.js';
 export type MessageId = BotModels['MessageId'];
 export type InaccessibleMessage = BotModels['InaccessibleMessage'];
 export type MaybeInaccessibleMessage = BotModels['MaybeInaccessibleMessage'];
