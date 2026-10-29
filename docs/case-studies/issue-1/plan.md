@@ -580,3 +580,11 @@ leaks. Nineteen cases cover the native transport through shared readers and
 cancellation. Verify all runtimes and static gates, commit this atomic change,
 then implement optional vendor-backend/account-media conversion and continue the
 remaining downstream scenarios. Keep all unverified criteria open.
+
+Late file-source cleanup: a real bounded Linux FIFO probe failed because a
+10 ms request deadline awaited a blocked open until its delayed writer arrived.
+The request now rejects before that release and closes the eventual handle. A
+further failing-before portable test covers cancellation of a URL body returned
+after cancellation. Verify 634 portable cases, thirteen native integrations and
+the separate FIFO probe, then preserve the atomic fix and continue optional
+vendor/account InputFile integration. Every broader unmet criterion remains open.

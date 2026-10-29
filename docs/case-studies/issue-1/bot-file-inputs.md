@@ -3,8 +3,8 @@
 The native Bot API transport previously accepted only bytes, Blobs and buffered
 wrappers. Paths, streams and supplier functions were serialized as objects or
 failed before a valid attachment reached Telegram. `tests/input-file.test.js`
-retains nineteen scenarios: ten initial failures, one existing structural guard,
-six further contract checks and two additional failing-before resource probes.
+retains twenty scenarios: ten initial failures, one existing structural guard,
+six further contract checks and three additional failing-before resource probes.
 
 The owned `InputFile` constructor follows grammY's explicit upload convention.
 It accepts bytes, Blobs, local paths, file/HTTP/HTTPS URL objects, URL-like
@@ -33,7 +33,11 @@ downloads and the Bot API request/response. A shared cancellation helper also
 replaces the earlier TCP-only helper. Cancellation stops awaiting blocked user
 iterators and requests their return; Node streams are destroyed. A supplier
 result that arrives after cancellation is discarded through its supported close
-operation. Arbitrary application suppliers/iterators must cooperate with cleanup;
+operation. A late URL response body is cancelled too. A bounded Linux FIFO
+probe reproduces a blocked local-file open: cancellation returns before a writer
+unblocks the open, and the eventual handle is closed. Kernel filesystem calls
+continue until they complete; cancellation stops awaiting them and retains
+cleanup ownership. Arbitrary application suppliers/iterators must cooperate with cleanup;
 the library cannot terminate code executing outside its owned resources.
 Direct stream-backed InputFile instances are single-use. Bytes, Blobs, paths,
 URLs and suppliers are reusable; a supplier can create a fresh stream per send.
@@ -53,11 +57,19 @@ account-media InputFile integration, streaming multipart without buffering and
 complete browser/Worker parity remain open. It does not establish the complete
 file/media feature union or downstream keyboard/photo coverage.
 
-All 633 tests pass on Node, Bun and Deno; the thirteen isolated native terminal
+All 634 tests pass on Node, Bun and Deno; the thirteen isolated native terminal
 integrations still pass. Strict ESLint, Prettier, TypeScript/example compilation
 and schema declaration freshness pass. The duplication gate scans 81 production
 sources with zero clones. The package contains 124 permitted entries. Fresh CI
-is required for this implementation. The preceding fatal-log head ecaf8f3a
-passed all nine runtime/OS jobs, native integration and applicable gates in
-[run 40850861766](https://github.com/link-foundation/anygram/actions/runs/40850861766),
-created 2026-10-29T09:35:42Z and completed 2026-10-29T09:38:24Z.
+is required for the late-source cleanup change. The preceding file-input head
+9aa73176 passed all nine runtime/OS jobs, native integration and applicable gates
+in [run 40852795814](https://github.com/link-foundation/anygram/actions/runs/40852795814),
+created 2026-10-29T09:50:35Z and completed 2026-10-29T09:52:30Z.
+
+The late URL-response regression failed with zero body cancellations before its
+fix. Run the separate filesystem probe with
+`node --max-old-space-size=64 --stack-size=512 experiments/input-file-blocked-path.mjs`.
+It failed before the change because cancellation waited for the delayed writer
+(about 254 ms). It now asserts event ordering and eventual descriptor cleanup,
+with a finite writer retry count and five-second process watchdog. It runs in
+the Linux native integration CI job; it is separate from the portable test count.

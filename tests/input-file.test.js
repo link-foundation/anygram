@@ -431,3 +431,47 @@ it('destroys a supplier-created Node stream that arrives after request cancellat
     stream.destroy();
   }
 });
+
+it('cancels a URL response body that arrives after request cancellation', async () => {
+  let release, entered;
+  const ready = new Promise((resolve) => {
+    entered = resolve;
+  });
+  const supplied = new Promise((resolve) => {
+    release = resolve;
+  });
+  let cancelled = 0,
+    calls = 0;
+  const controller = new globalThis.AbortController();
+  const { api } = transport({
+    fetch: () => {
+      calls++;
+      entered();
+      return supplied;
+    },
+  });
+  const pending = send(
+    api,
+    new anygram.InputFile(new globalThis.URL('https://files.example/x')),
+    { signal: controller.signal }
+  );
+  await ready;
+  const reason = new Error('download cancelled');
+  controller.abort(reason);
+  await assert.rejects(pending, (error) => error === reason);
+  const body = new globalThis.ReadableStream({
+    cancel() {
+      cancelled++;
+    },
+  });
+  release(new Response(body));
+  await new Promise((resolve) => globalThis.setTimeout(resolve, 0));
+  try {
+    assert.equal(cancelled, 1);
+    assert.equal(calls, 1);
+  } finally {
+    if (!cancelled) {
+      await body.cancel();
+    }
+  }
+});

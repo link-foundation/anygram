@@ -336,6 +336,8 @@ jobs:
         run: npm ci --prefix experiments/terminal-runtime
       - name: Verify actual PTY, canvas and independently decoded GIF frames
         run: npm test --prefix experiments/terminal-runtime
+      - name: Verify blocked file-open cancellation and late descriptor cleanup
+        run: node --max-old-space-size=64 --stack-size=512 experiments/input-file-blocked-path.mjs
 
   # Release - only runs on main after tests pass (for push events)
   release:

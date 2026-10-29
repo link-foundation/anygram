@@ -38,12 +38,12 @@ function discardSource(source) {
   return source?.destroy?.() ?? source?.cancel?.() ?? source?.return?.();
 }
 
-function suppliedSource(factory, signal) {
+function suppliedSource(factory, signal, discard = discardSource) {
   const pending = Promise.resolve(factory());
   pending
     .then((source) => {
       if (signal?.aborted) {
-        return discardSource(source);
+        return discard(source);
       }
     })
     .catch(() => {});
@@ -84,8 +84,7 @@ function checkSize(size, maxBytes) {
   }
 }
 
-async function readLocalFile(path, maxBytes, signal) {
-  const source = await sourceOf(path);
+async function readLocalSource(source, maxBytes, signal) {
   try {
     signal?.throwIfAborted();
     checkSize(source.size, maxBytes);
@@ -101,6 +100,15 @@ async function readLocalFile(path, maxBytes, signal) {
   } finally {
     await source.close();
   }
+}
+
+async function readLocalFile(path, maxBytes, signal) {
+  const source = await suppliedSource(
+    () => sourceOf(path),
+    signal,
+    (opened) => opened.close()
+  );
+  return abortable(readLocalSource(source, maxBytes, signal), signal);
 }
 
 async function closeIterator(input, iterator, signal, failure) {
@@ -162,9 +170,13 @@ async function readUrl(source, { maxBytes, signal, fetch: fetcher }) {
   if (!['http:', 'https:'].includes(source.protocol)) {
     throw new TypeError('InputFile URL requires HTTP, HTTPS or file protocol');
   }
-  const response = await abortable(fetcher(source.href, { signal }), signal);
+  const response = await suppliedSource(
+    () => fetcher(source.href, { signal }),
+    signal,
+    (late) => late.body?.cancel()
+  );
   if (!response.ok) {
-    await response.body?.cancel();
+    await abortable(response.body?.cancel(), signal);
     throw new Error(`InputFile download failed with HTTP ${response.status}`);
   }
   return readResponseBytes(response, { maxBytes, signal });
