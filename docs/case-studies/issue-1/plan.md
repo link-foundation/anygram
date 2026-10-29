@@ -178,6 +178,14 @@ All 588 tests pass per runtime with strict checks, 78 scanned sources and
 complete pinned terminal source scenarios next; retain explicit migration
 changes for application defects rather than claiming unchanged compatibility.
 
+The [terminal source checkpoint](terminal-migration.md) reproduces and patches
+nine application failures and six upload failures. Sixteen source scenarios
+include the actual emulator, grammY comparisons and patch application; upload
+preparation reuses shared traversal guards and adds finite byte/file limits.
+Complete local checks and fresh CI, then continue real rendering/PTY integration,
+keyboard/photo helpers and awaited polling shutdown. Preserve all broader open
+criteria and keep working independently of controlled-account credentials.
+
 Keep protocol completion (secret chats/call media/transports), complete backend
 return/event/style compatibility and actual downstream scenarios open in the
 ledger. Continue with transport resource/cancellation gaps and the shared bot

@@ -44,6 +44,11 @@ to 64 MiB and accepts `{ maxBytes, signal, timeout }`. MTProto HTTPS responses
 default to 16 MiB (`maxBytes` in transport options). Exceeding a response limit
 raises `TelegramError` with type `RESPONSE_TOO_LARGE` and releases the body reader.
 Bot API servers and custom networking can be selected with `baseUrl` and `fetch`.
+Buffered uploads accept bytes, Blobs, `{ data, filename }` and
+`{ source, filename }`, including nested albums and thumbnails. Total attachment
+bytes default to 64 MiB (`maxUploadBytes`); each request accepts up to 1000 files.
+Upload traversal uses the same depth/vector guards as request normalization,
+and pre-cancelled calls do not traverse or upload their files.
 
 Request normalization checks nesting and vector limits before visiting child
 values (defaults: depth 64 and 100000 vector entries). Invalid request limits,

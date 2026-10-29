@@ -71,3 +71,6 @@ nested contexts while preserving replacement, deletion and failure persistence.
 Preserve grammY chat/inline edit signatures and Telegraf's separate positional
 view over one transport. Retain structured Bot API failure data for application
 recovery, copying parameters and redacting native response descriptions.
+
+Accept buffered and Blob source wrappers in Bot API multipart media, preserving
+filenames and guarding total bytes, file count, nesting and vector lengths.

@@ -71,11 +71,12 @@ export function requestOf(method, params = {}) {
 }
 
 export const requestLimits = Object.freeze({ maxDepth: 64, maxVector: 100000 });
-function requestMapper(
+export function valueMapper(
   visit,
   {
     maxDepth = requestLimits.maxDepth,
     maxVector = requestLimits.maxVector,
+    label = 'TL',
   } = {}
 ) {
   if (
@@ -84,15 +85,15 @@ function requestMapper(
     !Number.isSafeInteger(maxVector) ||
     maxVector < 0
   ) {
-    throw new RangeError('Invalid TL request limits');
+    throw new RangeError(`Invalid ${label} request limits`);
   }
   function map(value, depth = 0, name) {
     if (depth > maxDepth) {
-      throw new RangeError('TL depth limit exceeded');
+      throw new RangeError(`${label} depth limit exceeded`);
     }
     if (Array.isArray(value)) {
       if (value.length > maxVector) {
-        throw new RangeError('Invalid TL vector length');
+        throw new RangeError(`Invalid ${label} vector length`);
       }
       return value.map((item) => map(item, depth + 1));
     }
@@ -105,7 +106,7 @@ export function gramRequest(Api, request, limits) {
   if (request.original?.getBytes && !nativeTlObjects.has(request.original)) {
     return request.original;
   }
-  const convert = requestMapper((value, next) => {
+  const convert = valueMapper((value, next) => {
     if (value instanceof Uint8Array) {
       return Buffer.from(value);
     }
@@ -160,7 +161,7 @@ export function objectRequest(request, limits) {
 
 /** Canonicalize complete values so root vectors share the same traversal limits. */
 export function canonicalValue(value, limits, name) {
-  const convert = requestMapper((value, next, name) => {
+  const convert = valueMapper((value, next, name) => {
     if (!value || typeof value !== 'object' || value instanceof Uint8Array) {
       return value;
     }

@@ -36,6 +36,11 @@ through the shared camelCase view and applies existing normalization guards to
 root response arrays. Sixteen regressions cover this data-view contract and
 finite failing-before resource probes. Vendor custom models remain open.
 
+The [pinned terminal migration](terminal-migration.md) executes both complete
+application handler sets and the original text emulator with bounded PTYs,
+timers and rendering. Explicit patches and upload regressions retain the
+remaining real-renderer/startup/Telegram evidence as unfinished.
+
 The [Bot API edit/error checkpoint](bot-api-compatibility.md) fixes the
 terminal's grammY edit argument mapping and structured failure handling, while
 preserving Telegraf's separate signature. Full terminal migration remains open.

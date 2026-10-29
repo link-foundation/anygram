@@ -1,2 +1,5 @@
 # Captured primary-source bytes and their hashes must survive every checkout.
 docs/case-studies/**/data/** -text
+
+# Derived patches must apply to the exact archived LF source bytes on Windows.
+docs/case-studies/**/*.patch -text

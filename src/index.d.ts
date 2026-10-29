@@ -391,6 +391,7 @@ export interface BotApiOptions {
   fetch?: typeof fetch;
   timeout?: number;
   maxResponseBytes?: number;
+  maxUploadBytes?: number;
 }
 export declare class BotApi {
   constructor(options: BotApiOptions);

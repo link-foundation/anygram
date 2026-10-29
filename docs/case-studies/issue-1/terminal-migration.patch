@@ -1,0 +1,575 @@
+diff --git a/src/text-bot.js b/src/text-bot.js
+index 186f91e..e31a5c2 100644
+--- a/src/text-bot.js
++++ b/src/text-bot.js
+@@ -1,4 +1,4 @@
+-import { Bot, InlineKeyboard } from "grammy";
++import { Bot } from "anygram";
+ import * as pty from "node-pty";
+ import { config } from "dotenv";
+ import pino from "pino";
+@@ -157,6 +157,7 @@ bot.command("start", async (ctx) => {
+     // Kill existing session if any
+     if (userSessions.has(userId)) {
+       logger.info({ userId }, 'Killing existing terminal session');
++      userSessions.get(userId).cleanup();
+       userSessions.get(userId).terminal.kill();
+       userSessions.delete(userId);
+     }
+@@ -175,6 +176,7 @@ bot.command("start", async (ctx) => {
+     const virtualTerminal = new VirtualTerminal(cols, rows);
+     let messageId = null;
+     let updateTimeout = null;
++    let initialUpdateTimeout = null;
+     let lastMessageContent = '';
+     
+     // Subscribe to terminal changes for optimized updates
+@@ -201,6 +203,7 @@ bot.command("start", async (ctx) => {
+     
+     // Handle terminal output
+     terminal.onData((data) => {
++      if (userSessions.get(userId)?.terminal !== terminal) { return; }
+       logger.debug({ 
+         userId, 
+         dataLength: data.length,
+@@ -214,6 +217,8 @@ bot.command("start", async (ctx) => {
+     
+     // Handle terminal exit
+     terminal.onExit((exitCode, signal) => {
++      if (userSessions.get(userId)?.terminal !== terminal) { return; }
++      userSessions.get(userId).cleanup();
+       logger.info({ userId, exitCode, signal }, 'Terminal session ended');
+       if (updateTimeout) {
+         clearTimeout(updateTimeout);
+@@ -226,6 +231,7 @@ bot.command("start", async (ctx) => {
+     
+     // Function to update the terminal message
+     async function updateTerminalMessage() {
++      if (userSessions.get(userId)?.terminal !== terminal) { return; }
+       try {
+         const formattedOutput = formatTerminalOutput(virtualTerminal);
+         const messageText = `🚀 **Terminal ${name} (${cols}x${rows})** - Ready!
+@@ -322,6 +328,13 @@ ${formattedOutput}
+       virtualTerminal,
+       messageId,
+       updateTerminalMessage,
++      cleanup() {
++        clearTimeout(updateTimeout);
++        clearTimeout(initialUpdateTimeout);
++        if (typeof unsubscribeFromChanges === 'function') {
++          unsubscribeFromChanges();
++        }
++      },
+       unsubscribeFromChanges,
+       cols,
+       rows,
+@@ -354,7 +367,7 @@ ${initialOutput}
+     logger.debug({ userId, messageId }, 'Initial terminal message sent');
+     
+     // Wait a bit for initial shell prompt, then update
+-    setTimeout(updateTerminalMessage, 500);
++    initialUpdateTimeout = setTimeout(updateTerminalMessage, 500);
+     
+   } catch (error) {
+     logger.error({ userId, error: error.message, stack: error.stack }, 'Failed to start terminal session');
+@@ -363,81 +376,6 @@ ${initialOutput}
+   }
+ });
+ 
+-// Handle all text messages as terminal commands
+-bot.on("message:text", async (ctx) => {
+-  const userId = ctx.from.id;
+-  const session = userSessions.get(userId);
+-  
+-  logger.debug({ userId, messageText: ctx.message.text }, 'Received text message');
+-  
+-  if (!session) {
+-    logger.warn({ userId }, 'No active terminal session for command execution');
+-    return ctx.reply("❌ No active terminal session. Use /start to begin.");
+-  }
+-  
+-  const command = parseCommandInput(ctx.message.text);
+-
+-  // Skip if the message is empty after parsing
+-  if (!command) {
+-    logger.debug({ userId }, 'Empty command after parsing, skipping');
+-    return;
+-  }
+-
+-  // Check for special control sequences
+-  if (command === '^C' || command === 'ctrl+c' || command === 'CTRL+C') {
+-    logger.info({ userId }, 'Sending SIGINT (Ctrl+C) to terminal');
+-    session.terminal.write('\x03'); // Send CTRL+C (ASCII 3)
+-    await ctx.reply(`🛑 Sent SIGINT (Ctrl+C) to terminal`, { parse_mode: 'Markdown' });
+-    return;
+-  } else if (command === '^D' || command === 'ctrl+d' || command === 'CTRL+D') {
+-    logger.info({ userId }, 'Sending EOF (Ctrl+D) to terminal');
+-    session.terminal.write('\x04'); // Send CTRL+D (ASCII 4)
+-    await ctx.reply(`🔚 Sent EOF (Ctrl+D) to terminal`, { parse_mode: 'Markdown' });
+-    return;
+-  } else if (command === '^Z' || command === 'ctrl+z' || command === 'CTRL+Z') {
+-    logger.info({ userId }, 'Sending SIGTSTP (Ctrl+Z) to terminal');
+-    session.terminal.write('\x1A'); // Send CTRL+Z (ASCII 26)
+-    await ctx.reply(`⏸️ Sent SIGTSTP (Ctrl+Z) to terminal`, { parse_mode: 'Markdown' });
+-    return;
+-  }
+-
+-  // Store last command globally and in session for output formatting
+-  global.lastCommand = command;
+-  session.lastCommand = command;
+-
+-  try {
+-    // Enhanced interactive command detection
+-    const interactiveCommands = ['top', 'htop', 'vim', 'nano', 'emacs', 'less', 'more', 'man', 'watch'];
+-    const streamingCommands = ['tail -f', 'ping'];
+-    const longRunningCommands = ['wget', 'curl', 'rsync'];
+-    
+-    const isInteractive = interactiveCommands.some(cmd => command.toLowerCase().startsWith(cmd));
+-    const isStreaming = streamingCommands.some(cmd => command.toLowerCase().includes(cmd));
+-    const isLongRunning = longRunningCommands.some(cmd => command.toLowerCase().startsWith(cmd));
+-    
+-    session.isInteractive = isInteractive || isStreaming;
+-    
+-    if (isInteractive) {
+-      logger.info({ userId, command }, 'Interactive command detected');
+-      await ctx.reply(`⚡ Running interactive command \`${command}\`. The display will update automatically. Send \`^C\` to stop.`, { parse_mode: 'Markdown' });
+-    } else if (isStreaming) {
+-      logger.info({ userId, command }, 'Streaming command detected');
+-      await ctx.reply(`🔄 Running streaming command \`${command}\`. Send \`^C\` to stop.`, { parse_mode: 'Markdown' });
+-    } else if (isLongRunning) {
+-      logger.info({ userId, command }, 'Long-running command detected');
+-      await ctx.reply(`⏳ Running \`${command}\`... This may take a while.`, { parse_mode: 'Markdown' });
+-    }
+-
+-    logger.info({ userId, command }, 'Executing terminal command');
+-    // Send command to terminal
+-    session.terminal.write(command + '\r');
+-  } catch (error) {
+-    logger.error({ userId, command, error: error.message }, 'Failed to execute terminal command');
+-    await ctx.reply("❌ Failed to execute command. Check logs for details.");
+-    process.exit(1);
+-  }
+-});
+-
+ // Handle stop command
+ bot.command("stop", async (ctx) => {
+   const userId = ctx.from.id;
+@@ -447,6 +385,7 @@ bot.command("stop", async (ctx) => {
+   
+   if (session) {
+     try {
++      session.cleanup();
+       session.terminal.kill();
+       userSessions.delete(userId);
+       logger.info({ userId }, 'Terminal session stopped successfully');
+@@ -477,7 +416,8 @@ bot.command("restart", async (ctx) => {
+         from: ctx.from,
+         chat: ctx.chat,
+         date: Date.now(),
+-        text: "/start"
++        text: "/start",
++        entities: [{ type: "bot_command", offset: 0, length: 6 }]
+       }
+     });
+     logger.info({ userId }, 'Terminal session restart initiated');
+@@ -521,6 +461,82 @@ bot.command("help", async (ctx) => {
+   logger.info({ userId: ctx.from.id }, 'Help command sent');
+ });
+ 
++// Handle all text messages as terminal commands
++bot.on("message:text", async (ctx) => {
++  const userId = ctx.from.id;
++  const session = userSessions.get(userId);
++  
++  logger.debug({ userId, messageText: ctx.message.text }, 'Received text message');
++  
++  if (!session) {
++    logger.warn({ userId }, 'No active terminal session for command execution');
++    return ctx.reply("❌ No active terminal session. Use /start to begin.");
++  }
++  
++  const command = parseCommandInput(ctx.message.text);
++
++  // Skip if the message is empty after parsing
++  if (!command) {
++    logger.debug({ userId }, 'Empty command after parsing, skipping');
++    return;
++  }
++
++  // Check for special control sequences
++  if (command === '^C' || command === 'ctrl+c' || command === 'CTRL+C') {
++    logger.info({ userId }, 'Sending SIGINT (Ctrl+C) to terminal');
++    session.terminal.write('\x03'); // Send CTRL+C (ASCII 3)
++    await ctx.reply(`🛑 Sent SIGINT (Ctrl+C) to terminal`, { parse_mode: 'Markdown' });
++    return;
++  } else if (command === '^D' || command === 'ctrl+d' || command === 'CTRL+D') {
++    logger.info({ userId }, 'Sending EOF (Ctrl+D) to terminal');
++    session.terminal.write('\x04'); // Send CTRL+D (ASCII 4)
++    await ctx.reply(`🔚 Sent EOF (Ctrl+D) to terminal`, { parse_mode: 'Markdown' });
++    return;
++  } else if (command === '^Z' || command === 'ctrl+z' || command === 'CTRL+Z') {
++    logger.info({ userId }, 'Sending SIGTSTP (Ctrl+Z) to terminal');
++    session.terminal.write('\x1A'); // Send CTRL+Z (ASCII 26)
++    await ctx.reply(`⏸️ Sent SIGTSTP (Ctrl+Z) to terminal`, { parse_mode: 'Markdown' });
++    return;
++  }
++
++  // Store last command globally and in session for output formatting
++  global.lastCommand = command;
++  session.lastCommand = command;
++
++  try {
++    // Enhanced interactive command detection
++    const interactiveCommands = ['top', 'htop', 'vim', 'nano', 'emacs', 'less', 'more', 'man', 'watch'];
++    const streamingCommands = ['tail -f', 'ping'];
++    const longRunningCommands = ['wget', 'curl', 'rsync'];
++    
++    const isInteractive = interactiveCommands.some(cmd => command.toLowerCase().startsWith(cmd));
++    const isStreaming = streamingCommands.some(cmd => command.toLowerCase().includes(cmd));
++    const isLongRunning = longRunningCommands.some(cmd => command.toLowerCase().startsWith(cmd));
++    
++    session.isInteractive = isInteractive || isStreaming;
++    
++    if (isInteractive) {
++      logger.info({ userId, command }, 'Interactive command detected');
++      await ctx.reply(`⚡ Running interactive command \`${command}\`. The display will update automatically. Send \`^C\` to stop.`, { parse_mode: 'Markdown' });
++    } else if (isStreaming) {
++      logger.info({ userId, command }, 'Streaming command detected');
++      await ctx.reply(`🔄 Running streaming command \`${command}\`. Send \`^C\` to stop.`, { parse_mode: 'Markdown' });
++    } else if (isLongRunning) {
++      logger.info({ userId, command }, 'Long-running command detected');
++      await ctx.reply(`⏳ Running \`${command}\`... This may take a while.`, { parse_mode: 'Markdown' });
++    }
++
++    logger.info({ userId, command }, 'Executing terminal command');
++    // Send command to terminal
++    session.terminal.write(command + '\r');
++  } catch (error) {
++    logger.error({ userId, command, error: error.message }, 'Failed to execute terminal command');
++    await ctx.reply("❌ Failed to execute command. Check logs for details.");
++    process.exit(1);
++  }
++});
++
++
+ // Error handling
+ bot.catch((err) => {
+   logger.error({ error: err.message, stack: err.stack }, 'Bot error occurred');
+@@ -534,12 +550,15 @@ process.once("SIGINT", () => {
+   for (const [userId, session] of userSessions) {
+     logger.debug({ userId }, 'Killing terminal session during shutdown');
+     try {
++      session.cleanup();
+       session.terminal.kill();
+     } catch (error) {
+       logger.warn({ userId, error: error.message }, 'Error killing terminal session during shutdown');
+     }
+   }
+   logger.info('All terminal sessions closed, exiting...');
++  bot.stop();
++  userSessions.clear();
+   process.exit(0);
+ });
+ 
+@@ -549,12 +568,15 @@ process.once("SIGTERM", () => {
+   for (const [userId, session] of userSessions) {
+     logger.debug({ userId }, 'Killing terminal session during shutdown');
+     try {
++      session.cleanup();
+       session.terminal.kill();
+     } catch (error) {
+       logger.warn({ userId, error: error.message }, 'Error killing terminal session during shutdown');
+     }
+   }
+   logger.info('All terminal sessions closed, exiting...');
++  bot.stop();
++  userSessions.clear();
+   process.exit(0);
+ });
+ 
+diff --git a/src/visual-bot.js b/src/visual-bot.js
+index 9ad84e0..6db00fb 100644
+--- a/src/visual-bot.js
++++ b/src/visual-bot.js
+@@ -1,4 +1,4 @@
+-import { Bot, InlineKeyboard } from "grammy";
++import { Bot } from "anygram";
+ import * as pty from "node-pty";
+ import { config } from "dotenv";
+ import pino from "pino";
+@@ -233,6 +233,7 @@ bot.command("start", async (ctx) => {
+   try {
+     if (userSessions.has(userId)) {
+       logger.info({ userId }, 'Killing existing terminal session');
++      userSessions.get(userId).cleanup();
+       userSessions.get(userId).terminal.kill();
+       userSessions.delete(userId);
+     }
+@@ -248,16 +249,19 @@ bot.command("start", async (ctx) => {
+     let output = '';
+     let messageId = null;
+     let updateTimeout = null;
++    let initialUpdateTimeout = null;
+     let lastMessageContent = '';
+     
+     terminal.onData((data) => {
++      if (userSessions.get(userId)?.terminal !== terminal) { return; }
+       logger.debug({ 
+         userId, 
+         dataLength: data.length,
+         dataPreview: data.substring(0, 50) + (data.length > 50 ? '...' : ''),
+         totalOutputLength: output.length + data.length
+       }, 'Terminal data received');
+-      output += data;
++      output = (output + data).slice(-262144);
++      userSessions.get(userId).output = output;
+       
+       if (updateTimeout) {
+         clearTimeout(updateTimeout);
+@@ -271,6 +275,8 @@ bot.command("start", async (ctx) => {
+     });
+     
+     terminal.onExit((exitCode, signal) => {
++      if (userSessions.get(userId)?.terminal !== terminal) { return; }
++      userSessions.get(userId).cleanup();
+       logger.info({ userId, exitCode, signal }, 'Terminal session ended');
+       if (updateTimeout) {
+         clearTimeout(updateTimeout);
+@@ -280,6 +286,7 @@ bot.command("start", async (ctx) => {
+     });
+     
+     async function updateTerminalMessage() {
++      if (userSessions.get(userId)?.terminal !== terminal) { return; }
+       try {
+         const formattedOutput = formatTerminalOutput(output, cols, rows);
+         const messageText = `🚀 **Terminal ${name} (${cols}x${rows})** - Ready!
+@@ -365,6 +372,13 @@ ${formattedOutput}
+       output,
+       messageId,
+       updateTerminalMessage,
++      cleanup() {
++        clearTimeout(updateTimeout);
++        clearTimeout(initialUpdateTimeout);
++        if (typeof unsubscribeFromChanges === 'function') {
++          unsubscribeFromChanges();
++        }
++      },
+       cols,
+       rows
+     });
+@@ -391,7 +405,7 @@ ${initialOutput}
+     
+     logger.debug({ userId, messageId }, 'Initial terminal message sent');
+     
+-    setTimeout(updateTerminalMessage, 500);
++    initialUpdateTimeout = setTimeout(updateTerminalMessage, 500);
+     
+   } catch (error) {
+     logger.error({ userId, error: error.message, stack: error.stack }, 'Failed to start terminal session');
+@@ -400,6 +414,88 @@ ${initialOutput}
+   }
+ });
+ 
++// Handle stop command
++bot.command("stop", async (ctx) => {
++  const userId = ctx.from.id;
++  const session = userSessions.get(userId);
++  
++  logger.info({ userId }, 'Stop command received');
++  
++  if (session) {
++    try {
++      session.cleanup();
++      session.terminal.kill();
++      userSessions.delete(userId);
++      logger.info({ userId }, 'Terminal session stopped successfully');
++      await ctx.reply("🛑 Terminal session stopped.");
++    } catch (error) {
++      logger.error({ userId, error: error.message }, 'Failed to stop terminal session');
++      await ctx.reply("❌ Failed to stop terminal session. Check logs for details.");
++      process.exit(1);
++    }
++  } else {
++    logger.warn({ userId }, 'Stop command called but no active session');
++    await ctx.reply("❌ No active terminal session.");
++  }
++});
++
++// Handle restart command
++bot.command("restart", async (ctx) => {
++  const userId = ctx.from.id;
++  logger.info({ userId }, 'Restart command received');
++  
++  try {
++    await ctx.reply("🔄 Restarting terminal session...");
++    await bot.handleUpdate({
++      update_id: Date.now(),
++      message: {
++        message_id: Date.now(),
++        from: ctx.from,
++        chat: ctx.chat,
++        date: Date.now(),
++        text: "/start",
++        entities: [{ type: "bot_command", offset: 0, length: 6 }]
++      }
++    });
++    logger.info({ userId }, 'Terminal session restart initiated');
++  } catch (error) {
++    logger.error({ userId, error: error.message }, 'Failed to restart terminal session');
++    await ctx.reply("❌ Failed to restart terminal session. Check logs for details.");
++    process.exit(1);
++  }
++});
++
++// Handle help command
++bot.command("help", async (ctx) => {
++  const helpMessage = `🎬 **Telegram Visual Terminal Bot Help**
++
++**Commands:**
++• \`/start\` - Start terminal session
++• \`/stop\` - Stop current terminal session
++• \`/restart\` - Restart terminal session
++• \`/help\` - Show this help message
++
++**Control Sequences:**
++• Send \`^C\` or \`ctrl+c\` - Send SIGINT (interrupt)
++• Send \`^D\` or \`ctrl+d\` - Send EOF (end of file)
++• Send \`^Z\` or \`ctrl+z\` - Send SIGTSTP (suspend)
++
++**Features:**
++• 🎥 **GIF Animations** - Interactive commands (top, htop) generate animated GIFs
++• 📸 **Static Images** - Regular commands show PNG screenshots
++• 🎨 **ANSI Colors** - Full color support in terminal output
++• 📱 **Mobile Optimized** - Images sized for Telegram viewing
++
++**Usage:**
++1. Start a terminal session with \`/start\`
++2. Send any command as a text message
++3. Interactive commands automatically generate 3-second GIF animations
++4. Use control sequences to manage running processes`;
++
++  await ctx.reply(helpMessage, { parse_mode: 'Markdown' });
++  logger.info({ userId: ctx.from.id }, 'Help command sent');
++});
++
+ // Handle all text messages as terminal commands
+ bot.on("message:text", async (ctx) => {
+   const userId = ctx.from.id;
+@@ -497,85 +593,6 @@ async function streamToBuffer(stream) {
+   return Buffer.concat(chunks);
+ }
+ 
+-// Handle stop command
+-bot.command("stop", async (ctx) => {
+-  const userId = ctx.from.id;
+-  const session = userSessions.get(userId);
+-  
+-  logger.info({ userId }, 'Stop command received');
+-  
+-  if (session) {
+-    try {
+-      session.terminal.kill();
+-      userSessions.delete(userId);
+-      logger.info({ userId }, 'Terminal session stopped successfully');
+-      await ctx.reply("🛑 Terminal session stopped.");
+-    } catch (error) {
+-      logger.error({ userId, error: error.message }, 'Failed to stop terminal session');
+-      await ctx.reply("❌ Failed to stop terminal session. Check logs for details.");
+-      process.exit(1);
+-    }
+-  } else {
+-    logger.warn({ userId }, 'Stop command called but no active session');
+-    await ctx.reply("❌ No active terminal session.");
+-  }
+-});
+-
+-// Handle restart command
+-bot.command("restart", async (ctx) => {
+-  const userId = ctx.from.id;
+-  logger.info({ userId }, 'Restart command received');
+-  
+-  try {
+-    await ctx.reply("🔄 Restarting terminal session...");
+-    await bot.handleUpdate({
+-      update_id: Date.now(),
+-      message: {
+-        message_id: Date.now(),
+-        from: ctx.from,
+-        chat: ctx.chat,
+-        date: Date.now(),
+-        text: "/start"
+-      }
+-    });
+-    logger.info({ userId }, 'Terminal session restart initiated');
+-  } catch (error) {
+-    logger.error({ userId, error: error.message }, 'Failed to restart terminal session');
+-    await ctx.reply("❌ Failed to restart terminal session. Check logs for details.");
+-    process.exit(1);
+-  }
+-});
+-
+-// Handle help command
+-bot.command("help", async (ctx) => {
+-  const helpMessage = `🎬 **Telegram Visual Terminal Bot Help**
+-
+-**Commands:**
+-• \`/start\` - Start terminal session
+-• \`/stop\` - Stop current terminal session
+-• \`/restart\` - Restart terminal session
+-• \`/help\` - Show this help message
+-
+-**Control Sequences:**
+-• Send \`^C\` or \`ctrl+c\` - Send SIGINT (interrupt)
+-• Send \`^D\` or \`ctrl+d\` - Send EOF (end of file)
+-• Send \`^Z\` or \`ctrl+z\` - Send SIGTSTP (suspend)
+-
+-**Features:**
+-• 🎥 **GIF Animations** - Interactive commands (top, htop) generate animated GIFs
+-• 📸 **Static Images** - Regular commands show PNG screenshots
+-• 🎨 **ANSI Colors** - Full color support in terminal output
+-• 📱 **Mobile Optimized** - Images sized for Telegram viewing
+-
+-**Usage:**
+-1. Start a terminal session with \`/start\`
+-2. Send any command as a text message
+-3. Interactive commands automatically generate 3-second GIF animations
+-4. Use control sequences to manage running processes`;
+-
+-  await ctx.reply(helpMessage, { parse_mode: 'Markdown' });
+-  logger.info({ userId: ctx.from.id }, 'Help command sent');
+-});
+ 
+ // Error handling
+ bot.catch((err) => {
+@@ -589,12 +606,15 @@ process.once("SIGINT", () => {
+   for (const [userId, session] of userSessions) {
+     logger.debug({ userId }, 'Killing terminal session during shutdown');
+     try {
++      session.cleanup();
+       session.terminal.kill();
+     } catch (error) {
+       logger.warn({ userId, error: error.message }, 'Error killing terminal session during shutdown');
+     }
+   }
+   logger.info('All terminal sessions closed, exiting...');
++  bot.stop();
++  userSessions.clear();
+   process.exit(0);
+ });
+ 
+@@ -603,12 +623,15 @@ process.once("SIGTERM", () => {
+   for (const [userId, session] of userSessions) {
+     logger.debug({ userId }, 'Killing terminal session during shutdown');
+     try {
++      session.cleanup();
+       session.terminal.kill();
+     } catch (error) {
+       logger.warn({ userId, error: error.message }, 'Error killing terminal session during shutdown');
+     }
+   }
+   logger.info('All terminal sessions closed, exiting...');
++  bot.stop();
++  userSessions.clear();
+   process.exit(0);
+ });
+ 

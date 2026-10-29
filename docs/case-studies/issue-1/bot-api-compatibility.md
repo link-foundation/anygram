@@ -39,3 +39,9 @@ the package dry run has 121 permitted entries. Fresh matrix CI is required.
 This advances R01/R13/R19. Full terminal source execution, command-order and
 synthetic-entity migration, animation uploads and lifecycle evidence remain open,
 alongside every other unverified requirement in the acceptance ledger.
+
+Head b5ab988 passed all nine runtime/OS jobs and applicable gates in
+[run 40845289559](https://github.com/link-foundation/anygram/actions/runs/40845289559),
+created 2026-10-29T08:52:24Z and completed 2026-10-29T08:55:12Z.
+The following [terminal checkpoint](terminal-migration.md) adds bounded execution
+of both pinned application handler sets; its open criteria remain explicit.
