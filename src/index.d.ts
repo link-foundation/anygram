@@ -597,18 +597,60 @@ export interface BotUpdate extends Parameters {
   };
 }
 export interface BotContextApi {
-  raw: BotMethods;
-  callApi: BotApi['callApi'];
-  getMe(): Promise<Parameters>;
+  raw: {
+    [method: string]: <T = unknown>(
+      params?: Parameters | AbortSignal,
+      options?: RequestOptions | AbortSignal
+    ) => Promise<T>;
+  };
+  callApi<T = unknown>(
+    method: string,
+    params?: Parameters,
+    options?: RequestOptions | AbortSignal
+  ): Promise<T>;
+  getMe(options?: RequestOptions | AbortSignal): Promise<Parameters>;
+  getWebhookInfo(options?: RequestOptions | AbortSignal): Promise<unknown>;
+  getForumTopicIconStickers(
+    options?: RequestOptions | AbortSignal
+  ): Promise<unknown>;
+  getAvailableGifts(options?: RequestOptions | AbortSignal): Promise<unknown>;
+  logOut(options?: RequestOptions | AbortSignal): Promise<unknown>;
+  close(options?: RequestOptions | AbortSignal): Promise<unknown>;
+  getMyStarBalance(options?: RequestOptions | AbortSignal): Promise<unknown>;
+  removeMyProfilePhoto(
+    options?: RequestOptions | AbortSignal
+  ): Promise<unknown>;
   sendMessage(
     chat: unknown,
     text: string | TextWithEntities,
-    options?: Parameters
+    options?: Parameters,
+    signal?: AbortSignal
   ): Promise<BotMessage>;
-  deleteMessage(chat: unknown, id: number): Promise<unknown>;
-  answerCallbackQuery(id: string, options?: Parameters): Promise<unknown>;
+  deleteMessage(
+    chat: unknown,
+    id: number,
+    options?: RequestOptions | AbortSignal
+  ): Promise<unknown>;
+  answerCallbackQuery(
+    id: string,
+    options?: Parameters,
+    signal?: AbortSignal
+  ): Promise<unknown>;
+  sendPhoto: BotMediaMethod;
+  sendAnimation: BotMediaMethod;
+  sendDocument: BotMediaMethod;
+  sendVideo: BotMediaMethod;
+  sendAudio: BotMediaMethod;
+  sendVoice: BotMediaMethod;
+  sendSticker: BotMediaMethod;
   [key: string]: unknown;
 }
+export type BotMediaMethod = (
+  chat: unknown,
+  file: unknown,
+  options?: Parameters,
+  signal?: AbortSignal
+) => Promise<BotMessage>;
 export interface ContextApi extends BotContextApi {
   editMessageText(
     chat: unknown,
@@ -657,22 +699,35 @@ export declare class Context {
   readonly from?: Parameters;
   reply(
     text: string | TextWithEntities,
-    options?: Parameters
+    options?: Parameters,
+    signal?: AbortSignal
   ): Promise<BotMessage>;
   editMessageText(
     text: string | TextWithEntities,
-    options?: Parameters
+    options?: Parameters,
+    signal?: AbortSignal
   ): Promise<unknown>;
-  answerCallbackQuery(options?: string | Parameters): Promise<unknown>;
-  deleteMessage(id?: number): Promise<unknown>;
-  replyWithPhoto(file: unknown, options?: Parameters): Promise<unknown>;
-  replyWithAnimation(file: unknown, options?: Parameters): Promise<unknown>;
-  replyWithDocument(file: unknown, options?: Parameters): Promise<unknown>;
-  replyWithVideo(file: unknown, options?: Parameters): Promise<unknown>;
-  replyWithAudio(file: unknown, options?: Parameters): Promise<unknown>;
-  replyWithVoice(file: unknown, options?: Parameters): Promise<unknown>;
-  replyWithSticker(file: unknown, options?: Parameters): Promise<unknown>;
+  answerCallbackQuery(
+    options?: string | Parameters,
+    signal?: AbortSignal
+  ): Promise<unknown>;
+  deleteMessage(
+    idOrOptions?: number | RequestOptions | AbortSignal,
+    options?: RequestOptions | AbortSignal
+  ): Promise<unknown>;
+  replyWithPhoto: ContextMediaMethod;
+  replyWithAnimation: ContextMediaMethod;
+  replyWithDocument: ContextMediaMethod;
+  replyWithVideo: ContextMediaMethod;
+  replyWithAudio: ContextMediaMethod;
+  replyWithVoice: ContextMediaMethod;
+  replyWithSticker: ContextMediaMethod;
 }
+export type ContextMediaMethod = (
+  file: unknown,
+  options?: Parameters,
+  signal?: AbortSignal
+) => Promise<unknown>;
 export interface TelegrafContext extends Omit<Context, 'me'> {
   readonly me?: string;
 }
@@ -809,18 +864,17 @@ export declare class TelegramBot {
   startPolling(options?: PollingOptions): Promise<void>;
   stopPolling(): Promise<void>;
   processUpdate(update: BotUpdate): Promise<void>;
-  sendMessage(
-    chat: unknown,
-    text: string | TextWithEntities,
-    options?: Parameters
-  ): Promise<BotMessage>;
+  sendMessage: BotContextApi['sendMessage'];
   editMessageText(
     text: string | TextWithEntities,
     options: Parameters
   ): Promise<unknown>;
-  getChat(chat: unknown): Promise<unknown>;
-  deleteMessage(chat: unknown, message: number): Promise<unknown>;
-  answerCallbackQuery(id: string, options?: Parameters): Promise<unknown>;
+  getChat(
+    chat: unknown,
+    options?: RequestOptions | AbortSignal
+  ): Promise<unknown>;
+  deleteMessage: BotContextApi['deleteMessage'];
+  answerCallbackQuery: BotContextApi['answerCallbackQuery'];
 }
 export declare function webhookCallback(
   bot: Pick<Bot, 'handleUpdate'>,

@@ -663,5 +663,19 @@ Community posting work plan:
       724 cases per runtime, plus 39 community cases on Node 20.18.3.
 - [x] Run strict static/package gates, 13 native terminal integrations, two
       actual Telegraf Node 20 wire cases and the bounded FIFO probe.
-- [ ] Commit the reviewed atomic work, push and inspect fresh CI by SHA/time.
+- [x] Commit the reviewed atomic work, push and inspect fresh CI by SHA/time:
+      community head 1c16f5c passed all runtime/OS jobs and applicable gates in
+      run 40862796563, created 2026-10-29T11:06:27Z, completed 11:19:15Z.
 - [ ] Continue every other open requirement; retain draft/unmerged status.
+
+Bot context cancellation work plan:
+
+- [x] Compare actual grammY positional/context signals and Telegraf signatures.
+- [x] Reproduce lost signals and controls leaking into positional payloads.
+- [x] Share request-control separation with canonical bot operations and retain
+      raw Telegram parameters such as getUpdates.timeout.
+- [x] Verify context/event aliases, owned-source deadlines and selected backends.
+- [x] Update checked declarations/examples and pass all 747 tests per runtime,
+      23 Node 20 cases, strict gates, native terminal/wire cases and package audit.
+- [ ] Commit the reviewed bot context-control change, push and inspect fresh CI.
+- [ ] Continue the complete feature union and all other open requirements.

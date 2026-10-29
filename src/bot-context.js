@@ -1,36 +1,56 @@
 import { methodProxy } from './requests.js';
 import { botTextParams } from './formatting.js';
+import {
+  botNoPayloadMethods,
+  botRequestOptions,
+  isBotSignal,
+  callBotOperation,
+} from './bot-operations.js';
 
 export function botApi(transport, style = 'grammy') {
   const invoke =
     transport.callApi?.bind(transport) ?? transport.callBotApi.bind(transport);
-  const call = (method, params, options) =>
-    invoke(method, botTextParams(params ?? {}), options);
+  const call = (method, params, options) => {
+    if (botNoPayloadMethods.has(method) && isBotSignal(params)) {
+      options = params;
+      params = {};
+    }
+    return invoke(
+      method,
+      botTextParams(params ?? {}),
+      botRequestOptions(options)
+    );
+  };
   const raw = methodProxy(call);
+  const operation = (method, params, options, signal) =>
+    callBotOperation({ callApi: invoke }, method, params, options, signal);
   const positional = {
     raw,
     callApi: call,
-    sendMessage: (chat_id, text, options = {}) =>
-      call('sendMessage', { ...options, chat_id, text }),
-    deleteMessage: (chat_id, message_id) =>
-      call('deleteMessage', { chat_id, message_id }),
-    answerCallbackQuery: (callback_query_id, options = {}) =>
-      call('answerCallbackQuery', { ...options, callback_query_id }),
+    sendMessage: (chat_id, text, options, signal) =>
+      operation('sendMessage', { chat_id, text }, options, signal),
+    deleteMessage: (chat_id, message_id, options) =>
+      operation('deleteMessage', { chat_id, message_id }, options),
+    answerCallbackQuery: (callback_query_id, options, signal) =>
+      operation('answerCallbackQuery', { callback_query_id }, options, signal),
   };
-  const edit = (params, signal) =>
-    call('editMessageText', params, signal ? { signal } : undefined);
+  const edit = (params, options, signal) =>
+    operation('editMessageText', params, options, signal);
   positional.editMessageText =
     style === 'telegraf'
-      ? (chat_id, message_id, inline_message_id, text, options = {}) =>
-          edit({ ...options, chat_id, message_id, inline_message_id, text })
-      : (chat_id, message_id, text, options = {}, signal) =>
-          edit({ ...options, chat_id, message_id, text }, signal);
+      ? (chat_id, message_id, inline_message_id, text, options) =>
+          edit({ chat_id, message_id, inline_message_id, text }, options)
+      : (chat_id, message_id, text, options, signal) =>
+          edit({ chat_id, message_id, text }, options, signal);
   positional.editMessageTextInline = (
     inline_message_id,
     text,
-    options = {},
+    options,
     signal
-  ) => edit({ ...options, inline_message_id, text }, signal);
+  ) => edit({ inline_message_id, text }, options, signal);
+  for (const method of botNoPayloadMethods) {
+    positional[method] = (options) => operation(method, {}, options);
+  }
   for (const media of [
     'Photo',
     'Animation',
@@ -40,12 +60,13 @@ export function botApi(transport, style = 'grammy') {
     'Document',
     'Sticker',
   ]) {
-    positional[`send${media}`] = (chat_id, file, options = {}) =>
-      call(`send${media}`, {
-        ...options,
-        chat_id,
-        [media.toLowerCase()]: file,
-      });
+    positional[`send${media}`] = (chat_id, file, options, signal) =>
+      operation(
+        `send${media}`,
+        { chat_id, [media.toLowerCase()]: file },
+        options,
+        signal
+      );
   }
   return new Proxy(positional, {
     get: (target, key) => (key in target ? target[key] : raw[key]),
@@ -108,27 +129,38 @@ export class Context {
   get botInfo() {
     return this.me;
   }
-  reply(text, options) {
-    return this.api.sendMessage(this.chat.id, text, options);
+  reply(text, options, signal) {
+    return this.api.sendMessage(this.chat.id, text, options, signal);
   }
-  editMessageText(text, options) {
-    return this.api.callApi('editMessageText', {
-      ...options,
-      chat_id: this.chat?.id,
-      message_id: this.msg?.message_id,
-      inline_message_id: this.callbackQuery?.inline_message_id,
-      text,
-    });
-  }
-
-  answerCallbackQuery(options) {
-    return this.api.answerCallbackQuery(
-      this.callbackQuery.id,
-      typeof options === 'string' ? { text: options } : options
+  editMessageText(text, options, signal) {
+    return callBotOperation(
+      this.api,
+      'editMessageText',
+      {
+        chat_id: this.chat?.id,
+        message_id: this.msg?.message_id,
+        inline_message_id: this.callbackQuery?.inline_message_id,
+        text,
+      },
+      options,
+      signal
     );
   }
-  deleteMessage(id = this.msg?.message_id) {
-    return this.api.deleteMessage(this.chat.id, id);
+
+  answerCallbackQuery(options, signal) {
+    return this.api.answerCallbackQuery(
+      this.callbackQuery.id,
+      typeof options === 'string' ? { text: options } : options,
+      signal
+    );
+  }
+  deleteMessage(idOrOptions, options) {
+    const explicitId = typeof idOrOptions === 'number';
+    return this.api.deleteMessage(
+      this.chat.id,
+      explicitId ? idOrOptions : this.msg?.message_id,
+      options ?? (explicitId ? undefined : idOrOptions)
+    );
   }
 }
 
@@ -150,8 +182,8 @@ for (const media of [
   'Document',
   'Sticker',
 ]) {
-  Context.prototype[`replyWith${media}`] = function (file, options) {
-    return this.api[`send${media}`](this.chat.id, file, options);
+  Context.prototype[`replyWith${media}`] = function (file, options, signal) {
+    return this.api[`send${media}`](this.chat.id, file, options, signal);
   };
 }
 

@@ -97,3 +97,7 @@ Add a complete community-posting application example over selected bot and
 account transports, with durable scoped prompts, rate limits, publication
 reconciliation and publish-before-delete lifting. Own CLI polling, account
 connections and shutdown through cancellation and bounded local persistence.
+
+Preserve positional and context cancellation signals, separate embedded bot
+request controls through the shared translator, and retain raw Telegram timeout
+fields and explicit message deletion across bot framework views.

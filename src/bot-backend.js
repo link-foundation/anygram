@@ -3,19 +3,7 @@ import { valueMapper, mapObjectValues } from './requests.js';
 import { createRequestScope, validateByteLimit } from './http.js';
 import { abortable } from './cancellation.js';
 import { TelegramError, UnsupportedError } from './errors.js';
-
-// grammY binds an empty payload into these raw methods; their only argument
-// is the signal. Keep the pinned SDK's public signatures at its boundary.
-const grammyNoPayload = new Set([
-  'getMe',
-  'getWebhookInfo',
-  'getForumTopicIconStickers',
-  'getAvailableGifts',
-  'logOut',
-  'close',
-  'getMyStarBalance',
-  'removeMyProfilePhoto',
-]);
+import { botNoPayloadMethods } from './bot-operations.js';
 
 // Vendor instances retain their prototypes and private state. Plain wrappers
 // and owned InputFiles still pass through our bounded source reader.
@@ -111,7 +99,7 @@ function dispatch(
     return client.callApi(method, params, options);
   }
   if (style === 'grammy') {
-    if (grammyNoPayload.has(method)) {
+    if (botNoPayloadMethods.has(method)) {
       return api.raw[method](options?.signal);
     }
     return api.raw[method](params, options?.signal);

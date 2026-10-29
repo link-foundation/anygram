@@ -37,6 +37,14 @@ Telegraf's. Context edits choose chat or inline fields directly. Bot API failure
 expose `error_code`, `description`, `parameters` and `response` alongside common
 `TelegramError` fields; sends are never retried automatically.
 
+The supported positional sends, media sends, edits and context replies accept
+grammY's final `AbortSignal`. Their options also accept `{ signal, timeout }`;
+`timeout` is a request deadline in milliseconds. `ctx.deleteMessage(signal)`
+deletes the current message, while `ctx.deleteMessage(id, options)` retains the
+explicit-ID form. Raw calls keep Telegram payload fields intact, so use
+`bot.api.raw.getUpdates({ timeout: 30 }, signal)` for Telegram's long-poll timeout
+in seconds. See the [context control comparisons](docs/case-studies/issue-1/bot-context-controls.md).
+
 Native HTTP requests validate deadlines before sending and cancel response-body
 reads when the deadline or caller's signal fires. Bot API JSON responses default
 to an 8 MiB limit (`maxResponseBytes` in the constructor); `downloadMedia` defaults

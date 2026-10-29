@@ -5,6 +5,7 @@ import { TelegramError } from './errors.js';
 import { pollingKey, acquirePolling, validatePolling } from './polling.js';
 import { joinBytes } from './bytes.js';
 import { taskContext } from './task-context.js';
+import { callBotOperation } from './bot-operations.js';
 
 /** Shared middleware runner usable with a native or adapted Bot API transport. */
 export class Bot extends Composer {
@@ -229,20 +230,20 @@ export class TelegramBot extends Bot {
   processUpdate(update) {
     return this.handleUpdate(update);
   }
-  sendMessage(chat, text, options) {
-    return this.api.sendMessage(chat, text, options);
+  sendMessage(chat, text, options, signal) {
+    return this.api.sendMessage(chat, text, options, signal);
   }
   editMessageText(text, options) {
-    return this.api.callApi('editMessageText', { ...options, text });
+    return callBotOperation(this.api, 'editMessageText', { text }, options);
   }
-  getChat(chat_id) {
-    return this.api.callApi('getChat', { chat_id });
+  getChat(chat_id, options) {
+    return callBotOperation(this.api, 'getChat', { chat_id }, options);
   }
-  deleteMessage(chat, message) {
-    return this.api.deleteMessage(chat, message);
+  deleteMessage(chat, message, options) {
+    return this.api.deleteMessage(chat, message, options);
   }
-  answerCallbackQuery(id, options) {
-    return this.api.answerCallbackQuery(id, options);
+  answerCallbackQuery(id, options, signal) {
+    return this.api.answerCallbackQuery(id, options, signal);
   }
 }
 
