@@ -1184,6 +1184,30 @@ Telegraf construction and webhook/server lifecycle work plan:
       checks and the bounded blocked-file probe. Strict gates scan 165 sources
       with zero clones; packaging permits 208 entries. Main is an ancestor,
       feedback remains empty, and the paginated PR inventory has no deletions.
-- [ ] Commit/push and verify exact-head lifecycle CI.
+- [x] Commit/push and verify exact-head lifecycle CI. Head
+      8874fdbc9e59261c337e3482116e7dfadd676c31 passed every applicable job in
+      run 40942419240, created 2026-10-29T19:41:56Z after its 19:41:36Z commit.
 - [ ] Continue complete installed-framework/application/protocol coverage and
       every wider criterion still marked unfinished in the acceptance ledger.
+
+Telegraf nested transport settings work plan:
+
+- [x] Reproduce ignored nested settings and shared context metadata with actual
+      SDK comparisons before changing production code; twelve initial cases fail.
+- [x] Retain SDK relative URL, mode/environment, compacted defaults and mutable
+      update settings while preserving selected backends and owned extensions.
+- [x] Reproduce and verify endpoint polling ownership across all three bot
+      styles. Keep custom transport identities and reject unsafe mode values.
+- [x] Add immutable runtime/type reproductions and current/actual-SDK examples.
+      Frozen sources reproduce 21 failures among 25 cases and preceding types
+      produce ten diagnostics. All 61 focused cases pass. Review regressions
+      retain relative custom bases and conservative selected-backend ownership.
+- [x] Run all local runtime/static/native/package gates and review the change.
+      All 2,223 core tests pass per runtime; 27 native, six Node 20 wire and
+      sixteen parser-fact checks pass. Strict gates scan 166 production sources
+      with zero clones; packaging permits 209 entries. Main remains an ancestor
+      and feedback is empty. Current/actual-SDK declarations compile; the
+      complete atomic diff and all new sources, fixtures and examples are reviewed.
+- [ ] Commit/push and verify fresh exact-head CI before continuing.
+- [ ] Continue HTTP agents, standalone Telegram construction and every wider
+      unfinished application/framework/protocol acceptance criterion.

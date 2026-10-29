@@ -39,10 +39,22 @@ export interface TelegrafFilterOptions {
   path: string;
   secretToken?: string;
 }
+export interface TelegrafTelegramOptions {
+  apiRoot: string;
+  apiMode: 'bot' | 'user';
+  testEnv: boolean;
+  webhookReply: boolean;
+}
+/** Configured SDK views expose settings while the shared legacy facade stays portable. */
+export interface TelegrafTelegramApi extends TelegrafApi {
+  readonly token: string;
+  readonly options: TelegrafTelegramOptions;
+}
 export interface TelegrafOptions<C extends CommonContext> extends BotOptions {
+  telegram?: Partial<TelegrafTelegramOptions>;
   contextType?: new (
     update: BotUpdate,
-    telegram: TelegrafApi,
+    telegram: TelegrafTelegramApi,
     botInfo: BotApiResult<'getMe'>
   ) => C;
   handlerTimeout?: number;

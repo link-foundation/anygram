@@ -18,20 +18,33 @@ export class BotApi extends BotOperations {
   constructor({
     token,
     baseUrl = 'https://api.telegram.org',
+    apiMode = 'bot',
+    testEnv = false,
     fetch: fetcher = globalThis.fetch,
     timeout = 30000,
     maxResponseBytes = 8 * 1024 * 1024,
     maxUploadBytes = 64 * 1024 * 1024,
     fileOptions,
   } = {}) {
-    super(undefined, { token, apiRoot: baseUrl, ...fileOptions });
+    super(undefined, {
+      token,
+      apiRoot: baseUrl,
+      apiMode,
+      testEnv,
+      ...fileOptions,
+    });
     if (typeof token !== 'string' || !token || /[\s/?#]/.test(token)) {
       throw new TypeError('A bot token without URL delimiters is required');
+    }
+    if (!['bot', 'user'].includes(apiMode) || typeof testEnv !== 'boolean') {
+      throw new TypeError('Invalid Bot API mode or environment');
     }
     validateTimeout(timeout);
     validateByteLimit(maxResponseBytes);
     validateByteLimit(maxUploadBytes);
     this.#token = token;
+    this.apiMode = apiMode;
+    this.testEnv = testEnv;
     this.baseUrl = baseUrl.replace(/\/$/, '');
     this.fetch = fetcher;
     this.timeout = timeout;
@@ -87,7 +100,7 @@ export class BotApi extends BotOperations {
     }
     options?.signal?.throwIfAborted();
     const { response, envelope } = await this.request(
-      `bot${this.#token}/${method}`,
+      `${this.apiMode}${this.#token}${this.testEnv ? '/test' : ''}/${method}`,
       async (signal) => ({
         method: 'POST',
         ...(await uploadBody(botTextParams(params), {
@@ -158,7 +171,7 @@ export class BotApi extends BotOperations {
       });
     }
     return this.request(
-      `file/bot${this.#token}/${file.file_path}`,
+      `file/${this.apiMode}${this.#token}${this.testEnv ? '/test' : ''}/${file.file_path}`,
       {},
       options,
       (response, signal) => {

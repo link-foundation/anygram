@@ -215,3 +215,7 @@ shared initialization, authorization, bounded bodies, deadlines and cleanup.
 
 Support Telegraf callback/registration and HTTP/TLS launch/stop contracts with
 bounded input and startup cleanup, SDK custom contexts and handler deadlines.
+
+Preserve Telegraf nested API roots, mode/test routing and per-update mutable
+Telegram settings through selected backends, canonical file links and shared
+polling ownership.

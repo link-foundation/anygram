@@ -1618,3 +1618,8 @@ Entity and button declarations now expose the remaining 37 modern model namespac
 names. Actual SDK comparisons verify exact field presence and mutual assignment,
 including recursive rich labels. [Component evidence](bot-component-types.md)
 records reproduction, portable fixtures and remaining SDK compatibility limits.
+
+[Telegraf transport settings](telegraf-transport-options.md) compares nested
+roots, mode/environment routing and independent update settings against the
+actual SDK. Selected backend and cross-style polling ownership remain shared;
+HTTP agents and complete standalone construction remain open.

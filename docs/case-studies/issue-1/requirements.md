@@ -852,8 +852,16 @@ remains unfinished alongside every wider open criterion.
 R01/R05/R08/R13/R16/R17/R19 Telegraf lifecycle follow-up adds bounded callbacks,
 registration, SDK context construction and HTTP/TLS launch/stop. The immutable
 runner reproduces 54 failures among 55 final cases; frozen public declarations
-produce 16 diagnostics. Actual SDK comparisons and finite HTTP/TLS requests cover
+produce 18 diagnostics. Actual SDK comparisons and finite HTTP/TLS requests cover
 accepted bodies, filtering, reply policy and registration fields; failure, retry
 and cancellation cases verify listener cleanup.
 [Evidence and limits](telegraf-lifecycle.md) retain open nested transport options,
 installed-framework/cloud hosting, controlled delivery and all wider criteria.
+
+The [Telegraf transport setting comparisons](telegraf-transport-options.md)
+advance R01/R05/R08/R13/R16/R17/R19 with four nested Telegram settings, SDK
+relative roots, per-update metadata/options isolation and shared endpoint
+ownership. Frozen sources reproduce 21 of 25 cases and frozen declarations
+produce ten diagnostics; actual SDK comparisons cover HTTP paths, defaults,
+file links and webhook policy. Agents, standalone Telegram construction and
+all wider unfinished acceptance criteria remain open.

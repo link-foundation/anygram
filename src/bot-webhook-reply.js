@@ -1,4 +1,5 @@
 import { botApi } from './bot-context.js';
+import { inheritTelegramMetadata } from './telegraf-api.js';
 import { collectUploads, stringify } from './bot-api-upload.js';
 
 const telegrafReplies = new Set([
@@ -58,7 +59,9 @@ export function webhookReplyScope(
     if (style === 'telegraf') {
       facade.webhookReply = base.webhookReply;
     }
-    return facade;
+    return style === 'telegraf'
+      ? inheritTelegramMetadata(facade, base)
+      : facade;
   };
   return {
     api: scoped(api, 'grammy'),

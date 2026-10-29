@@ -4,11 +4,26 @@ import { TelegramError } from './errors.js';
 const active = new Set();
 
 export function pollingKey(token, options) {
-  return typeof token === 'string'
-    ? createHash('sha256')
-        .update(`${options.baseUrl ?? 'https://api.telegram.org'}\0${token}`)
-        .digest('hex')
-    : (options.api ?? {});
+  if (typeof token !== 'string') {
+    return options.api ?? {};
+  }
+  const base = (options.baseUrl ?? 'https://api.telegram.org').replace(
+    /\/$/,
+    ''
+  );
+  const endpoint = `${base}/${options.apiMode ?? 'bot'}${token}${options.testEnv ? '/test' : ''}/getUpdates`;
+  return createHash('sha256')
+    .update(`${normalizedEndpoint(endpoint)}\0${token}`)
+    .digest('hex');
+}
+
+function normalizedEndpoint(endpoint) {
+  try {
+    return new globalThis.URL(endpoint).href;
+  } catch {
+    // Custom transports may use a relative base understood by their fetch hook.
+    return endpoint;
+  }
 }
 
 export function acquirePolling(key) {

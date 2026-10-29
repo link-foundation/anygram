@@ -6,6 +6,12 @@ const options = JSON.parse(
 );
 for (const [sourceName, targetName, sdk, namespace] of [
   [
+    'typed-telegraf-options.ts',
+    'typed-telegraf-options-fixture.ts',
+    'telegraf',
+    'telegraf/types',
+  ],
+  [
     'typed-telegraf-lifecycle.ts',
     'typed-telegraf-lifecycle-fixture.ts',
     'telegraf',

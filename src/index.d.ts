@@ -1,5 +1,6 @@
 import type {
   TelegrafOptions,
+  TelegrafTelegramApi,
   TelegrafLaunchOptions,
   TelegrafWebhookOptions,
   TelegrafCreateWebhookOptions,
@@ -547,6 +548,8 @@ export declare class InputFile {
 export interface BotApiOptions {
   token: string;
   baseUrl?: string;
+  apiMode?: 'bot' | 'user';
+  testEnv?: boolean;
   fetch?: typeof fetch;
   timeout?: number;
   maxResponseBytes?: number;
@@ -939,6 +942,7 @@ export interface TelegrafContext
   payload?: string;
   args?: string[];
   startPayload?: string;
+  telegram: TelegrafTelegramApi;
   readonly msg?: import('./telegraf-filter-types.js').MaybeMessage;
 }
 export declare const TelegrafContext: {
@@ -1169,6 +1173,7 @@ export interface Telegraf<C extends CommonContext = TelegrafContext>
     ...middleware: import('./telegraf-composer.js').TelegrafMiddlewareLike<C>[]
   ): this;
   catch(handler: (error: unknown, ctx: C) => unknown | Promise<unknown>): this;
+  telegram: TelegrafTelegramApi;
   readonly context: Partial<C>;
   webhookReply: boolean;
   webhookFilter: (

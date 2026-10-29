@@ -1,4 +1,9 @@
 import { BotApi } from './bot-api.js';
+import {
+  telegrafApi,
+  cloneTelegramApi,
+  telegrafPollingKey,
+} from './telegraf-api.js';
 import { launchTelegraf, stopTelegrafWebhook } from './telegraf-server.js';
 import { Context, TelegrafContext, botApi, matchText } from './bot-context.js';
 import { Composer } from './composer.js';
@@ -78,7 +83,7 @@ export class Bot extends Composer {
   async dispatch(update, response) {
     const scope = webhookReplyScope(
       this.api,
-      this.telegram,
+      cloneTelegramApi(this.telegram),
       response,
       this.canUseWebhookReply
     );
@@ -191,7 +196,13 @@ export class Bot extends Composer {
 /** Telegraf command registration and launch style over the shared bot runner. */
 export class Telegraf extends Bot {
   constructor(token, options = {}) {
-    super(token, { ...options, Context: options.Context ?? TelegrafContext });
+    const telegram = telegrafApi(token, options);
+    super(token, {
+      ...options,
+      api: telegram,
+      Context: options.Context ?? TelegrafContext,
+    });
+    this.telegram = telegram;
     this.token = token;
     this.webhookFilter = telegrafWebhookFilter;
     this.context = {};
@@ -248,9 +259,10 @@ export class Telegraf extends Bot {
     return this.command('start', ...middleware);
   }
   launch(options, onLaunch) {
-    return launchTelegraf(this, options, onLaunch, (polling) =>
-      super.start(polling)
-    );
+    return launchTelegraf(this, options, onLaunch, (polling) => {
+      this.pollingKey = telegrafPollingKey(this.telegram);
+      return super.start(polling);
+    });
   }
   isRunning() {
     return super.isRunning() || !!this.webhookServer?.listening;

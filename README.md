@@ -898,3 +898,9 @@ filtering, registration and owned shutdown. Custom `contextType`, shared context
 fields and handler timeouts retain their SDK contracts.
 [Lifecycle examples and limits](docs/case-studies/issue-1/telegraf-lifecycle.md)
 cover bounded bodies and startup failure cleanup.
+
+Telegraf's nested `telegram` options support `apiRoot`, `apiMode`, `testEnv` and
+`webhookReply`. Each update owns mutable `ctx.telegram.options`; changes affect
+its calls while global settings apply to subsequent updates. Selected backends
+remain authoritative. [Transport examples and limits](docs/case-studies/issue-1/telegraf-transport-options.md)
+describe relative roots, canonical file links and endpoint polling ownership.

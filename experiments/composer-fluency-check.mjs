@@ -13,6 +13,10 @@ import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new globalThis.URL('../', import.meta.url));
 const modes = {
+  '--telegraf-options': [
+    ['typed-telegraf-options.ts'],
+    '8874fdbc9e59261c337e3482116e7dfadd676c31',
+  ],
   '--telegraf-lifecycle': [
     ['typed-telegraf-lifecycle.ts'],
     '197d5a1baedf3f10c24e6005a08fad79518e68ee',
@@ -75,6 +79,7 @@ const mode =
 const [selected, revision] = modes[mode];
 const fixtures = Array.isArray(selected) ? selected : [selected];
 const frozen = new Set([
+  ...(mode === '--telegraf-options' ? ['src/telegraf-server-types.d.ts'] : []),
   'src/index.d.ts',
   'src/telegraf-composer.d.ts',
   ...(['--components', '--message-subtypes'].includes(mode)
