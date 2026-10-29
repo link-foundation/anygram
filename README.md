@@ -187,6 +187,36 @@ by default; `continueOnFloodWait` processes later links without replaying or
 waiting on the failed operation. Capacity errors always stop. The application
 owns durable progress, deliberate retries and user interaction for verification.
 
+The [follow command example](examples/follow-cli.mjs) runs after `npm install`
+in this repository:
+
+```sh
+node examples/follow-cli.mjs '(telegramLinks: t.me/first t.me/second)' --mute --archive
+node examples/follow-cli.mjs join https://t.me/first --info --messages --json
+node examples/follow-cli.mjs list --json
+node examples/follow-cli.mjs leave @first
+```
+
+It accepts space-separated arguments, multiline stdin, or the existing
+`~/.follow/telegram-links.lino` cache. Inside Links Notation, quote references
+containing URL schemes. Input is limited to 256 KiB, 1000 links and 4096 characters
+per link. `--delay` sets 0–3600 seconds between links (default 2); cancellation
+interrupts pacing. `--skip-rate-limit` continues with later links without replay.
+`--backend` selects native, GramJS or teleproto for this example.
+Existing plaintext `.env` keys `TELEGRAM_USER_BOT_API_ID`,
+`TELEGRAM_USER_BOT_API_HASH`, `TELEGRAM_USER_BOT_PHONE` and `TELEGRAM_USER_SESSION`
+are recognized; process environment takes precedence. Interactive login prompts
+hide secrets. Authorized sessions are saved through `FileSessionStore` to
+`~/.follow/telegram-session` before application work; the existing `.env` is
+preserved. Saved sessions take precedence over the imported environment session.
+Use `--env-file`, `--session-file` and `--cache-file` for explicit paths. Piped
+commands require a reusable authorized session; interactive login needs a terminal.
+`--json` writes one JSON result after cleanup, and `--debug` writes only request
+metadata to stderr. Pending approval remains explicit; invalid links, failed work,
+verification requirements, flood stops and exhausted cleanup yield failure status.
+Group listings retain raw `id` values and include an exact `markedId` usable by
+the leave command, including private channels without usernames.
+
 `client.withConnection(async (connected) => { /* account work */ }, options)`
 opens one selected backend and awaits cleanup before returning. The callback
 receives a client pinned to that backend. Supplying `start: { ...loginOptions }`

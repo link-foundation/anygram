@@ -1375,3 +1375,42 @@ cache input, prompts, standalone connection/session compatibility and controlled
 accounts remain open. The archived CLI's missing info/message methods and unsafe
 numeric private-link conversion need explicit migration; these tests do not
 claim those paths. All other unmet issue criteria remain unfinished.
+
+## Follow command and login checkpoint
+
+The command example retains follow's positional/named Links Notation, cached
+telegram-links.lino input, join/list/leave commands and existing option aliases.
+It uses the pinned links-notation 0.12.0 and yargs 17.7.2 as development-only
+dependencies; the published library still has no runtime dependencies. The two
+additional archived input helpers retain their original bytes and SHA-256 hashes.
+The upstream HEAD remains af8fbb80cec26a7b5b205c93314372d1d92cec1f.
+
+Thirty-three regressions cover bounded UTF-8 input, all multiline rows, exact URL
+schemes, pending-stream cancellation, argument validation, mute/archive, approval,
+flood stopping/continuation, info/history, exact private-channel IDs, and marked
+list IDs usable by leave. Failing-before tests demonstrate that the pinned parser
+treats URL schemes as labels, input cancellation can wait forever for another
+chunk, and a batch without pacing advances before cancellation. The command
+does not replay joins or suppress exhausted TIMEOUT cleanup. JSON output follows
+successful cleanup, while default-off diagnostics contain request metadata only.
+
+Existing plaintext follow environment keys and lazy phone/code/password prompts
+feed the shared factory. Prompt echo tests verify secret suppression, cancellation
+and EOF cleanup. Explicit environment values override the file without mutating
+process environment. The shared atomic FileSessionStore saves an authorized
+session before work; write failures prevent work and still clean up. This
+deliberately uses a separate portable session file instead of rewriting .env,
+and saved sessions take precedence over an imported legacy environment session.
+Actual GramJS/teleproto clients verify construction and exported session bytes
+with stubbed login/cleanup. Native encrypted TCP verifies authorized session
+persistence and separately parsed join/history commands.
+
+All 480 tests pass on Node, Bun and Deno. Strict lint, formatting, declaration and
+typed-example checks pass, with zero clones across 73 production sources.
+The preceding bridge head c55c44a passed all nine runtime/OS jobs and applicable
+gates in [run 40829426170](https://github.com/link-foundation/anygram/actions/runs/40829426170),
+created 2026-10-29T06:28:34Z and completed 2026-10-29T06:30:51Z.
+Fresh CI is required for this command checkpoint. Legacy standalone connection/
+constructor/session compatibility, controlled-account login and actual Telegram
+application behavior remain open. This local command does not establish complete
+downstream or backend parity, and all other unmet issue criteria remain unfinished.

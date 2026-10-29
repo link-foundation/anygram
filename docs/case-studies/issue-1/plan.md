@@ -115,14 +115,16 @@ cancellation. Use the immutable follow source as the migration contract; write
 reproducing tests before implementing missing behavior. Controlled-account
 validation remains blocked without credentials; independent work continues.
 
-The pinned follow application checkpoint passes 447 tests on each runtime and strict checks,
+The follow command/login checkpoint passes 480 tests on each runtime and strict checks,
 with zero clones across 73 production sources and a 78-entry package dry run.
-Pinned follow batch and join/list/leave classes now execute through the bridge;
-actual GramJS/teleproto requests and native TCP cover the batch. CLI input,
-prompts, standalone session/connection behavior and controlled accounts remain
-open. Account-style head 821d810 passed all nine runtime/OS jobs and applicable
-gates in run 40828227547.
-Commit/push the new step and verify exact CI SHA and timestamps.
+Pinned follow classes execute through the bridge, and a migrated command now
+covers input/cache, login prompts, portable session persistence and option aliases.
+Actual GramJS/teleproto construction/session exports and native TCP cover these
+paths. Legacy standalone constructor/connection/session compatibility and
+controlled-account evidence remain open. Bridge head c55c44a passed all nine
+runtime/OS jobs and applicable gates in run 40829426170.
+Commit/push this step and verify exact CI SHA and timestamps, then write failing
+tests for the remaining standalone connection surface before implementing it.
 
 Keep protocol completion (secret chats/call media/transports), complete backend
 return/event/style compatibility and actual downstream scenarios open in the

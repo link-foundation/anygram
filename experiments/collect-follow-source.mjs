@@ -11,6 +11,8 @@ const files = [
   'telegram.lib.mjs',
   'telegram-follow.mjs',
   'telegram-join-group.mjs',
+  'lino.lib.mjs',
+  'cache-files.mjs',
   'experiments/test-private-channel-link-handling.mjs',
   'experiments/test-channel-invalid-error-fix.mjs',
   'experiments/test-telegram-message-reading.mjs',

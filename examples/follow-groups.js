@@ -1,4 +1,5 @@
 import { parseTelegramLink, TelegramError } from '../src/index.js';
+import { setTimeout as pause } from 'node:timers/promises';
 
 const groupKey = (entity) =>
   `${entity._.replace(/Forbidden$/, '')}:${entity.id}`;
@@ -42,6 +43,14 @@ function validateBatch(links, options) {
     if (options[key] !== undefined && typeof options[key] !== 'boolean') {
       throw new TypeError(`Invalid ${key} option`);
     }
+  }
+  if (
+    options.delay !== undefined &&
+    (!Number.isFinite(options.delay) ||
+      options.delay < 0 ||
+      options.delay > 3600000)
+  ) {
+    throw new RangeError('Follow delay must be from 0 to 3600000 milliseconds');
   }
   const now = (options.now ?? (() => Math.floor(Date.now() / 1000)))();
   if (!Number.isSafeInteger(now) || now < 0) {
@@ -239,6 +248,19 @@ function recordFailure(outcome, error, options) {
   return undefined;
 }
 
+async function pace(index, { delay, signal }) {
+  signal?.throwIfAborted();
+  if (index && delay) {
+    try {
+      await pause(delay, undefined, { signal });
+    } catch (error) {
+      signal?.throwIfAborted();
+      throw error;
+    }
+  }
+  signal?.throwIfAborted();
+}
+
 /** One attempt per side effect; callers own any durable resumption or later retries. */
 export async function followGroups(client, links, input = {}) {
   const options = { ...input };
@@ -257,7 +279,7 @@ export async function followGroups(client, links, input = {}) {
     addGroup(index, entry);
   }
   for (const link of links) {
-    options.signal?.throwIfAborted();
+    await pace(outcomes.length, options);
     const outcome = {
       link,
       status: 'failed',
