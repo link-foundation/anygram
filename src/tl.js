@@ -117,7 +117,10 @@ export class TlWriter {
   }
 
   object(type, value, depth) {
-    const request = objectRequest(requestOf(value));
+    const request = objectRequest(requestOf(value), {
+      maxDepth: this.codec.maxDepth - depth,
+      maxVector: this.codec.maxVector,
+    });
     const definition =
       this.codec.methods.get(request._) ??
       this.codec.constructors.get(request._);

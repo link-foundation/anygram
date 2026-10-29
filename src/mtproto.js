@@ -265,7 +265,7 @@ export class Mtproto {
   }
 
   call(method, params = {}, options) {
-    const request = objectRequest(requestOf(method, params));
+    const request = objectRequest(requestOf(method, params), this.codec);
     options = {
       ...options,
       afterMessageIds: rpcDependencies(options?.afterMessageIds),

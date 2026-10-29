@@ -34,7 +34,9 @@ Native HTTP requests validate deadlines before sending and cancel response-body
 reads when the deadline or caller's signal fires. Bot API JSON responses default
 to an 8 MiB limit (`maxResponseBytes` in the constructor); `downloadMedia` defaults
 to 64 MiB and accepts `{ maxBytes, signal, timeout }`. MTProto HTTPS responses
-default to 16 MiB (`maxBytes` in transport options). Exceeding a limit raises
+default to 16 MiB (`maxBytes` in transport options).
+Request normalization checks nesting and vector limits before visiting child
+values (defaults: depth 64 and 100000 vector entries). Exceeding a limit raises
 `TelegramError` with type `RESPONSE_TOO_LARGE` and releases the body reader.
 Bot API servers and custom networking can be selected with `baseUrl` and `fetch`.
 

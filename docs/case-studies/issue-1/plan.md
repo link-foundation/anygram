@@ -142,8 +142,13 @@ The native class checkpoint adds ten regressions and passes 524 tests on each
 runtime, strict checks, exact declaration regeneration and compilation. The
 clone scan covers 76 production sources with zero clones; 38 generated schema
 declarations are excluded as data and compiled separately. The package contains
-119 permitted entries. Commit/push this checkpoint and verify fresh matrix CI.
-Then continue peer resolution, request resource bounds and the remaining
+119 permitted entries. Head 6b3e3e0 passed all nine runtime/OS jobs and applicable
+gates in run 40837895072 (07:49:20Z–07:51:59Z, 2026-10-29), verifying the
+Windows fixture repair.
+
+The request-bound checkpoint adds eight regressions and passes all 532 tests per
+runtime plus strict checks. See [normalization evidence](request-limits.md).
+Commit/push it and verify fresh CI. Then continue peer resolution and remaining
 application contracts with failing-before tests. Main remains an ancestor.
 
 Keep protocol completion (secret chats/call media/transports), complete backend
@@ -154,6 +159,15 @@ Update PR #2 with current implementation and evidence; keep it draft until the
 remaining requirements are genuinely implemented and verified.
 
 ## Current CI investigation
+
+1. [x] List constructor/storage runs and verify head SHAs and timestamps.
+2. [x] Preserve complete failed logs under ci-logs/ and read each platform failure.
+3. [x] Identify the Windows ENOENT/ENOTDIR fixture assumption; retain actual store behavior.
+4. [x] Use an existing-directory read failure and keep blocked write/recovery checks.
+5. [x] Verify all nine OS/runtime jobs on head 6b3e3e0 in run 40837895072.
+6. [ ] Verify fresh matrix CI after the request-bound checkpoint is pushed.
+
+## Historical CI investigations
 
 The layer-policy run 40801264105 passed eight runtime/OS jobs and all applicable
 gates, but Node on macOS failed the existing TCP cancellation test. Preserved

@@ -17,7 +17,12 @@ The [native class checkpoint](api-classes.md) provides schema-backed camelCase
 constructors and checked declarations for all 2629 pinned definitions. Node,
 Bun and Deno each pass 524 tests. String-peer resolution and full vendor model
 compatibility remain open. The same checkpoint repairs a Windows-specific
-read-error fixture; fresh CI must verify the platform change.
+read-error fixture; all nine runtime/OS jobs and applicable gates pass in
+run 40837895072 for head 6b3e3e0.
+
+The [request normalization checkpoint](request-limits.md) rejects excessive
+depth and vector length before traversing nested requests. All 532 tests pass
+on Node, Bun and Deno, with strict static checks. Fresh CI is required.
 
 ## Evidence and research method
 

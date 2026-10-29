@@ -67,14 +67,35 @@ export function requestOf(method, params = {}) {
   return { ...requestOf(name, values), original: method };
 }
 
-export function gramRequest(Api, request) {
+function requestMapper(visit, { maxDepth = 64, maxVector = 100000 } = {}) {
+  if (
+    !Number.isSafeInteger(maxDepth) ||
+    maxDepth < 0 ||
+    !Number.isSafeInteger(maxVector) ||
+    maxVector < 0
+  ) {
+    throw new RangeError('Invalid TL request limits');
+  }
+  function map(value, depth = 0, name) {
+    if (depth > maxDepth) {
+      throw new RangeError('TL depth limit exceeded');
+    }
+    if (Array.isArray(value)) {
+      if (value.length > maxVector) {
+        throw new RangeError('Invalid TL vector length');
+      }
+      return value.map((item) => map(item, depth + 1));
+    }
+    return visit(value, (entry) => map(entry, depth + 1), name);
+  }
+  return map;
+}
+
+export function gramRequest(Api, request, limits) {
   if (request.original?.getBytes && !nativeTlObjects.has(request.original)) {
     return request.original;
   }
-  function convert(value) {
-    if (Array.isArray(value)) {
-      return value.map(convert);
-    }
+  const convert = requestMapper((value, next) => {
     if (value instanceof Uint8Array) {
       return Buffer.from(value);
     }
@@ -90,10 +111,10 @@ export function gramRequest(Api, request) {
     const fields = Object.fromEntries(
       Object.entries(value)
         .filter(([key]) => !metadataFields.has(key))
-        .map(([key, entry]) => [camel(key), convert(entry)])
+        .map(([key, entry]) => [camel(key), next(entry)])
     );
     return name ? construct(name, fields) : fields;
-  }
+  }, limits);
   function construct(name, fields) {
     const path = gramClassName(name).split('.');
     const Constructor = path.reduce((scope, key) => scope?.[key], Api);
@@ -120,11 +141,8 @@ export function gramRequest(Api, request) {
   return construct(request.method, convert(request.params));
 }
 
-export function objectRequest(request) {
-  function convert(value, name) {
-    if (Array.isArray(value)) {
-      return value.map((item) => convert(item));
-    }
+export function objectRequest(request, limits) {
+  const convert = requestMapper((value, next, name) => {
     if (!value || typeof value !== 'object' || value instanceof Uint8Array) {
       return value;
     }
@@ -142,11 +160,11 @@ export function objectRequest(request) {
         continue;
       }
       const field = fields.has(key) ? key : snake(key);
-      result[field] = canonicalField(fields.get(field), convert(entry));
+      result[field] = canonicalField(fields.get(field), next(entry));
     }
     return result;
-  }
-  return { _: request.method, ...convert(request.params, request.method) };
+  }, limits);
+  return { _: request.method, ...convert(request.params, 0, request.method) };
 }
 
 function canonicalField(type, value) {

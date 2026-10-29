@@ -48,7 +48,9 @@ Node log lines 14227–14244, Deno 8832–8841 and Bun 17791–17807. Storage ru
 `ENOENT` as an absent file. Windows reports that code for a child of a regular
 file, while Unix reports `ENOTDIR`. The read-failure fixture now targets an
 existing directory consistently on all platforms; the blocked writer and queue
-recovery assertions remain. Fresh matrix CI must verify this correction.
+recovery assertions remain. Head 6b3e3e0 passed all nine runtime/OS jobs and applicable gates in run
+40837895072, created 2026-10-29T07:49:20Z and completed 07:51:59Z. This
+verifies the correction on all three Windows runtimes.
 
 ## Local validation
 
@@ -56,5 +58,4 @@ Node, Bun and Deno each pass all 524 tests. Strict ESLint, formatting, declarati
 compilation and exact regeneration pass. The repaired duplication gate scans
 76 production sources with zero clones; the 38 generated declaration data files
 are excluded explicitly and compiled separately. The package dry run contains
-119 permitted entries. Logs are retained under `ci-logs/api-*`; fresh matrix CI
-is required for this checkpoint.
+119 permitted entries. Logs are retained under `ci-logs/api-*`; matrix CI for head 6b3e3e0 passes as recorded above.

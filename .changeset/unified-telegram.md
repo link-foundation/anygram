@@ -57,3 +57,6 @@ Add schema-backed native API class constructors and generated declarations,
 retaining numeric random IDs and converting owned requests into vendor runtime
 classes through the shared adapter path. Bound atomic file reads/writes and
 follow session imports while preserving prior files on validation failure.
+
+Apply shared request depth/vector guards before canonical and vendor conversion,
+including configured native codec limits before queued RPC work.
