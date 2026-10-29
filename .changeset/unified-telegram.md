@@ -3,7 +3,11 @@
 ---
 
 Introduce shared Telegram backend routing and optional client adapters alongside
-schema-aware native request peer/message shortcuts, recursive resolution through
+schema-backed rich-message factories, bounded rich-tree renderers, bound content
+getters and exact message/peer-correlated full-content retrieval. Preserve rich
+file labels and supply the required empty plain text for rich-only sends. Add
+actual current SDK byte/rendering comparisons and explicit older-schema limits.
+Add schema-aware native request peer/message shortcuts, recursive resolution through
 the selected backend, checked shortcut declarations and cancellation/depth guards,
 independent Bot API and encrypted MTProto HTTPS/TCP transports. Add four native
 TCP framing formats with bounded streams and send-only acknowledgements,

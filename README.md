@@ -802,7 +802,12 @@ Canonical clients and both styles share `sendReaction` and `getReactionUsers`.
 Custom emoji IDs retain exact integers, and scheduled copies accept timestamp
 seconds or Dates. See [typed reaction examples](examples/typed-account-reactions.ts)
 and [reaction/copy evidence](docs/case-studies/issue-1/account-reactions.md).
-Rich formatting/model parity, drafts, array totals,
+The `Rich` namespace creates HTML/Markdown/block inputs and renders rich trees
+as plain text, Markdown or HTML. Messages expose `richText`, `richMarkdown`,
+`richHtml` and origin-bound `fetchRichMessage`; canonical clients and both styles
+share `getRichMessage`. See [typed rich-message examples](examples/typed-rich-messages.ts)
+and [rich-message comparisons and limits](docs/case-studies/issue-1/rich-messages.md).
+Ordinary markup parse modes, complete rich formatting/model parity, drafts, array totals,
 legacy big-integer methods and `instanceof Api.*` behavior remain open.
 Direct `client.invoke` keeps raw backend results.
 

@@ -52,6 +52,30 @@ export interface AccountReactionMethods<Updates, List> {
   ): Promise<List>;
 }
 
+export interface AccountRichContent extends GramStyleObject {
+  part?: boolean;
+  rtl?: boolean;
+  blocks: GramStyleObject[];
+  photos: GramStyleObject[];
+  documents: GramStyleObject[];
+}
+export interface AccountRichCanonicalMessage extends TlRequest {
+  id: number;
+  rich_message?: TlRequest & {
+    part?: boolean;
+    blocks: TlRequest[];
+    photos: TlRequest[];
+    documents: TlRequest[];
+  };
+}
+export interface AccountRichMethods<Message> {
+  getRichMessage(
+    peer: unknown,
+    message: number | { id: number },
+    options?: RequestOptions
+  ): Promise<Message | undefined>;
+}
+
 export interface AccountTextEntity extends GramStyleObject {
   offset: number;
   length: number;
@@ -194,6 +218,11 @@ export interface AccountMessage extends GramStyleObject, AccountPeerView {
   readonly toId?: GramStyleObject;
   rawText: string;
   text: string;
+  richMessage?: AccountRichContent;
+  readonly richText?: string;
+  readonly richMarkdown?: string;
+  readonly richHtml?: string;
+  fetchRichMessage(options?: RequestOptions): Promise<this>;
   readonly photo?: GramStyleObject;
   readonly document?: GramStyleObject;
   readonly webPreview?: GramStyleObject;

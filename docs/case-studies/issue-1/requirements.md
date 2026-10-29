@@ -41,6 +41,15 @@ encrypted TCP verify the finite helper behavior. SDK Date scheduling differences
 paid-reaction errors and broadcast privacy limits remain explicit. Full SDK and
 production-account verification remain open.
 
+The [rich-message follow-up](rich-messages.md) advances these criteria with shared
+bounded factories/renderers, bound rich getters and correlated full-content
+retrieval. All 816 cases pass; frozen preceding source fails 806, and preceding
+declarations produce six diagnostics. Thirty-one actual SDK byte comparisons,
+all five selected routes and independent encrypted TCP verify the finite helper
+contracts. The official schema independently matches 104 related definitions.
+The pinned older GramJS schema lacks these constructors; that gap, refined rich
+node types, ordinary markup parse modes and full production parity remain open.
+
 The [AES-IGE allocation regression](crypto-allocations.md) advances R05/R08
 with an immutable failing-before reproduction, independent ciphertext checks
 and a bounded public-buffer measurement. It retains the 10 MiB upload workload

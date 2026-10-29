@@ -2,6 +2,7 @@ import { AccountFile } from './account-file.js';
 import { responseMessage } from './account-response.js';
 import { randomId } from './random.js';
 import { canonicalValue } from './requests.js';
+import * as Rich from './rich-messages.js';
 import {
   AccountPeerView,
   bindAccountPeers,
@@ -159,6 +160,43 @@ class AccountMessage extends AccountPeerView {
   }
   set text(value) {
     this.rawText = value;
+  }
+
+  get richText() {
+    return this.richMessage?._ === 'richMessage'
+      ? Rich.toPlainText(this.richMessage)
+      : undefined;
+  }
+  get richMarkdown() {
+    return this.richMessage?._ === 'richMessage'
+      ? Rich.toMarkdown(this.richMessage)
+      : undefined;
+  }
+  get richHtml() {
+    return this.richMessage?._ === 'richMessage'
+      ? Rich.toHtml(this.richMessage)
+      : undefined;
+  }
+  async fetchRichMessage(options = {}) {
+    options.signal?.throwIfAborted();
+    const current = this.richMessage;
+    if (current?._ !== 'richMessage' || !current.part) {
+      return this;
+    }
+    const origin = await target(this, options);
+    const full = await scope(this).operations.getRichMessage(
+      origin,
+      this.id,
+      options
+    );
+    options.signal?.throwIfAborted();
+    if (
+      this.richMessage === current &&
+      full?.rich_message?._ === 'richMessage'
+    ) {
+      this.richMessage = scope(this).wrap(full.rich_message);
+    }
+    return this;
   }
 
   async getReplyMessage(options = {}) {

@@ -15,6 +15,8 @@ import type {
   AccountReactionMethods,
   AccountReactionList,
   AccountReactionCanonicalList,
+  AccountRichMethods,
+  AccountRichCanonicalMessage,
 } from './account-message-types.js';
 export type * from './account-message-types.js';
 import type {
@@ -147,6 +149,15 @@ export declare function matchFilter<
   Q extends FilterQuery = FilterQuery,
 >(filter: Q | readonly Q[]): <D extends C>(ctx: D) => ctx is Filter<D, Q>;
 export { Api } from './api.js';
+export * as Rich from './rich-messages.js';
+export type {
+  RichNode,
+  RichFileMap,
+  RichInputOptions,
+  RichBlocksOptions,
+  RichSource,
+  RenderMode,
+} from './rich-messages.js';
 export type {
   TlObject,
   TlClass,
@@ -376,10 +387,10 @@ export interface GramStyleDialog {
   isChannel: boolean;
   isGroup: boolean;
 }
-export interface GramStyleClient extends AccountReactionMethods<
-  GramStyleObject,
-  AccountReactionList
-> {
+export interface GramStyleClient
+  extends
+    AccountReactionMethods<GramStyleObject, AccountReactionList>,
+    AccountRichMethods<AccountMessage> {
   invoke: Anygram['invoke'];
   sendMessage(peer: unknown, options: Parameters): Promise<unknown>;
   getMe(options?: RequestOptions): Promise<GramStyleObject>;
@@ -428,10 +439,10 @@ export interface ConnectionScopeOptions extends RequestOptions {
   cleanupAttempts?: 1 | 2 | 3;
   cleanupDelay?: number;
 }
-export interface Anygram extends AccountReactionMethods<
-  TlRequest,
-  AccountReactionCanonicalList
-> {}
+export interface Anygram
+  extends
+    AccountReactionMethods<TlRequest, AccountReactionCanonicalList>,
+    AccountRichMethods<AccountRichCanonicalMessage> {}
 export declare class Anygram {
   constructor(options?: ClientOptions);
   adapters: Adapter[];

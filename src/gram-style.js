@@ -1,6 +1,7 @@
 import { RpcOperations, iterateHistory, normalize } from './operations.js';
 import { camel, gramClassName } from './requests.js';
 import { bindAccountMessage } from './account-message.js';
+import { accountMessageId } from './account-message-id.js';
 
 function convert(value, context, origin) {
   if (value instanceof Uint8Array) {
@@ -110,6 +111,12 @@ export function createGramStyle(client, kind = 'gramjs') {
       return wrap(await operations.getMessages(input, options), input).map(
         (message) => (message._ === 'messageEmpty' ? undefined : message)
       );
+    },
+    async getRichMessage(peer, message, options) {
+      options?.signal?.throwIfAborted();
+      const id = accountMessageId(message);
+      const input = await operations.resolvePeer(peer, options);
+      return wrap(await operations.getRichMessage(input, id, options), input);
     },
     async *iterMessages(peer, options) {
       let input;

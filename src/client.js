@@ -141,6 +141,7 @@ for (const operation of [
   'getMe',
   'getFileLink',
   'getMessages',
+  'getRichMessage',
   'getDialogs',
   'getEntity',
   'getInputEntity',

@@ -1422,5 +1422,34 @@ Account reaction and copy helper work plan:
       and sub-issues are empty, and issue prose is unchanged. The paginated PR
       inventory has 967 files with no removals. GitHub's 300-file diff limit
       requires complete local atomic diff review.
-- [ ] Commit/push and verify exact-head CI. Continue formatting, rich messages
-      and all wider unfinished criteria.
+- [x] Commit and push reaction head 85aff53 after all local gates pass.
+- [x] Verify reaction head 85aff538 in run 40973473812, created
+      2026-10-29T23:29:22Z after its commit: all 23 applicable jobs pass.
+      Continue wider model work.
+
+Rich-message factory, renderer and full-content fetch work plan:
+
+- [x] Compare every pinned SDK RichText/PageBlock rendering branch, factories,
+      custom message getters and getRichMessage. Verify current official schema
+      independently and preserve source revisions, hashes and missing-doc evidence.
+- [x] Add minimum failing factory, renderer and bound-fetch regressions before
+      implementation, with immutable prior-source and declaration runners.
+- [x] Share schema-backed rich input factories and bounded rendering across
+      canonical, owned class and actual SDK objects, retaining exact media IDs.
+- [x] Add shared getRichMessage and bound fetch/getters with exact ID/peer
+      correlation, detached views, origin hashes, cancellation and selected routes.
+- [x] Compare all supported SDK text/block cases, independent expected renderings,
+      serialized requests, five selected adapters and encrypted native TCP.
+- [x] Add checked migration examples, actual SDK type fixtures and research facts;
+      document intentional differences and every remaining rich-message limit.
+      All 816 focused cases pass; frozen source fails 806, and frozen declarations
+      produce six diagnostics. All 104 selected official schema definitions match.
+- [x] Run all local/runtime/static/integration/package gates and refresh feedback.
+      All 3,628 core cases pass per runtime; 183 production sources have zero
+      clones, and packaging contains 226 permitted entries. Actual SDK types,
+      71 framework cases per runtime/Node 20, 27 native terminal, eight Node 20 wire,
+      sixteen parser checks and the bounded FIFO probe pass. Main is an ancestor;
+      issue prose is unchanged, and feedback/sub-issue streams remain empty.
+      Review the complete atomic diff; GitHub rejects the >300-file full diff.
+- [ ] Commit and push the rich-message checkpoint, then verify exact-head CI.
+      Continue markup formatting, bound plain edits and wider unfinished criteria.

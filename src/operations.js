@@ -7,6 +7,7 @@ import { iterateDialogs } from './dialogs.js';
 import { parseTelegramLink } from './chat-links.js';
 import { notificationOptions, notificationPeer } from './notifications.js';
 import { reactionOf, reactionList } from './account-reactions.js';
+import { accountMessageId, samePeerId } from './account-message-id.js';
 import {
   hasMinAccessHash,
   rememberPeer,
@@ -380,7 +381,7 @@ export class RpcOperations extends MediaOperations {
       {
         ...params,
         peer: await this.resolvePeer(peer, options),
-        message: text,
+        message: text ?? (params.rich_message ? '' : text),
         random_id: params.random_id ?? randomId(),
       },
       options
@@ -437,6 +438,31 @@ export class RpcOperations extends MediaOperations {
       options
     );
     return result.messages ?? [];
+  }
+
+  async getRichMessage(peer, message, options = {}) {
+    options.signal?.throwIfAborted();
+    const id = accountMessageId(message);
+    const input = await this.resolvePeer(peer, options);
+    const identity =
+      input._ === 'inputPeerSelf' ? await this.getMe(options) : input;
+    const family = identity._ === 'user' ? 'user' : peerFamily(identity);
+    const peerId =
+      identity._ === 'user' ? identity.id : identity[`${family}_id`];
+    const result = await this.rpc(
+      'messages.getRichMessage',
+      { peer: input, id },
+      options
+    );
+    options.signal?.throwIfAborted();
+    return result.messages?.find(
+      (value) =>
+        value._ === 'message' &&
+        value.id === id &&
+        value.peer_id?._ ===
+          `peer${family[0]?.toUpperCase()}${family.slice(1)}` &&
+        samePeerId(value.peer_id[`${family}_id`], peerId)
+    );
   }
 
   getDialogs(options = {}) {

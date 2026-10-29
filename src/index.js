@@ -29,6 +29,7 @@ export const delay = (ms) =>
 
 export { Anygram } from './client.js';
 export { Api } from './api.js';
+export * as Rich from './rich-messages.js';
 export { parseTelegramLink } from './chat-links.js';
 export { createAdapter } from './adapters.js';
 export { TelegramError, UnsupportedError } from './errors.js';
