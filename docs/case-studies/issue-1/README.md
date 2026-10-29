@@ -1,5 +1,10 @@
 # Unified Telegram client: investigation and implementation
 
+The [context message action comparison](bot-context-message-actions.md) verifies
+29 grammY and 14 Telegraf scoped helpers plus persistent chat action lifecycle.
+It compares inline/business edits, copying/forwarding, reaction formats,
+checklist targets, ephemeral recipients and request controls.
+
 The [context service comparison](bot-context-services.md) verifies 51 grammY and
 27 Telegraf user, query, business, managed-bot, payment and configuration helpers.
 It also retains exact public API override arguments for administration calls.

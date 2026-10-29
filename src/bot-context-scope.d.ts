@@ -1,3 +1,8 @@
+import type { RequestOptions } from './index.js';
+export type { GrammyPositionalArguments } from './bot-positional.js';
+export type { TelegrafPositionalArguments } from './telegraf-positional.js';
+export type ContextRequest = RequestOptions | AbortSignal;
+
 type StripScope<A extends unknown[], S extends unknown[]> = S extends [
   unknown,
   ...infer Remaining,

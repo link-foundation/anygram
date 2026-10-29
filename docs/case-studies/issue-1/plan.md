@@ -842,6 +842,32 @@ Context user, query, business and configuration work plan:
       Strict gates scan 100 production sources with zero clones, compile all
       declarations/examples and regenerate exactly. Packaging permits 143
       entries; main remains an ancestor.
-- [ ] Finish review, commit/push and inspect fresh CI by exact SHA/time.
+- [x] Finish review, commit/push and inspect fresh CI by exact SHA/time.
+      Services head d76b83c passed run 40887641230, created
+      2026-10-29T14:02:59Z and completed 2026-10-29T14:09:22Z.
 - [ ] Continue every other independent requirement without presenting a helper
       inventory or passing CI as complete ecosystem compatibility.
+
+Context message actions work plan:
+
+- [x] Compare all 29 grammY and 14 Telegraf edit, forwarding, copy, reaction,
+      deletion and suggested-post helpers before implementation. The first
+      100 cases reproduce 98 failures; two inventory assertions pass.
+- [x] Bind message/inline, business, checklist and ephemeral scope through the
+      shared positional APIs, preserving distinct SDK signatures and errors.
+- [x] Compare argument overrides, reaction variants, caller controls, zero IDs,
+      immutable updates and actual selected-backend HTTP requests. Verify
+      persistent chat actions with finite callback/timer experiments.
+- [x] Add checked declarations/examples, immutable reproduction and evidence.
+      All 119 focused cases pass. The immutable context-entry loader reproduces
+      117 failures and two inventory passes against preceding head d76b83c.
+      Bounded persistent-action comparisons verify initial/repeated send
+      failures, callback errors and timer cleanup, with optional error tracing.
+- [x] Pass local runtime/static/native/vendor/FIFO/package gates and review.
+      All 1,780 core cases pass on Node, Bun and Deno; 119 focused cases pass
+      on Node 20. Strict gates scan 102 sources with zero clones and exact
+      declaration regeneration; packaging permits 145 entries. All 26 native
+      checks, two vendor wire cases and bounded FIFO cleanup pass. Main remains
+      an ancestor. Source, tests, declarations and atomic diff were reviewed.
+- [ ] Commit/push message actions and inspect exact-head CI.
+- [ ] Continue all remaining independent issue requirements.

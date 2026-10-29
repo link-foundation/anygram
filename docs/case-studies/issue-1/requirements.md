@@ -680,3 +680,17 @@ All 1,661 core cases pass on Node, Bun and Deno; the 303 focused Node 20 cases,
 gates report zero clones across 100 production sources, exact regeneration
 and 143 permitted package entries. Complete message helpers, filters/entities,
 SDK models and every other open acceptance criterion remain unfinished.
+
+The [context message action comparison](bot-context-message-actions.md) advances
+R01/R05/R08/R13/R16/R17/R19 with all 29 grammY and 14 Telegraf scoped action
+helpers plus persistent chat actions. The fixed preceding context entry
+reproduces 117 failures in the final 119-case suite. All cases now pass against
+actual SDKs, including inline/business scope, checklist/ephemeral identifiers,
+reaction formats, public override calls, request controls, eight selected-backend
+HTTP cases and eight bounded upload deadlines. Persistent action comparisons
+verify initial/repeated send failure, callback failure and timer cleanup.
+All 1,780 core cases pass on Node, Bun and Deno; the 119 focused Node 20 cases,
+26 native checks, two vendor wire cases and bounded FIFO probe pass. Strict
+gates report zero clones across 102 production sources, exact regeneration
+and 145 permitted package entries. Context filters/entities, complete models,
+framework compatibility and every other open criterion remain unfinished.

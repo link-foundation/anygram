@@ -6,6 +6,7 @@ import { installContextData } from './bot-context-data.js';
 import { installContextDelivery } from './bot-context-delivery.js';
 import { installContextAdministration } from './bot-context-admin.js';
 import { installContextServices } from './bot-context-services.js';
+import { installContextMessageActions } from './bot-context-message-actions.js';
 import { contextRequired } from './bot-context-scope.js';
 import {
   botNoPayloadMethods,
@@ -111,36 +112,6 @@ export class Context {
   get botInfo() {
     return this.me;
   }
-  editMessageText(text, options, signal) {
-    return callBotOperation(
-      this.api,
-      'editMessageText',
-      {
-        chat_id: this.chat?.id,
-        message_id: this.msg?.message_id,
-        inline_message_id: this.callbackQuery?.inline_message_id,
-        text,
-      },
-      options,
-      signal
-    );
-  }
-
-  answerCallbackQuery(options, signal) {
-    return this.api.answerCallbackQuery(
-      this.callbackQuery.id,
-      typeof options === 'string' ? { text: options } : options,
-      signal
-    );
-  }
-  deleteMessage(idOrOptions, options) {
-    const explicitId = typeof idOrOptions === 'number';
-    return this.api.deleteMessage(
-      this.chat.id,
-      explicitId ? idOrOptions : this.msg?.message_id,
-      options ?? (explicitId ? undefined : idOrOptions)
-    );
-  }
 }
 
 /** Preserve Telegraf's username alias without changing grammY's user alias. */
@@ -173,6 +144,8 @@ installContextAdministration(Context);
 installContextAdministration(TelegrafContext, 'telegraf');
 installContextServices(Context);
 installContextServices(TelegrafContext, 'telegraf');
+installContextMessageActions(Context);
+installContextMessageActions(TelegrafContext, 'telegraf');
 
 export function compose(middleware) {
   return (ctx, last = () => Promise.resolve()) => {

@@ -78,6 +78,12 @@ File selection and public API overrides compare against the pinned SDKs. See the
 [service comparisons](docs/case-studies/issue-1/bot-context-services.md) and
 [typed example](examples/typed-bot-context-services.ts).
 
+Message actions bind edits, forwarding/copying, reactions and deletion to their
+message or inline scope, including business, checklist and ephemeral identifiers.
+Telegraf persistent chat actions clear their timer when the callback finishes.
+See the [message action comparisons](docs/case-studies/issue-1/bot-context-message-actions.md)
+and [typed example](examples/typed-bot-context-message-actions.ts).
+
 Query shortcuts such as `bot.callbackQuery('refresh').use(handler)` return a
 scoped composer. The six query shortcuts accept strings, regular expressions or
 arrays and share asynchronous `filter(predicate)` registration. See the

@@ -143,3 +143,10 @@ configuration context helpers through the same operation boundary. Preserve file
 selection, identifier requirements, SDK error quirks and immutable arguments.
 Share exact public API argument widths across scoped contexts so overrides retain
 omitted optional slots, and compile declarations/examples for both SDK styles.
+
+Bind pinned message edits, forwarding/copying, reactions, suggested posts and
+deletion through shared positional operations, retaining inline/business scope,
+checklist targets, ephemeral recipients and SDK-specific reaction formats.
+Preserve public override calls and explicit deletion/request extensions. Add
+Telegraf persistent chat action lifecycle and optional disabled-by-default error
+tracing, clearing timers after callback completion or failure.
