@@ -10,6 +10,7 @@
     "**/*.min.js",
     "**/coverage/**",
     "**/docs/case-studies/*/data/**",
+    "**/api-types/**",
     "**/.changeset/**",
     "**/package-lock.json",
     "**/pnpm-lock.yaml",

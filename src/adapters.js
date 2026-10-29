@@ -1,5 +1,5 @@
 import { UnsupportedError } from './errors.js';
-import { gramRequest, objectRequest } from './requests.js';
+import { gramRequest, objectRequest, nativeTlObjects } from './requests.js';
 import { mtcuteRequest } from './mtcute.js';
 import { RpcOperations } from './operations.js';
 
@@ -83,7 +83,10 @@ export function createAdapter(
     },
     async invoke(request, options) {
       if (style === 'gramjs') {
-        if (!Api && !request.original?.getBytes) {
+        if (
+          !Api &&
+          (!request.original?.getBytes || nativeTlObjects.has(request.original))
+        ) {
           throw new UnsupportedError(
             'raw invocation requires the backend Api namespace',
             name

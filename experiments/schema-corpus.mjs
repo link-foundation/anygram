@@ -7,8 +7,14 @@ import assert from 'node:assert/strict';
 import { createFixtureFactory } from './tl-fixtures.mjs';
 const codec = new TlCodec();
 const fixture = createFixtureFactory(codec);
-export function runCorpus() {
-  const counts = { methods: 0, constructors: 0, teleproto: 0, gramjs: 0 };
+export function runCorpus(additional = []) {
+  const counts = {
+    methods: 0,
+    constructors: 0,
+    teleproto: 0,
+    gramjs: 0,
+    ...Object.fromEntries(additional.map(([name]) => [name, 0])),
+  };
   const failures = [];
   for (const definition of [
     ...codec.methods.values(),
@@ -26,6 +32,7 @@ export function runCorpus() {
       for (const [label, api] of [
         ['teleproto', Api],
         ['gramjs', GramApi],
+        ...additional,
       ]) {
         if (!compatible(input, api)) {
           continue;

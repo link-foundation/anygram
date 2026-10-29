@@ -38,7 +38,8 @@
     "changeset:status": "changeset status --since=origin/main",
     "schema:update": "node scripts/update-schema.mjs",
     "schema:update:secret": "node scripts/update-secret-schema.mjs",
-    "typecheck": "tsc --project tsconfig.json"
+    "schema:types": "node scripts/update-api-types.mjs",
+    "typecheck": "tsc --project tsconfig.json && node scripts/update-api-types.mjs --check"
   },
   "keywords": [
     "telegram",

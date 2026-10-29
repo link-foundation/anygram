@@ -88,6 +88,23 @@ await client.sendMessage('me', 'Hello from MTProto');
 await client.disconnect();
 ```
 
+`Api` supplies class constructors for all 869 methods and 1760 constructors in
+the pinned layer-232 registry, including its MTProto service definitions:
+
+```js
+import { Api } from 'anygram';
+const request = new Api.users.GetUsers({ id: [new Api.InputUserSelf()] });
+const users = await client.invoke(request);
+```
+
+Constructors accept camelCase fields and serialize through the shared TL codec.
+Numeric request random IDs are generated once when omitted; explicit zero IDs
+are retained. Use fully specified TL input objects here. String peer resolution,
+vendor custom models and vendor reader methods remain separate compatibility
+work. The same requests convert to actual GramJS/teleproto classes when those
+backends are selected. Generated declarations check names, fields and TL input
+types; see the [typed example](examples/typed-api.ts).
+
 The native implementation includes RSA/DH authorization-key exchange, validated
 MTProto 2.0 encrypted envelopes, HTTPS/TCP/WebSocket transports, layer 232 TL serialization,
 phone/bot authorization and SRP 2FA, and a shared set of account operations.
@@ -242,8 +259,8 @@ file writer. Configuration reads/writes are limited to 256 KiB. `envFile: false`
 disables default disk persistence; `sessionPath` or `sessionStore` selects another
 store. `backend: 'gramjs'` or `'teleproto'` also supplies the vendor's `Api`
 namespace to callbacks. Native callbacks can use tagged requests or an explicitly
-supplied `Api`; a native class namespace and full vendor client methods remain
-compatibility work. This constructor is separate from the CLI's portable-file
+supplied `Api`, and default to the shared native `Api` namespace. Full vendor
+client methods remain compatibility work. This constructor is separate from the CLI's portable-file
 persistence policy.
 
 `client.withConnection(async (connected) => { /* account work */ }, options)`

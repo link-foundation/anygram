@@ -1,4 +1,4 @@
-import { createClient, Session } from '../src/index.js';
+import { createClient, Session, Api } from '../src/index.js';
 import { FileSessionStore } from '../src/storage.js';
 import { FollowClient } from './follow-client.js';
 import { createFollowAccount } from './follow-account.js';
@@ -92,7 +92,7 @@ export class TelegramUserClient extends FollowClient {
           return await configured.run(task, connection);
         },
       },
-      { Api: options.Api, scope }
+      { Api: options.Api ?? Api, scope }
     );
     const owner = this;
     this.apiId = env.TELEGRAM_USER_BOT_API_ID ?? '';

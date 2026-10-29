@@ -28,6 +28,7 @@ export const delay = (ms) =>
   new Promise((resolve) => globalThis.setTimeout(resolve, ms));
 
 export { Anygram } from './client.js';
+export { Api } from './api.js';
 export { parseTelegramLink } from './chat-links.js';
 export { createAdapter } from './adapters.js';
 export { TelegramError, UnsupportedError } from './errors.js';

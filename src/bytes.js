@@ -30,3 +30,18 @@ export function fixedIntegerBytes(value, length) {
   }
   return bytes;
 }
+
+const crcTable = Array.from({ length: 256 }, (_, value) => {
+  for (let bit = 0; bit < 8; bit++) {
+    value = value & 1 ? (value >>> 1) ^ 0xedb88320 : value >>> 1;
+  }
+  return value >>> 0;
+});
+
+export function crc32(bytes) {
+  let value = 0xffffffff;
+  for (const byte of bytes) {
+    value = crcTable[(value ^ byte) & 255] ^ (value >>> 8);
+  }
+  return (value ^ 0xffffffff) >>> 0;
+}

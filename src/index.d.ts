@@ -6,6 +6,13 @@ import type {
   EncryptedFileDownloadOptions,
   EncryptedFileInput,
 } from './mtproto.js';
+export { Api } from './api.js';
+export type {
+  TlObject,
+  TlClass,
+  LongValue,
+  FixedInteger,
+} from './api-classes.js';
 
 /**
  * Adds two numbers

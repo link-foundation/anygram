@@ -1,5 +1,7 @@
 import schema from './schema/telegram.json' with { type: 'json' };
 import { fixedIntegerBytes } from './bytes.js';
+// Owned schema classes must be reconstructed with a backend's own runtime.
+export const nativeTlObjects = new WeakSet();
 const definitions = new Map(
   [...schema.methods, ...schema.constructors].map((item) => [
     item.method ?? item.predicate,
@@ -66,7 +68,7 @@ export function requestOf(method, params = {}) {
 }
 
 export function gramRequest(Api, request) {
-  if (request.original?.getBytes) {
+  if (request.original?.getBytes && !nativeTlObjects.has(request.original)) {
     return request.original;
   }
   function convert(value) {
@@ -80,14 +82,14 @@ export function gramRequest(Api, request) {
       !value ||
       typeof value !== 'object' ||
       value instanceof Uint8Array ||
-      value.getBytes
+      (value.getBytes && !nativeTlObjects.has(value))
     ) {
       return value;
     }
     const name = value._ ?? value.className;
     const fields = Object.fromEntries(
       Object.entries(value)
-        .filter(([key]) => !['_', 'className'].includes(key))
+        .filter(([key]) => !metadataFields.has(key))
         .map(([key, entry]) => [camel(key), convert(entry)])
     );
     return name ? construct(name, fields) : fields;

@@ -13,6 +13,12 @@ format `console`, so those checks scanned no files. They did not establish
 absence of duplicated code. The duplication checkpoint records the repair and
 actual source scan.
 
+The [native class checkpoint](api-classes.md) provides schema-backed camelCase
+constructors and checked declarations for all 2629 pinned definitions. Node,
+Bun and Deno each pass 524 tests. String-peer resolution and full vendor model
+compatibility remain open. The same checkpoint repairs a Windows-specific
+read-error fixture; fresh CI must verify the platform change.
+
 ## Evidence and research method
 
 `data/issue.json`, `issue-comments.json`, `sub-issues.json`, and the three PR

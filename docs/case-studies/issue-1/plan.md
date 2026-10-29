@@ -130,11 +130,21 @@ native TCP checks. All 491 tests pass on each runtime, together with strict
 checks and the zero-clone scan. Commit/push this checkpoint and verify fresh CI.
 Connection head 16fc829 passed all nine runtime/OS jobs and applicable gates in
 run 40833093614, created 07:04:30Z and completed 07:06:48Z on 2026-10-29.
-Constructor/environment head 527b7cd passes 507 tests per runtime locally; run
-40834951184 remains queued. The bounded storage checkpoint adds seven regressions
-and passes all 514 tests per runtime plus strict checks; see [evidence](storage-limits.md).
-Commit/push it and verify fresh matrix CI. Continue native class-based API
-compatibility with failing-before tests. Main remains an ancestor.
+Constructor/environment head 527b7cd and bounded storage head 2514dbc each passed
+six Linux/macOS runtime jobs and static/release gates, but failed all three
+Windows jobs on the same nonportable read-error fixture. The shared file store
+correctly treats ENOENT as absent; Windows uses that code for a child of a regular
+file. The repaired test reads an existing directory instead. The blocked write
+and recovery assertions remain. [Native class evidence](api-classes.md) records
+exact run IDs and failure log lines.
+
+The native class checkpoint adds ten regressions and passes 524 tests on each
+runtime, strict checks, exact declaration regeneration and compilation. The
+clone scan covers 76 production sources with zero clones; 38 generated schema
+declarations are excluded as data and compiled separately. The package contains
+119 permitted entries. Commit/push this checkpoint and verify fresh matrix CI.
+Then continue peer resolution, request resource bounds and the remaining
+application contracts with failing-before tests. Main remains an ancestor.
 
 Keep protocol completion (secret chats/call media/transports), complete backend
 return/event/style compatibility and actual downstream scenarios open in the

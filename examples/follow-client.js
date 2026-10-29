@@ -1,4 +1,4 @@
-import { parseTelegramLink } from '../src/index.js';
+import { parseTelegramLink, Api as NativeApi } from '../src/index.js';
 import { gramView } from '../src/gram-style.js';
 import { normalize } from '../src/operations.js';
 import { holdFollowConnection } from './follow-connection.js';
@@ -21,7 +21,7 @@ function peerKey(entity) {
 
 /** Bridge follow's application helpers to a configured Anygram account. */
 export class FollowClient {
-  constructor(account, { Api, scope = {} } = {}) {
+  constructor(account, { Api = NativeApi, scope = {} } = {}) {
     this.account = account;
     this.Api = Api;
     this.scope = { ...scope };
