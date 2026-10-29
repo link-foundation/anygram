@@ -1,3 +1,5 @@
+import { taskContext } from './task-context.js';
+
 /** Bounded, timer-free storage accepting both bot-framework store interfaces. */
 export class MemorySessionStore {
   constructor(options = {}) {
@@ -144,6 +146,7 @@ function createSession(options, style) {
   const initial = options.initial ?? options.defaultSession;
   const getKey = options.getSessionKey ?? ((ctx) => defaultKey(ctx, style));
   const serial = serialSessions(options.maxPending ?? 10000);
+  const context = taskContext();
   const active = new WeakSet();
   return async (ctx, next) => {
     if (active.has(ctx)) {
@@ -157,6 +160,16 @@ function createSession(options, style) {
         return await next();
       }
       const key = `${options.prefix ?? ''}${raw}`;
+      for (let frame = context.current(); frame; frame = frame.value.parent) {
+        if (frame.active && frame.value.key === key) {
+          Object.defineProperty(
+            ctx,
+            property,
+            Object.getOwnPropertyDescriptor(frame.value.ctx, property)
+          );
+          return await next();
+        }
+      }
       return await serial(key, async () => {
         let value = await storage.read(key);
         let initialized = false;
@@ -180,14 +193,16 @@ function createSession(options, style) {
             }
           }
         };
+        const run = () =>
+          context.run({ key, ctx, parent: context.current() }, next);
         if (style === 'telegraf') {
           try {
-            return await next();
+            return await run();
           } finally {
             await save();
           }
         }
-        const result = await next();
+        const result = await run();
         await save();
         return result;
       });

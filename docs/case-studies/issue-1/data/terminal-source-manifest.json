@@ -1,0 +1,146 @@
+{
+  "repository": "konard/telegram-terminal-bot",
+  "commit": "7f3aeee50965160b31dca62b6e5b4e4a7af99bea",
+  "sources": [
+    {
+      "file": "terminal-source/.env.example",
+      "bytes": 346,
+      "gitBlob": "12dee17108e272350abe74b6435dd76d5121d83f",
+      "sha256": "40854a857dd924080d23be2ba5df53e440faa806c757597476f8aac5dbf5a323",
+      "url": "https://github.com/konard/telegram-terminal-bot/blob/7f3aeee50965160b31dca62b6e5b4e4a7af99bea/.env.example"
+    },
+    {
+      "file": "terminal-source/LICENSE",
+      "bytes": 1211,
+      "gitBlob": "fdddb29aa445bf3d6a5d843d6dd77e10a9f99657",
+      "sha256": "6b0382b16279f26ff69014300541967a356a666eb0b91b422f6862f6b7dad17e",
+      "url": "https://github.com/konard/telegram-terminal-bot/blob/7f3aeee50965160b31dca62b6e5b4e4a7af99bea/LICENSE"
+    },
+    {
+      "file": "terminal-source/README.md",
+      "bytes": 6087,
+      "gitBlob": "ee905e813abd0a351b93af2bfd0ae7e30226add9",
+      "sha256": "a7fa67dfd9e9806a5b91bb586c9530b41e2d91674d80c81a0eb90a8d1af9e591",
+      "url": "https://github.com/konard/telegram-terminal-bot/blob/7f3aeee50965160b31dca62b6e5b4e4a7af99bea/README.md"
+    },
+    {
+      "file": "terminal-source/package.json",
+      "bytes": 646,
+      "gitBlob": "9dae395951747c11798da889b880b57527e6dd1b",
+      "sha256": "f7bc2e5ed6025a1a6a2ea0701d0a95a0de1f149094ee8f522d0cddb760be4c8a",
+      "url": "https://github.com/konard/telegram-terminal-bot/blob/7f3aeee50965160b31dca62b6e5b4e4a7af99bea/package.json"
+    },
+    {
+      "file": "terminal-source/src/tests/debug/debug-alt-screen-detailed.js",
+      "bytes": 739,
+      "gitBlob": "8c378fd1533062214ef7d12a0bccdfb2ef4c1b43",
+      "sha256": "dcb8010214aef3bce321321bfd7f81ce4fb1c95459594dd1a3727e65a85f71bc",
+      "url": "https://github.com/konard/telegram-terminal-bot/blob/7f3aeee50965160b31dca62b6e5b4e4a7af99bea/src/tests/debug/debug-alt-screen-detailed.js"
+    },
+    {
+      "file": "terminal-source/src/tests/debug/debug-alt-screen.js",
+      "bytes": 1099,
+      "gitBlob": "4de53905cfec2291204cbbdf733a896df7b1c9e1",
+      "sha256": "1cb8173d437f41c282dc7f247e41e9e4f5e9fa2012368677c2136227a77ba9a7",
+      "url": "https://github.com/konard/telegram-terminal-bot/blob/7f3aeee50965160b31dca62b6e5b4e4a7af99bea/src/tests/debug/debug-alt-screen.js"
+    },
+    {
+      "file": "terminal-source/src/tests/debug/debug-layout.js",
+      "bytes": 1005,
+      "gitBlob": "549db47fe0695bc59c1965f681d7107d148bbe2e",
+      "sha256": "687fc7de5f93da0327cb3c20367a35388679cfd04720e51535f01044801a4873",
+      "url": "https://github.com/konard/telegram-terminal-bot/blob/7f3aeee50965160b31dca62b6e5b4e4a7af99bea/src/tests/debug/debug-layout.js"
+    },
+    {
+      "file": "terminal-source/src/tests/debug/debug-line-clear.js",
+      "bytes": 714,
+      "gitBlob": "6a6076ec3e30a72313c1c158deadfe80b1ba9e94",
+      "sha256": "c78a3edf32720ec73b3fc9e45c456bdc2dc0bd21614f8b4dce901e6ff00f1b31",
+      "url": "https://github.com/konard/telegram-terminal-bot/blob/7f3aeee50965160b31dca62b6e5b4e4a7af99bea/src/tests/debug/debug-line-clear.js"
+    },
+    {
+      "file": "terminal-source/src/tests/debug/debug-terminal.js",
+      "bytes": 1153,
+      "gitBlob": "d04113370184a56f6be957b38656b830ed28b4bc",
+      "sha256": "cbe55fe84ba1301b7c741a12e80a512dfba41604d3bb267e4bb85b0860b2bfdb",
+      "url": "https://github.com/konard/telegram-terminal-bot/blob/7f3aeee50965160b31dca62b6e5b4e4a7af99bea/src/tests/debug/debug-terminal.js"
+    },
+    {
+      "file": "terminal-source/src/tests/test-bot-integration.js",
+      "bytes": 9493,
+      "gitBlob": "63795fd67bcf5138b8b6f9ac74c9ef56ee0a1726",
+      "sha256": "a46243604e6373b4aa65e594f1e8ccf3ebfcd88e6c2106ce907a05b8f4554eaa",
+      "url": "https://github.com/konard/telegram-terminal-bot/blob/7f3aeee50965160b31dca62b6e5b4e4a7af99bea/src/tests/test-bot-integration.js"
+    },
+    {
+      "file": "terminal-source/src/tests/test-control-sequences.js",
+      "bytes": 4485,
+      "gitBlob": "e18e43341167843fa7bfc2cd3e455b9afe1ca37c",
+      "sha256": "3c35fab35828ce7c04a9893d95b3fcfc7a519ade265410d31df2b3c7b8cf068f",
+      "url": "https://github.com/konard/telegram-terminal-bot/blob/7f3aeee50965160b31dca62b6e5b4e4a7af99bea/src/tests/test-control-sequences.js"
+    },
+    {
+      "file": "terminal-source/src/tests/test-integration.js",
+      "bytes": 3068,
+      "gitBlob": "908c9c605cbb88396210f4ae332a7a673822b604",
+      "sha256": "bffd9763a31cf18e48b71f21aeba9e759de142cf7ede3b98fa09e8d7b1ce36f4",
+      "url": "https://github.com/konard/telegram-terminal-bot/blob/7f3aeee50965160b31dca62b6e5b4e4a7af99bea/src/tests/test-integration.js"
+    },
+    {
+      "file": "terminal-source/src/tests/test-subscription-system.js",
+      "bytes": 13012,
+      "gitBlob": "b02d11b4f10b13a76ff087b5c845ab91529296fd",
+      "sha256": "2bab6d49d6a080930b81ff30bcc626c46f27c292509f87359e8c1a9348dd8319",
+      "url": "https://github.com/konard/telegram-terminal-bot/blob/7f3aeee50965160b31dca62b6e5b4e4a7af99bea/src/tests/test-subscription-system.js"
+    },
+    {
+      "file": "terminal-source/src/tests/test-terminal.js",
+      "bytes": 10553,
+      "gitBlob": "07ce127cde4ab5ac806901d0e1e68d11f8f3ee67",
+      "sha256": "4cadb9f6f17120474ecb041a0cff00e8fb409ab4f31de53d19856983cf8882aa",
+      "url": "https://github.com/konard/telegram-terminal-bot/blob/7f3aeee50965160b31dca62b6e5b4e4a7af99bea/src/tests/test-terminal.js"
+    },
+    {
+      "file": "terminal-source/src/tests/test-top-focused.js",
+      "bytes": 4779,
+      "gitBlob": "1776643dae379c0659261168a29719c8bafde21f",
+      "sha256": "a4f3688a3863ca67c867b21499c9363afaad9e23cd62071184bc59684f08af36",
+      "url": "https://github.com/konard/telegram-terminal-bot/blob/7f3aeee50965160b31dca62b6e5b4e4a7af99bea/src/tests/test-top-focused.js"
+    },
+    {
+      "file": "terminal-source/src/tests/test-top-simulation.js",
+      "bytes": 10255,
+      "gitBlob": "1c3377c88adc854a61e7ca189abae120762e9e0d",
+      "sha256": "a6e64d857b62ba6a40af92bae3b3d4cc4d7ce13b3d6749240943101455d88b33",
+      "url": "https://github.com/konard/telegram-terminal-bot/blob/7f3aeee50965160b31dca62b6e5b4e4a7af99bea/src/tests/test-top-simulation.js"
+    },
+    {
+      "file": "terminal-source/src/tests/test-verbose-mode.js",
+      "bytes": 2576,
+      "gitBlob": "d218c5174e7fff62cc03e07c7b8f1994d76f3682",
+      "sha256": "bde09f9335f4876aef028d0da7b8429c59cd134938de73b0929a8fc9610934c3",
+      "url": "https://github.com/konard/telegram-terminal-bot/blob/7f3aeee50965160b31dca62b6e5b4e4a7af99bea/src/tests/test-verbose-mode.js"
+    },
+    {
+      "file": "terminal-source/src/text-bot.js",
+      "bytes": 20584,
+      "gitBlob": "186f91edf8dffcc989c9e47ed1920c0c91363a6e",
+      "sha256": "8a0c24bba5a3d0b3982e2fd47afd56025fb82329151a9fbeae460fd922376b4e",
+      "url": "https://github.com/konard/telegram-terminal-bot/blob/7f3aeee50965160b31dca62b6e5b4e4a7af99bea/src/text-bot.js"
+    },
+    {
+      "file": "terminal-source/src/virtual-terminal.js",
+      "bytes": 20912,
+      "gitBlob": "0a5ea4703f023ade12b991c476d623cb1eb87caf",
+      "sha256": "379813863b06c92c2a29285d14c0b72034538ce5ee9170cedca5f7791c8fd9c5",
+      "url": "https://github.com/konard/telegram-terminal-bot/blob/7f3aeee50965160b31dca62b6e5b4e4a7af99bea/src/virtual-terminal.js"
+    },
+    {
+      "file": "terminal-source/src/visual-bot.js",
+      "bytes": 21220,
+      "gitBlob": "9ad84e0382c373c7bcea00b9427abbfd9e82a777",
+      "sha256": "9e781b21bad69a050b182b3fa5a3a5b8f017219e3c85ba6973d5bce9fa947985",
+      "url": "https://github.com/konard/telegram-terminal-bot/blob/7f3aeee50965160b31dca62b6e5b4e4a7af99bea/src/visual-bot.js"
+    }
+  ]
+}

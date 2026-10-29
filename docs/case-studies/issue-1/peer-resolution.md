@@ -36,7 +36,7 @@ its failure before the traversal guard is in
 `ci-logs/api-resolution-mutation-before.log`. After the fix, excessive depth
 rejects without reaching that probe limit.
 
-This closes specific constructor/input gaps in R01 and R12. InputMedia/photo/file
+This closes specific constructor/input gaps in R01/R17/R19. InputMedia/photo/file
 shortcuts, vendor custom models/readers, complete return/event shapes and full
 backend/application parity remain open. The request-normalization prerequisite
 passed all nine runtime/OS jobs and applicable gates for head d5f84c0 in
@@ -44,4 +44,6 @@ passed all nine runtime/OS jobs and applicable gates for head d5f84c0 in
 Node, Bun and Deno each pass all 549 tests. Strict lint, formatting, TypeScript
 compilation/regeneration and the 77-source zero-clone scan pass. The package
 contains 120 permitted entries. Logs are retained under `ci-logs/api-resolution-*`.
-Fresh CI must verify this checkpoint.
+Head edb0ee7 passed all nine runtime/OS jobs and applicable gates in
+[run 40841294344](https://github.com/link-foundation/anygram/actions/runs/40841294344),
+created 2026-10-29T08:19:21Z and completed 2026-10-29T08:33:58Z.

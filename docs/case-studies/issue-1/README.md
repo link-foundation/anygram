@@ -36,6 +36,12 @@ through the shared camelCase view and applies existing normalization guards to
 root response arrays. Sixteen regressions cover this data-view contract and
 finite failing-before resource probes. Vendor custom models remain open.
 
+The [nested bot checkpoint](bot-reentrancy.md) fixes an awaited-child update
+deadlock and shares active session transactions without losing replacement or
+deletion. Fourteen regressions include bounded failing-before probes. Twenty
+complete immutable terminal-bot sources replace the earlier truncated source
+as the migration contract. Full application routing/media evidence remains open.
+
 ## Evidence and research method
 
 `data/issue.json`, `issue-comments.json`, `sub-issues.json`, and the three PR

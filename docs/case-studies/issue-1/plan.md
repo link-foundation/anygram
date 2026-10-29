@@ -164,6 +164,13 @@ with strict checks, 77 scanned production sources and 120 package entries.
 Commit/push and verify fresh CI. Next investigate nested bot update dispatch used
 by terminal restart and execute the downstream command/lifecycle scenarios.
 
+The [nested bot checkpoint](bot-reentrancy.md) adds fourteen regressions for
+awaited child dispatch and borrowed session transactions. All 579 tests pass
+per runtime, with strict checks, 78 scanned sources and 121 package entries.
+Commit/push and verify CI. Execute the complete pinned terminal
+sources next, correcting the application text-handler order and synthetic
+command entities explicitly in the migration, then verify media/lifecycle flows.
+
 Keep protocol completion (secret chats/call media/transports), complete backend
 return/event/style compatibility and actual downstream scenarios open in the
 ledger. Continue with transport resource/cancellation gaps and the shared bot
@@ -179,7 +186,9 @@ remaining requirements are genuinely implemented and verified.
 4. [x] Use an existing-directory read failure and keep blocked write/recovery checks.
 5. [x] Verify all nine OS/runtime jobs on head 6b3e3e0 in run 40837895072.
 6. [x] Verify request-bound head d5f84c0 in run 40838745111.
-7. [ ] Verify fresh matrix CI for the peer-resolution checkpoint.
+7. [x] Verify peer-resolution head edb0ee7 in run 40841294344 (08:19:21Z–08:33:58Z).
+8. [x] Verify facade-result head 937d596 in run 40842257601 (08:27:27Z–08:38:10Z).
+9. [ ] Verify fresh matrix CI for nested bot dispatch/session ownership.
 
 ## Historical CI investigations
 

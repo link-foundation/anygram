@@ -27,9 +27,13 @@ stop after 72 reads and the oversized sparse vector has 100001 entries.
 `experiments/result-limits.mjs` separately uses finite nested arrays with a
 512 KiB stack and 128 MiB heap.
 
-This advances R01/R08/R12 while leaving complete backend and downstream parity
+This advances R01/R08/R16/R19 while leaving complete backend and downstream parity
 open. Node, Bun and Deno each pass all 565 tests. Strict lint, formatting,
 TypeScript compilation/regeneration and the zero-clone scan of 77 production
 sources pass. The package contains 120 permitted entries. Logs are preserved
 under `ci-logs/gram-results-*` and `ci-logs/result-limits-*`. Fresh matrix CI is
 required for this checkpoint.
+
+Head 937d596 passed all nine runtime/OS jobs and applicable gates in
+[run 40842257601](https://github.com/link-foundation/anygram/actions/runs/40842257601),
+created 2026-10-29T08:27:27Z and completed 2026-10-29T08:38:10Z.

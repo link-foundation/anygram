@@ -4,6 +4,7 @@ import { Composer } from './composer.js';
 import { TelegramError } from './errors.js';
 import { pollingKey, acquirePolling, validatePolling } from './polling.js';
 import { joinBytes } from './bytes.js';
+import { taskContext } from './task-context.js';
 
 /** Shared middleware runner usable with a native or adapted Bot API transport. */
 export class Bot extends Composer {
@@ -14,6 +15,8 @@ export class Bot extends Composer {
     this.botInfo = options.botInfo;
     this.offset = options.offset ?? 0;
     this.seen = new Set();
+    this.processing = new Set();
+    this.dispatchContext = taskContext();
     this.queue = Promise.resolve();
     this.running = false;
     this.Context = options.Context ?? Context;
@@ -28,7 +31,19 @@ export class Bot extends Composer {
     return this.botInfo;
   }
   handleUpdate(update) {
-    const task = this.queue.then(() => this.dispatch(update));
+    const context = this.dispatchContext.current();
+    const depth = context ? context.value + 1 : 0;
+    if (depth > 64) {
+      return Promise.reject(
+        new RangeError('Nested bot update depth limit exceeded')
+      );
+    }
+    const run = () =>
+      this.dispatchContext.run(depth, () => this.dispatch(update));
+    if (context) {
+      return run();
+    }
+    const task = this.queue.then(run);
     this.queue = task.catch(() => {});
     return task;
   }
@@ -36,9 +51,20 @@ export class Bot extends Composer {
     if (!Number.isSafeInteger(update?.update_id)) {
       throw new TypeError('Invalid Telegram update_id');
     }
-    if (this.seen.has(update.update_id)) {
+    if (
+      this.seen.has(update.update_id) ||
+      this.processing.has(update.update_id)
+    ) {
       return;
     }
+    this.processing.add(update.update_id);
+    try {
+      return await this.#dispatchUpdate(update);
+    } finally {
+      this.processing.delete(update.update_id);
+    }
+  }
+  async #dispatchUpdate(update) {
     await this.emitUpdate?.(update);
     const ctx = new this.Context(update, this.api, this.botInfo);
     try {

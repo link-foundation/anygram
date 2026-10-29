@@ -64,3 +64,6 @@ Apply shared request depth/vector guards before canonical and vendor conversion,
 including configured native codec limits before queued RPC work.
 Return shared camelCase data from GramJS-style invocation/send facades and apply
 the same normalization depth/vector guards to complete response values.
+Allow awaited nested bot updates without deadlocking the outer queue, deduplicate
+active ancestor IDs and bound nesting. Share active session transactions across
+nested contexts while preserving replacement, deletion and failure persistence.
