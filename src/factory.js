@@ -4,6 +4,27 @@ import { BotApi } from './bot-api.js';
 import { UnsupportedError } from './errors.js';
 import { Session } from './session.js';
 
+function botFileOptions(name, token, options, override) {
+  const config =
+    name === 'telegraf'
+      ? (options.telegram ?? {})
+      : name === 'grammy'
+        ? (options.client ?? {})
+        : options;
+  if (config.buildUrl && !override) {
+    return undefined;
+  }
+  const apiRoot = config.apiRoot ?? 'https://api.telegram.org';
+  return {
+    token,
+    apiRoot:
+      name === 'telegraf' ? new globalThis.URL('.', apiRoot).href : apiRoot,
+    apiMode: config.apiMode,
+    testEnv: config.testEnv ?? config.environment === 'test',
+    ...override,
+  };
+}
+
 async function optionalLibrary(name, options) {
   const { apiId, apiHash, token, session, clientOptions = {} } = options;
   if (name === 'gramjs' || name === 'teleproto') {
@@ -46,6 +67,12 @@ async function optionalLibrary(name, options) {
       maxUploadBytes: options.maxUploadBytes,
       timeout: options.timeout,
       fetch: options.fetch,
+      fileOptions: botFileOptions(
+        name,
+        token,
+        clientOptions,
+        options.fileOptions
+      ),
     });
   }
   throw new UnsupportedError(

@@ -58,7 +58,7 @@ count, body size and socket lifetime; blocked sources are explicitly released.
 No Telegram account or credentials are used.
 
 This checkpoint covers pinned grammY API argument translation. Complete
-Telegraf/event positional APIs, context shortcuts, plugin/model behavior,
+Telegraf context/event APIs, context shortcuts, plugin/model behavior,
 Telegram-server semantics and the other issue criteria remain unfinished.
 
 All 217 focused cases pass on Node 20.18.3. All 974 core cases pass on Node,

@@ -721,8 +721,10 @@ Complete pinned grammY positional API work plan:
       retaining raw object access, method aliases and conditional rich messages.
 - [x] Compile checked declarations/examples and verify each selected backend,
       cancellation, upload controls, runtime suites and strict/package gates.
-- [ ] Review the atomic diff, commit/push, verify fresh CI and continue all other
-      open requirements without presenting this comparison set as full parity.
+- [x] Review the atomic diff, commit/push and verify fresh CI. Head ad7941a
+      passed every applicable job in run 40869702384, created
+      2026-10-29T12:00:03Z and completed 2026-10-29T12:31:24Z.
+- [ ] Continue all other requirements without presenting this set as full parity.
 
 Bot query registration work plan:
 
@@ -734,6 +736,26 @@ Bot query registration work plan:
       predicate failures, declaration examples and immutable update fields.
 - [x] Pass all 989 core tests per runtime, fifteen focused Node 20 cases,
       strict static gates, 26 native checks, vendor wire/FIFO and package audit.
-- [ ] Pass focused/full runtime suites, strict static/package and integration
-      gates; review the diff, commit/push and inspect fresh CI by SHA/time.
+- [x] Pass runtime/static/integration gates, review and commit/push. Head a78c071
+      passed every applicable job in run 40871737725, created
+      2026-10-29T12:15:13Z and completed 2026-10-29T12:36:54Z.
 - [ ] Continue all remaining issue criteria in this draft, unmerged PR.
+
+Complete pinned Telegraf positional API work plan:
+
+- [x] Inventory every public signature, argument/default, alias and field mapping
+      from pinned Telegraf facts; compare actual SDK calls before implementation.
+- [x] Share selected-backend dispatch for the complete positional API, retaining
+      raw-object access, option precedence, formatted text and file-link behavior.
+- [x] Verify representative HTTP requests, signals/deadlines, immutable inputs,
+      complete declaration examples and exact metadata generation.
+- [x] Pass 1,140 core cases on Node/Bun/Deno, 151 focused Node 20 cases, strict
+      gates, 26 native terminal checks, vendor wire/FIFO and the package audit.
+- [ ] Commit/push the reviewed atomic change and inspect fresh CI for this head.
+- [ ] Continue every other open criterion in this draft, unmerged PR.
+
+The independent proxy serialization head fdb6a2a passed every applicable CI job
+in run 40874558130, created 2026-10-29T12:35:47Z and completed
+2026-10-29T12:39:07Z. The Telegraf context-file regression also preserves lazy
+middleware-only context construction, as verified by the existing composer/query
+regressions after an intermediate full-suite failure.

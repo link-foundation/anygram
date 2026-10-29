@@ -51,6 +51,12 @@ Unambiguous raw-object calls remain accepted; `.raw` accepts arbitrary payloads.
 See the [positional comparisons](docs/case-studies/issue-1/bot-positional-api.md)
 for the exact scope and current type-model limits.
 
+The Telegraf view similarly maps all 125 public members of the pinned SDK,
+including callback aliases, invoices, menu objects, game defaults and file URLs.
+`getFileLink(fileIdOrMetadata, options)` uses the selected backend for metadata
+and its configured file server. See the [Telegraf comparisons](docs/case-studies/issue-1/telegraf-positional-api.md)
+for request controls, custom file roots and declaration limits.
+
 Query shortcuts such as `bot.callbackQuery('refresh').use(handler)` return a
 scoped composer. The six query shortcuts accept strings, regular expressions or
 arrays and share asynchronous `filter(predicate)` registration. See the

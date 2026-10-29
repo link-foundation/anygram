@@ -139,6 +139,7 @@ for (const operation of [
   'disconnect',
   'start',
   'getMe',
+  'getFileLink',
   'getMessages',
   'getDialogs',
   'getEntity',

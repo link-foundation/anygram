@@ -25,6 +25,12 @@ translator. Actual public SDK comparisons and representative HTTP requests cover
 inline methods, aliases, polls, rich messages, raw-object compatibility and
 nested upload deadlines. Full framework and type-model parity remain open.
 
+The [pinned Telegraf API comparison](telegraf-positional-api.md) covers all 125
+public members, including defaults, aliases, formatting and canonical file
+links. Its independent local HTTP cases exercise all four selected backends.
+The related [proxy serialization regression](proxy-serialization.md) prevents
+JSON inspection from dispatching synthetic raw RPC calls.
+
 The [query registration comparison](bot-query-composer.md) covers all six grammY
 query shortcuts, exact and regular-expression match values, asynchronous filters
 and returned scoped composers. Actual selected-backend HTTP cases acknowledge

@@ -64,7 +64,14 @@ function hasOwnedUpload(operation, args) {
   );
 }
 
-function useCanonical(style, client, method, operation, args) {
+function useCanonical(style, client, method, operation, args, fileOptions) {
+  if (
+    operation === 'getFileLink' &&
+    client instanceof BotOperations &&
+    !fileOptions
+  ) {
+    return false;
+  }
   return (
     style !== 'gramjs' ||
     canonicalOperations.has(operation) ||
@@ -142,7 +149,14 @@ export function createAdapter(
       if (
         (bot || adapter.supports('invoke')) &&
         typeof operations[operation] === 'function' &&
-        useCanonical(style, client, method, operation, args)
+        useCanonical(
+          style,
+          client,
+          method,
+          operation,
+          args,
+          botOptions.fileOptions
+        )
       ) {
         return operations[operation](...args);
       }
@@ -163,7 +177,7 @@ export function createAdapter(
     }),
   };
   const operations = bot
-    ? new BotOperations(adapter.bot)
+    ? new BotOperations(adapter.bot, botOptions.fileOptions)
     : new RpcOperations(adapter.invoke.bind(adapter));
   return adapter;
 }

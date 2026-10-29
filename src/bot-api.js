@@ -22,8 +22,9 @@ export class BotApi extends BotOperations {
     timeout = 30000,
     maxResponseBytes = 8 * 1024 * 1024,
     maxUploadBytes = 64 * 1024 * 1024,
+    fileOptions,
   } = {}) {
-    super();
+    super(undefined, { token, apiRoot: baseUrl, ...fileOptions });
     if (typeof token !== 'string' || !token || /[\s/?#]/.test(token)) {
       throw new TypeError('A bot token without URL delimiters is required');
     }

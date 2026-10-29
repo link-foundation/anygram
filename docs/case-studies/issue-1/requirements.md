@@ -618,3 +618,14 @@ match values, expression flags, trigger-array snapshots, scoped chaining,
 asynchronous predicates, bounds and recovery. Four actual selected-backend HTTP
 cases cover callback acknowledgement/editing and update ownership. Broader filter,
 framework and type-model compatibility remain open.
+
+The [pinned Telegraf positional comparison](telegraf-positional-api.md) advances
+R01/R05/R08/R13/R16/R17/R19. The initial 130 comparisons reproduce 109 failures;
+149 final cases cover all 125 public members, ordered options, defaults, aliases,
+formatting, shared file URLs, controls and actual selected-backend HTTP requests.
+The independent [proxy serialization regression](proxy-serialization.md) prevents
+JSON inspection from issuing synthetic raw RPCs. All 1,140 core cases pass on
+Node, Bun and Deno, and all 151 focused cases pass on Node 20.18.3. Strict gates
+and exact generation pass, with zero clones across 90 production sources and
+133 permitted package entries. Full contexts, SDK models, plugins, production
+semantics and all other unmet requirements remain open.

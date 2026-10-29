@@ -1,6 +1,7 @@
 import { methodProxy } from './requests.js';
 import { botTextParams } from './formatting.js';
 import { positionalBotMethods } from './bot-positional.js';
+import { telegrafBotMethods } from './telegraf-positional.js';
 import {
   botNoPayloadMethods,
   botRequestOptions,
@@ -28,6 +29,7 @@ export function botApi(transport, style = 'grammy') {
   const positional = {
     raw,
     callApi: call,
+    getFileLink: (...args) => transport.getFileLink(...args),
     sendMessage: (chat_id, text, options, signal) =>
       operation('sendMessage', { chat_id, text }, options, signal),
     deleteMessage: (chat_id, message_id, options) =>
@@ -71,6 +73,14 @@ export function botApi(transport, style = 'grammy') {
   }
   if (style === 'grammy') {
     Object.assign(positional, positionalBotMethods({ callApi: invoke }));
+  } else if (style === 'telegraf') {
+    Object.assign(
+      positional,
+      telegrafBotMethods({
+        callApi: invoke,
+        getFileLink: (...args) => transport.getFileLink(...args),
+      })
+    );
   }
   return new Proxy(positional, {
     get: (target, key) => (key in target ? target[key] : raw[key]),
@@ -83,7 +93,13 @@ export class Context {
     this.api = api;
     this.telegram =
       telegram ??
-      botApi({ callApi: (...args) => api.callApi(...args) }, 'telegraf');
+      botApi(
+        {
+          callApi: (...args) => api.callApi(...args),
+          getFileLink: (...args) => api.getFileLink(...args),
+        },
+        'telegraf'
+      );
     this.me = me;
     this.state = {};
   }

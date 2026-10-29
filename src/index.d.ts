@@ -7,6 +7,7 @@ import type {
   EncryptedFileInput,
 } from './mtproto.js';
 import type { GrammyPositionalApi } from './bot-positional.js';
+import type { TelegrafPositionalApi } from './telegraf-positional.js';
 export { Api } from './api.js';
 export type {
   TlObject,
@@ -144,6 +145,7 @@ export declare function createAdapter(
     maxUploadBytes?: number;
     timeout?: number;
     fetch?: typeof fetch;
+    fileOptions?: BotFileOptions;
   }
 ): Adapter;
 export declare class UnsupportedError extends Error {
@@ -329,6 +331,7 @@ export declare class Anygram {
   disconnect(): Promise<unknown>;
   start(options?: Parameters): Promise<unknown>;
   getMe(options?: RequestOptions): Promise<unknown>;
+  getFileLink: BotFileLink;
   getMessages(peer: unknown, options?: Parameters): Promise<unknown>;
   getDialogs(options?: Parameters): Promise<unknown>;
   iterDialogs(options?: DialogOptions): AsyncIterableIterator<DialogEntry>;
@@ -423,7 +426,18 @@ export interface BotApiOptions {
   timeout?: number;
   maxResponseBytes?: number;
   maxUploadBytes?: number;
+  fileOptions?: Omit<BotFileOptions, 'token'>;
 }
+export interface BotFileOptions {
+  token: string;
+  apiRoot: string;
+  apiMode?: string;
+  testEnv?: boolean;
+}
+export type BotFileLink = (
+  file: string | Parameters,
+  options?: RequestOptions | AbortSignal
+) => Promise<URL>;
 export declare class BotApi {
   constructor(options: BotApiOptions);
   api: BotMethods;
@@ -433,6 +447,7 @@ export declare class BotApi {
     options?: RequestOptions
   ): Promise<T>;
   getMe(options?: RequestOptions): Promise<unknown>;
+  getFileLink: BotFileLink;
   sendMessage(
     chat: string | number | bigint,
     text: string | TextWithEntities,
@@ -526,6 +541,7 @@ export interface FactoryOptions extends ClientOptions, TcpTransportOptions {
   sessionStore?: import('./storage.js').SessionStore;
   onSession?: (session: string) => void | Promise<void>;
   clientOptions?: Parameters;
+  fileOptions?: Omit<BotFileOptions, 'token'>;
   transport?: import('./mtproto.js').Transport | 'http' | 'tcp' | 'websocket';
   url?: string;
   ca?: string | Uint8Array;
@@ -608,6 +624,7 @@ export interface BotPaymentQuery extends Parameters {
   from?: Parameters;
 }
 export interface BotContextApi {
+  getFileLink: BotFileLink;
   raw: {
     [method: string]: <T = unknown>(
       params?: Parameters | AbortSignal,
@@ -677,13 +694,14 @@ export interface ContextApi extends BotContextApi, GrammyPositionalApi {
     signal?: AbortSignal
   ): Promise<unknown>;
 }
-export interface TelegrafApi extends BotContextApi {
+export interface TelegrafApi extends BotContextApi, TelegrafPositionalApi {
   editMessageText(
     chat: unknown,
     id: number | undefined,
     inlineId: string | undefined,
     text: string | TextWithEntities,
-    options?: Parameters
+    options?: Parameters,
+    request?: RequestOptions | AbortSignal
   ): Promise<unknown>;
 }
 export declare class Context {

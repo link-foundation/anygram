@@ -1,4 +1,5 @@
 import { botTextParams } from './formatting.js';
+import { UnsupportedError } from './errors.js';
 
 // grammY's raw zero-payload methods bind {} and accept only a signal.
 export const botNoPayloadMethods = new Set([
@@ -41,10 +42,47 @@ export function callBotOperation(api, method, params, options, signal) {
 
 /** Canonical operations share one translation across every Bot API transport. */
 export class BotOperations {
-  constructor(callApi) {
+  #fileOptions;
+  constructor(callApi, fileOptions) {
     if (callApi) {
       this.callApi = callApi;
     }
+    this.#fileOptions = fileOptions;
+  }
+
+  async getFileLink(file, options) {
+    options = botRequestOptions(options);
+    options?.signal?.throwIfAborted();
+    const config = this.#fileOptions;
+    if (!config?.token || !config.apiRoot) {
+      throw new UnsupportedError(
+        'Bot file links require explicit server/token configuration'
+      );
+    }
+    if (typeof file === 'string' || file.file_path === undefined) {
+      file = await callBotOperation(
+        this,
+        'getFile',
+        { file_id: typeof file === 'string' ? file : file.file_id },
+        options
+      );
+    }
+    if (
+      typeof file.file_path === 'string' &&
+      /^(?:\/|[A-Za-z]:[\\/])/.test(file.file_path)
+    ) {
+      const url = new globalThis.URL(config.apiRoot);
+      url.port = '';
+      url.pathname = file.file_path;
+      url.protocol = 'file:';
+      return url;
+    }
+    const mode = config.apiMode ?? 'bot';
+    const test = config.testEnv ? '/test' : '';
+    return new globalThis.URL(
+      `./file/${mode}${config.token}${test}/${file.file_path}`,
+      `${config.apiRoot.replace(/\/$/, '')}/`
+    );
   }
 
   getMe(options) {

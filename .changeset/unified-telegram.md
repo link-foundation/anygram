@@ -117,3 +117,9 @@ snapshots and query context aliases across selected bot transports.
 
 Prevent JSON serialization from issuing synthetic toJSON requests through raw
 account or bot method proxies, while preserving explicit RPC invocation.
+
+Map all 125 public pinned Telegraf API members through shared selected-backend
+operations, retaining aliases, ordered options, formatted text and defaults.
+Add canonical file URLs with private server/token configuration, explicit custom
+file roots and metadata lookup through the selected backend. Preserve embedded
+request controls when a final options object supplies undefined controls.
