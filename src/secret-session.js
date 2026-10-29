@@ -163,6 +163,17 @@ export class SecretChatSession {
     );
   }
 
+  pruneAcknowledged(options) {
+    return this.#exclusive(options, (save) =>
+      this.#transaction(save, options?.signal, (draft) => {
+        draft.assertActive();
+        const removed = draft.sequence.pruneAcknowledged();
+        draft.synchronize();
+        return removed;
+      })
+    );
+  }
+
   rotateKey(exchangeId, options) {
     return this.#exclusive(options, (save) =>
       this.#transaction(save, options?.signal, (draft) =>

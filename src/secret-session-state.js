@@ -511,6 +511,10 @@ export class SecretSessionState {
         );
       }
     }
+    // A peer already acknowledged these positions; deletion must also release
+    // their plaintext, encrypted packets, prepared replacements and file keys.
+    this.sequence.pruneAcknowledged();
+    this.pruneOutbox();
   }
 
   rotateIfNeeded() {

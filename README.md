@@ -319,7 +319,27 @@ message effects for application history and expiry handling. See
 Application delete/history-clear actions also replace matching unacknowledged
 text and attachment frames with self-deletions before queueing the new action.
 This preserves their sequence/key boundaries while removing their contents from
-retransmissions. Incoming history actions do not reset protocol sequence state.
+retransmissions. Delete/history actions release acknowledged protocol caches as well.
+`pruneAcknowledged({ save })` explicitly releases acknowledged plaintext and
+ciphertext without moving sequence counters. Incoming history actions do not
+reset protocol sequence state.
+
+`SecretChatLifetimes` retains bounded expiry metadata separately from the
+protocol retransmission state. Track each expiring message with its server date,
+direction and a `startOn: 'read' | 'open'` trigger before processing receipts.
+Use `readThrough(maxDate, { outgoing, at })` for history reads and
+`read(ids, { outgoing, at })` for opened content. Pass remote
+`updateEncryptedMessagesRead.max_date` and `.date` with `outgoing: true`; local
+reads use `false`. Audio/video lifetime includes its playback duration plus one
+second. Duplicate reads preserve the first deadline, including after restart.
+`expire(now)` returns due metadata for transactional deletion from application
+storage; `nextExpiration` permits one shared scheduler with no message timers.
+Snapshots contain exact IDs and times, without plaintext or file keys. Persist
+the timer draft and delete stored messages, thumbnails and cached files in one
+transaction. `applyService()` processes ordered incoming read/delete/history
+actions; its removed entries cover tracked TTL metadata only. Also delete
+nonexpiring application history named by delete/history actions. See
+`examples/typed-secret-expiry.ts` for transaction and scheduler callbacks.
 
 The default limits retain at most 1000 incoming gaps, 1000 outgoing frames and
 16 MiB of combined plaintext/ciphertext. Acknowledged history can be released

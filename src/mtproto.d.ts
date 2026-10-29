@@ -437,6 +437,58 @@ export interface SecretChatSessionStateV2 extends SecretChatSessionStateBase {
     file?: string | null;
   })[];
 }
+export interface SecretChatLifetimeMetadata {
+  outgoing: boolean;
+  /** Server message time in whole seconds. */
+  date: number;
+  /** Protected media starts on content opening, separately from history reads. */
+  startOn: 'read' | 'open';
+}
+export interface SecretChatLifetimeEntry extends SecretChatLifetimeMetadata {
+  randomId: bigint;
+  /** Effective TTL, including any audio/video playback minimum. */
+  ttl: number;
+  readAt: number | null;
+  expiresAt: number | null;
+}
+export interface SecretChatLifetimesState {
+  version: 1;
+  maxMessages: number;
+  messages: (Omit<SecretChatLifetimeEntry, 'randomId' | 'expiresAt'> & {
+    randomId: string;
+  })[];
+}
+/** One instance per chat; no plaintext, file keys or background timers retained. */
+export declare class SecretChatLifetimes {
+  constructor(options?: {
+    state?: SecretChatLifetimesState;
+    maxMessages?: number;
+  });
+  readonly size: number;
+  readonly nextExpiration: number | null;
+  /** Track before processing receipts; identical replays retain the first read. */
+  track(message: TlRequest, options: SecretChatLifetimeMetadata): boolean;
+  read(
+    ids: (bigint | string)[],
+    options: { outgoing: boolean; at: number }
+  ): SecretChatLifetimeEntry[];
+  readThrough(
+    maxDate: number,
+    options: { outgoing: boolean; at: number }
+  ): SecretChatLifetimeEntry[];
+  remove(
+    ids: (bigint | string)[],
+    options?: { outgoing?: boolean }
+  ): SecretChatLifetimeEntry[];
+  clear(): SecretChatLifetimeEntry[];
+  expire(at: number): SecretChatLifetimeEntry[];
+  /** removed contains tracked TTL entries, not all affected application history. */
+  applyService(
+    action: TlRequest | undefined,
+    options?: { at?: number }
+  ): { started: SecretChatLifetimeEntry[]; removed: SecretChatLifetimeEntry[] };
+  exportState(): SecretChatLifetimesState;
+}
 export type SecretChatSessionState =
   | SecretChatSessionStateV1
   | SecretChatSessionStateV2;
@@ -527,6 +579,8 @@ export declare class SecretChatSession {
     action: TlRequest,
     options: SecretChatSessionSaveOptions & { randomId?: bigint }
   ): Promise<SecretChatLayer>;
+  /** Durably release acknowledged plaintext/ciphertext without moving counters. */
+  pruneAcknowledged(options: SecretChatSessionSaveOptions): Promise<number>;
   notify(
     options: SecretChatSessionSaveOptions
   ): Promise<SecretChatLayer | undefined>;

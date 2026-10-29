@@ -108,16 +108,15 @@ examples/. No live credentials or sessions may be included in research data.
 
 ## Next steps
 
-Current protocol work: implement read-triggered expiry and application history
-handling, then controlled-peer interoperability. Encrypted file transfer and
-references now survive durable submission, incoming gaps and restart. Application
-services and ordered TTL defaults share the durable encrypted outbox. Add failing
-minimal tests for expiry/read/delete semantics before implementation.
+Current protocol work: verify the expiry/history checkpoint, then exercise
+controlled-peer interoperability. Encrypted file references, application services,
+ordered TTL defaults and read-triggered lifetime metadata now have local
+regressions. Applications own transactional storage; the typed expiry example
+commits deletion with durable protocol/timer state and batches service IDs.
 
-The service checkpoint passes all 339 tests on Node, Bun and Deno, strict
-lint/format/types and a zero-clone scan of 65 production files. Durable attachment
-head 8d9027e passed all nine runtime/OS jobs and gates in run 40815695308,
-created 2026-10-29T04:04:46Z and completed 2026-10-29T04:06:42Z.
+The preceding service checkpoint passed 339 tests on Node, Bun and Deno and all
+strict checks. Its CI head ed1c457 is being verified in run 40817252237; check
+current status and exact head before citing it as passing.
 
 Keep protocol completion (secret chats/call media/transports), complete backend
 return/event/style compatibility and actual downstream scenarios open in the
@@ -160,7 +159,7 @@ local tests and strict checks pass; fresh CI is required after committing it.
 6. [x] Integrate layer/cipher/sequence policy and the initial peer flow through native test peers.
 7. [x] Implement compulsory PFS rotation and simultaneous key-exchange rules.
 8. [x] Integrate encrypted RPC ordering, durable effects/cursors and file media.
-9. [ ] Implement read-triggered expiry and application history effects.
+9. [x] Implement read-triggered expiry and application history effects.
 10. [ ] Verify interoperable flows with controlled Telegram accounts.
 
 The subsequent TL ownership regression exposes Buffer.slice view aliasing.
@@ -373,3 +372,28 @@ created 2026-10-29T04:04:46Z and completed 2026-10-29T04:06:42Z. Fresh CI is
 required for this service checkpoint. Read-triggered expiry and application
 history deletion still need implementation evidence. Controlled production
 accounts, call media, complete compatibility and downstream criteria remain open.
+
+Read-triggered expiry checkpoint: `SecretChatLifetimes` retains bounded metadata
+for expiring messages without plaintext or file keys. History reads and explicit
+content opening have separate triggers; repeated reads keep the first deadline.
+Audio/video playback duration sets a minimum lifetime. Portable state retains
+exact signed IDs and validates bounds, duplicate records and malformed clocks.
+Incoming read/delete/history services update the metadata only after ordered
+authenticated delivery. Applications delete their actual stored history in the
+same transaction as timer/session state; the typed example includes batched
+durable deletion and a single shared scheduler callback.
+
+A failing-before retention regression showed that application deletion left
+acknowledged protocol plaintext and ciphertext cached. Delete/history actions now
+prune acknowledged frames and their associated packets/file references, while
+unacknowledged originals retain self-deletion sequence positions. The explicit
+`pruneAcknowledged` method uses mandatory durable persistence and preserves all
+protocol counters. Failed saves retain the old state.
+
+Ten new tests cover exact deadlines, restart, direction, protected media,
+playback duration, complete vector validation, bounded snapshots, immutable
+metadata, read timestamp ordering and actual session save rollback. All 349 tests pass on Node, Bun and Deno. Strict lint, formatting, full
+declaration/example checks and the zero-clone scan of 67 production sources
+pass; the package dry run contains 72 permitted entries. Fresh CI is required
+for this checkpoint. Controlled production interoperability and all
+other unmet issue criteria remain open.

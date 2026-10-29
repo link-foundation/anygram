@@ -1060,3 +1060,38 @@ Official Android [service processing at 3de37c8](https://github.com/DrKLO/Telegr
 checks chat-default clamping and separates history deletion from protocol counters.
 The sequence specification requires a self-deletion in each missing original
 position plus a new service action; the batch operation retains that invariant.
+
+Read-triggered expiry checkpoint: `SecretChatLifetimes` retains bounded metadata
+for expiring messages without plaintext or file keys. History reads and explicit
+content opening have separate triggers; repeated reads keep the first deadline.
+Audio/video playback duration sets a minimum lifetime. Portable state retains
+exact signed IDs and validates bounds, duplicate records and malformed clocks.
+Incoming read/delete/history services update the metadata only after ordered
+authenticated delivery. Applications delete their actual stored history in the
+same transaction as timer/session state; the typed example includes batched
+durable deletion and a single shared scheduler callback.
+
+A failing-before retention regression showed that application deletion left
+acknowledged protocol plaintext and ciphertext cached. Delete/history actions now
+prune acknowledged frames and their associated packets/file references, while
+unacknowledged originals retain self-deletion sequence positions. The explicit
+`pruneAcknowledged` method uses mandatory durable persistence and preserves all
+protocol counters. Failed saves retain the old state.
+
+Ten new tests cover exact deadlines, restart, direction, protected media,
+playback duration, complete vector validation, bounded snapshots, immutable
+metadata, read timestamp ordering and actual session save rollback. All 349 tests pass on Node, Bun and Deno. Strict lint, formatting, full
+declaration/example checks and the zero-clone scan of 67 production sources
+pass; the package dry run contains 72 permitted entries. Fresh CI is required
+for this checkpoint. Controlled production interoperability and all
+other unmet issue criteria remain open.
+
+The expiry design uses Telegram's [encrypted-history read update](https://core.telegram.org/constructor/updateEncryptedMessagesRead)
+and the pinned official Android [task creation](https://github.com/DrKLO/Telegram/blob/3de37c8cfb039452be7398909461da6288babf15/TMessagesProj/src/main/java/org/telegram/messenger/MessagesStorage.java#L5959-L6039):
+start once using the later timestamp and avoid restarting a timer on a duplicate
+receipt. Its [media handling](https://github.com/DrKLO/Telegram/blob/3de37c8cfb039452be7398909461da6288babf15/TMessagesProj/src/main/java/org/telegram/messenger/SecretChatHelper.java#L965-L1010)
+provides the playback minimum. The library requires an explicit read/open trigger
+because the application controls when protected content is actually displayed.
+`data/secret-lifetime-sources.json` records URLs and source-byte hashes. This is
+local protocol/application evidence; no controlled production account result is
+claimed.
