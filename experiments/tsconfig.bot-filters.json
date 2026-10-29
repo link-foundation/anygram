@@ -21,6 +21,8 @@
     "typed-telegraf-method-fixture.ts",
     "typed-grammy-context-fixture.ts",
     "typed-telegraf-context-fixture.ts",
+    "typed-grammy-delivery-fixture.ts",
+    "typed-telegraf-delivery-fixture.ts",
     "typed-context-result-differences.ts"
   ]
 }

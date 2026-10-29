@@ -29,6 +29,18 @@ for (const [sourceName, targetName, sdk, namespace] of [
     'telegraf',
     'telegraf/types',
   ],
+  [
+    'typed-grammy-delivery-arguments.ts',
+    'typed-grammy-delivery-fixture.ts',
+    'grammy',
+    '@grammyjs/types',
+  ],
+  [
+    'typed-telegraf-delivery-arguments.ts',
+    'typed-telegraf-delivery-fixture.ts',
+    'telegraf',
+    'telegraf/types',
+  ],
 ]) {
   const source = (
     await readFile(new globalThis.URL(`examples/${sourceName}`, root), 'utf8')

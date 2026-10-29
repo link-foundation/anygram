@@ -1,80 +1,75 @@
-import type { Parameters, TextWithEntities } from './index.js';
-import type { BotApiMethod, BotApiResult } from './bot-api-types.js';
+import type { BotContextApi } from './index.js';
+import type { GrammyPositionalApi } from './bot-positional.js';
+import type { TelegrafPositionalApi } from './telegraf-positional.js';
+import type {
+  ContextOperation,
+  GrammyContextOperation,
+  TelegrafContextOperation,
+} from './bot-context-scope.js';
 
-type DeliveryMethod<K extends string> = K extends
-  | 'Message'
-  | 'Markdown'
-  | 'MarkdownV2'
-  | 'HTML'
-  ? 'sendMessage'
-  : K extends 'Draft'
-    ? 'sendMessageDraft'
-    : K extends 'Quiz'
-      ? 'sendPoll'
-      : `send${K}` & BotApiMethod;
-type Delivery<A extends unknown[], K extends string> = (
-  ...args: [...A, options?: Parameters, signal?: AbortSignal]
-) => Promise<BotApiResult<DeliveryMethod<K>>>;
-interface SharedArguments {
-  Message: [text: string | TextWithEntities];
-  Photo: [photo: unknown];
-  Audio: [audio: unknown];
-  Document: [document: unknown];
-  Video: [video: unknown];
-  Animation: [animation: unknown];
-  Voice: [voice: unknown];
-  Sticker: [sticker: unknown];
-  VideoNote: [videoNote: unknown];
-  MediaGroup: [media: readonly unknown[]];
-  Location: [latitude: number, longitude: number];
-  Venue: [latitude: number, longitude: number, title: string, address: string];
-  Contact: [phoneNumber: string, firstName: string];
-  Poll: [question: string, options: readonly unknown[]];
-  ChatAction: [action: string];
-  Game: [game: string];
-}
-interface GrammyArguments extends SharedArguments {
-  RichMessage: [richMessage: unknown];
-  LivePhoto: [livePhoto: unknown, photo: unknown];
-  PaidMedia: [starCount: number, media: readonly unknown[]];
-  Checklist: [checklist: unknown];
-  Dice: [emoji?: string];
-  Draft: [text: string | TextWithEntities];
-  RichMessageDraft: [richMessage: unknown];
-  Invoice: [
-    title: string,
-    description: string,
-    payload: string,
-    currency: string,
-    prices: readonly unknown[],
-  ];
-}
-interface TelegrafArguments extends SharedArguments {
-  Dice: [];
-  Invoice: [invoice: Parameters];
-  Quiz: [question: string, options: readonly unknown[]];
-  Markdown: [text: string | TextWithEntities];
-  MarkdownV2: [text: string | TextWithEntities];
-  HTML: [text: string | TextWithEntities];
-}
-type Reply<A> = {
-  [K in keyof A as K extends 'Message'
-    ? 'reply'
-    : `replyWith${K & string}`]: A[K] extends unknown[]
-    ? Delivery<A[K], K & string>
+type Shared =
+  | 'VideoNote'
+  | 'MediaGroup'
+  | 'Location'
+  | 'Venue'
+  | 'Contact'
+  | 'Poll'
+  | 'ChatAction'
+  | 'Game'
+  | 'Invoice'
+  | 'Dice';
+type Grammy =
+  | Shared
+  | 'RichMessage'
+  | 'LivePhoto'
+  | 'PaidMedia'
+  | 'Checklist'
+  | 'Draft'
+  | 'RichMessageDraft';
+type Media =
+  | 'Photo'
+  | 'Audio'
+  | 'Document'
+  | 'Video'
+  | 'Animation'
+  | 'Voice'
+  | 'Sticker';
+type Telegraf = Shared | Media | 'Message' | 'Quiz';
+type Method<K> = K extends 'Draft'
+  ? 'sendMessageDraft'
+  : K extends string
+    ? `send${K}`
     : never;
-};
-type Declared =
-  | 'reply'
-  | `replyWith${'Photo' | 'Audio' | 'Document' | 'Video' | 'Animation' | 'Voice' | 'Sticker'}`;
-export type GrammyContextDelivery = Omit<Reply<GrammyArguments>, Declared> & {
-  sendPaidMedia: Delivery<GrammyArguments['PaidMedia'], 'PaidMedia'>;
-};
-export type TelegrafContextDelivery = Omit<
-  Reply<TelegrafArguments>,
-  Declared
-> & {
-  [K in keyof TelegrafArguments as K extends 'Markdown' | 'MarkdownV2' | 'HTML'
-    ? never
-    : `send${K & string}`]: Delivery<TelegrafArguments[K], K>;
+type Scope<K> = K extends 'Draft' | 'RichMessageDraft' | 'Checklist'
+  ? [unknown, unknown]
+  : [unknown];
+type OptionalFirst<F> = F extends (first: infer V, ...rest: infer A) => infer R
+  ? (first?: V, ...rest: A) => R
+  : never;
+type GrammyDelivery<K extends Grammy> = GrammyContextOperation<
+  Method<K> & keyof GrammyPositionalApi,
+  Scope<K>
+>;
+export type GrammyContextDelivery = {
+  [K in Grammy as `replyWith${K}`]: K extends 'Dice'
+    ? OptionalFirst<GrammyDelivery<K>>
+    : GrammyDelivery<K>;
+} & { sendPaidMedia: GrammyDelivery<'PaidMedia'> };
+type TelegrafDelivery<K extends Telegraf> = K extends Media | 'Message'
+  ? BotContextApi[Method<K>] extends (...args: infer A) => Promise<infer R>
+    ? ContextOperation<A, [unknown], R>
+    : never
+  : TelegrafContextOperation<Method<K> & keyof TelegrafPositionalApi>;
+export type TelegrafContextDelivery = {
+  [K in Telegraf as `send${K}`]: TelegrafDelivery<K>;
+} & {
+  [K in Exclude<
+    Telegraf,
+    Media | 'Message'
+  > as `replyWith${K}`]: TelegrafDelivery<K>;
+} & {
+  [K in
+    | 'Markdown'
+    | 'MarkdownV2'
+    | 'HTML' as `replyWith${K}`]: TelegrafDelivery<'Message'>;
 };

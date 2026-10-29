@@ -205,6 +205,10 @@ Context helpers also retain these results: `ctx.getFile()` returns a typed file,
 copy helpers return message IDs, and acknowledgement helpers return true. See the
 [checked context results](examples/typed-grammy-context-results.ts) and
 [SDK comparison](docs/case-studies/issue-1/bot-context-result-types.md).
+Delivery and edit arguments check documented media and option fields while
+preserving owned uploads, byte arrays, Blobs and source wrappers. See the
+[checked upload inputs](examples/typed-bot-upload-arguments.ts) and
+[argument comparison](docs/case-studies/issue-1/bot-delivery-argument-types.md).
 
 `Scenes.BaseScene`, `Scenes.WizardScene` and `Scenes.Stage` provide persisted
 conversation steps on that same middleware path. Install session middleware

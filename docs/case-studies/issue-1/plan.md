@@ -1016,7 +1016,9 @@ Bot API method declaration work plan:
       permits 194 entries. Frozen fixtures reproduce 38 diagnostics. Main is an
       ancestor, all feedback streams remain empty and GitHub diff limits are
       handled with the paginated file inventory and local atomic diff.
-- [ ] Commit/push and verify exact-head CI; keep every wider criterion open.
+- [x] Commit/push and verify exact-head CI; keep every wider criterion open.
+      Head 2dbc782abe55d2251a323fbc7628c93491ae7200 passed run 40918719207,
+      created 2026-10-29T17:10:13Z, including every applicable runtime and gate.
 
 Context result declaration work plan:
 
@@ -1032,5 +1034,22 @@ Context result declaration work plan:
       reproduce 49 diagnostics and both current and actual-SDK fixtures compile.
       Strict checks scan 151 sources with zero clones; packaging permits 194
       entries. Main is an ancestor and all four feedback streams remain empty.
-- [ ] Commit/push, update PR evidence and verify fresh CI by SHA and timestamp.
+- [x] Commit/push, update PR evidence and verify fresh CI by SHA and timestamp.
+      Head 606e831242547be69e36929ee9f35af1a25987fa passed run 40920838137,
+      created 2026-10-29T17:23:19Z, including every applicable runtime and gate.
 - [ ] Continue every wider unmet criterion in the same draft PR.
+
+Delivery/edit argument declaration work plan:
+
+- [x] Reproduce unchecked media, delivery and edit arguments with portable
+      positive/negative fixtures before changing declarations.
+- [x] Reuse canonical positional tuples for scoped delivery and type the
+      manually installed media/edit methods, preserving upload extensions.
+- [x] Compare portable fixtures against actual pinned SDKs with strict checking
+      and preserve an immutable before/after reproduction.
+- [x] Run appropriate local gates and inspect the atomic change. All 2,007 core
+      tests pass per runtime; current and actual-SDK fixtures compile. Strict
+      checks scan 152 sources with zero clones and packaging permits 195 entries.
+      Main remains an ancestor and all four feedback streams remain empty.
+- [ ] Commit/push the reviewed change and verify exact-head CI.
+- [ ] Continue all wider unmet criteria in the same draft PR.

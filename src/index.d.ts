@@ -13,7 +13,11 @@ import type {
   RawBotApi,
   ExtensionMethods,
   BotOther,
+  BotArgument,
+  BotApiResult,
 } from './bot-api-types.js';
+import type { ContextOperation } from './bot-context-scope.js';
+export type { BotFileInput } from './bot-input-types.js';
 export type {
   BotApiMethod,
   BotApiParams,
@@ -547,17 +551,34 @@ export declare class BotApi {
     text: string | TextWithEntities,
     options?: BotSendMessageOptions
   ): Promise<BotMessage>;
-  editMessage(chat: unknown, options: Parameters): Promise<BotMessage | true>;
+  editMessage(
+    chat: BotArgument<'editMessageText', 'chat_id'>,
+    options: BotEditOptions & {
+      id: number;
+      text: string | TextWithEntities;
+    }
+  ): Promise<BotMessage | true>;
   deleteMessages(
-    chat: unknown,
-    ids: number[],
+    chat: BotArgument<'deleteMessages', 'chat_id'>,
+    ids: readonly number[],
     options?: RequestOptions
   ): Promise<true>;
   forwardMessages(
-    chat: unknown,
-    options: Parameters
+    chat: BotArgument<'forwardMessages', 'chat_id'>,
+    options: BotOther<
+      'forwardMessages',
+      'chat_id' | 'from_chat_id' | 'message_ids'
+    > & {
+      fromPeer: BotArgument<'forwardMessages', 'from_chat_id'>;
+      messages: readonly number[];
+    }
   ): Promise<Telegram.MessageId[]>;
-  sendFile(chat: unknown, options: Parameters): Promise<BotMessage>;
+  sendFile(
+    chat: BotArgument<'sendDocument', 'chat_id'>,
+    options: BotOther<'sendDocument', 'chat_id' | 'document'> & {
+      file: BotArgument<'sendDocument', 'document'>;
+    }
+  ): Promise<BotMessage>;
   downloadMedia(
     fileId: string,
     options?: RequestOptions & { maxBytes?: number }
@@ -742,33 +763,48 @@ export interface BotContextApi {
     options?: BotOther<'answerCallbackQuery', 'callback_query_id'>,
     signal?: AbortSignal
   ): Promise<true>;
-  sendPhoto: BotMediaMethod;
-  sendAnimation: BotMediaMethod;
-  sendDocument: BotMediaMethod;
-  sendVideo: BotMediaMethod;
-  sendAudio: BotMediaMethod;
-  sendVoice: BotMediaMethod;
-  sendSticker: BotMediaMethod;
+  sendPhoto: BotMediaMethod<'Photo'>;
+  sendAnimation: BotMediaMethod<'Animation'>;
+  sendDocument: BotMediaMethod<'Document'>;
+  sendVideo: BotMediaMethod<'Video'>;
+  sendAudio: BotMediaMethod<'Audio'>;
+  sendVoice: BotMediaMethod<'Voice'>;
+  sendSticker: BotMediaMethod<'Sticker'>;
   [key: string]: unknown;
 }
-export type BotMediaMethod = (
-  chat: string | number | bigint,
-  file: unknown,
-  options?: Parameters,
+type BotMediaKind =
+  | 'Photo'
+  | 'Animation'
+  | 'Document'
+  | 'Video'
+  | 'Audio'
+  | 'Voice'
+  | 'Sticker';
+export type BotMediaMethod<K extends BotMediaKind = BotMediaKind> = (
+  chat: BotArgument<`send${K}`, 'chat_id'>,
+  file: BotArgument<`send${K}`, Lowercase<K>>,
+  options?: BotOther<`send${K}`, 'chat_id' | Lowercase<K>>,
   signal?: AbortSignal
-) => Promise<BotMessage>;
+) => Promise<BotApiResult<`send${K}`>>;
+type ScopedBotMethod<F> = F extends (...args: infer A) => Promise<infer R>
+  ? ContextOperation<A, [unknown], R>
+  : never;
+type BotEditOptions = BotOther<
+  'editMessageText',
+  'chat_id' | 'message_id' | 'inline_message_id' | 'text' | 'rich_message'
+>;
 export interface ContextApi extends BotContextApi, GrammyPositionalApi {
   editMessageText(
     chat: string | number | bigint,
     id: number,
-    text: string | TextWithEntities | Parameters,
-    options?: Parameters,
+    text: BotArgument<'editMessageText', 'text_or_rich_message'>,
+    options?: BotEditOptions,
     signal?: AbortSignal
   ): Promise<BotMessage | true>;
   editMessageTextInline(
     inlineId: string,
-    text: string | TextWithEntities | Parameters,
-    options?: Parameters,
+    text: BotArgument<'editMessageText', 'text_or_rich_message'>,
+    options?: BotEditOptions,
     signal?: AbortSignal
   ): Promise<true>;
 }
@@ -779,7 +815,7 @@ export interface TelegrafApi extends BotContextApi, TelegrafPositionalApi {
     id: number | undefined,
     inlineId: string | undefined,
     text: string | TextWithEntities,
-    options?: Parameters,
+    options?: BotEditOptions,
     request?: RequestOptions | AbortSignal
   ): Promise<BotMessage | true>;
 }
@@ -815,14 +851,10 @@ export declare class Context {
   readonly inlineMessageId?: string;
   readonly businessConnectionId?: string;
   readonly from?: Telegram.User;
-  reply(
-    text: string | TextWithEntities,
-    options?: Parameters,
-    signal?: AbortSignal
-  ): Promise<BotMessage>;
+  reply: ScopedBotMethod<BotContextApi['sendMessage']>;
   editMessageText(
-    text: string | TextWithEntities | Parameters,
-    options?: Parameters,
+    text: BotArgument<'editMessageText', 'text_or_rich_message'>,
+    options?: BotEditOptions,
     signal?: AbortSignal
   ): Promise<BotMessage | true>;
   answerCallbackQuery(
@@ -833,31 +865,28 @@ export declare class Context {
     idOrOptions?: number | RequestOptions | AbortSignal,
     options?: RequestOptions | AbortSignal
   ): Promise<true>;
-  replyWithPhoto: ContextMediaMethod;
-  replyWithAnimation: ContextMediaMethod;
-  replyWithDocument: ContextMediaMethod;
-  replyWithVideo: ContextMediaMethod;
-  replyWithAudio: ContextMediaMethod;
-  replyWithVoice: ContextMediaMethod;
-  replyWithSticker: ContextMediaMethod;
+  replyWithPhoto: ContextMediaMethod<'Photo'>;
+  replyWithAnimation: ContextMediaMethod<'Animation'>;
+  replyWithDocument: ContextMediaMethod<'Document'>;
+  replyWithVideo: ContextMediaMethod<'Video'>;
+  replyWithAudio: ContextMediaMethod<'Audio'>;
+  replyWithVoice: ContextMediaMethod<'Voice'>;
+  replyWithSticker: ContextMediaMethod<'Sticker'>;
 }
-export type ContextMediaMethod = (
-  file: unknown,
-  options?: Parameters,
-  signal?: AbortSignal
-) => Promise<BotMessage>;
+export type ContextMediaMethod<K extends BotMediaKind = BotMediaKind> =
+  ScopedBotMethod<BotMediaMethod<K>>;
 export type CommonContext = Omit<
   Context,
   | 'me'
   | 'match'
-  | 'replyWithDice'
-  | 'replyWithInvoice'
+  | keyof GrammyContextDelivery
   | keyof GrammyContextAdministration
   | keyof GrammyContextServices
   | keyof GrammyContextMessageActions
   | keyof GrammyContextCheckers
   | keyof GrammyContextContent
   | 'botInfo'
+  | 'editMessageText'
 > & {
   match?: string | RegExpMatchArray | import('./bot-reactions.js').Reaction;
 };
@@ -870,10 +899,16 @@ export interface TelegrafContext
     TelegrafContextMessageActions,
     TelegrafContextCheckers,
     TelegrafContextContent,
+    Omit<GrammyContextDelivery, keyof TelegrafContextDelivery>,
     Omit<GrammyContextAdministration, keyof TelegrafContextAdministration>,
     Omit<GrammyContextServices, keyof TelegrafContextServices>,
     Omit<GrammyContextMessageActions, keyof TelegrafContextMessageActions> {
   assert(value: unknown, method: string): void;
+  editMessageText(
+    text: string | TextWithEntities,
+    options?: BotEditOptions,
+    request?: RequestOptions | AbortSignal
+  ): Promise<BotMessage | true>;
   readonly me?: string;
   readonly updateType: string;
   command?: string;

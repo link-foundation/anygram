@@ -1,5 +1,10 @@
 # Unified Telegram client: investigation and implementation
 
+The [delivery argument comparison](bot-delivery-argument-types.md) replaces broad
+media/edit arguments with shared operation contracts while preserving recognized
+upload representations. Three fixtures reproduce 32 diagnostics against preceding
+declarations; portable fixtures also compile against both actual pinned SDKs.
+
 The [context result comparison](bot-context-result-types.md) carries official
 operation results through scoped helpers without changing runtime calls. Two
 fixtures reproduce 49 diagnostics against preceding declarations and compile

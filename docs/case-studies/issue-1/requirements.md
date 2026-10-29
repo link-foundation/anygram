@@ -794,3 +794,14 @@ official chat-boost object despite Telegraf's erroneous array declaration; capti
 comparisons retain their documented common-field limit. Complete SDK subtype
 names/refinements, manual media/edit arguments, framework integrations and all
 wider unmet acceptance criteria remain unfinished.
+
+The [delivery argument comparison](bot-delivery-argument-types.md) advances
+R01/R05/R08/R13/R16/R17/R19 with shared scoped delivery tuples, per-kind media
+inputs, documented reply/edit options and native canonical operation arguments.
+A request-only mapping preserves recognized binary/source uploads in nested
+media while keeping response models unchanged. Three checked fixtures reproduce
+32 diagnostics against immutable preceding declarations, then compile after the
+change; the two portable fixtures also compile against actual pinned SDKs.
+Complete SDK subtypes/refinements, remaining manual helpers, vendor-private input
+conversion, framework/webhook integrations and every wider unmet criterion remain
+unfinished.

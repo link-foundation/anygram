@@ -1,9 +1,12 @@
 import type { Parameters, RequestOptions, TextWithEntities } from './index.js';
 import type { BotApiMethodMap } from './bot-method-types/index.js';
 import type { InputPollOption, InputRichMessage } from './bot-types/index.js';
+import type { BotRequestInput } from './bot-input-types.js';
 
 export type BotApiMethod = keyof BotApiMethodMap;
-export type BotApiParams<M extends BotApiMethod> = BotApiMethodMap[M]['params'];
+export type BotApiParams<M extends BotApiMethod> = BotRequestInput<
+  BotApiMethodMap[M]['params']
+>;
 export type BotApiResult<M extends string> = M extends BotApiMethod
   ? BotApiMethodMap[M]['result']
   : unknown;
@@ -40,10 +43,10 @@ export type BotArgument<
   M extends BotApiMethod,
   F extends string,
 > = F extends 'text_or_rich_message'
-  ? string | TextWithEntities | InputRichMessage
+  ? string | TextWithEntities | BotRequestInput<InputRichMessage>
   : M extends 'sendPoll'
     ? F extends 'options'
-      ? ReadonlyArray<string | InputPollOption>
+      ? ReadonlyArray<string | BotRequestInput<InputPollOption>>
       : Field<M, F>
     : Field<M, F>;
 type Field<

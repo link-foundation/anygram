@@ -192,3 +192,8 @@ Retain official operation results through grammY and Telegraf context delivery,
 administration, services and message actions. Check portable inferred results and
 negative assignments against frozen declarations and actual pinned SDKs, with an
 explicit assertion for Telegraf's chat-boost result declaration discrepancy.
+
+Type media, scoped delivery, reply/edit options and native canonical Bot API
+arguments from shared operation contracts. Preserve recognized binary/source
+upload inputs recursively in requests and top-level formatted captions without
+changing response models; compare portable fixtures against actual pinned SDKs.
