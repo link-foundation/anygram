@@ -1,5 +1,5 @@
 import type { BotUpdate, CommonContext } from './index.js';
-import type { ContextAliasFields } from './bot-context-data.js';
+import type { UpdateContextCore } from './bot-update-refinement.js';
 import type {
   filterRoot,
   filterNodes,
@@ -95,7 +95,7 @@ type FieldGuarantees<
             ? 'message_thread_id'
             : never
   : never;
-type EventValue<
+export type EventValue<
   Event extends keyof BotUpdate,
   Field extends string,
 > = RequiredFields<
@@ -131,111 +131,14 @@ type QueryUpdates<
   Q extends string,
   Event extends Events<Q> & keyof BotUpdate = Events<Q> & keyof BotUpdate,
 > = Event extends unknown ? FieldBranches<Q, Event> : never;
-type Present<T> = [T] extends [object] ? T : undefined;
-type Known<U extends BotUpdate> = { [K in keyof BotUpdate]-?: Present<U[K]> };
-type Get<T, K extends PropertyKey> = T extends unknown
-  ? K extends keyof T
-    ? T[K]
-    : undefined
-  : never;
-type At<T, Path extends string> = Path extends `${infer Head}.${infer Tail}`
-  ? At<Get<T, Head>, Tail>
-  : Get<T, Path>;
-type Select<T, Paths extends readonly string[]> = Paths extends readonly [
-  infer Path extends string,
-  ...infer Rest extends string[],
-]
-  ? [At<T, Path>] extends [undefined]
-    ? Select<T, Rest>
-    : At<T, Path>
-  : undefined;
-type Messages<U extends BotUpdate> = Select<
-  Known<U>,
-  [
-    'message',
-    'edited_message',
-    'channel_post',
-    'edited_channel_post',
-    'business_message',
-    'edited_business_message',
-    'guest_message',
-    'callback_query.message',
-  ]
->;
-type Sources<U extends BotUpdate> = Known<U> & { msg: Messages<U> };
-type Chats<U extends BotUpdate> = Select<
-  Sources<U>,
-  [
-    'msg.chat',
-    'deleted_business_messages.chat',
-    'stopped_message_generation.chat',
-    'message_reaction.chat',
-    'message_reaction_count.chat',
-    'my_chat_member.chat',
-    'chat_member.chat',
-    'chat_join_request.chat',
-    'chat_boost.chat',
-    'removed_chat_boost.chat',
-  ]
->;
-type Senders<U extends BotUpdate> = Select<
-  Sources<U>,
-  [
-    'business_connection.user',
-    'message_reaction.user',
-    'managed_bot.user',
-    'chat_boost.boost.source.user',
-    'removed_chat_boost.source.user',
-    'subscription.user',
-    'callback_query.from',
-    'msg.from',
-    'inline_query.from',
-    'chosen_inline_result.from',
-    'shipping_query.from',
-    'pre_checkout_query.from',
-    'my_chat_member.from',
-    'chat_member.from',
-    'chat_join_request.from',
-    'purchased_paid_media.from',
-  ]
->;
-type Shortcuts<U extends BotUpdate> = {
-  readonly [Alias in keyof ContextAliasFields]: Present<
-    U[ContextAliasFields[Alias]]
-  >;
-} & {
-  readonly msg: Messages<U>;
-  readonly chat: Chats<U>;
-  readonly from: Senders<U>;
-  readonly senderChat: Get<Messages<U>, 'sender_chat'>;
-  readonly msgId: Select<
-    Sources<U>,
-    [
-      'msg.message_id',
-      'message_reaction.message_id',
-      'message_reaction_count.message_id',
-    ]
-  >;
-  readonly chatId: Select<
-    Sources<U> & { chat: Chats<U> },
-    ['chat.id', 'business_connection.user_chat_id']
-  >;
-  readonly businessConnectionId: Select<
-    Sources<U>,
-    [
-      'msg.business_connection_id',
-      'business_connection.id',
-      'deleted_business_messages.business_connection_id',
-    ]
-  >;
-};
-type Core<U extends BotUpdate> = U extends unknown
-  ? { update: U } & Shortcuts<U>
-  : never;
 export type FilterCore<Q extends FilterQuery> = FilterQuery extends Q
   ? object
-  : Core<QueryUpdates<Extract<Expand<Q>, ConcreteQuery>>>;
+  : UpdateContextCore<QueryUpdate<Q>>;
 export type Filter<
   C extends CommonContext,
   Q extends FilterQuery,
 > = FilterQuery extends Q ? C : C & FilterCore<Q>;
+
+export type QueryUpdate<Q extends FilterQuery> = QueryUpdates<
+  Extract<Expand<Q>, ConcreteQuery>
+>;

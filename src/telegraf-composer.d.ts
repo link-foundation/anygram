@@ -6,6 +6,14 @@ import type {
   ReactionArgument,
   Composer,
 } from './index.js';
+import type {
+  TelegrafOnFilter,
+  FilteredContext,
+  NarrowedContext,
+  TelegrafMatched,
+  TelegrafCommandContext,
+  TelegrafGameContext,
+} from './telegraf-filter-types.js';
 
 export type TelegrafMiddleware<C extends CommonContext = TelegrafContext> = (
   ctx: C,
@@ -22,7 +30,6 @@ type Triggers<C extends CommonContext> =
   | TelegrafTrigger<C>
   | readonly TelegrafTrigger<C>[];
 type Predicate<C> = boolean | ((ctx: C) => unknown | Promise<unknown>);
-type UpdateFilter = string | ((update: BotUpdate) => unknown);
 type EntityPredicate<C> = (
   entity: BotParameters,
   text: string,
@@ -33,12 +40,10 @@ type EntityArgument<C extends CommonContext> =
   | TelegrafMiddlewareLike<C>
   | TelegrafMiddlewareLike<C>[];
 interface RegistrationArguments<C extends CommonContext> {
-  guard: [(update: BotUpdate) => unknown];
-  on: [UpdateFilter | readonly UpdateFilter[]];
-  hears: [Triggers<C>];
-  command: [Triggers<C> | TelegrafMiddlewareLike<C>];
-  action: [Triggers<C>];
-  inlineQuery: [Triggers<C>];
+  hears: [Triggers<FilteredContext<C, 'text'>>];
+  command: [Triggers<FilteredContext<C, 'text'>> | TelegrafMiddlewareLike<C>];
+  action: [Triggers<FilteredContext<C, 'callback_query'>>];
+  inlineQuery: [Triggers<FilteredContext<C, 'inline_query'>>];
   gameQuery: [];
   reaction: [ReactionArgument | readonly ReactionArgument[]];
   entity: [string | readonly string[] | EntityPredicate<C>];
@@ -52,20 +57,60 @@ interface RegistrationArguments<C extends CommonContext> {
   cashtag: [EntityArgument<C>];
   spoiler: [EntityArgument<C>];
 }
+type RegistrationScopes<C extends CommonContext> = {
+  hears: TelegrafMatched<C, 'text'>;
+  command: TelegrafCommandContext<C>;
+  action: TelegrafMatched<C, 'callback_query'>;
+  inlineQuery: TelegrafMatched<C, 'inline_query'>;
+  gameQuery: TelegrafGameContext<C>;
+  reaction: FilteredContext<C, 'message_reaction'> & {
+    match: ReactionArgument;
+  };
+};
+type RegistrationContext<
+  C extends CommonContext,
+  K extends keyof RegistrationArguments<C>,
+> = K extends keyof RegistrationScopes<C>
+  ? RegistrationScopes<C>[K]
+  : K extends 'entity'
+    ? FilteredContext<C, 'message' | 'channel_post'>
+    : TelegrafMatched<C, 'message' | 'channel_post'>;
 interface EntityRegistration<C extends CommonContext, R> {
   (
-    middleware: TelegrafMiddlewareLike<C>,
-    ...rest: TelegrafMiddlewareLike<C>[]
+    middleware: TelegrafMiddlewareLike<
+      FilteredContext<C, 'message' | 'channel_post'>
+    >,
+    ...rest: TelegrafMiddlewareLike<
+      FilteredContext<C, 'message' | 'channel_post'>
+    >[]
   ): R;
-  (trigger: Triggers<C>, ...middleware: TelegrafMiddlewareLike<C>[]): R;
+  (
+    trigger: Triggers<C>,
+    ...middleware: TelegrafMiddlewareLike<
+      TelegrafMatched<C, 'message' | 'channel_post'>
+    >[]
+  ): R;
 }
 type RegistrationParameters<
   C extends CommonContext,
   K extends keyof RegistrationArguments<C>,
-> = [...RegistrationArguments<C>[K], ...TelegrafMiddlewareLike<C>[]];
+> = [
+  ...RegistrationArguments<C>[K],
+  ...TelegrafMiddlewareLike<RegistrationContext<C, K>>[],
+];
 export interface TelegrafRegistrations<C extends CommonContext> {
-  guard(...args: RegistrationParameters<C, 'guard'>): this;
-  on(...args: RegistrationParameters<C, 'on'>): this;
+  guard<U extends BotUpdate>(
+    guard: (update: BotUpdate) => update is U,
+    ...middleware: TelegrafMiddlewareLike<NarrowedContext<C, U>>[]
+  ): this;
+  guard(
+    guard: (update: BotUpdate) => unknown,
+    ...middleware: TelegrafMiddlewareLike<C>[]
+  ): this;
+  on<F extends TelegrafOnFilter>(
+    filters: F | readonly F[],
+    ...middleware: TelegrafMiddlewareLike<FilteredContext<C, F>>[]
+  ): this;
   hears(...args: RegistrationParameters<C, 'hears'>): this;
   command(...args: RegistrationParameters<C, 'command'>): this;
   action(...args: RegistrationParameters<C, 'action'>): this;
@@ -84,6 +129,17 @@ export interface TelegrafRegistrations<C extends CommonContext> {
   spoiler: EntityRegistration<C, this>;
   filter(predicate: Predicate<C>): this;
   drop(predicate: Predicate<C>): this;
+  start(
+    ...middleware: TelegrafMiddlewareLike<
+      TelegrafCommandContext<C> & { startPayload: string }
+    >[]
+  ): this;
+  help(
+    ...middleware: TelegrafMiddlewareLike<TelegrafCommandContext<C>>[]
+  ): this;
+  settings(
+    ...middleware: TelegrafMiddlewareLike<TelegrafCommandContext<C>>[]
+  ): this;
 }
 type FactoryArguments<C extends CommonContext> = RegistrationArguments<C> & {
   optional: [Predicate<C>];
@@ -95,21 +151,23 @@ type FactoryArguments<C extends CommonContext> = RegistrationArguments<C> & {
   privateChat: [];
   groupChat: [];
   entityText: [string, EntityArgument<C>];
-  mount: RegistrationArguments<C>['on'];
 };
+type FactoryParameters<
+  C extends CommonContext,
+  K extends keyof FactoryArguments<C>,
+> = K extends keyof RegistrationArguments<C>
+  ? RegistrationParameters<C, K>
+  : [...FactoryArguments<C>[K], ...TelegrafMiddlewareLike<C>[]];
 type Factories = {
   [K in keyof FactoryArguments<TelegrafContext>]: <
     C extends CommonContext = TelegrafContext,
   >(
-    ...args: [...FactoryArguments<C>[K], ...TelegrafMiddlewareLike<C>[]]
+    ...args: FactoryParameters<C, K>
   ) => TelegrafMiddleware<C>;
 };
 export interface TelegrafComposer<C extends CommonContext = TelegrafContext>
   extends TelegrafRegistrations<C>, TelegrafQueryExtensions<C> {
   use(...middleware: TelegrafMiddlewareLike<C>[]): this;
-  start(...middleware: TelegrafMiddlewareLike<C>[]): this;
-  help(...middleware: TelegrafMiddlewareLike<C>[]): this;
-  settings(...middleware: TelegrafMiddlewareLike<C>[]): this;
   middleware(): TelegrafMiddleware<C>;
 }
 export type TelegrafQueryExtensions<C extends CommonContext> = Pick<
@@ -117,6 +175,25 @@ export type TelegrafQueryExtensions<C extends CommonContext> = Pick<
   'callbackQuery' | 'chosenInlineResult' | 'preCheckoutQuery' | 'shippingQuery'
 >;
 export interface TelegrafComposerConstructor extends Factories {
+  guard<
+    C extends CommonContext = TelegrafContext,
+    U extends BotUpdate = BotUpdate,
+  >(
+    guard: (update: BotUpdate) => update is U,
+    ...middleware: TelegrafMiddlewareLike<NarrowedContext<C, U>>[]
+  ): TelegrafMiddleware<C>;
+  guard<C extends CommonContext = TelegrafContext>(
+    guard: (update: BotUpdate) => unknown,
+    ...middleware: TelegrafMiddlewareLike<C>[]
+  ): TelegrafMiddleware<C>;
+  on<
+    C extends CommonContext = TelegrafContext,
+    F extends TelegrafOnFilter = TelegrafOnFilter,
+  >(
+    filters: F | readonly F[],
+    ...middleware: TelegrafMiddlewareLike<FilteredContext<C, F>>[]
+  ): TelegrafMiddleware<C>;
+  mount: TelegrafComposerConstructor['on'];
   new <C extends CommonContext = TelegrafContext>(
     ...middleware: TelegrafMiddlewareLike<C>[]
   ): TelegrafComposer<C>;

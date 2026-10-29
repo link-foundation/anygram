@@ -760,3 +760,16 @@ All 2,007 core cases pass on Node, Bun and Deno. Static checks scan 138 producti
 sources with zero clones; the package permits 181 entries. Telegraf predicate
 refinements, SDK-specific subtype names, per-method models and every wider unmet
 acceptance criterion remain unfinished.
+
+The [Telegraf declaration comparison](telegraf-filter-types.md) advances
+R01/R05/R08/R13/R16/R17/R19 with scoped update names, message subtypes, raw
+guards, correlated arrays, command/start fields and static factories. Shared
+refinement machinery retains Telegraf getter precedence, custom contexts and
+fluent receivers. The portable fixture produces 69 diagnostics with frozen
+preceding declarations, then compiles with strict negative assertions. The same
+fixture compiles against actual Telegraf 4.16.3 in CI. ID-only guards preserve
+optional message fields; reaction objects and possible false sender-chat values
+retain their owned runtime contracts. All 2,007 core tests pass on Node, Bun and
+Deno. Strict gates scan 140 sources with zero clones; packaging permits 183
+entries. SDK-specific subtype names, per-method models, remaining framework
+integrations and every wider unmet acceptance criterion remain unfinished.

@@ -969,7 +969,7 @@ Filter declaration work plan:
       implied message fields while preserving custom application contexts.
 - [x] Add scoped helper/checker predicates and portable checked examples;
       compare valid programs against actual SDK types with strict checking.
-- [ ] Preserve an immutable before reproduction, pass appropriate gates and
+- [x] Preserve an immutable before reproduction, pass appropriate gates and
       review before committing/pushing; inspect fresh CI by SHA and timestamp.
       Local validation passes: 80 diagnostics with frozen preceding declarations,
       isolated current compilation, complete actual-SDK grammar equality and
@@ -978,5 +978,23 @@ Filter declaration work plan:
       gates scan 138 production sources with zero clones. The package permits
       181 entries. Main remains an ancestor, feedback streams remain empty and
       the atomic implementation, generator, declarations and workflow diff were
-      reviewed. Commit/push and exact-head CI remain next.
+      reviewed. Head bebfa138ce830b9d5453fd974e3a80849fd19120 passed run
+      40908761294, created 2026-10-29T16:09:25Z, including every runtime/OS,
+      native integration and static gate.
 - [ ] Continue all remaining framework and wider acceptance criteria.
+
+Telegraf declaration work plan:
+
+- [x] Reproduce lost raw-update, message-subtype, helper and checker narrowing
+      with a portable checked fixture before implementation.
+- [x] Share refinement machinery with SDK-specific getter precedence; preserve
+      custom contexts and fluent receivers through registrations and scenes.
+- [x] Cover instance/static guard factories, command/start fields and update
+      checker predicates; compare the same valid fixture against actual Telegraf.
+- [x] Retain immutable before/after reproduction and run appropriate local checks.
+      The frozen fixture produces 69 diagnostics, all in the fixture; the current
+      fixture and actual Telegraf comparison pass. All 2,007 core tests pass on
+      Node, Bun and Deno. Strict checks scan 140 production sources with zero
+      clones; packaging permits 183 entries.
+- [ ] Inspect the complete change, commit/push and verify exact-head CI.
+- [ ] Continue all wider unmet acceptance criteria in the same draft PR.

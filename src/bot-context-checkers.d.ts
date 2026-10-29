@@ -1,4 +1,9 @@
-import type { Context, QueryTrigger, BotUpdate, Parameters } from './index.js';
+import type { Context, QueryTrigger, Parameters } from './index.js';
+import type {
+  TelegrafUpdateFilter,
+  TelegrafFilterCore,
+} from './telegraf-filter-types.js';
+export type { TelegrafUpdateFilter } from './telegraf-filter-types.js';
 import type { Filter, FilterCore, FilterQuery } from './bot-filter-types.js';
 import type { CheckerScopes } from './bot-filter-context.js';
 import type {
@@ -66,7 +71,8 @@ export interface GrammyContextCheckers {
     argument: T | readonly T[]
   ): this is ChatTypeCore<T>;
 }
-export type TelegrafUpdateFilter = string | ((update: BotUpdate) => unknown);
 export interface TelegrafContextCheckers {
-  has(filters: TelegrafUpdateFilter | readonly TelegrafUpdateFilter[]): boolean;
+  has<F extends TelegrafUpdateFilter>(
+    filters: F | readonly F[]
+  ): this is TelegrafFilterCore<F>;
 }

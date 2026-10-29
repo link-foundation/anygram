@@ -13,6 +13,10 @@ import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new globalThis.URL('../', import.meta.url));
 const modes = {
+  '--telegraf-filters': [
+    'typed-telegraf-filters.ts',
+    'bebfa138ce830b9d5453fd974e3a80849fd19120',
+  ],
   '--filters': [
     'typed-filter-narrowing.ts',
     '4d6c1ca33b62a06500312a106e2638a9f80b66d0',
@@ -32,7 +36,9 @@ const [fixture, revision] = modes[mode];
 const frozen = new Set([
   'src/index.d.ts',
   'src/telegraf-composer.d.ts',
-  ...(mode === '--filters' ? ['src/bot-context-checkers.d.ts'] : []),
+  ...(['--filters', '--telegraf-filters'].includes(mode)
+    ? ['src/bot-context-checkers.d.ts']
+    : []),
 ]);
 const before = process.argv.includes('--before');
 const workspace = await mkdtemp(join(tmpdir(), 'anygram-fluency-'));

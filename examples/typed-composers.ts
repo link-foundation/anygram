@@ -68,6 +68,14 @@ fluent.mention(['user', /person/], async (ctx) => {
 fluent.gameQuery(async (ctx) => {
   await ctx.answerGameQuery('https://example.test');
 });
+fluent.on('text', (ctx) => {
+  const possiblyMissing: typeof ctx.senderChat = false;
+  void possiblyMissing;
+});
+fluent.reaction({ type: 'emoji', emoji: '👍' }, (ctx) => {
+  const match: string | import('../src/index.js').Reaction = ctx.match;
+  void match;
+});
 fluent
   .filter(async (ctx) => Boolean(ctx.message))
   .start(async (ctx) => {

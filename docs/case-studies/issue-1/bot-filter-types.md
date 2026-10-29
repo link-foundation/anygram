@@ -84,8 +84,9 @@ research or development-only SDK type dependencies.
 
 ## Remaining acceptance criteria
 
-This checkpoint covers grammY-style filter and checker declarations. Complete
-Telegraf update-predicate refinements, SDK-specific public message/chat subtype
+This checkpoint covers grammY-style filter and checker declarations.
+Telegraf update-predicate refinements were added in the subsequent
+[Telegraf declaration checkpoint](telegraf-filter-types.md). SDK-specific public message/chat subtype
 names, per-method argument/result models, framework plugins, webhook responses
 and the wider account/application/live-interoperability requirements remain
 unfinished. Grammar equality and passing type fixtures do not establish those

@@ -192,6 +192,9 @@ For example, `on('message:text')` requires `ctx.message.text`, and
 literal filter queries are rejected. See the checked
 [filter example](examples/typed-filter-narrowing.ts) and
 [type comparisons](docs/case-studies/issue-1/bot-filter-types.md).
+Telegraf-style registrations also narrow raw updates, message subtypes and
+predicate guards, including static factories and custom contexts. See the
+[checked Telegraf example](examples/typed-telegraf-filters.ts).
 
 `Scenes.BaseScene`, `Scenes.WizardScene` and `Scenes.Stage` provide persisted
 conversation steps on that same middleware path. Install session middleware

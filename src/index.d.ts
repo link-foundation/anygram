@@ -66,6 +66,13 @@ import type {
 } from './bot-filter-context.js';
 export type { Filter, FilterCore } from './bot-filter-types.js';
 export type {
+  NarrowedContext,
+  FilteredContext,
+  TelegrafUpdateType,
+  TelegrafOnFilter,
+  MaybeMessage,
+} from './telegraf-filter-types.js';
+export type {
   HearsContext,
   CommandContext,
   ReactionContext,
@@ -841,6 +848,7 @@ export type ContextMediaMethod = (
 export type CommonContext = Omit<
   Context,
   | 'me'
+  | 'match'
   | 'replyWithDice'
   | 'replyWithInvoice'
   | keyof GrammyContextAdministration
@@ -849,7 +857,9 @@ export type CommonContext = Omit<
   | keyof GrammyContextCheckers
   | keyof GrammyContextContent
   | 'botInfo'
->;
+> & {
+  match?: string | RegExpMatchArray | import('./bot-reactions.js').Reaction;
+};
 export interface TelegrafContext
   extends
     CommonContext,
@@ -869,10 +879,7 @@ export interface TelegrafContext
   payload?: string;
   args?: string[];
   startPayload?: string;
-  readonly msg?: BotMessage & {
-    has(...keys: string[]): boolean;
-    isAccessible(): boolean;
-  };
+  readonly msg?: import('./telegraf-filter-types.js').MaybeMessage;
 }
 export declare const TelegrafContext: {
   new (
@@ -1079,15 +1086,6 @@ export interface Telegraf<C extends CommonContext = TelegrafContext>
     TelegrafQueryExtensions<C>,
     Pick<TelegrafComposer<C>, 'middleware'> {
   use(
-    ...middleware: import('./telegraf-composer.js').TelegrafMiddlewareLike<C>[]
-  ): this;
-  start(
-    ...middleware: import('./telegraf-composer.js').TelegrafMiddlewareLike<C>[]
-  ): this;
-  help(
-    ...middleware: import('./telegraf-composer.js').TelegrafMiddlewareLike<C>[]
-  ): this;
-  settings(
     ...middleware: import('./telegraf-composer.js').TelegrafMiddlewareLike<C>[]
   ): this;
   catch(handler: (error: unknown, ctx: C) => unknown | Promise<unknown>): this;
