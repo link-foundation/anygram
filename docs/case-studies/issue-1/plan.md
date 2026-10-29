@@ -151,3 +151,7 @@ original headers and a second outgoing deletion. Five regressions cover both
 roles, already-delivered and missing originals, restart state, resend content,
 invalid targets and atomic capacity failures. All 221 tests pass on each runtime
 with strict checks. TL byte-ownership head 07d27f9 passed CI run 40797847810.
+
+Strict declaration/example checking is now an explicit `npm run typecheck` gate
+in both `npm run check` and CI. The project includes every declaration and typed
+example and keeps library checking enabled. The new gate passes locally.

@@ -303,6 +303,7 @@ Node >=20.18.3 is required. Tests also run on Bun and Deno.
 npm install
 npm test
 npm run check
+npm run typecheck
 bun test
 deno test --allow-read --allow-write --allow-env --allow-net=127.0.0.1
 ```
@@ -318,3 +319,6 @@ Regenerate the schema with `npm run schema:update` and review its pinned provena
 Original code is released under the Unlicense. Optional libraries retain their
 own licenses; @mtproto/core is GPL-3.0 and is not bundled. The template's `add`,
 `multiply`, and `delay` exports are retained for compatibility.
+
+`npm run check` includes strict declaration and typed-example checking through
+`tsconfig.json`, with library checking enabled. CI runs the same type check.
