@@ -814,3 +814,11 @@ SDKs; a separate oracle checks the entire modern message namespace and required
 field sets. [Subtype evidence](bot-message-subtype-types.md) records the scope
 and remaining namespaces, chat/update refinement and conditional server limits.
 Every wider acceptance criterion remains open.
+
+[Terminal keyboard/PNG evidence](terminal-controls.md) advances R05/R08/R13/R16/R19:
+both pinned applications execute scoped controls; regular visual commands upload
+actual PNG output. Fifteen portable scenarios and four selected-backend HTTP
+integrations cover authorization, stale menus, failures and cancellation. Native
+encoding/decoding and a committed upload artifact document the photo path.
+Broader emulator/color, recovery, platform and controlled-delivery criteria remain
+unfinished; R13 and the wider feature union stay open.

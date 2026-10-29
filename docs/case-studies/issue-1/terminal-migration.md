@@ -23,7 +23,7 @@ an automated `git apply --check` regression. Regenerate it using
 `node experiments/render-terminal-migration.mjs`. The emitter writes source
 artifacts under ci-logs and never executes them. The patch changes:
 
-- The Bot import to anygram and the unused InlineKeyboard import removal.
+- The Bot/InputFile imports to anygram and the unused InlineKeyboard import removal.
 - General text registration to follow command registration, allowing help,
   stop and restart to run. The synthetic restart update gains a command entity.
 - Timer/subscription cleanup and terminal identity guards, preventing a retired
@@ -98,11 +98,12 @@ throughput for exit durability; the console stream remains independent. These
 bounded children use a 64 MiB heap and a 512 KiB stack, isolated fake credentials
 and temporary directories. All four fail before this change and pass afterward.
 
-The visual source advertises static PNGs in help but implements regular-command text edits;
-there is no static-photo handler to claim as covered. InlineKeyboard is unused
-in these pinned sources. Full keyboard/photo scenarios, broader error recovery, native
-rendering on other runtimes/platforms and controlled-account delivery remain
-open. Polling shutdown is verified with the actual runner and a controlled
+The original visual source advertises static PNGs but implements only regular-command
+text edits; its InlineKeyboard import is unused. The subsequent
+[keyboard and PNG migration](terminal-controls.md) now executes those local
+scenarios through actual application handlers. Broader error recovery, ANSI color
+behavior, native rendering on other runtimes/platforms and controlled-account
+delivery remain open. Polling shutdown is verified with the actual runner and a controlled
 transport; authenticated online delivery is still unverified. This advances R05/R08/R13/R16/R19;
 it does not close R13 or the broader feature-union criteria.
 
@@ -126,4 +127,5 @@ bounded child executions to this same native command, bringing it to 26 checks.
 All eight upstream test files and five debug scripts complete; six scripts have
 46 assertion-driven scenarios and seven provide diagnostics. Each source and
 the unchanged emulator are hash-verified. This resolves original-suite execution
-coverage while leaving photo/keyboard, runtime/platform and live delivery open.
+coverage. Subsequent keyboard/photo execution is documented separately; complete
+runtime/platform and live delivery coverage remain open.

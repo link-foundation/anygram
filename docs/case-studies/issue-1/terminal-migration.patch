@@ -1,10 +1,10 @@
 diff --git a/src/text-bot.js b/src/text-bot.js
-index 186f91e..45afac0 100644
+index 186f91e..2046d13 100644
 --- a/src/text-bot.js
 +++ b/src/text-bot.js
 @@ -1,12 +1,15 @@
 -import { Bot, InlineKeyboard } from "grammy";
-+import { Bot } from "anygram";
++import { Bot, InputFile } from "anygram";
  import * as pty from "node-pty";
  import { config } from "dotenv";
  import pino from "pino";
@@ -29,7 +29,129 @@ index 186f91e..45afac0 100644
  ]));
  
  // Global error handlers
-@@ -157,6 +160,7 @@ bot.command("start", async (ctx) => {
+@@ -97,7 +100,8 @@ bot.use((ctx, next) => {
+     messageType: ctx.message?.text ? 'text' : ctx.update_type 
+   }, 'Processing message');
+   
+-  if (!isAuthorized(ctx.from)) {
++  if (!ctx.from || !isAuthorized(ctx.from)) {
++    if (ctx.callbackQuery) { return ctx.answerCallbackQuery({ text: "You are not authorized to use this bot.", show_alert: true }); }
+     logger.warn({ userId: ctx.from?.id, username: ctx.from?.username }, 'Unauthorized access attempt');
+     return ctx.reply("❌ You are not authorized to use this bot.");
+   }
+@@ -138,6 +142,111 @@ function parseCommandInput(text) {
+   return parsed;
+ }
+ 
++const terminalControls = (function installTerminalControls({ bot, userSessions, logger, capture }) {
++  const pending = new Set();
++  const selected = (ctx) => {
++    const session = userSessions.get(ctx.from?.id);
++    return session?.chatId === ctx.chat?.id ? session : undefined;
++  };
++  const warn = (error) =>
++    logger.warn({ error: error.message }, 'Terminal control failed');
++  const screenshot = (ctx, session) => {
++    if (selected(ctx) !== session) {
++      return;
++    }
++    if (session.screenshotTask) {
++      return session.screenshotTask;
++    }
++    const controller = new globalThis.AbortController();
++    session.screenshotController = controller;
++    const task = Promise.resolve()
++      .then(() => capture(ctx, session, controller.signal))
++      .catch(async (error) => {
++        if (!controller.signal.aborted) {
++          warn(error);
++          await ctx
++            .reply(
++              '❌ Failed to capture terminal screenshot. Try /controls again.'
++            )
++            .catch(warn);
++        }
++      })
++      .finally(() => {
++        pending.delete(task);
++        delete session.screenshotTask;
++        delete session.screenshotController;
++      });
++    session.screenshotTask = task;
++    pending.add(task);
++    return task;
++  };
++  bot.command('controls', (ctx) => {
++    const session = selected(ctx);
++    if (!session) {
++      return ctx.reply('❌ No active terminal session. Use /start to begin.');
++    }
++    const button = (text, action) => ({
++      text,
++      callback_data: `terminal:${session.controlKey}:${action}`,
++    });
++    return ctx.reply('Terminal controls', {
++      reply_markup: {
++        inline_keyboard: [
++          [
++            button('Ctrl+C', 'interrupt'),
++            button('Ctrl+D', 'eof'),
++            button('Ctrl+Z', 'suspend'),
++          ],
++          [
++            button(capture ? 'Screenshot' : 'Refresh', 'refresh'),
++            button('Stop', 'stop'),
++          ],
++        ],
++      },
++    });
++  });
++  bot.callbackQuery(/^terminal:/, async (ctx) => {
++    const session = selected(ctx);
++    const match = /^terminal:(\d+):(interrupt|eof|suspend|refresh|stop)$/.exec(
++      ctx.callbackQuery.data
++    );
++    if (!session || !match || match[1] !== session.controlKey) {
++      return ctx.answerCallbackQuery({
++        text: 'Terminal controls have expired. Use /controls.',
++        show_alert: true,
++      });
++    }
++    await ctx.answerCallbackQuery();
++    if (selected(ctx) !== session) {
++      return;
++    }
++    const action = match[2];
++    const bytes = { interrupt: '\x03', eof: '\x04', suspend: '\x1a' };
++    if (Object.hasOwn(bytes, action)) {
++      session.terminal.write(bytes[action]);
++    } else if (action === 'refresh') {
++      if (capture) {
++        await screenshot(ctx, session);
++      } else {
++        await session.updateTerminalMessage();
++      }
++    } else {
++      session.cleanup();
++      session.terminal.kill();
++      userSessions.delete(ctx.from.id);
++      await session.screenshotTask?.catch(() => {});
++      try {
++        await ctx.editMessageReplyMarkup({
++          reply_markup: { inline_keyboard: [] },
++        });
++      } catch (error) {
++        warn(error);
++      }
++    }
++  });
++  return { screenshot, drain: () => Promise.allSettled(pending) };
++})({ bot, userSessions, logger, capture: undefined });
++
+ // Start command handler
+ bot.command("start", async (ctx) => {
+   const userId = ctx.from.id;
+@@ -157,6 +266,7 @@ bot.command("start", async (ctx) => {
      // Kill existing session if any
      if (userSessions.has(userId)) {
        logger.info({ userId }, 'Killing existing terminal session');
@@ -37,7 +159,7 @@ index 186f91e..45afac0 100644
        userSessions.get(userId).terminal.kill();
        userSessions.delete(userId);
      }
-@@ -175,6 +179,7 @@ bot.command("start", async (ctx) => {
+@@ -175,6 +285,7 @@ bot.command("start", async (ctx) => {
      const virtualTerminal = new VirtualTerminal(cols, rows);
      let messageId = null;
      let updateTimeout = null;
@@ -45,7 +167,7 @@ index 186f91e..45afac0 100644
      let lastMessageContent = '';
      
      // Subscribe to terminal changes for optimized updates
-@@ -201,6 +206,7 @@ bot.command("start", async (ctx) => {
+@@ -201,6 +312,7 @@ bot.command("start", async (ctx) => {
      
      // Handle terminal output
      terminal.onData((data) => {
@@ -53,7 +175,7 @@ index 186f91e..45afac0 100644
        logger.debug({ 
          userId, 
          dataLength: data.length,
-@@ -214,6 +220,8 @@ bot.command("start", async (ctx) => {
+@@ -214,6 +326,8 @@ bot.command("start", async (ctx) => {
      
      // Handle terminal exit
      terminal.onExit((exitCode, signal) => {
@@ -62,7 +184,7 @@ index 186f91e..45afac0 100644
        logger.info({ userId, exitCode, signal }, 'Terminal session ended');
        if (updateTimeout) {
          clearTimeout(updateTimeout);
-@@ -226,6 +234,7 @@ bot.command("start", async (ctx) => {
+@@ -226,6 +340,7 @@ bot.command("start", async (ctx) => {
      
      // Function to update the terminal message
      async function updateTerminalMessage() {
@@ -70,7 +192,12 @@ index 186f91e..45afac0 100644
        try {
          const formattedOutput = formatTerminalOutput(virtualTerminal);
          const messageText = `🚀 **Terminal ${name} (${cols}x${rows})** - Ready!
-@@ -322,6 +331,14 @@ ${formattedOutput}
+@@ -319,9 +434,20 @@ ${formattedOutput}
+     // Store session
+     userSessions.set(userId, {
+       terminal,
++      chatId: ctx.chat.id,
++      controlKey: String(ctx.update.update_id),
        virtualTerminal,
        messageId,
        updateTerminalMessage,
@@ -78,6 +205,7 @@ index 186f91e..45afac0 100644
 +        clearTimeout(updateTimeout);
 +        clearTimeout(initialUpdateTimeout);
 +        this.cancelAnimation?.();
++        this.screenshotController?.abort();
 +        if (typeof unsubscribeFromChanges === 'function') {
 +          unsubscribeFromChanges();
 +        }
@@ -85,7 +213,7 @@ index 186f91e..45afac0 100644
        unsubscribeFromChanges,
        cols,
        rows,
-@@ -354,7 +371,7 @@ ${initialOutput}
+@@ -354,7 +480,7 @@ ${initialOutput}
      logger.debug({ userId, messageId }, 'Initial terminal message sent');
      
      // Wait a bit for initial shell prompt, then update
@@ -94,7 +222,7 @@ index 186f91e..45afac0 100644
      
    } catch (error) {
      logger.error({ userId, error: error.message, stack: error.stack }, 'Failed to start terminal session');
-@@ -363,81 +380,6 @@ ${initialOutput}
+@@ -363,81 +489,6 @@ ${initialOutput}
    }
  });
  
@@ -176,15 +304,17 @@ index 186f91e..45afac0 100644
  // Handle stop command
  bot.command("stop", async (ctx) => {
    const userId = ctx.from.id;
-@@ -447,6 +389,7 @@ bot.command("stop", async (ctx) => {
+@@ -447,7 +498,9 @@ bot.command("stop", async (ctx) => {
    
    if (session) {
      try {
 +      session.cleanup();
        session.terminal.kill();
++      await session.screenshotTask;
        userSessions.delete(userId);
        logger.info({ userId }, 'Terminal session stopped successfully');
-@@ -477,7 +420,8 @@ bot.command("restart", async (ctx) => {
+       await ctx.reply("🛑 Terminal session stopped.");
+@@ -477,7 +530,8 @@ bot.command("restart", async (ctx) => {
          from: ctx.from,
          chat: ctx.chat,
          date: Date.now(),
@@ -194,7 +324,15 @@ index 186f91e..45afac0 100644
        }
      });
      logger.info({ userId }, 'Terminal session restart initiated');
-@@ -521,6 +465,82 @@ bot.command("help", async (ctx) => {
+@@ -493,6 +547,7 @@ bot.command("help", async (ctx) => {
+   const helpMessage = `🤖 **Telegram Terminal Bot Help**
+ 
+ **Commands:**
++• /controls - Open terminal keyboard controls
+ • \`/start\` - Start terminal with default 16:9 aspect ratio
+ • \`/start 1:1\` - Start with square terminal (44x44)
+ • \`/start 16:9\` - Start with landscape terminal (56x32)
+@@ -521,6 +576,82 @@ bot.command("help", async (ctx) => {
    logger.info({ userId: ctx.from.id }, 'Help command sent');
  });
  
@@ -277,27 +415,12 @@ index 186f91e..45afac0 100644
  // Error handling
  bot.catch((err) => {
    logger.error({ error: err.message, stack: err.stack }, 'Bot error occurred');
-@@ -528,39 +548,37 @@ bot.catch((err) => {
+@@ -528,39 +659,40 @@ bot.catch((err) => {
  });
  
  // Graceful shutdown
 -process.once("SIGINT", () => {
 -  logger.info('Received SIGINT, shutting down gracefully...');
--  // Kill all terminal sessions
--  for (const [userId, session] of userSessions) {
--    logger.debug({ userId }, 'Killing terminal session during shutdown');
--    try {
--      session.terminal.kill();
--    } catch (error) {
--      logger.warn({ userId, error: error.message }, 'Error killing terminal session during shutdown');
--    }
--  }
--  logger.info('All terminal sessions closed, exiting...');
--  process.exit(0);
--});
--
--process.once("SIGTERM", () => {
--  logger.info('Received SIGTERM, shutting down gracefully...');
 -  // Kill all terminal sessions
 -  for (const [userId, session] of userSessions) {
 -    logger.debug({ userId }, 'Killing terminal session during shutdown');
@@ -321,7 +444,9 @@ index 186f91e..45afac0 100644
 -  logger.info('All terminal sessions closed, exiting...');
 -  process.exit(0);
 -});
++    const controlsDrained = terminalControls.drain();
 +    userSessions.clear();
++    await controlsDrained;
 +    await polling;
 +    await bot.queue;
 +    logger.info('All terminal sessions and polling closed');
@@ -334,6 +459,21 @@ index 186f91e..45afac0 100644
 +  })();
 +  return shutdownTask;
 +}
+ 
+-process.once("SIGTERM", () => {
+-  logger.info('Received SIGTERM, shutting down gracefully...');
+-  // Kill all terminal sessions
+-  for (const [userId, session] of userSessions) {
+-    logger.debug({ userId }, 'Killing terminal session during shutdown');
+-    try {
+-      session.terminal.kill();
+-    } catch (error) {
+-      logger.warn({ userId, error: error.message }, 'Error killing terminal session during shutdown');
+-    }
+-  }
+-  logger.info('All terminal sessions closed, exiting...');
+-  process.exit(0);
+-});
 +process.once("SIGINT", shutdownTerminal);
 +process.once("SIGTERM", shutdownTerminal);
  
@@ -345,12 +485,12 @@ index 186f91e..45afac0 100644
      logger.info('Telegram Terminal Bot started successfully!');
      logger.info({ 
 diff --git a/src/visual-bot.js b/src/visual-bot.js
-index 9ad84e0..e59068e 100644
+index 9ad84e0..f928a74 100644
 --- a/src/visual-bot.js
 +++ b/src/visual-bot.js
 @@ -1,14 +1,17 @@
 -import { Bot, InlineKeyboard } from "grammy";
-+import { Bot } from "anygram";
++import { Bot, InputFile } from "anygram";
  import * as pty from "node-pty";
  import { config } from "dotenv";
  import pino from "pino";
@@ -377,7 +517,172 @@ index 9ad84e0..e59068e 100644
  ]));
  
  // Global error handlers
-@@ -233,6 +236,7 @@ bot.command("start", async (ctx) => {
+@@ -105,7 +108,8 @@ bot.use((ctx, next) => {
+     messageType: ctx.message?.text ? 'text' : ctx.update_type 
+   }, 'Processing message');
+   
+-  if (!isAuthorized(ctx.from)) {
++  if (!ctx.from || !isAuthorized(ctx.from)) {
++    if (ctx.callbackQuery) { return ctx.answerCallbackQuery({ text: "You are not authorized to use this bot.", show_alert: true }); }
+     logger.warn({ userId: ctx.from?.id, username: ctx.from?.username }, 'Unauthorized access attempt');
+     return ctx.reply("❌ You are not authorized to use this bot.");
+   }
+@@ -216,6 +220,154 @@ async function generateTerminalAnimation(frames, cols, rows) {
+   return stream;
+ }
+ 
++const terminalControls = (function installTerminalControls({ bot, userSessions, logger, capture }) {
++  const pending = new Set();
++  const selected = (ctx) => {
++    const session = userSessions.get(ctx.from?.id);
++    return session?.chatId === ctx.chat?.id ? session : undefined;
++  };
++  const warn = (error) =>
++    logger.warn({ error: error.message }, 'Terminal control failed');
++  const screenshot = (ctx, session) => {
++    if (selected(ctx) !== session) {
++      return;
++    }
++    if (session.screenshotTask) {
++      return session.screenshotTask;
++    }
++    const controller = new globalThis.AbortController();
++    session.screenshotController = controller;
++    const task = Promise.resolve()
++      .then(() => capture(ctx, session, controller.signal))
++      .catch(async (error) => {
++        if (!controller.signal.aborted) {
++          warn(error);
++          await ctx
++            .reply(
++              '❌ Failed to capture terminal screenshot. Try /controls again.'
++            )
++            .catch(warn);
++        }
++      })
++      .finally(() => {
++        pending.delete(task);
++        delete session.screenshotTask;
++        delete session.screenshotController;
++      });
++    session.screenshotTask = task;
++    pending.add(task);
++    return task;
++  };
++  bot.command('controls', (ctx) => {
++    const session = selected(ctx);
++    if (!session) {
++      return ctx.reply('❌ No active terminal session. Use /start to begin.');
++    }
++    const button = (text, action) => ({
++      text,
++      callback_data: `terminal:${session.controlKey}:${action}`,
++    });
++    return ctx.reply('Terminal controls', {
++      reply_markup: {
++        inline_keyboard: [
++          [
++            button('Ctrl+C', 'interrupt'),
++            button('Ctrl+D', 'eof'),
++            button('Ctrl+Z', 'suspend'),
++          ],
++          [
++            button(capture ? 'Screenshot' : 'Refresh', 'refresh'),
++            button('Stop', 'stop'),
++          ],
++        ],
++      },
++    });
++  });
++  bot.callbackQuery(/^terminal:/, async (ctx) => {
++    const session = selected(ctx);
++    const match = /^terminal:(\d+):(interrupt|eof|suspend|refresh|stop)$/.exec(
++      ctx.callbackQuery.data
++    );
++    if (!session || !match || match[1] !== session.controlKey) {
++      return ctx.answerCallbackQuery({
++        text: 'Terminal controls have expired. Use /controls.',
++        show_alert: true,
++      });
++    }
++    await ctx.answerCallbackQuery();
++    if (selected(ctx) !== session) {
++      return;
++    }
++    const action = match[2];
++    const bytes = { interrupt: '\x03', eof: '\x04', suspend: '\x1a' };
++    if (Object.hasOwn(bytes, action)) {
++      session.terminal.write(bytes[action]);
++    } else if (action === 'refresh') {
++      if (capture) {
++        await screenshot(ctx, session);
++      } else {
++        await session.updateTerminalMessage();
++      }
++    } else {
++      session.cleanup();
++      session.terminal.kill();
++      userSessions.delete(ctx.from.id);
++      await session.screenshotTask?.catch(() => {});
++      try {
++        await ctx.editMessageReplyMarkup({
++          reply_markup: { inline_keyboard: [] },
++        });
++      } catch (error) {
++        warn(error);
++      }
++    }
++  });
++  return { screenshot, drain: () => Promise.allSettled(pending) };
++})({ bot, userSessions, logger, capture: (ctx, session, signal) => (function captureTerminalPng(
++  ctx,
++  session,
++  signal,
++  { createCanvas, formatTerminalOutput, InputFile, fontSize, lineHeight }
++) {
++  signal.throwIfAborted();
++  const { cols, rows } = session;
++  if (
++    !Number.isInteger(cols) ||
++    !Number.isInteger(rows) ||
++    cols < 1 ||
++    rows < 1 ||
++    cols > 80 ||
++    rows > 80
++  ) {
++    throw new RangeError(
++      'Terminal screenshot dimensions exceed the bounded presets'
++    );
++  }
++  const width = Math.floor(cols * fontSize * 0.6);
++  const height = Math.floor(rows * lineHeight);
++  const canvas = createCanvas(width, height);
++  const context = canvas.getContext('2d');
++  context.fillStyle = '#000000';
++  context.fillRect(0, 0, width, height);
++  context.fillStyle = '#FFFFFF';
++  context.font = `${fontSize}px monospace`;
++  const lines = formatTerminalOutput(session.output, cols, rows).split('\n');
++  for (let index = 0; index < Math.min(lines.length, rows); index++) {
++    context.fillText(lines[index].slice(0, cols), 0, (index + 1) * lineHeight);
++  }
++  const png = canvas.toBuffer('image/png');
++  if (png.byteLength > 4 * 1024 * 1024) {
++    throw new RangeError('Terminal screenshot exceeds the upload budget');
++  }
++  return ctx.replyWithPhoto(
++    new InputFile(png, 'terminal.png'),
++    {
++      caption: 'Terminal screenshot',
++    },
++    signal
++  );
++})(ctx, session, signal, { createCanvas, formatTerminalOutput, InputFile, fontSize: FONT_SIZE, lineHeight: LINE_HEIGHT }) });
++
+ // Start command handler
+ bot.command("start", async (ctx) => {
+   const userId = ctx.from.id;
+@@ -233,6 +385,7 @@ bot.command("start", async (ctx) => {
    try {
      if (userSessions.has(userId)) {
        logger.info({ userId }, 'Killing existing terminal session');
@@ -385,7 +690,7 @@ index 9ad84e0..e59068e 100644
        userSessions.get(userId).terminal.kill();
        userSessions.delete(userId);
      }
-@@ -248,16 +252,19 @@ bot.command("start", async (ctx) => {
+@@ -248,16 +401,19 @@ bot.command("start", async (ctx) => {
      let output = '';
      let messageId = null;
      let updateTimeout = null;
@@ -406,7 +711,7 @@ index 9ad84e0..e59068e 100644
        
        if (updateTimeout) {
          clearTimeout(updateTimeout);
-@@ -271,6 +278,8 @@ bot.command("start", async (ctx) => {
+@@ -271,6 +427,8 @@ bot.command("start", async (ctx) => {
      });
      
      terminal.onExit((exitCode, signal) => {
@@ -415,15 +720,25 @@ index 9ad84e0..e59068e 100644
        logger.info({ userId, exitCode, signal }, 'Terminal session ended');
        if (updateTimeout) {
          clearTimeout(updateTimeout);
-@@ -280,6 +289,7 @@ bot.command("start", async (ctx) => {
+@@ -280,6 +438,12 @@ bot.command("start", async (ctx) => {
      });
      
      async function updateTerminalMessage() {
++      const session = userSessions.get(userId);
++      if (session?.terminal === terminal && session.pendingScreenshot) {
++        session.pendingScreenshot = false;
++        await terminalControls.screenshot(ctx, session);
++      }
 +      if (userSessions.get(userId)?.terminal !== terminal) { return; }
        try {
          const formattedOutput = formatTerminalOutput(output, cols, rows);
          const messageText = `🚀 **Terminal ${name} (${cols}x${rows})** - Ready!
-@@ -365,6 +375,14 @@ ${formattedOutput}
+@@ -362,9 +526,20 @@ ${formattedOutput}
+     
+     userSessions.set(userId, {
+       terminal,
++      chatId: ctx.chat.id,
++      controlKey: String(ctx.update.update_id),
        output,
        messageId,
        updateTerminalMessage,
@@ -431,6 +746,7 @@ index 9ad84e0..e59068e 100644
 +        clearTimeout(updateTimeout);
 +        clearTimeout(initialUpdateTimeout);
 +        this.cancelAnimation?.();
++        this.screenshotController?.abort();
 +        if (typeof unsubscribeFromChanges === 'function') {
 +          unsubscribeFromChanges();
 +        }
@@ -438,7 +754,7 @@ index 9ad84e0..e59068e 100644
        cols,
        rows
      });
-@@ -391,7 +409,7 @@ ${initialOutput}
+@@ -391,7 +566,7 @@ ${initialOutput}
      
      logger.debug({ userId, messageId }, 'Initial terminal message sent');
      
@@ -447,7 +763,7 @@ index 9ad84e0..e59068e 100644
      
    } catch (error) {
      logger.error({ userId, error: error.message, stack: error.stack }, 'Failed to start terminal session');
-@@ -400,6 +418,88 @@ ${initialOutput}
+@@ -400,6 +575,90 @@ ${initialOutput}
    }
  });
  
@@ -462,6 +778,7 @@ index 9ad84e0..e59068e 100644
 +    try {
 +      session.cleanup();
 +      session.terminal.kill();
++      await session.screenshotTask;
 +      userSessions.delete(userId);
 +      logger.info({ userId }, 'Terminal session stopped successfully');
 +      await ctx.reply("🛑 Terminal session stopped.");
@@ -507,6 +824,7 @@ index 9ad84e0..e59068e 100644
 +  const helpMessage = `🎬 **Telegram Visual Terminal Bot Help**
 +
 +**Commands:**
++• /controls - Open terminal keyboard controls
 +• \`/start\` - Start terminal session
 +• \`/stop\` - Stop current terminal session
 +• \`/restart\` - Restart terminal session
@@ -536,7 +854,7 @@ index 9ad84e0..e59068e 100644
  // Handle all text messages as terminal commands
  bot.on("message:text", async (ctx) => {
    const userId = ctx.from.id;
-@@ -463,7 +563,18 @@ bot.on("message:text", async (ctx) => {
+@@ -463,7 +722,18 @@ bot.on("message:text", async (ctx) => {
        captureFrames();
  
        // Wait for animation duration and generate GIF
@@ -556,7 +874,15 @@ index 9ad84e0..e59068e 100644
        clearTimeout(frameTimeout);
  
        const animationStream = await generateTerminalAnimation(frames, session.cols, session.rows);
-@@ -497,85 +608,6 @@ async function streamToBuffer(stream) {
+@@ -479,6 +749,7 @@ bot.on("message:text", async (ctx) => {
+       await ctx.reply("ℹ️ To stop the command, send `^C` (Ctrl+C).", { parse_mode: 'Markdown' });
+     } else {
+       logger.info({ userId, command }, 'Executing regular terminal command');
++      session.pendingScreenshot = true;
+       session.terminal.write(command + '\r');
+     }
+   } catch (error) {
+@@ -497,85 +768,6 @@ async function streamToBuffer(stream) {
    return Buffer.concat(chunks);
  }
  
@@ -642,26 +968,12 @@ index 9ad84e0..e59068e 100644
  
  // Error handling
  bot.catch((err) => {
-@@ -584,37 +616,37 @@ bot.catch((err) => {
+@@ -584,37 +776,40 @@ bot.catch((err) => {
  });
  
  // Graceful shutdown
 -process.once("SIGINT", () => {
 -  logger.info('Received SIGINT, shutting down gracefully...');
--  for (const [userId, session] of userSessions) {
--    logger.debug({ userId }, 'Killing terminal session during shutdown');
--    try {
--      session.terminal.kill();
--    } catch (error) {
--      logger.warn({ userId, error: error.message }, 'Error killing terminal session during shutdown');
--    }
--  }
--  logger.info('All terminal sessions closed, exiting...');
--  process.exit(0);
--});
--
--process.once("SIGTERM", () => {
--  logger.info('Received SIGTERM, shutting down gracefully...');
 -  for (const [userId, session] of userSessions) {
 -    logger.debug({ userId }, 'Killing terminal session during shutdown');
 -    try {
@@ -684,7 +996,9 @@ index 9ad84e0..e59068e 100644
 -  logger.info('All terminal sessions closed, exiting...');
 -  process.exit(0);
 -});
++    const controlsDrained = terminalControls.drain();
 +    userSessions.clear();
++    await controlsDrained;
 +    await polling;
 +    await bot.queue;
 +    logger.info('All terminal sessions and polling closed');
@@ -697,6 +1011,20 @@ index 9ad84e0..e59068e 100644
 +  })();
 +  return shutdownTask;
 +}
+ 
+-process.once("SIGTERM", () => {
+-  logger.info('Received SIGTERM, shutting down gracefully...');
+-  for (const [userId, session] of userSessions) {
+-    logger.debug({ userId }, 'Killing terminal session during shutdown');
+-    try {
+-      session.terminal.kill();
+-    } catch (error) {
+-      logger.warn({ userId, error: error.message }, 'Error killing terminal session during shutdown');
+-    }
+-  }
+-  logger.info('All terminal sessions closed, exiting...');
+-  process.exit(0);
+-});
 +process.once("SIGINT", shutdownTerminal);
 +process.once("SIGTERM", shutdownTerminal);
  

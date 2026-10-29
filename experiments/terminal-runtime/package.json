@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test terminal-runtime.integration.js startup.integration.js fatal-exit.integration.js upstream-suites.integration.js"
+    "test": "node --test terminal-runtime.integration.js screenshot.integration.js startup.integration.js fatal-exit.integration.js upstream-suites.integration.js"
   },
   "dependencies": {
     "canvas": "3.1.2",

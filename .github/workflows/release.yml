@@ -344,12 +344,12 @@ jobs:
         run: npm ci
       - name: Install isolated native rendering and PTY fixtures
         run: npm ci --prefix experiments/terminal-runtime
-      - name: Verify actual PTY, canvas and independently decoded GIF frames
+      - name: Verify actual PTY, static PNG and independently decoded GIF frames
         run: npm test --prefix experiments/terminal-runtime
       - name: Verify blocked file-open cancellation and late descriptor cleanup
         run: node --max-old-space-size=64 --stack-size=512 experiments/input-file-blocked-path.mjs
-      - name: Verify actual Telegraf multipart encoding on Node 20
-        run: node --test experiments/vendor-bot-wire.integration.js
+      - name: Verify vendor and terminal multipart requests on Node 20
+        run: node --test experiments/vendor-bot-wire.integration.js experiments/terminal-runtime/terminal-wire.integration.js
 
   # Release - only runs on main after tests pass (for push events)
   release:

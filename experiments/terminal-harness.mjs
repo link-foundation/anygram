@@ -1,5 +1,5 @@
 import { setImmediate as turn } from 'node:timers/promises';
-import { Bot } from '../src/index.js';
+import { Bot, InputFile } from '../src/index.js';
 import {
   loadTerminalSource,
   loadVirtualTerminal,
@@ -116,6 +116,9 @@ function rendering(frames) {
     GIFEncoder,
     createCanvas() {
       return {
+        toBuffer() {
+          return Buffer.from('PNG fixture');
+        },
         getContext() {
           return {
             lines: [],
@@ -228,6 +231,7 @@ export function terminalHarness(
     mode,
     {
       Bot: FixtureBot,
+      InputFile,
       pty,
       logger,
       VirtualTerminal: loadVirtualTerminal(),
@@ -259,7 +263,6 @@ export function terminalHarness(
     },
     { migrated, startup, initialization }
   );
-  let updateId = 0;
   return {
     ...scenario,
     calls,
@@ -275,9 +278,33 @@ export function terminalHarness(
       await signals.get(name)();
       await turn();
     },
+    ...terminalUpdates(scenario.bot),
+  };
+}
+
+function terminalUpdates(bot) {
+  let updateId = 0;
+  return {
+    callback(data, { from = { id: 8, username: 'owner' }, chatId = 7 } = {}) {
+      const id = ++updateId;
+      return bot.handleUpdate({
+        update_id: id,
+        callback_query: {
+          id: String(id),
+          from,
+          data,
+          chat_instance: 'terminal-fixture',
+          message: {
+            message_id: 1,
+            date: 1,
+            chat: { id: chatId, type: 'private' },
+          },
+        },
+      });
+    },
     send(text, from = { id: 8, username: 'owner' }) {
       const id = ++updateId;
-      return scenario.bot.handleUpdate({
+      return bot.handleUpdate({
         update_id: id,
         message: {
           message_id: id,

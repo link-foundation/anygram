@@ -1,3 +1,5 @@
+import { terminalControlSource } from './terminal-controls.js';
+
 function replaceOnce(source, before, after) {
   const index = source.indexOf(before);
   if (index < 0 || source.indexOf(before, index + before.length) >= 0) {
@@ -25,6 +27,7 @@ function retireSessions(source) {
         clearTimeout(updateTimeout);
         clearTimeout(initialUpdateTimeout);
         this.cancelAnimation?.();
+        this.screenshotController?.abort();
         if (typeof unsubscribeFromChanges === 'function') {
           unsubscribeFromChanges();
         }
@@ -116,7 +119,9 @@ function shutdownTerminal() {
         logger.warn({ userId, error: error.message }, 'Terminal cleanup failed');
       }
     }
+    const controlsDrained = terminalControls.drain();
     userSessions.clear();
+    await controlsDrained;
     await polling;
     await bot.queue;
     logger.info('All terminal sessions and polling closed');
@@ -129,12 +134,59 @@ function shutdownTerminal() {
   })();
   return shutdownTask;
 }
+
 process.once("SIGINT", shutdownTerminal);
 process.once("SIGTERM", shutdownTerminal);
 
 `;
   source = source.slice(0, begin) + handlers + source.slice(end);
   return replaceOnce(source, 'bot.start({', 'const polling = bot.start({');
+}
+
+function interactiveControls(source, visual) {
+  source = replaceOnce(
+    source,
+    '// Start command handler',
+    `${terminalControlSource(visual)}\n// Start command handler`
+  );
+  source = replaceOnce(
+    source,
+    '      terminal,',
+    '      terminal,\n      chatId: ctx.chat.id,\n      controlKey: String(ctx.update.update_id),'
+  );
+  source = replaceOnce(
+    source,
+    'if (!isAuthorized(ctx.from)) {',
+    'if (!ctx.from || !isAuthorized(ctx.from)) {\n    if (ctx.callbackQuery) { return ctx.answerCallbackQuery({ text: "You are not authorized to use this bot.", show_alert: true }); }'
+  );
+  source = replaceOnce(
+    source,
+    '**Commands:**',
+    '**Commands:**\n• /controls - Open terminal keyboard controls'
+  );
+  source = replaceOnce(
+    source,
+    'session.terminal.kill();\n      userSessions.delete(userId);',
+    'session.terminal.kill();\n      await session.screenshotTask;\n      userSessions.delete(userId);'
+  );
+  if (visual) {
+    source = replaceOnce(
+      source,
+      'async function updateTerminalMessage() {',
+      `async function updateTerminalMessage() {
+      const session = userSessions.get(userId);
+      if (session?.terminal === terminal && session.pendingScreenshot) {
+        session.pendingScreenshot = false;
+        await terminalControls.screenshot(ctx, session);
+      }`
+    );
+    source = replaceOnce(
+      source,
+      "logger.info({ userId, command }, 'Executing regular terminal command');",
+      "logger.info({ userId, command }, 'Executing regular terminal command');\n      session.pendingScreenshot = true;"
+    );
+  }
+  return source;
 }
 
 /** Explicit patches for the pinned public-domain text/visual terminal sources. */
@@ -145,7 +197,7 @@ export function migrateTerminalSource(source) {
   source = replaceOnce(
     source,
     'import { Bot, InlineKeyboard } from "grammy";',
-    'import { Bot } from "anygram";'
+    'import { Bot, InputFile } from "anygram";'
   );
   const begin = source.indexOf(
     '// Handle all text messages as terminal commands'
@@ -176,5 +228,11 @@ export function migrateTerminalSource(source) {
       userSessions.get(userId).output = output;`
     );
   }
-  return gracefulShutdown(source);
+  return gracefulShutdown(
+    interactiveControls(
+      source,
+      source.includes('output += data;') ||
+        source.includes('userSessions.get(userId).output = output;')
+    )
+  );
 }

@@ -1608,3 +1608,8 @@ regressions and brings local verification to 514 passing tests per runtime.
 message subtype names, twelve chat/update aliases and 29 content/edit result
 contracts. Portable examples and an exhaustive message field-presence oracle
 compile against actual pinned SDKs; wider compatibility remains unfinished.
+
+[Terminal controls and PNG execution](terminal-controls.md) adds user/chat/session
+scoped keyboards to both pinned applications and actual static PNG uploads to
+the visual application. Portable comparisons, native encoding/decoding and all
+four selected HTTP transports provide local evidence; wider criteria remain open.

@@ -1067,5 +1067,24 @@ Message subtype and result refinement work plan:
       27 diagnostics; current and actual-SDK examples and the complete 81-name
       presence oracle compile. All 2,007 core tests pass per runtime; the static
       gate scans 154 production sources with zero clones, packaging 197 entries.
-- [ ] Commit/push and inspect exact-head CI.
+- [x] Commit/push and inspect exact-head CI. Follow-up head
+      079c19ff9709e74322300debcb5b6ef0569b13c2 passed run 40926060664,
+      created 2026-10-29T17:56:21Z. The preceding run exposed omitted source
+      examples; both are committed and all applicable jobs now pass.
 - [ ] Continue every wider unfinished acceptance criterion in the same draft PR.
+
+Terminal keyboard and static PNG work plan:
+
+- [x] Reproduce absent keyboard and regular-command PNG behavior in pinned sources.
+- [x] Add scoped controls, stale/foreign callback guards and bounded static rendering
+      through the applicable migration, preserving existing handlers and cleanup.
+- [x] Compare actual grammY command effects, decode actual PNG bytes and save a
+      reviewable rendering; verify upload failures and cancellation cleanup.
+- [x] Run local static/runtime/native checks and review the complete patch.
+      All 2,022 core tests pass per runtime; the final cancellation/coalescing
+      case also passes in the focused Deno suite. Strict checks scan 154 sources
+      with zero clones; packaging permits 197 entries. The isolated native suite
+      passes 27 checks and six Node 20 wire cases cover actual selected clients.
+      Main remains an ancestor and all four feedback streams remain empty.
+- [ ] Commit/push, update the PR and verify exact-head CI by SHA and timestamp.
+- [ ] Continue the remaining complete application and protocol criteria.

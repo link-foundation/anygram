@@ -200,3 +200,6 @@ changing response models; compare portable fixtures against actual pinned SDKs.
 
 Retain public Bot API message subtype names and method-specific content/edit
 results through raw methods, positional APIs and scoped replies.
+
+Add scoped terminal keyboard controls and bounded static PNG rendering through
+the complete downstream migration, with capture cancellation and upload recovery.
