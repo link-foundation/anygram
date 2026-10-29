@@ -158,6 +158,12 @@ on each runtime, with strict checks and a zero-clone scan of 77 sources. The
 package contains 120 permitted entries. Commit/push and verify fresh CI. Continue remaining
 return/model and application contracts with failing-before tests.
 
+The [facade-result checkpoint](gram-results.md) adds nine return-view regressions
+and seven complete-value resource regressions. All 565 tests pass per runtime,
+with strict checks, 77 scanned production sources and 120 package entries.
+Commit/push and verify fresh CI. Next investigate nested bot update dispatch used
+by terminal restart and execute the downstream command/lifecycle scenarios.
+
 Keep protocol completion (secret chats/call media/transports), complete backend
 return/event/style compatibility and actual downstream scenarios open in the
 ledger. Continue with transport resource/cancellation gaps and the shared bot

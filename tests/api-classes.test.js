@@ -203,7 +203,7 @@ it('provides the native namespace to original follow callbacks over encrypted TC
       const result = await view.invoke(
         new namespace.users.GetUsers({ id: [new namespace.InputUserSelf()] })
       );
-      assert.equal(result[0].first_name, 'Ada');
+      assert.equal(result[0].firstName, 'Ada');
     });
     assert.equal(peer.client.transport.closed, true);
   } finally {

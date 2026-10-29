@@ -1,5 +1,5 @@
 import { TelegramError } from './errors.js';
-import { objectRequest, requestOf } from './requests.js';
+import { canonicalValue, objectRequest, requestOf } from './requests.js';
 import { MediaOperations } from './media.js';
 import { randomId } from './random.js';
 import { mtprotoTextParams } from './formatting.js';
@@ -8,24 +8,7 @@ import { parseTelegramLink } from './chat-links.js';
 import { notificationOptions, notificationPeer } from './notifications.js';
 // Normalize raw client objects without changing exact IDs or byte buffers.
 export function normalize(value) {
-  if (Array.isArray(value)) {
-    return value.map(normalize);
-  }
-  if (!value || typeof value !== 'object' || value instanceof Uint8Array) {
-    return value;
-  }
-  if (value.__isLong__ || typeof value.toJSNumber === 'function') {
-    return BigInt(value.toString());
-  }
-  if (value._ || value.className) {
-    return objectRequest(requestOf(value));
-  }
-  const { _: tag, ...fields } = objectRequest({
-    method: 'value',
-    params: value,
-  });
-  void tag;
-  return fields;
+  return canonicalValue(value);
 }
 
 export async function* iterateHistory(

@@ -31,6 +31,11 @@ traversal. Seventeen regressions include actual vendor argument-byte comparisons
 and native encrypted TCP. Full vendor custom models and return/event parity
 remain open.
 
+The [facade-result checkpoint](gram-results.md) routes invocation/send results
+through the shared camelCase view and applies existing normalization guards to
+root response arrays. Sixteen regressions cover this data-view contract and
+finite failing-before resource probes. Vendor custom models remain open.
+
 ## Evidence and research method
 
 `data/issue.json`, `issue-comments.json`, `sub-issues.json`, and the three PR

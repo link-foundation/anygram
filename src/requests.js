@@ -152,6 +152,14 @@ export function gramRequest(Api, request, limits) {
 }
 
 export function objectRequest(request, limits) {
+  return {
+    _: request.method,
+    ...canonicalValue(request.params, limits, request.method),
+  };
+}
+
+/** Canonicalize complete values so root vectors share the same traversal limits. */
+export function canonicalValue(value, limits, name) {
   const convert = requestMapper((value, next, name) => {
     if (!value || typeof value !== 'object' || value instanceof Uint8Array) {
       return value;
@@ -174,7 +182,7 @@ export function objectRequest(request, limits) {
     }
     return result;
   }, limits);
-  return { _: request.method, ...convert(request.params, 0, request.method) };
+  return convert(value, 0, name);
 }
 
 function canonicalField(type, value) {

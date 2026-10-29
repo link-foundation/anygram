@@ -65,9 +65,9 @@ export function createGramStyle(client) {
     client.invoke(request.method, request.params, options)
   );
   const style = {
-    invoke: client.invoke.bind(client),
-    sendMessage: (peer, options) =>
-      client.sendMessage(peer, options.message, options),
+    invoke: async (...args) => gramView(await client.invoke(...args)),
+    sendMessage: async (peer, options) =>
+      gramView(await client.sendMessage(peer, options.message, options)),
     async getMe(options) {
       return gramView(await operations.getMe(options));
     },

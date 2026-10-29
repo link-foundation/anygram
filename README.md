@@ -622,13 +622,16 @@ differ; full cross-library return-model compatibility is not claimed.
 
 `client.gramjs` and `client.teleproto` share account migration helpers:
 `getMe`, `getEntity`, `getInputEntity`, `getMessages`, `iterMessages`,
-`getDialogs` and `iterDialogs`. Their detached TL data uses camelCase fields,
+`getDialogs` and `iterDialogs`. `invoke` and `sendMessage` use the same detached
+result conversion. Their TL data uses camelCase fields,
 `className` tags and exact native bigint IDs. Dialogs include `entity`,
 `inputEntity`, peer-qualified `message`, marked `id`, names, folder/unread fields
 and user/group/channel flags. Dialog collection uses bounded shared pagination;
 request options and cancellation reach the selected backend. These are plain
 data views; vendor custom model methods, drafts, array totals, legacy big-integer
 methods and `instanceof Api.*` behavior require the original `backend()` API.
+Direct `client.invoke` keeps raw backend results. Native send results can still
+be Updates containers; complete vendor message-result correlation remains open.
 
 The [follow migration bridge](examples/follow-client.js) adapts a configured
 account to follow's application helpers, preserving owned connection cleanup,
