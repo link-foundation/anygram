@@ -105,3 +105,8 @@ fields and explicit message deletion across bot framework views.
 Route event listener failures through the shared update recovery boundary and
 preserve Telegraf's original-error/context callback contract. Await recovery
 before acknowledging updates, retaining failures and queue ownership.
+
+Map all 198 public helpers from the pinned grammY API through one shared
+positional translator, preserving raw-object compatibility, aliases, inline
+routes, rich-message branches, poll normalization and request controls. Check
+regenerated method facts and declarations against actual SDK comparisons.

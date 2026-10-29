@@ -39,7 +39,7 @@
     "schema:update": "node scripts/update-schema.mjs",
     "schema:update:secret": "node scripts/update-secret-schema.mjs",
     "schema:types": "node scripts/update-api-types.mjs",
-    "typecheck": "tsc --project tsconfig.json && node scripts/update-api-types.mjs --check"
+    "typecheck": "tsc --project tsconfig.json && node scripts/update-api-types.mjs --check && node experiments/generate-bot-methods.mjs --check"
   },
   "keywords": [
     "telegram",

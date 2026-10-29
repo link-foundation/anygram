@@ -706,5 +706,20 @@ Original terminal suite execution work plan:
       archived sources immutable. All original assertions pass without emulator
       changes; distinguish seven diagnostics from six assertion-driven suites.
 - [x] Pass strict static gates, all 26 native checks and thirteen Node 20 scripts.
-- [ ] Verify strict gates and native integration, commit and inspect fresh CI.
+- [x] Verify strict gates and native integration, commit and inspect fresh CI.
+      Head 6f69ce3 passed every applicable job in run 40866789779, created
+      2026-10-29T11:37:15Z and completed 11:40:16Z.
 - [ ] Continue keyboard/photo, platform/runtime and controlled Telegram criteria.
+
+Complete pinned grammY positional API work plan:
+
+- [x] Inventory every public positional signature and method/field mapping from
+      the actual pinned SDK; preserve metadata facts without copying SDK code.
+- [x] Compare every supported mapping against actual public SDK calls and first
+      reproduce positional fallthrough failures, including inline/alias methods.
+- [x] Route descriptors through shared request control and backend operations,
+      retaining raw object access, method aliases and conditional rich messages.
+- [x] Compile checked declarations/examples and verify each selected backend,
+      cancellation, upload controls, runtime suites and strict/package gates.
+- [ ] Review the atomic diff, commit/push, verify fresh CI and continue all other
+      open requirements without presenting this comparison set as full parity.

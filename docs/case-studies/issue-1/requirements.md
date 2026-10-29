@@ -598,3 +598,15 @@ under finite child/heap/stack/output limits. Six scripts retain 46 assertion-dri
 scenarios; seven are diagnostics. All complete without emulator changes, with an
 explicit bridge for the original debug import error. The isolated native suite
 now has 26 checks. Wider terminal and protocol requirements remain open.
+
+The [pinned grammY positional checkpoint](bot-positional-api.md) advances
+R01/R05/R08/R13/R16/R17/R19. All 198 public helpers have actual pinned SDK
+payload/signal comparisons and a complete prototype inventory. Representative
+native/vendor HTTP cases cover aliases, inline routes, nested payloads, raw
+compatibility, cancellation and blocked album preparation. The initial 202
+comparisons reproduce 169 failures; later regressions preserve raw object and
+separate request-option behavior. All 217 new cases pass on Node 20.18.3;
+all 974 core cases pass per runtime. Strict gates, 26 native integrations,
+two vendor wire cases and the FIFO probe pass, with zero clones across 87
+production sources and 130 permitted package entries. Full ecosystem, context,
+plugin and type-model parity remain open.

@@ -6,6 +6,7 @@ import type {
   EncryptedFileDownloadOptions,
   EncryptedFileInput,
 } from './mtproto.js';
+import type { GrammyPositionalApi } from './bot-positional.js';
 export { Api } from './api.js';
 export type {
   TlObject,
@@ -651,17 +652,17 @@ export type BotMediaMethod = (
   options?: Parameters,
   signal?: AbortSignal
 ) => Promise<BotMessage>;
-export interface ContextApi extends BotContextApi {
+export interface ContextApi extends BotContextApi, GrammyPositionalApi {
   editMessageText(
     chat: unknown,
     id: number,
-    text: string | TextWithEntities,
+    text: string | TextWithEntities | Parameters,
     options?: Parameters,
     signal?: AbortSignal
   ): Promise<unknown>;
   editMessageTextInline(
     inlineId: string,
-    text: string | TextWithEntities,
+    text: string | TextWithEntities | Parameters,
     options?: Parameters,
     signal?: AbortSignal
   ): Promise<unknown>;

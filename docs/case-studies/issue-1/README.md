@@ -19,6 +19,12 @@ send/edit, batch deletion/forwarding and document sends through all four actual
 bot transports. Fifteen regressions cover exact wire parameters, cancellation,
 preparation deadlines, object options and grammY zero-payload signatures.
 
+The [pinned positional API comparison](bot-positional-api.md) inventories all
+198 public grammY helpers and routes their arguments through one selected-backend
+translator. Actual public SDK comparisons and representative HTTP requests cover
+inline methods, aliases, polls, rich messages, raw-object compatibility and
+nested upload deadlines. Full framework and type-model parity remain open.
+
 Historical checkpoints below reported duplication-check exit status. A later
 investigation found the inherited configuration selected the nonexistent source
 format `console`, so those checks scanned no files. They did not establish

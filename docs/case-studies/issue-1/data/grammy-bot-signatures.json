@@ -1,0 +1,2729 @@
+{
+  "library": "grammy",
+  "version": "1.46.0",
+  "sha256": "d9e92656ccb5fb463aead3be745dfee868ae2b5f4176fbdb5ebe9d93f252a51d",
+  "methods": {
+    "getUpdates": {
+      "args": [
+        "other",
+        "signal"
+      ],
+      "method": "getUpdates",
+      "fields": [
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "setWebhook": {
+      "args": [
+        "url",
+        "other",
+        "signal"
+      ],
+      "method": "setWebhook",
+      "fields": [
+        "url:url",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "deleteWebhook": {
+      "args": [
+        "other",
+        "signal"
+      ],
+      "method": "deleteWebhook",
+      "fields": [
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "getWebhookInfo": {
+      "args": [
+        "signal"
+      ],
+      "method": "getWebhookInfo",
+      "fields": null,
+      "shape": "Identifier"
+    },
+    "getMe": {
+      "args": [
+        "signal"
+      ],
+      "method": "getMe",
+      "fields": null,
+      "shape": "Identifier"
+    },
+    "logOut": {
+      "args": [
+        "signal"
+      ],
+      "method": "logOut",
+      "fields": null,
+      "shape": "Identifier"
+    },
+    "close": {
+      "args": [
+        "signal"
+      ],
+      "method": "close",
+      "fields": null,
+      "shape": "Identifier"
+    },
+    "sendMessage": {
+      "args": [
+        "chat_id",
+        "text",
+        "other",
+        "signal"
+      ],
+      "method": "sendMessage",
+      "fields": [
+        "chat_id:chat_id",
+        "text:text",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "sendRichMessage": {
+      "args": [
+        "chat_id",
+        "rich_message",
+        "other",
+        "signal"
+      ],
+      "method": "sendRichMessage",
+      "fields": [
+        "chat_id:chat_id",
+        "rich_message:rich_message",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "forwardMessage": {
+      "args": [
+        "chat_id",
+        "from_chat_id",
+        "message_id",
+        "other",
+        "signal"
+      ],
+      "method": "forwardMessage",
+      "fields": [
+        "chat_id:chat_id",
+        "from_chat_id:from_chat_id",
+        "message_id:message_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "forwardMessages": {
+      "args": [
+        "chat_id",
+        "from_chat_id",
+        "message_ids",
+        "other",
+        "signal"
+      ],
+      "method": "forwardMessages",
+      "fields": [
+        "chat_id:chat_id",
+        "from_chat_id:from_chat_id",
+        "message_ids:message_ids",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "copyMessage": {
+      "args": [
+        "chat_id",
+        "from_chat_id",
+        "message_id",
+        "other",
+        "signal"
+      ],
+      "method": "copyMessage",
+      "fields": [
+        "chat_id:chat_id",
+        "from_chat_id:from_chat_id",
+        "message_id:message_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "copyMessages": {
+      "args": [
+        "chat_id",
+        "from_chat_id",
+        "message_ids",
+        "other",
+        "signal"
+      ],
+      "method": "copyMessages",
+      "fields": [
+        "chat_id:chat_id",
+        "from_chat_id:from_chat_id",
+        "message_ids:message_ids",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "sendPhoto": {
+      "args": [
+        "chat_id",
+        "photo",
+        "other",
+        "signal"
+      ],
+      "method": "sendPhoto",
+      "fields": [
+        "chat_id:chat_id",
+        "photo:photo",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "sendLivePhoto": {
+      "args": [
+        "chat_id",
+        "live_photo",
+        "photo",
+        "other",
+        "signal"
+      ],
+      "method": "sendLivePhoto",
+      "fields": [
+        "chat_id:chat_id",
+        "live_photo:live_photo",
+        "photo:photo",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "sendAudio": {
+      "args": [
+        "chat_id",
+        "audio",
+        "other",
+        "signal"
+      ],
+      "method": "sendAudio",
+      "fields": [
+        "chat_id:chat_id",
+        "audio:audio",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "sendDocument": {
+      "args": [
+        "chat_id",
+        "document",
+        "other",
+        "signal"
+      ],
+      "method": "sendDocument",
+      "fields": [
+        "chat_id:chat_id",
+        "document:document",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "sendVideo": {
+      "args": [
+        "chat_id",
+        "video",
+        "other",
+        "signal"
+      ],
+      "method": "sendVideo",
+      "fields": [
+        "chat_id:chat_id",
+        "video:video",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "sendAnimation": {
+      "args": [
+        "chat_id",
+        "animation",
+        "other",
+        "signal"
+      ],
+      "method": "sendAnimation",
+      "fields": [
+        "chat_id:chat_id",
+        "animation:animation",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "sendVoice": {
+      "args": [
+        "chat_id",
+        "voice",
+        "other",
+        "signal"
+      ],
+      "method": "sendVoice",
+      "fields": [
+        "chat_id:chat_id",
+        "voice:voice",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "sendVideoNote": {
+      "args": [
+        "chat_id",
+        "video_note",
+        "other",
+        "signal"
+      ],
+      "method": "sendVideoNote",
+      "fields": [
+        "chat_id:chat_id",
+        "video_note:video_note",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "sendPaidMedia": {
+      "args": [
+        "chat_id",
+        "star_count",
+        "media",
+        "other",
+        "signal"
+      ],
+      "method": "sendPaidMedia",
+      "fields": [
+        "chat_id:chat_id",
+        "star_count:star_count",
+        "media:media",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "sendMediaGroup": {
+      "args": [
+        "chat_id",
+        "media",
+        "other",
+        "signal"
+      ],
+      "method": "sendMediaGroup",
+      "fields": [
+        "chat_id:chat_id",
+        "media:media",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "sendLocation": {
+      "args": [
+        "chat_id",
+        "latitude",
+        "longitude",
+        "other",
+        "signal"
+      ],
+      "method": "sendLocation",
+      "fields": [
+        "chat_id:chat_id",
+        "latitude:latitude",
+        "longitude:longitude",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "editMessageLiveLocation": {
+      "args": [
+        "chat_id",
+        "message_id",
+        "latitude",
+        "longitude",
+        "other",
+        "signal"
+      ],
+      "method": "editMessageLiveLocation",
+      "fields": [
+        "chat_id:chat_id",
+        "message_id:message_id",
+        "latitude:latitude",
+        "longitude:longitude",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "editMessageLiveLocationInline": {
+      "args": [
+        "inline_message_id",
+        "latitude",
+        "longitude",
+        "other",
+        "signal"
+      ],
+      "method": "editMessageLiveLocation",
+      "fields": [
+        "inline_message_id:inline_message_id",
+        "latitude:latitude",
+        "longitude:longitude",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "stopMessageLiveLocation": {
+      "args": [
+        "chat_id",
+        "message_id",
+        "other",
+        "signal"
+      ],
+      "method": "stopMessageLiveLocation",
+      "fields": [
+        "chat_id:chat_id",
+        "message_id:message_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "stopMessageLiveLocationInline": {
+      "args": [
+        "inline_message_id",
+        "other",
+        "signal"
+      ],
+      "method": "stopMessageLiveLocation",
+      "fields": [
+        "inline_message_id:inline_message_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "sendVenue": {
+      "args": [
+        "chat_id",
+        "latitude",
+        "longitude",
+        "title",
+        "address",
+        "other",
+        "signal"
+      ],
+      "method": "sendVenue",
+      "fields": [
+        "chat_id:chat_id",
+        "latitude:latitude",
+        "longitude:longitude",
+        "title:title",
+        "address:address",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "sendContact": {
+      "args": [
+        "chat_id",
+        "phone_number",
+        "first_name",
+        "other",
+        "signal"
+      ],
+      "method": "sendContact",
+      "fields": [
+        "chat_id:chat_id",
+        "phone_number:phone_number",
+        "first_name:first_name",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "sendPoll": {
+      "args": [
+        "chat_id",
+        "question",
+        "options",
+        "other",
+        "signal"
+      ],
+      "method": null,
+      "fields": null,
+      "shape": null
+    },
+    "sendChecklist": {
+      "args": [
+        "business_connection_id",
+        "chat_id",
+        "checklist",
+        "other",
+        "signal"
+      ],
+      "method": "sendChecklist",
+      "fields": [
+        "business_connection_id:business_connection_id",
+        "chat_id:chat_id",
+        "checklist:checklist",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "editMessageChecklist": {
+      "args": [
+        "business_connection_id",
+        "chat_id",
+        "message_id",
+        "checklist",
+        "other",
+        "signal"
+      ],
+      "method": "editMessageChecklist",
+      "fields": [
+        "business_connection_id:business_connection_id",
+        "chat_id:chat_id",
+        "message_id:message_id",
+        "checklist:checklist",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "sendDice": {
+      "args": [
+        "chat_id",
+        "emoji",
+        "other",
+        "signal"
+      ],
+      "method": "sendDice",
+      "fields": [
+        "chat_id:chat_id",
+        "emoji:emoji",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "setMessageReaction": {
+      "args": [
+        "chat_id",
+        "message_id",
+        "reaction",
+        "other",
+        "signal"
+      ],
+      "method": "setMessageReaction",
+      "fields": [
+        "chat_id:chat_id",
+        "message_id:message_id",
+        "reaction:reaction",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "sendMessageDraft": {
+      "args": [
+        "chat_id",
+        "draft_id",
+        "text",
+        "other",
+        "signal"
+      ],
+      "method": "sendMessageDraft",
+      "fields": [
+        "chat_id:chat_id",
+        "draft_id:draft_id",
+        "text:text",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "sendRichMessageDraft": {
+      "args": [
+        "chat_id",
+        "draft_id",
+        "rich_message",
+        "other",
+        "signal"
+      ],
+      "method": "sendRichMessageDraft",
+      "fields": [
+        "chat_id:chat_id",
+        "draft_id:draft_id",
+        "rich_message:rich_message",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "sendChatAction": {
+      "args": [
+        "chat_id",
+        "action",
+        "other",
+        "signal"
+      ],
+      "method": "sendChatAction",
+      "fields": [
+        "chat_id:chat_id",
+        "action:action",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "getUserProfilePhotos": {
+      "args": [
+        "user_id",
+        "other",
+        "signal"
+      ],
+      "method": "getUserProfilePhotos",
+      "fields": [
+        "user_id:user_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "getUserProfileAudios": {
+      "args": [
+        "user_id",
+        "other",
+        "signal"
+      ],
+      "method": "getUserProfileAudios",
+      "fields": [
+        "user_id:user_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "setUserEmojiStatus": {
+      "args": [
+        "user_id",
+        "other",
+        "signal"
+      ],
+      "method": "setUserEmojiStatus",
+      "fields": [
+        "user_id:user_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "getUserChatBoosts": {
+      "args": [
+        "chat_id",
+        "user_id",
+        "signal"
+      ],
+      "method": "getUserChatBoosts",
+      "fields": [
+        "chat_id:chat_id",
+        "user_id:user_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "getUserGifts": {
+      "args": [
+        "user_id",
+        "other",
+        "signal"
+      ],
+      "method": "getUserGifts",
+      "fields": [
+        "user_id:user_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "getChatGifts": {
+      "args": [
+        "chat_id",
+        "other",
+        "signal"
+      ],
+      "method": "getChatGifts",
+      "fields": [
+        "chat_id:chat_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "getBusinessConnection": {
+      "args": [
+        "business_connection_id",
+        "signal"
+      ],
+      "method": "getBusinessConnection",
+      "fields": [
+        "business_connection_id:business_connection_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "getManagedBotToken": {
+      "args": [
+        "user_id",
+        "signal"
+      ],
+      "method": "getManagedBotToken",
+      "fields": [
+        "user_id:user_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "replaceManagedBotToken": {
+      "args": [
+        "user_id",
+        "signal"
+      ],
+      "method": "replaceManagedBotToken",
+      "fields": [
+        "user_id:user_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "getManagedBotAccessSettings": {
+      "args": [
+        "user_id",
+        "signal"
+      ],
+      "method": "getManagedBotAccessSettings",
+      "fields": [
+        "user_id:user_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "setManagedBotAccessSettings": {
+      "args": [
+        "user_id",
+        "is_access_restricted",
+        "other",
+        "signal"
+      ],
+      "method": "setManagedBotAccessSettings",
+      "fields": [
+        "user_id:user_id",
+        "is_access_restricted:is_access_restricted",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "getFile": {
+      "args": [
+        "file_id",
+        "signal"
+      ],
+      "method": "getFile",
+      "fields": [
+        "file_id:file_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "kickChatMember": {
+      "args": [
+        "...args"
+      ],
+      "method": null,
+      "fields": null,
+      "shape": "SpreadElement"
+    },
+    "banChatMember": {
+      "args": [
+        "chat_id",
+        "user_id",
+        "other",
+        "signal"
+      ],
+      "method": "banChatMember",
+      "fields": [
+        "chat_id:chat_id",
+        "user_id:user_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "unbanChatMember": {
+      "args": [
+        "chat_id",
+        "user_id",
+        "other",
+        "signal"
+      ],
+      "method": "unbanChatMember",
+      "fields": [
+        "chat_id:chat_id",
+        "user_id:user_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "restrictChatMember": {
+      "args": [
+        "chat_id",
+        "user_id",
+        "permissions",
+        "other",
+        "signal"
+      ],
+      "method": "restrictChatMember",
+      "fields": [
+        "chat_id:chat_id",
+        "user_id:user_id",
+        "permissions:permissions",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "promoteChatMember": {
+      "args": [
+        "chat_id",
+        "user_id",
+        "other",
+        "signal"
+      ],
+      "method": "promoteChatMember",
+      "fields": [
+        "chat_id:chat_id",
+        "user_id:user_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "setChatAdministratorCustomTitle": {
+      "args": [
+        "chat_id",
+        "user_id",
+        "custom_title",
+        "signal"
+      ],
+      "method": "setChatAdministratorCustomTitle",
+      "fields": [
+        "chat_id:chat_id",
+        "user_id:user_id",
+        "custom_title:custom_title"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "setChatMemberTag": {
+      "args": [
+        "chat_id",
+        "user_id",
+        "tag",
+        "signal"
+      ],
+      "method": "setChatMemberTag",
+      "fields": [
+        "chat_id:chat_id",
+        "user_id:user_id",
+        "tag:tag"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "banChatSenderChat": {
+      "args": [
+        "chat_id",
+        "sender_chat_id",
+        "signal"
+      ],
+      "method": "banChatSenderChat",
+      "fields": [
+        "chat_id:chat_id",
+        "sender_chat_id:sender_chat_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "unbanChatSenderChat": {
+      "args": [
+        "chat_id",
+        "sender_chat_id",
+        "signal"
+      ],
+      "method": "unbanChatSenderChat",
+      "fields": [
+        "chat_id:chat_id",
+        "sender_chat_id:sender_chat_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "setChatPermissions": {
+      "args": [
+        "chat_id",
+        "permissions",
+        "other",
+        "signal"
+      ],
+      "method": "setChatPermissions",
+      "fields": [
+        "chat_id:chat_id",
+        "permissions:permissions",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "exportChatInviteLink": {
+      "args": [
+        "chat_id",
+        "signal"
+      ],
+      "method": "exportChatInviteLink",
+      "fields": [
+        "chat_id:chat_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "createChatInviteLink": {
+      "args": [
+        "chat_id",
+        "other",
+        "signal"
+      ],
+      "method": "createChatInviteLink",
+      "fields": [
+        "chat_id:chat_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "editChatInviteLink": {
+      "args": [
+        "chat_id",
+        "invite_link",
+        "other",
+        "signal"
+      ],
+      "method": "editChatInviteLink",
+      "fields": [
+        "chat_id:chat_id",
+        "invite_link:invite_link",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "createChatSubscriptionInviteLink": {
+      "args": [
+        "chat_id",
+        "subscription_period",
+        "subscription_price",
+        "other",
+        "signal"
+      ],
+      "method": "createChatSubscriptionInviteLink",
+      "fields": [
+        "chat_id:chat_id",
+        "subscription_period:subscription_period",
+        "subscription_price:subscription_price",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "editChatSubscriptionInviteLink": {
+      "args": [
+        "chat_id",
+        "invite_link",
+        "other",
+        "signal"
+      ],
+      "method": "editChatSubscriptionInviteLink",
+      "fields": [
+        "chat_id:chat_id",
+        "invite_link:invite_link",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "revokeChatInviteLink": {
+      "args": [
+        "chat_id",
+        "invite_link",
+        "signal"
+      ],
+      "method": "revokeChatInviteLink",
+      "fields": [
+        "chat_id:chat_id",
+        "invite_link:invite_link"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "approveChatJoinRequest": {
+      "args": [
+        "chat_id",
+        "user_id",
+        "signal"
+      ],
+      "method": "approveChatJoinRequest",
+      "fields": [
+        "chat_id:chat_id",
+        "user_id:user_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "declineChatJoinRequest": {
+      "args": [
+        "chat_id",
+        "user_id",
+        "signal"
+      ],
+      "method": "declineChatJoinRequest",
+      "fields": [
+        "chat_id:chat_id",
+        "user_id:user_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "answerChatJoinRequestQuery": {
+      "args": [
+        "chat_join_request_query_id",
+        "result",
+        "signal"
+      ],
+      "method": "answerChatJoinRequestQuery",
+      "fields": [
+        "chat_join_request_query_id:chat_join_request_query_id",
+        "result:result"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "sendChatJoinRequestWebApp": {
+      "args": [
+        "chat_join_request_query_id",
+        "web_app_url",
+        "signal"
+      ],
+      "method": "sendChatJoinRequestWebApp",
+      "fields": [
+        "chat_join_request_query_id:chat_join_request_query_id",
+        "web_app_url:web_app_url"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "approveSuggestedPost": {
+      "args": [
+        "chat_id",
+        "message_id",
+        "other",
+        "signal"
+      ],
+      "method": "approveSuggestedPost",
+      "fields": [
+        "chat_id:chat_id",
+        "message_id:message_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "declineSuggestedPost": {
+      "args": [
+        "chat_id",
+        "message_id",
+        "other",
+        "signal"
+      ],
+      "method": "declineSuggestedPost",
+      "fields": [
+        "chat_id:chat_id",
+        "message_id:message_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "setChatPhoto": {
+      "args": [
+        "chat_id",
+        "photo",
+        "signal"
+      ],
+      "method": "setChatPhoto",
+      "fields": [
+        "chat_id:chat_id",
+        "photo:photo"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "deleteChatPhoto": {
+      "args": [
+        "chat_id",
+        "signal"
+      ],
+      "method": "deleteChatPhoto",
+      "fields": [
+        "chat_id:chat_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "setChatTitle": {
+      "args": [
+        "chat_id",
+        "title",
+        "signal"
+      ],
+      "method": "setChatTitle",
+      "fields": [
+        "chat_id:chat_id",
+        "title:title"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "setChatDescription": {
+      "args": [
+        "chat_id",
+        "description",
+        "signal"
+      ],
+      "method": "setChatDescription",
+      "fields": [
+        "chat_id:chat_id",
+        "description:description"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "pinChatMessage": {
+      "args": [
+        "chat_id",
+        "message_id",
+        "other",
+        "signal"
+      ],
+      "method": "pinChatMessage",
+      "fields": [
+        "chat_id:chat_id",
+        "message_id:message_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "unpinChatMessage": {
+      "args": [
+        "chat_id",
+        "message_id",
+        "other",
+        "signal"
+      ],
+      "method": "unpinChatMessage",
+      "fields": [
+        "chat_id:chat_id",
+        "message_id:message_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "unpinAllChatMessages": {
+      "args": [
+        "chat_id",
+        "signal"
+      ],
+      "method": "unpinAllChatMessages",
+      "fields": [
+        "chat_id:chat_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "leaveChat": {
+      "args": [
+        "chat_id",
+        "signal"
+      ],
+      "method": "leaveChat",
+      "fields": [
+        "chat_id:chat_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "getChat": {
+      "args": [
+        "chat_id",
+        "signal"
+      ],
+      "method": "getChat",
+      "fields": [
+        "chat_id:chat_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "getChatAdministrators": {
+      "args": [
+        "chat_id",
+        "other",
+        "signal"
+      ],
+      "method": "getChatAdministrators",
+      "fields": [
+        "chat_id:chat_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "getChatMembersCount": {
+      "args": [
+        "...args"
+      ],
+      "method": null,
+      "fields": null,
+      "shape": "SpreadElement"
+    },
+    "getChatMemberCount": {
+      "args": [
+        "chat_id",
+        "signal"
+      ],
+      "method": "getChatMemberCount",
+      "fields": [
+        "chat_id:chat_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "getChatMember": {
+      "args": [
+        "chat_id",
+        "user_id",
+        "signal"
+      ],
+      "method": "getChatMember",
+      "fields": [
+        "chat_id:chat_id",
+        "user_id:user_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "getUserPersonalChatMessages": {
+      "args": [
+        "user_id",
+        "limit",
+        "signal"
+      ],
+      "method": "getUserPersonalChatMessages",
+      "fields": [
+        "user_id:user_id",
+        "limit:limit"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "setChatStickerSet": {
+      "args": [
+        "chat_id",
+        "sticker_set_name",
+        "signal"
+      ],
+      "method": "setChatStickerSet",
+      "fields": [
+        "chat_id:chat_id",
+        "sticker_set_name:sticker_set_name"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "deleteChatStickerSet": {
+      "args": [
+        "chat_id",
+        "signal"
+      ],
+      "method": "deleteChatStickerSet",
+      "fields": [
+        "chat_id:chat_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "getForumTopicIconStickers": {
+      "args": [
+        "signal"
+      ],
+      "method": "getForumTopicIconStickers",
+      "fields": null,
+      "shape": "Identifier"
+    },
+    "createForumTopic": {
+      "args": [
+        "chat_id",
+        "name",
+        "other",
+        "signal"
+      ],
+      "method": "createForumTopic",
+      "fields": [
+        "chat_id:chat_id",
+        "name:name",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "editForumTopic": {
+      "args": [
+        "chat_id",
+        "message_thread_id",
+        "other",
+        "signal"
+      ],
+      "method": "editForumTopic",
+      "fields": [
+        "chat_id:chat_id",
+        "message_thread_id:message_thread_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "closeForumTopic": {
+      "args": [
+        "chat_id",
+        "message_thread_id",
+        "signal"
+      ],
+      "method": "closeForumTopic",
+      "fields": [
+        "chat_id:chat_id",
+        "message_thread_id:message_thread_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "reopenForumTopic": {
+      "args": [
+        "chat_id",
+        "message_thread_id",
+        "signal"
+      ],
+      "method": "reopenForumTopic",
+      "fields": [
+        "chat_id:chat_id",
+        "message_thread_id:message_thread_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "deleteForumTopic": {
+      "args": [
+        "chat_id",
+        "message_thread_id",
+        "signal"
+      ],
+      "method": "deleteForumTopic",
+      "fields": [
+        "chat_id:chat_id",
+        "message_thread_id:message_thread_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "unpinAllForumTopicMessages": {
+      "args": [
+        "chat_id",
+        "message_thread_id",
+        "signal"
+      ],
+      "method": "unpinAllForumTopicMessages",
+      "fields": [
+        "chat_id:chat_id",
+        "message_thread_id:message_thread_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "editGeneralForumTopic": {
+      "args": [
+        "chat_id",
+        "name",
+        "signal"
+      ],
+      "method": "editGeneralForumTopic",
+      "fields": [
+        "chat_id:chat_id",
+        "name:name"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "closeGeneralForumTopic": {
+      "args": [
+        "chat_id",
+        "signal"
+      ],
+      "method": "closeGeneralForumTopic",
+      "fields": [
+        "chat_id:chat_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "reopenGeneralForumTopic": {
+      "args": [
+        "chat_id",
+        "signal"
+      ],
+      "method": "reopenGeneralForumTopic",
+      "fields": [
+        "chat_id:chat_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "hideGeneralForumTopic": {
+      "args": [
+        "chat_id",
+        "signal"
+      ],
+      "method": "hideGeneralForumTopic",
+      "fields": [
+        "chat_id:chat_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "unhideGeneralForumTopic": {
+      "args": [
+        "chat_id",
+        "signal"
+      ],
+      "method": "unhideGeneralForumTopic",
+      "fields": [
+        "chat_id:chat_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "unpinAllGeneralForumTopicMessages": {
+      "args": [
+        "chat_id",
+        "signal"
+      ],
+      "method": "unpinAllGeneralForumTopicMessages",
+      "fields": [
+        "chat_id:chat_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "answerCallbackQuery": {
+      "args": [
+        "callback_query_id",
+        "other",
+        "signal"
+      ],
+      "method": "answerCallbackQuery",
+      "fields": [
+        "callback_query_id:callback_query_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "answerGuestQuery": {
+      "args": [
+        "guest_query_id",
+        "result",
+        "signal"
+      ],
+      "method": "answerGuestQuery",
+      "fields": [
+        "guest_query_id:guest_query_id",
+        "result:result"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "setMyName": {
+      "args": [
+        "name",
+        "other",
+        "signal"
+      ],
+      "method": "setMyName",
+      "fields": [
+        "name:name",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "getMyName": {
+      "args": [
+        "other",
+        "signal"
+      ],
+      "method": "getMyName",
+      "fields": null,
+      "shape": "ConditionalExpression"
+    },
+    "setMyCommands": {
+      "args": [
+        "commands",
+        "other",
+        "signal"
+      ],
+      "method": "setMyCommands",
+      "fields": [
+        "commands:commands",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "deleteMyCommands": {
+      "args": [
+        "other",
+        "signal"
+      ],
+      "method": "deleteMyCommands",
+      "fields": [
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "getMyCommands": {
+      "args": [
+        "other",
+        "signal"
+      ],
+      "method": "getMyCommands",
+      "fields": [
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "setMyDescription": {
+      "args": [
+        "description",
+        "other",
+        "signal"
+      ],
+      "method": "setMyDescription",
+      "fields": [
+        "description:description",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "getMyDescription": {
+      "args": [
+        "other",
+        "signal"
+      ],
+      "method": "getMyDescription",
+      "fields": [
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "setMyShortDescription": {
+      "args": [
+        "short_description",
+        "other",
+        "signal"
+      ],
+      "method": "setMyShortDescription",
+      "fields": [
+        "short_description:short_description",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "getMyShortDescription": {
+      "args": [
+        "other",
+        "signal"
+      ],
+      "method": "getMyShortDescription",
+      "fields": [
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "setMyProfilePhoto": {
+      "args": [
+        "photo",
+        "signal"
+      ],
+      "method": "setMyProfilePhoto",
+      "fields": [
+        "photo:photo"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "removeMyProfilePhoto": {
+      "args": [
+        "signal"
+      ],
+      "method": "removeMyProfilePhoto",
+      "fields": null,
+      "shape": "Identifier"
+    },
+    "setChatMenuButton": {
+      "args": [
+        "other",
+        "signal"
+      ],
+      "method": "setChatMenuButton",
+      "fields": [
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "getChatMenuButton": {
+      "args": [
+        "other",
+        "signal"
+      ],
+      "method": "getChatMenuButton",
+      "fields": [
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "setMyDefaultAdministratorRights": {
+      "args": [
+        "other",
+        "signal"
+      ],
+      "method": "setMyDefaultAdministratorRights",
+      "fields": [
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "getMyDefaultAdministratorRights": {
+      "args": [
+        "other",
+        "signal"
+      ],
+      "method": "getMyDefaultAdministratorRights",
+      "fields": [
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "getMyStarBalance": {
+      "args": [
+        "signal"
+      ],
+      "method": "getMyStarBalance",
+      "fields": null,
+      "shape": "Identifier"
+    },
+    "editMessageText": {
+      "args": [
+        "chat_id",
+        "message_id",
+        "text_or_rich_message",
+        "other",
+        "signal"
+      ],
+      "method": "editMessageText",
+      "fields": null,
+      "shape": "ConditionalExpression"
+    },
+    "editMessageTextInline": {
+      "args": [
+        "inline_message_id",
+        "text_or_rich_message",
+        "other",
+        "signal"
+      ],
+      "method": "editMessageText",
+      "fields": null,
+      "shape": "ConditionalExpression"
+    },
+    "editMessageCaption": {
+      "args": [
+        "chat_id",
+        "message_id",
+        "other",
+        "signal"
+      ],
+      "method": "editMessageCaption",
+      "fields": [
+        "chat_id:chat_id",
+        "message_id:message_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "editMessageCaptionInline": {
+      "args": [
+        "inline_message_id",
+        "other",
+        "signal"
+      ],
+      "method": "editMessageCaption",
+      "fields": [
+        "inline_message_id:inline_message_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "editMessageMedia": {
+      "args": [
+        "chat_id",
+        "message_id",
+        "media",
+        "other",
+        "signal"
+      ],
+      "method": "editMessageMedia",
+      "fields": [
+        "chat_id:chat_id",
+        "message_id:message_id",
+        "media:media",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "editMessageMediaInline": {
+      "args": [
+        "inline_message_id",
+        "media",
+        "other",
+        "signal"
+      ],
+      "method": "editMessageMedia",
+      "fields": [
+        "inline_message_id:inline_message_id",
+        "media:media",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "editMessageReplyMarkup": {
+      "args": [
+        "chat_id",
+        "message_id",
+        "other",
+        "signal"
+      ],
+      "method": "editMessageReplyMarkup",
+      "fields": [
+        "chat_id:chat_id",
+        "message_id:message_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "editMessageReplyMarkupInline": {
+      "args": [
+        "inline_message_id",
+        "other",
+        "signal"
+      ],
+      "method": "editMessageReplyMarkup",
+      "fields": [
+        "inline_message_id:inline_message_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "stopPoll": {
+      "args": [
+        "chat_id",
+        "message_id",
+        "other",
+        "signal"
+      ],
+      "method": "stopPoll",
+      "fields": [
+        "chat_id:chat_id",
+        "message_id:message_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "editEphemeralMessageText": {
+      "args": [
+        "chat_id",
+        "receiver_user_id",
+        "ephemeral_message_id",
+        "text_or_rich_message",
+        "other",
+        "signal"
+      ],
+      "method": "editEphemeralMessageText",
+      "fields": null,
+      "shape": "ConditionalExpression"
+    },
+    "editEphemeralMessageMedia": {
+      "args": [
+        "chat_id",
+        "receiver_user_id",
+        "ephemeral_message_id",
+        "media",
+        "other",
+        "signal"
+      ],
+      "method": "editEphemeralMessageMedia",
+      "fields": [
+        "chat_id:chat_id",
+        "receiver_user_id:receiver_user_id",
+        "ephemeral_message_id:ephemeral_message_id",
+        "media:media",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "editEphemeralMessageCaption": {
+      "args": [
+        "chat_id",
+        "receiver_user_id",
+        "ephemeral_message_id",
+        "caption",
+        "other",
+        "signal"
+      ],
+      "method": "editEphemeralMessageCaption",
+      "fields": [
+        "chat_id:chat_id",
+        "receiver_user_id:receiver_user_id",
+        "ephemeral_message_id:ephemeral_message_id",
+        "caption:caption",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "editEphemeralMessageReplyMarkup": {
+      "args": [
+        "chat_id",
+        "receiver_user_id",
+        "ephemeral_message_id",
+        "other",
+        "signal"
+      ],
+      "method": "editEphemeralMessageReplyMarkup",
+      "fields": [
+        "chat_id:chat_id",
+        "receiver_user_id:receiver_user_id",
+        "ephemeral_message_id:ephemeral_message_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "deleteMessage": {
+      "args": [
+        "chat_id",
+        "message_id",
+        "signal"
+      ],
+      "method": "deleteMessage",
+      "fields": [
+        "chat_id:chat_id",
+        "message_id:message_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "deleteMessages": {
+      "args": [
+        "chat_id",
+        "message_ids",
+        "signal"
+      ],
+      "method": "deleteMessages",
+      "fields": [
+        "chat_id:chat_id",
+        "message_ids:message_ids"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "deleteEphemeralMessage": {
+      "args": [
+        "chat_id",
+        "receiver_user_id",
+        "ephemeral_message_id",
+        "signal"
+      ],
+      "method": "deleteEphemeralMessage",
+      "fields": [
+        "chat_id:chat_id",
+        "receiver_user_id:receiver_user_id",
+        "ephemeral_message_id:ephemeral_message_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "deleteMessageReactionUser": {
+      "args": [
+        "chat_id",
+        "message_id",
+        "user_id",
+        "other",
+        "signal"
+      ],
+      "method": "deleteMessageReaction",
+      "fields": [
+        "chat_id:chat_id",
+        "message_id:message_id",
+        "user_id:user_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "deleteMessageReactionChat": {
+      "args": [
+        "chat_id",
+        "message_id",
+        "actor_chat_id",
+        "other",
+        "signal"
+      ],
+      "method": "deleteMessageReaction",
+      "fields": [
+        "chat_id:chat_id",
+        "message_id:message_id",
+        "actor_chat_id:actor_chat_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "deleteAllMessageReactionsUser": {
+      "args": [
+        "chat_id",
+        "user_id",
+        "other",
+        "signal"
+      ],
+      "method": "deleteAllMessageReactions",
+      "fields": [
+        "chat_id:chat_id",
+        "user_id:user_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "deleteAllMessageReactionsChat": {
+      "args": [
+        "chat_id",
+        "actor_chat_id",
+        "other",
+        "signal"
+      ],
+      "method": "deleteAllMessageReactions",
+      "fields": [
+        "chat_id:chat_id",
+        "actor_chat_id:actor_chat_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "deleteBusinessMessages": {
+      "args": [
+        "business_connection_id",
+        "message_ids",
+        "signal"
+      ],
+      "method": "deleteBusinessMessages",
+      "fields": [
+        "business_connection_id:business_connection_id",
+        "message_ids:message_ids"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "setBusinessAccountName": {
+      "args": [
+        "business_connection_id",
+        "first_name",
+        "other",
+        "signal"
+      ],
+      "method": "setBusinessAccountName",
+      "fields": [
+        "business_connection_id:business_connection_id",
+        "first_name:first_name",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "setBusinessAccountUsername": {
+      "args": [
+        "business_connection_id",
+        "username",
+        "signal"
+      ],
+      "method": "setBusinessAccountUsername",
+      "fields": [
+        "business_connection_id:business_connection_id",
+        "username:username"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "setBusinessAccountBio": {
+      "args": [
+        "business_connection_id",
+        "bio",
+        "signal"
+      ],
+      "method": "setBusinessAccountBio",
+      "fields": [
+        "business_connection_id:business_connection_id",
+        "bio:bio"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "setBusinessAccountProfilePhoto": {
+      "args": [
+        "business_connection_id",
+        "photo",
+        "other",
+        "signal"
+      ],
+      "method": "setBusinessAccountProfilePhoto",
+      "fields": [
+        "business_connection_id:business_connection_id",
+        "photo:photo",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "removeBusinessAccountProfilePhoto": {
+      "args": [
+        "business_connection_id",
+        "other",
+        "signal"
+      ],
+      "method": "removeBusinessAccountProfilePhoto",
+      "fields": [
+        "business_connection_id:business_connection_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "setBusinessAccountGiftSettings": {
+      "args": [
+        "business_connection_id",
+        "show_gift_button",
+        "accepted_gift_types",
+        "signal"
+      ],
+      "method": "setBusinessAccountGiftSettings",
+      "fields": [
+        "business_connection_id:business_connection_id",
+        "show_gift_button:show_gift_button",
+        "accepted_gift_types:accepted_gift_types"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "getBusinessAccountStarBalance": {
+      "args": [
+        "business_connection_id",
+        "signal"
+      ],
+      "method": "getBusinessAccountStarBalance",
+      "fields": [
+        "business_connection_id:business_connection_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "transferBusinessAccountStars": {
+      "args": [
+        "business_connection_id",
+        "star_count",
+        "signal"
+      ],
+      "method": "transferBusinessAccountStars",
+      "fields": [
+        "business_connection_id:business_connection_id",
+        "star_count:star_count"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "getBusinessAccountGifts": {
+      "args": [
+        "business_connection_id",
+        "other",
+        "signal"
+      ],
+      "method": "getBusinessAccountGifts",
+      "fields": [
+        "business_connection_id:business_connection_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "convertGiftToStars": {
+      "args": [
+        "business_connection_id",
+        "owned_gift_id",
+        "signal"
+      ],
+      "method": "convertGiftToStars",
+      "fields": [
+        "business_connection_id:business_connection_id",
+        "owned_gift_id:owned_gift_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "upgradeGift": {
+      "args": [
+        "business_connection_id",
+        "owned_gift_id",
+        "other",
+        "signal"
+      ],
+      "method": "upgradeGift",
+      "fields": [
+        "business_connection_id:business_connection_id",
+        "owned_gift_id:owned_gift_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "transferGift": {
+      "args": [
+        "business_connection_id",
+        "owned_gift_id",
+        "new_owner_chat_id",
+        "star_count",
+        "signal"
+      ],
+      "method": "transferGift",
+      "fields": [
+        "business_connection_id:business_connection_id",
+        "owned_gift_id:owned_gift_id",
+        "new_owner_chat_id:new_owner_chat_id",
+        "star_count:star_count"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "postStory": {
+      "args": [
+        "business_connection_id",
+        "content",
+        "active_period",
+        "other",
+        "signal"
+      ],
+      "method": "postStory",
+      "fields": [
+        "business_connection_id:business_connection_id",
+        "content:content",
+        "active_period:active_period",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "repostStory": {
+      "args": [
+        "business_connection_id",
+        "from_chat_id",
+        "from_story_id",
+        "active_period",
+        "other",
+        "signal"
+      ],
+      "method": "repostStory",
+      "fields": [
+        "business_connection_id:business_connection_id",
+        "from_chat_id:from_chat_id",
+        "from_story_id:from_story_id",
+        "active_period:active_period",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "editStory": {
+      "args": [
+        "business_connection_id",
+        "story_id",
+        "content",
+        "other",
+        "signal"
+      ],
+      "method": "editStory",
+      "fields": [
+        "business_connection_id:business_connection_id",
+        "story_id:story_id",
+        "content:content",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "deleteStory": {
+      "args": [
+        "business_connection_id",
+        "story_id",
+        "signal"
+      ],
+      "method": "deleteStory",
+      "fields": [
+        "business_connection_id:business_connection_id",
+        "story_id:story_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "sendSticker": {
+      "args": [
+        "chat_id",
+        "sticker",
+        "other",
+        "signal"
+      ],
+      "method": "sendSticker",
+      "fields": [
+        "chat_id:chat_id",
+        "sticker:sticker",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "getStickerSet": {
+      "args": [
+        "name",
+        "signal"
+      ],
+      "method": "getStickerSet",
+      "fields": [
+        "name:name"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "getCustomEmojiStickers": {
+      "args": [
+        "custom_emoji_ids",
+        "signal"
+      ],
+      "method": "getCustomEmojiStickers",
+      "fields": [
+        "custom_emoji_ids:custom_emoji_ids"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "uploadStickerFile": {
+      "args": [
+        "user_id",
+        "sticker_format",
+        "sticker",
+        "signal"
+      ],
+      "method": "uploadStickerFile",
+      "fields": [
+        "user_id:user_id",
+        "sticker_format:sticker_format",
+        "sticker:sticker"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "createNewStickerSet": {
+      "args": [
+        "user_id",
+        "name",
+        "title",
+        "stickers",
+        "other",
+        "signal"
+      ],
+      "method": "createNewStickerSet",
+      "fields": [
+        "user_id:user_id",
+        "name:name",
+        "title:title",
+        "stickers:stickers",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "addStickerToSet": {
+      "args": [
+        "user_id",
+        "name",
+        "sticker",
+        "signal"
+      ],
+      "method": "addStickerToSet",
+      "fields": [
+        "user_id:user_id",
+        "name:name",
+        "sticker:sticker"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "setStickerPositionInSet": {
+      "args": [
+        "sticker",
+        "position",
+        "signal"
+      ],
+      "method": "setStickerPositionInSet",
+      "fields": [
+        "sticker:sticker",
+        "position:position"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "deleteStickerFromSet": {
+      "args": [
+        "sticker",
+        "signal"
+      ],
+      "method": "deleteStickerFromSet",
+      "fields": [
+        "sticker:sticker"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "replaceStickerInSet": {
+      "args": [
+        "user_id",
+        "name",
+        "old_sticker",
+        "sticker",
+        "signal"
+      ],
+      "method": "replaceStickerInSet",
+      "fields": [
+        "user_id:user_id",
+        "name:name",
+        "old_sticker:old_sticker",
+        "sticker:sticker"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "setStickerEmojiList": {
+      "args": [
+        "sticker",
+        "emoji_list",
+        "signal"
+      ],
+      "method": "setStickerEmojiList",
+      "fields": [
+        "sticker:sticker",
+        "emoji_list:emoji_list"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "setStickerKeywords": {
+      "args": [
+        "sticker",
+        "keywords",
+        "signal"
+      ],
+      "method": "setStickerKeywords",
+      "fields": [
+        "sticker:sticker",
+        "keywords:keywords"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "setStickerMaskPosition": {
+      "args": [
+        "sticker",
+        "mask_position",
+        "signal"
+      ],
+      "method": "setStickerMaskPosition",
+      "fields": [
+        "sticker:sticker",
+        "mask_position:mask_position"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "setStickerSetTitle": {
+      "args": [
+        "name",
+        "title",
+        "signal"
+      ],
+      "method": "setStickerSetTitle",
+      "fields": [
+        "name:name",
+        "title:title"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "deleteStickerSet": {
+      "args": [
+        "name",
+        "signal"
+      ],
+      "method": "deleteStickerSet",
+      "fields": [
+        "name:name"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "setStickerSetThumbnail": {
+      "args": [
+        "name",
+        "user_id",
+        "thumbnail",
+        "format",
+        "signal"
+      ],
+      "method": "setStickerSetThumbnail",
+      "fields": [
+        "name:name",
+        "user_id:user_id",
+        "thumbnail:thumbnail",
+        "format:format"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "setCustomEmojiStickerSetThumbnail": {
+      "args": [
+        "name",
+        "custom_emoji_id",
+        "signal"
+      ],
+      "method": "setCustomEmojiStickerSetThumbnail",
+      "fields": [
+        "name:name",
+        "custom_emoji_id:custom_emoji_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "getAvailableGifts": {
+      "args": [
+        "signal"
+      ],
+      "method": "getAvailableGifts",
+      "fields": null,
+      "shape": "Identifier"
+    },
+    "sendGift": {
+      "args": [
+        "user_id",
+        "gift_id",
+        "other",
+        "signal"
+      ],
+      "method": "sendGift",
+      "fields": [
+        "user_id:user_id",
+        "gift_id:gift_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "giftPremiumSubscription": {
+      "args": [
+        "user_id",
+        "month_count",
+        "star_count",
+        "other",
+        "signal"
+      ],
+      "method": "giftPremiumSubscription",
+      "fields": [
+        "user_id:user_id",
+        "month_count:month_count",
+        "star_count:star_count",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "sendGiftToChannel": {
+      "args": [
+        "chat_id",
+        "gift_id",
+        "other",
+        "signal"
+      ],
+      "method": "sendGift",
+      "fields": [
+        "chat_id:chat_id",
+        "gift_id:gift_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "answerInlineQuery": {
+      "args": [
+        "inline_query_id",
+        "results",
+        "other",
+        "signal"
+      ],
+      "method": "answerInlineQuery",
+      "fields": [
+        "inline_query_id:inline_query_id",
+        "results:results",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "answerWebAppQuery": {
+      "args": [
+        "web_app_query_id",
+        "result",
+        "signal"
+      ],
+      "method": "answerWebAppQuery",
+      "fields": [
+        "web_app_query_id:web_app_query_id",
+        "result:result"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "savePreparedInlineMessage": {
+      "args": [
+        "user_id",
+        "result",
+        "other",
+        "signal"
+      ],
+      "method": "savePreparedInlineMessage",
+      "fields": [
+        "user_id:user_id",
+        "result:result",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "savePreparedKeyboardButton": {
+      "args": [
+        "user_id",
+        "button",
+        "signal"
+      ],
+      "method": "savePreparedKeyboardButton",
+      "fields": [
+        "user_id:user_id",
+        "button:button"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "sendInvoice": {
+      "args": [
+        "chat_id",
+        "title",
+        "description",
+        "payload",
+        "currency",
+        "prices",
+        "other",
+        "signal"
+      ],
+      "method": "sendInvoice",
+      "fields": [
+        "chat_id:chat_id",
+        "title:title",
+        "description:description",
+        "payload:payload",
+        "currency:currency",
+        "prices:prices",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "createInvoiceLink": {
+      "args": [
+        "title",
+        "description",
+        "payload",
+        "provider_token",
+        "currency",
+        "prices",
+        "other",
+        "signal"
+      ],
+      "method": "createInvoiceLink",
+      "fields": [
+        "title:title",
+        "description:description",
+        "payload:payload",
+        "provider_token:provider_token",
+        "currency:currency",
+        "prices:prices",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "answerShippingQuery": {
+      "args": [
+        "shipping_query_id",
+        "ok",
+        "other",
+        "signal"
+      ],
+      "method": "answerShippingQuery",
+      "fields": [
+        "shipping_query_id:shipping_query_id",
+        "ok:ok",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "answerPreCheckoutQuery": {
+      "args": [
+        "pre_checkout_query_id",
+        "ok",
+        "other",
+        "signal"
+      ],
+      "method": "answerPreCheckoutQuery",
+      "fields": [
+        "pre_checkout_query_id:pre_checkout_query_id",
+        "ok:ok",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "getStarTransactions": {
+      "args": [
+        "other",
+        "signal"
+      ],
+      "method": "getStarTransactions",
+      "fields": [
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "refundStarPayment": {
+      "args": [
+        "user_id",
+        "telegram_payment_charge_id",
+        "signal"
+      ],
+      "method": "refundStarPayment",
+      "fields": [
+        "user_id:user_id",
+        "telegram_payment_charge_id:telegram_payment_charge_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "editUserStarSubscription": {
+      "args": [
+        "user_id",
+        "telegram_payment_charge_id",
+        "is_canceled",
+        "signal"
+      ],
+      "method": "editUserStarSubscription",
+      "fields": [
+        "user_id:user_id",
+        "telegram_payment_charge_id:telegram_payment_charge_id",
+        "is_canceled:is_canceled"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "verifyUser": {
+      "args": [
+        "user_id",
+        "other",
+        "signal"
+      ],
+      "method": "verifyUser",
+      "fields": [
+        "user_id:user_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "verifyChat": {
+      "args": [
+        "chat_id",
+        "other",
+        "signal"
+      ],
+      "method": "verifyChat",
+      "fields": [
+        "chat_id:chat_id",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "removeUserVerification": {
+      "args": [
+        "user_id",
+        "signal"
+      ],
+      "method": "removeUserVerification",
+      "fields": [
+        "user_id:user_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "removeChatVerification": {
+      "args": [
+        "chat_id",
+        "signal"
+      ],
+      "method": "removeChatVerification",
+      "fields": [
+        "chat_id:chat_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "readBusinessMessage": {
+      "args": [
+        "business_connection_id",
+        "chat_id",
+        "message_id",
+        "signal"
+      ],
+      "method": "readBusinessMessage",
+      "fields": [
+        "business_connection_id:business_connection_id",
+        "chat_id:chat_id",
+        "message_id:message_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "setPassportDataErrors": {
+      "args": [
+        "user_id",
+        "errors",
+        "signal"
+      ],
+      "method": "setPassportDataErrors",
+      "fields": [
+        "user_id:user_id",
+        "errors:errors"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "sendGame": {
+      "args": [
+        "chat_id",
+        "game_short_name",
+        "other",
+        "signal"
+      ],
+      "method": "sendGame",
+      "fields": [
+        "chat_id:chat_id",
+        "game_short_name:game_short_name",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "setGameScore": {
+      "args": [
+        "chat_id",
+        "message_id",
+        "user_id",
+        "score",
+        "other",
+        "signal"
+      ],
+      "method": "setGameScore",
+      "fields": [
+        "chat_id:chat_id",
+        "message_id:message_id",
+        "user_id:user_id",
+        "score:score",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "setGameScoreInline": {
+      "args": [
+        "inline_message_id",
+        "user_id",
+        "score",
+        "other",
+        "signal"
+      ],
+      "method": "setGameScore",
+      "fields": [
+        "inline_message_id:inline_message_id",
+        "user_id:user_id",
+        "score:score",
+        "...other"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "getGameHighScores": {
+      "args": [
+        "chat_id",
+        "message_id",
+        "user_id",
+        "signal"
+      ],
+      "method": "getGameHighScores",
+      "fields": [
+        "chat_id:chat_id",
+        "message_id:message_id",
+        "user_id:user_id"
+      ],
+      "shape": "ObjectExpression"
+    },
+    "getGameHighScoresInline": {
+      "args": [
+        "inline_message_id",
+        "user_id",
+        "signal"
+      ],
+      "method": "getGameHighScores",
+      "fields": [
+        "inline_message_id:inline_message_id",
+        "user_id:user_id"
+      ],
+      "shape": "ObjectExpression"
+    }
+  }
+}

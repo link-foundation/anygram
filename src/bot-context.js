@@ -1,5 +1,6 @@
 import { methodProxy } from './requests.js';
 import { botTextParams } from './formatting.js';
+import { positionalBotMethods } from './bot-positional.js';
 import {
   botNoPayloadMethods,
   botRequestOptions,
@@ -67,6 +68,9 @@ export function botApi(transport, style = 'grammy') {
         options,
         signal
       );
+  }
+  if (style === 'grammy') {
+    Object.assign(positional, positionalBotMethods({ callApi: invoke }));
   }
   return new Proxy(positional, {
     get: (target, key) => (key in target ? target[key] : raw[key]),
