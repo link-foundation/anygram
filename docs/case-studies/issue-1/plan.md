@@ -81,7 +81,7 @@ examples/. No live credentials or sessions may be included in research data.
   Fragmented replies, rejection codes, deadlines and TLS WebSocket tunnels pass.
 - The inherited duplication configuration scanned no files. A failing-before
   fixture now guards the detector, and shared helpers consolidate eleven actual
-  clones. The repaired gate scans all 49 production JS/TS files with zero clones.
+  clones. The repaired gate scans all 50 production JS/TS files with zero clones.
 - The first repaired-gate CI run passed all runtime jobs but rejected a CLI flag
   accepted by a newer Deno-created local shim. The check now invokes locked
   jscpd 4.0.5 directly without that flag; its fixture and source scan pass locally.
@@ -93,7 +93,7 @@ examples/. No live credentials or sessions may be included in research data.
 - All 90 independently versioned secret-schema constructors round-trip. The
   codec retains historical IDs and flag-only fields missing from primary JSON;
   a handwritten wire vector and source-hash comparison verify serialization.
-- Node/Bun/Deno each pass 229 tests; strict lint, format, the repaired duplication
+- Node/Bun/Deno each pass 232 tests; strict lint, format, the repaired duplication
   gate and declaration/example checks pass. Each later code change requires
   fresh checks. The package contains 55 permitted files.
 - Refreshed issue/sub-issue and all three PR feedback streams are empty. Main is
@@ -166,3 +166,12 @@ uses the valid RFC 3526 group with generator 2; Telegram's published generator-3
 parameters remain covered by the bilateral tests. Request/accept RPC integration,
 layer agreement and PFS remain open. Head 192d011 passed all nine runtime/OS jobs
 and applicable gates in CI run 40798442235.
+
+Outgoing layer upgrades now preserve exact old frames, including old-layer
+deletions and JSON restoration. Three failing-before regressions pass with the
+existing sequence/deletion tests. Layer notifications and cipher-version
+negotiation remain the next integration steps.
+
+The layer checkpoint passes all 232 tests on Node, Bun and Deno, strict lint,
+format, duplication and full type checking. DH head 29f274e passed all nine
+OS/runtime jobs and applicable gates in CI run 40799647031.

@@ -34,3 +34,5 @@ create follow-up deletions, reserving bounded cache capacity before mutation.
 Generate recoverable secret-chat DH exchanges with refreshed configuration,
 bounded safe-prime validation caching, local entropy, public-value bounds,
 fingerprint verification and owned private-exponent destruction.
+Upgrade outgoing secret-chat layers while preserving historical cached bytes,
+headers and deletion serialization through retransmission and restart.

@@ -651,3 +651,22 @@ and declaration/example checks pass. The detector scans 50 production files
 with zero clones, and the package has 55 permitted entries. Declaration-gate
 head 192d011 passed all nine runtime/OS jobs and applicable gates in
 [run 40798442235](https://github.com/link-foundation/anygram/actions/runs/40798442235).
+
+## Secret-chat layer upgrades
+
+Telegram requires clients to retain their peer's highest known layer and send
+a notification when local secret-chat support changes. The sequence primitive
+now supports monotonic outgoing-layer upgrades without reserializing older
+cached messages. Snapshot validation accepts monotonic historical layers up to
+the current layer, preserving exact cached bytes across restart and resends.
+Deleting an older unacknowledged message also uses its original layer's codec
+for the replacement; only the new follow-up deletion uses the current layer.
+
+Three failing-before regressions exercise 46→73→144 upgrades, exact serialized
+cache contents, restart/resend identity, old-layer deletion headers and encoding,
+downgrade/unsupported-layer rejection and corrupted history. Layer notification
+and envelope-version negotiation still require the integrated client.
+
+All 232 tests pass on each runtime with strict checks; package contents remain
+55 permitted entries. DH head 29f274e passed all nine runtime/OS jobs and gates
+in [run 40799647031](https://github.com/link-foundation/anygram/actions/runs/40799647031).

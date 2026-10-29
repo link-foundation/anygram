@@ -56,7 +56,8 @@ function entries(values, maximum) {
 function historyOf(state, context) {
   const output = new Map();
   let previous,
-    acknowledgement = 0;
+    acknowledgement = 0,
+    layer = 17;
   for (const data of entries(state.history, context.maxHistory)) {
     const { frame, bytes } = cached(data, context);
     const index = secretCounter(frame.out_seq_no, context.originator ? 1 : 0);
@@ -66,13 +67,15 @@ function historyOf(state, context) {
       (previous !== undefined && index !== previous + 1) ||
       ack < acknowledgement ||
       ack > state.incoming ||
-      frame.layer !== context.codec.layer
+      frame.layer < layer ||
+      frame.layer > context.codec.layer
     ) {
       throw new RangeError('Invalid secret chat history continuity');
     }
     output.set(index, bytes);
     previous = index;
     acknowledgement = ack;
+    layer = frame.layer;
   }
   const first = output.keys().next().value;
   if (

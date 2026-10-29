@@ -95,6 +95,16 @@ export class SecretChatSequence {
     }
   }
 
+  /** Change future serialization only; cached frames retain their original layer. */
+  upgradeLayer(layer) {
+    this.#assertActive();
+    limit(layer, this.#codec.layer, 216, 'layer upgrade');
+    this.#codec = new SecretChatCodec({
+      layer,
+      maxBytes: this.#codec.maxBytes,
+    });
+  }
+
   #abort(message, cause) {
     this.destroy();
     this.#failure = new TelegramError(message, {
@@ -184,7 +194,11 @@ export class SecretChatSequence {
         random_ids: [original.message.random_id],
       },
     });
-    const replacement = this.#codec.encode({
+    const originalCodec = new SecretChatCodec({
+      layer: original.layer,
+      maxBytes: this.#codec.maxBytes,
+    });
+    const replacement = originalCodec.encode({
       ...original,
       message: service(original.message.random_id),
     });

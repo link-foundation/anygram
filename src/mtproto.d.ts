@@ -105,6 +105,8 @@ export declare class SecretChatSequence {
     aborted: boolean;
   };
   create(message: TlRequest): SecretChatLayer;
+  /** Upgrade future messages while retaining the exact cached older frames. */
+  upgradeLayer(layer: number): void;
   /** Replaces cached plaintext and creates a new deletion; persist both atomically. */
   deleteUnacknowledged(
     outSequence: number,
