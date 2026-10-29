@@ -1,5 +1,5 @@
 diff --git a/src/text-bot.js b/src/text-bot.js
-index 186f91e..78d2df9 100644
+index 186f91e..45afac0 100644
 --- a/src/text-bot.js
 +++ b/src/text-bot.js
 @@ -1,12 +1,15 @@
@@ -9,13 +9,13 @@ index 186f91e..78d2df9 100644
  import { config } from "dotenv";
  import pino from "pino";
 -import { createWriteStream } from "fs";
-+import { createWriteStream, mkdirSync } from "fs";
++import { mkdirSync } from "fs";
  import VirtualTerminal from "./virtual-terminal.js";
  
  config();
  
 +mkdirSync('./logs', { recursive: true });
-+const logStream = createWriteStream('./logs/bot.log', { flags: 'a' });
++const logStream = pino.destination({ dest: './logs/bot.log', sync: true });
 +
  // Setup logger with file and console output
  const logger = pino({
@@ -277,7 +277,7 @@ index 186f91e..78d2df9 100644
  // Error handling
  bot.catch((err) => {
    logger.error({ error: err.message, stack: err.stack }, 'Bot error occurred');
-@@ -528,39 +548,36 @@ bot.catch((err) => {
+@@ -528,39 +548,37 @@ bot.catch((err) => {
  });
  
  // Graceful shutdown
@@ -327,7 +327,8 @@ index 186f91e..78d2df9 100644
 +    logger.info('All terminal sessions and polling closed');
 +    await new Promise((resolve, reject) => {
 +      logStream.once('error', reject);
-+      logStream.end(resolve);
++      logStream.once('finish', resolve);
++      logStream.end();
 +    });
 +    process.exit(0);
 +  })();
@@ -344,7 +345,7 @@ index 186f91e..78d2df9 100644
      logger.info('Telegram Terminal Bot started successfully!');
      logger.info({ 
 diff --git a/src/visual-bot.js b/src/visual-bot.js
-index 9ad84e0..062aff4 100644
+index 9ad84e0..e59068e 100644
 --- a/src/visual-bot.js
 +++ b/src/visual-bot.js
 @@ -1,14 +1,17 @@
@@ -354,7 +355,7 @@ index 9ad84e0..062aff4 100644
  import { config } from "dotenv";
  import pino from "pino";
 -import { createWriteStream } from "fs";
-+import { createWriteStream, mkdirSync } from "fs";
++import { mkdirSync } from "fs";
  import GIFEncoder from "gifencoder";
  import { createCanvas } from "canvas";
  import { Readable } from "stream";
@@ -362,7 +363,7 @@ index 9ad84e0..062aff4 100644
  config();
  
 +mkdirSync('./logs', { recursive: true });
-+const logStream = createWriteStream('./logs/bot.log', { flags: 'a' });
++const logStream = pino.destination({ dest: './logs/bot.log', sync: true });
 +
  // Setup logger with file and console output
  const logger = pino({
@@ -641,7 +642,7 @@ index 9ad84e0..062aff4 100644
  
  // Error handling
  bot.catch((err) => {
-@@ -584,37 +616,36 @@ bot.catch((err) => {
+@@ -584,37 +616,37 @@ bot.catch((err) => {
  });
  
  // Graceful shutdown
@@ -689,7 +690,8 @@ index 9ad84e0..062aff4 100644
 +    logger.info('All terminal sessions and polling closed');
 +    await new Promise((resolve, reject) => {
 +      logStream.once('error', reject);
-+      logStream.end(resolve);
++      logStream.once('finish', resolve);
++      logStream.end();
 +    });
 +    process.exit(0);
 +  })();

@@ -88,14 +88,19 @@ is submitted. The full derived patch retains these explicit application fixes.
 
 A fourth failing-before shutdown regression catches successful exit before log
 writes finish. The patch creates the logs directory and keeps its destination
-stream, then awaits that stream after polling and handler drain. Full-startup
+stream, then awaits its finish event after polling and handler drain. Full-startup
 checks verify its real final log record before successful exit and stream close.
-The invalid-configuration checks explicitly flush their fixture streams after
-catching exit; they do not establish fatal-exit flushing in a real process.
+Four additional child-process regressions reproduce a missing log file after
+the actual `process.exit(1)` for either missing credential in both modes. The
+migration now uses pino's synchronous file destination, preserving each fatal
+record before immediate exit. This deliberately trades asynchronous file-log
+throughput for exit durability; the console stream remains independent. These
+bounded children use a 64 MiB heap and a 512 KiB stack, isolated fake credentials
+and temporary directories. All four fail before this change and pass afterward.
 
 The visual source advertises static PNGs in help but implements regular-command text edits;
 there is no static-photo handler to claim as covered. InlineKeyboard is unused
-in these pinned sources. Full keyboard/photo scenarios, fatal-exit logging/error recovery, native
+in these pinned sources. Full keyboard/photo scenarios, broader error recovery, native
 rendering on other runtimes/platforms and controlled-account delivery remain
 open. Polling shutdown is verified with the actual runner and a controlled
 transport; authenticated online delivery is still unverified. This advances R05/R08/R13/R16/R19;
@@ -109,6 +114,9 @@ gates in [run 40847213870](https://github.com/link-foundation/anygram/actions/ru
 created 2026-10-29T09:07:50Z and completed 2026-10-29T09:10:19Z. Rendering/shutdown head 2b8ef53f passed all nine runtime/OS jobs, the native
 integration job and applicable gates in
 [run 40848702436](https://github.com/link-foundation/anygram/actions/runs/40848702436),
-created 2026-10-29T09:19:14Z and completed 2026-10-29T09:22:16Z. Fresh matrix
-CI is required for the complete startup and log-drain checkpoint. Its local
-isolated integration command passes nine cases.
+created 2026-10-29T09:19:14Z and completed 2026-10-29T09:22:16Z. Complete-startup
+head 9483b5c5 passed all nine runtime/OS jobs, native integration and applicable
+gates in [run 40849679128](https://github.com/link-foundation/anygram/actions/runs/40849679128),
+created 2026-10-29T09:26:44Z and completed 2026-10-29T09:29:06Z. Fresh matrix
+CI is required for fatal-exit durability. The local isolated integration command
+now passes thirteen cases.

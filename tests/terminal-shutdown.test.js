@@ -91,10 +91,14 @@ it('awaits the terminal log destination before reporting a successful exit', asy
   const app = terminalHarness('text', {
     dependencies: {
       logStream: {
-        once() {},
-        end(done) {
+        once(event, callback) {
+          if (event === 'finish') {
+            this.finish = callback;
+          }
+        },
+        end() {
           flushing.resolve();
-          release.promise.then(done);
+          release.promise.then(this.finish);
         },
       },
     },

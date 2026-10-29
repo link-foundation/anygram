@@ -194,9 +194,12 @@ integration and applicable gates in run 40848702436, created 09:19:14Z and
 completed 09:22:16Z on 2026-10-29. Six native scenarios now execute complete
 actual dotenv/pino startup and validate missing credentials, isolated paths and
 successful file-log drain. One more failing-before regression verifies log
-completion before successful exit. Preserve the checkpoint after full local
-checks and verify its fresh CI. Fatal-exit log recovery and native runtime/OS
-coverage remain open alongside keyboard/photo/account evidence. Preserve all broader open
+completion before successful exit. Head 9483b5c5 passed all nine runtime/OS jobs,
+native integration and applicable gates in run 40849679128, created 09:26:44Z
+and completed 09:29:06Z on 2026-10-29. Four additional real child-process
+regressions now verify fatal startup logs before immediate exit. Verify fresh CI
+after preserving the synchronous-destination change. Broader error recovery and
+native runtime/OS coverage remain open alongside keyboard/photo/account evidence. Preserve all broader open
 criteria and keep working independently of controlled-account credentials.
 
 Keep protocol completion (secret chats/call media/transports), complete backend
@@ -561,6 +564,12 @@ Downstream account workflow audit:
   Eighteen regressions include actual GramJS/teleproto destruction and native
   TCP closure. All 425 tests and strict checks pass on each runtime.
 - Next: downstream wrapper/CLI migration and controlled-account evidence.
+- Terminal fatal-exit audit: four real child-process probes reproduced a missing
+  file after immediate exit with either required credential missing. The explicit
+  migration uses a synchronous pino destination and awaits its finish event on
+  successful shutdown. Thirteen isolated native cases pass locally. Preserve
+  this atomic change after full checks, then continue downstream/media/runtime
+  implementation; this does not satisfy the broader terminal requirement.
 - Continue all other unmet protocol/runtime/compatibility/downstream criteria.
   Controlled accounts and official-app-only passkeys remain externally blocked;
   independent implementation work remains available. Keep PR #2 draft/unmerged.

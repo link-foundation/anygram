@@ -81,7 +81,7 @@ function logDestination(source) {
   source = replaceOnce(
     source,
     'import { createWriteStream } from "fs";',
-    'import { createWriteStream, mkdirSync } from "fs";'
+    'import { mkdirSync } from "fs";'
   );
   source = replaceOnce(
     source,
@@ -92,7 +92,7 @@ function logDestination(source) {
     source,
     '// Setup logger with file and console output',
     `mkdirSync('./logs', { recursive: true });
-const logStream = createWriteStream('./logs/bot.log', { flags: 'a' });
+const logStream = pino.destination({ dest: './logs/bot.log', sync: true });
 
 // Setup logger with file and console output`
   );
@@ -122,7 +122,8 @@ function shutdownTerminal() {
     logger.info('All terminal sessions and polling closed');
     await new Promise((resolve, reject) => {
       logStream.once('error', reject);
-      logStream.end(resolve);
+      logStream.once('finish', resolve);
+      logStream.end();
     });
     process.exit(0);
   })();

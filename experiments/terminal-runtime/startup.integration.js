@@ -4,7 +4,6 @@ import {
   mkdtempSync,
   writeFileSync,
   mkdirSync,
-  createWriteStream,
   readFileSync,
   rmSync,
 } from 'node:fs';
@@ -12,9 +11,9 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { once } from 'node:events';
 import { Writable } from 'node:stream';
-import pino from 'pino';
 import { config } from 'dotenv';
 import { terminalHarness } from '../terminal-harness.mjs';
+import { terminalLogger } from './log-destination.mjs';
 
 function startupFixture(contents) {
   const root = mkdtempSync(join(tmpdir(), 'anygram-terminal-startup-'));
@@ -39,19 +38,14 @@ function startupFixture(contents) {
     streams,
     processExtras: { env, stdout },
     dependencies: {
-      pino,
+      pino: terminalLogger(root, (stream) => streams.push(stream)),
       config: () => config({ path, processEnv: env }),
       mkdirSync: (directory, options) =>
         mkdirSync(join(root, directory), options),
-      createWriteStream(file, options) {
-        const stream = createWriteStream(join(root, file), options);
-        streams.push(stream);
-        return stream;
-      },
     },
     async close() {
       for (const stream of streams) {
-        if (!stream.closed) {
+        if (!stream.destroyed) {
           const closed = once(stream, 'close');
           stream.end();
           await closed;
@@ -110,7 +104,7 @@ for (const mode of ['text', 'visual']) {
         await app.signal('SIGTERM');
         await closed;
         assert.deepEqual(app.exits, [0]);
-        assert.equal(app.logStream.writableFinished, true);
+        assert.equal(app.logStream.destroyed, true);
         assert.equal(app.bot.isRunning(), false);
         const records = readFileSync(join(fixture.root, 'logs/bot.log'), 'utf8')
           .trim()

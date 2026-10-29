@@ -536,6 +536,9 @@ Node/Linux integrations now cover polling drain, animation cancellation, real
 PTY children and independently decoded actual GIFs, with before/after images.
 Six further native scenarios exercise actual dotenv/pino startup, validation
 and successful file-log drain. A fourth failing-before shutdown regression
-verifies that drain. Keyboard/photo flows, fatal-exit log recovery, native
+verifies that drain. Four further actual child-process failures reproduce lost
+fatal startup logs; synchronous pino file logging preserves the final record
+before immediate exit. All thirteen isolated native cases pass locally.
+Keyboard/photo flows, broader error recovery, native
 runtime/platform coverage and Telegram delivery remain open. R13
 is unfinished alongside every other unverified criterion.

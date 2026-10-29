@@ -143,6 +143,19 @@ function fixtureLogger(errors) {
   );
 }
 
+function fixtureLogStream() {
+  return {
+    once(event, callback) {
+      if (event === 'finish') {
+        this.finish = callback;
+      }
+    },
+    end() {
+      this.finish();
+    },
+  };
+}
+
 export function terminalHarness(
   mode,
   {
@@ -225,12 +238,7 @@ export function terminalHarness(
       setTimeout: clock.setTimeout,
       clearTimeout: clock.clearTimeout,
       ...(startup ? {} : { polling: Promise.resolve() }),
-      logStream: {
-        once() {},
-        end(done) {
-          done();
-        },
-      },
+      logStream: fixtureLogStream(),
       process: {
         env: { BOT_TOKEN: 'terminal:fixture', AUTHORIZED_USER_ID: '8', ...env },
         on(name, callback) {
