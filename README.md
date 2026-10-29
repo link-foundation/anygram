@@ -44,11 +44,21 @@ to 64 MiB and accepts `{ maxBytes, signal, timeout }`. MTProto HTTPS responses
 default to 16 MiB (`maxBytes` in transport options). Exceeding a response limit
 raises `TelegramError` with type `RESPONSE_TOO_LARGE` and releases the body reader.
 Bot API servers and custom networking can be selected with `baseUrl` and `fetch`.
-Buffered uploads accept bytes, Blobs, `{ data, filename }` and
-`{ source, filename }`, including nested albums and thumbnails. Total attachment
-bytes default to 64 MiB (`maxUploadBytes`); each request accepts up to 1000 files.
-Upload traversal uses the same depth/vector guards as request normalization,
-and pre-cancelled calls do not traverse or upload their files.
+Native Bot API uploads accept bytes, Blobs, `{ data, filename }` and
+`{ source, filename }`, including nested albums and thumbnails. Use
+`new InputFile(source, filename)` for explicit local paths, file/HTTP URL objects,
+Node/web byte streams, byte iterators or suppliers that create fresh sources.
+Plain strings remain remote IDs or Telegram-fetched URLs. Bytes, Blobs, paths,
+URLs and suppliers are reusable; a direct stream-backed InputFile is single-use.
+See [typed uploads](examples/typed-bot-uploads.ts).
+
+Total attachment bytes default to 64 MiB (`maxUploadBytes`); each request accepts
+up to 1000 files. Preparation uses the shared depth/vector guards and validates
+the complete shape before opening sources. Deadlines and cancellation cover
+preparation too. Suppliers unwrap at most sixteen steps and stream/body reading
+permits at most 100000 reads. These inputs are buffered within the configured byte
+limit before multipart fetch. Optional vendor bot backends and account-media
+InputFile conversion remain unfinished.
 
 Request normalization checks nesting and vector limits before visiting child
 values (defaults: depth 64 and 100000 vector entries). Invalid request limits,

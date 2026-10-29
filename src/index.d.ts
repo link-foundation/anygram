@@ -385,6 +385,29 @@ export declare class Anygram {
   watchChannel(id: bigint | string | number): Promise<void>;
   unwatchChannel(id: bigint | string | number): Promise<void>;
 }
+export type InputFileSource =
+  | Uint8Array
+  | Blob
+  | string
+  | URL
+  | { url: string }
+  | ReadableStream<Uint8Array>
+  | Iterable<Uint8Array>
+  | AsyncIterable<Uint8Array>
+  | (() => InputFileSource | Promise<InputFileSource>);
+export declare class InputFile {
+  constructor(file: InputFileSource, filename?: string);
+  fileData: InputFileSource;
+  filename?: string;
+  consumed: boolean;
+  toJSON(): never;
+  /** Internal bounded conversion used by the Bot API transport. */
+  toRaw(options?: {
+    maxBytes?: number;
+    signal?: AbortSignal;
+    fetch?: typeof fetch;
+  }): Promise<Uint8Array>;
+}
 export interface BotApiOptions {
   token: string;
   baseUrl?: string;

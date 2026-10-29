@@ -1,6 +1,7 @@
 import { TelegramError, botApiError } from './errors.js';
-import { methodProxy, valueMapper } from './requests.js';
+import { methodProxy } from './requests.js';
 import { botTextParams } from './formatting.js';
+import { uploadBody } from './bot-api-upload.js';
 import {
   readResponseBytes,
   createRequestScope,
@@ -8,71 +9,7 @@ import {
   validateTimeout,
 } from './http.js';
 
-export const stringify = (value) =>
-  JSON.stringify(value, (key, entry) =>
-    typeof entry === 'bigint' ? entry.toString() : entry
-  );
-
-function uploadPart(value, data) {
-  const blob =
-    data instanceof globalThis.Blob
-      ? data
-      : new globalThis.Blob([data], {
-          type: value.mimeType ?? 'application/octet-stream',
-        });
-  return [blob, value.filename ?? data.name ?? 'file'];
-}
-
-function uploadBody(params, maxBytes) {
-  validateByteLimit(maxBytes);
-  const files = [];
-  let used = 0;
-  const visit = valueMapper(
-    (value, next) => {
-      const data = value?.data ?? value?.source ?? value;
-      if (data instanceof Uint8Array || data instanceof globalThis.Blob) {
-        const size = data instanceof Uint8Array ? data.byteLength : data.size;
-        if (size > maxBytes - used) {
-          throw new RangeError('Bot API upload exceeds byte limit');
-        }
-        if (files.length >= 1000) {
-          throw new RangeError('Bot API upload exceeds file limit');
-        }
-        used += size;
-        const name = `file${files.length}`;
-        files.push([name, ...uploadPart(value, data)]);
-        return `attach://${name}`;
-      }
-      if (value && typeof value === 'object') {
-        return Object.fromEntries(
-          Object.entries(value).map(([key, entry]) => [key, next(entry)])
-        );
-      }
-      return value;
-    },
-    { label: 'Bot API' }
-  );
-  const fields = visit(params);
-  if (!files.length) {
-    return {
-      body: stringify(fields),
-      headers: { 'content-type': 'application/json' },
-    };
-  }
-  const body = new globalThis.FormData();
-  for (const [key, value] of Object.entries(fields)) {
-    if (value !== undefined && value !== null) {
-      body.append(
-        key,
-        typeof value === 'object' ? stringify(value) : String(value)
-      );
-    }
-  }
-  for (const [name, blob, filename] of files) {
-    body.append(name, blob, filename);
-  }
-  return { body };
-}
+export { stringify } from './bot-api-upload.js';
 
 /** Dependency-free transport for every Bot API method, including local servers. */
 export class BotApi {
@@ -106,28 +43,36 @@ export class BotApi {
     { signal, timeout = this.timeout } = {},
     consume
   ) {
-    const scope = createRequestScope({ signal, timeout });
+    const scope = createRequestScope(
+      { signal, timeout },
+      new TelegramError('Bot API request timed out', { type: 'NETWORK_ERROR' })
+    );
     const { controller, signal: combined } = scope;
     try {
       combined.throwIfAborted();
-      const response = await this.fetch(`${this.baseUrl}/${path}`, {
-        ...options,
-        signal: combined,
-      });
-      return await consume(response, combined);
-    } catch (error) {
-      if (error instanceof TelegramError) {
-        throw error;
+      const prepared =
+        typeof options === 'function' ? await options(combined) : options;
+      combined.throwIfAborted();
+      try {
+        const response = await this.fetch(`${this.baseUrl}/${path}`, {
+          ...prepared,
+          signal: combined,
+        });
+        return await consume(response, combined);
+      } catch (error) {
+        if (error instanceof TelegramError) {
+          throw error;
+        }
+        // Fetch error messages often contain the entire credential-bearing URL.
+        throw new TelegramError(
+          signal?.aborted
+            ? 'Bot API request cancelled'
+            : controller.signal.aborted
+              ? 'Bot API request timed out'
+              : 'Bot API network request failed',
+          { type: 'NETWORK_ERROR' }
+        );
       }
-      // Fetch error messages often contain the entire credential-bearing URL.
-      throw new TelegramError(
-        signal?.aborted
-          ? 'Bot API request cancelled'
-          : controller.signal.aborted
-            ? 'Bot API request timed out'
-            : 'Bot API network request failed',
-        { type: 'NETWORK_ERROR' }
-      );
     } finally {
       scope.dispose();
     }
@@ -140,10 +85,14 @@ export class BotApi {
     options?.signal?.throwIfAborted();
     const { response, envelope } = await this.request(
       `bot${this.#token}/${method}`,
-      {
+      async (signal) => ({
         method: 'POST',
-        ...uploadBody(botTextParams(params), this.maxUploadBytes),
-      },
+        ...(await uploadBody(botTextParams(params), {
+          maxBytes: this.maxUploadBytes,
+          signal,
+          fetch: this.fetch,
+        })),
+      }),
       options,
       async (response, signal) => {
         const bytes = await readResponseBytes(response, {

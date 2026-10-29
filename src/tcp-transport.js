@@ -5,6 +5,7 @@ import { validateTimeout, createRequestScope } from './http.js';
 import { TelegramError } from './errors.js';
 import { createSocksConnector } from './socks5.js';
 import { ObfuscatedFraming } from './obfuscated-framing.js';
+import { abortable } from './cancellation.js';
 
 /** Persistent packet stream. It never retries a possibly transmitted packet. */
 export class TcpTransport {
@@ -304,17 +305,4 @@ function proxyRoute({ host, port, mode, proxy, obfuscate }) {
     obfuscate: obfuscate || mtproxy,
     secret,
   };
-}
-
-function abortable(promise, signal) {
-  return new Promise((resolve, reject) => {
-    const abort = () => reject(signal.reason);
-    signal.addEventListener('abort', abort, { once: true });
-    promise
-      .then(resolve, reject)
-      .finally(() => signal.removeEventListener('abort', abort));
-    if (signal.aborted) {
-      abort();
-    }
-  });
 }

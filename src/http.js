@@ -61,19 +61,31 @@ export async function readResponseBytes(response, { maxBytes, signal }) {
   try {
     const chunks = [];
     let length = 0;
-    for (;;) {
+    for (let reads = 0; ; reads++) {
       signal?.throwIfAborted();
+      if (reads >= 100000) {
+        cancel();
+        throw new TelegramError('HTTP response exceeds chunk limit', {
+          type: 'RESPONSE_TOO_LARGE',
+        });
+      }
       const { value, done } = await reader.read();
       signal?.throwIfAborted();
       if (done) {
         break;
+      }
+      if (!(value instanceof Uint8Array)) {
+        cancel();
+        throw new TypeError('HTTP body must yield bytes');
       }
       length += value.byteLength;
       if (length > maxBytes) {
         cancel();
         throw tooLarge();
       }
-      chunks.push(value);
+      if (value.byteLength) {
+        chunks.push(value.slice());
+      }
     }
     return joinBytes(chunks, length);
   } finally {

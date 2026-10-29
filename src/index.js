@@ -33,6 +33,7 @@ export { parseTelegramLink } from './chat-links.js';
 export { createAdapter } from './adapters.js';
 export { TelegramError, UnsupportedError } from './errors.js';
 export { BotApi } from './bot-api.js';
+export { InputFile } from './input-file.js';
 export { createClient } from './factory.js';
 export { Session } from './session.js';
 export { Bot, Telegraf, TelegramBot, webhookCallback } from './bot.js';

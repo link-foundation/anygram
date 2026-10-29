@@ -573,3 +573,10 @@ Downstream account workflow audit:
 - Continue all other unmet protocol/runtime/compatibility/downstream criteria.
   Controlled accounts and official-app-only passkeys remain externally blocked;
   independent implementation work remains available. Keep PR #2 draft/unmerged.
+
+Bot file inputs: ten initial failures reproduce missing path/stream/supplier
+handling; two further failures reproduce empty-chunk bookkeeping and late-source
+leaks. Nineteen cases cover the native transport through shared readers and
+cancellation. Verify all runtimes and static gates, commit this atomic change,
+then implement optional vendor-backend/account-media conversion and continue the
+remaining downstream scenarios. Keep all unverified criteria open.
