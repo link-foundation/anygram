@@ -11,6 +11,7 @@ import { secretLimit, secretCounter } from './secret-sequence-state.js';
 import { secretChatId, secretLong } from './secret-handshake-state.js';
 import { TelegramError } from './errors.js';
 import { randomId } from './random.js';
+import { secretMessageTTL, secretObservedTTL } from './secret-services.js';
 import {
   encodeSecretAttachment,
   decodeSecretAttachment,
@@ -109,6 +110,9 @@ export class SecretSessionState {
     if (state && (!state.layers || !state.sequence)) {
       throw new TypeError('Missing secret chat active state');
     }
+    this.messageTTL = secretMessageTTL(
+      state?.messageTTL === undefined ? 0 : state.messageTTL
+    );
     this.layers = new SecretChatLayers({
       layer: state ? state.layers?.localLayer : options.layer,
       remoteLayer: options.remoteLayer,
@@ -145,6 +149,9 @@ export class SecretSessionState {
 
   restoreAborted(state) {
     this.restoreIncomingFiles(state);
+    if (state.messageTTL !== undefined && state.messageTTL !== null) {
+      throw new TypeError('Aborted secret chat retains message TTL');
+    }
     if (
       state.key !== null ||
       state.layers !== null ||
@@ -447,6 +454,7 @@ export class SecretSessionState {
     try {
       const frame = this.sequence.create(outgoing);
       this.encrypt(frame, this.layers.outgoing.version, file);
+      this.messageTTL = secretObservedTTL(frame.message, this.messageTTL);
       this.keys.recordSent();
       return frame;
     } catch (error) {
@@ -469,13 +477,40 @@ export class SecretSessionState {
     return frame;
   }
 
-  queueAction(action) {
+  queueAction(action, id = randomId()) {
     this.notify();
     return this.queue({
       _: 'decryptedMessageService',
-      random_id: randomId(),
+      random_id: secretLong(id, 'service random ID'),
       action,
     });
+  }
+
+  queueApplicationAction(action, id) {
+    this.replaceApplicationHistory(action);
+    return this.queueAction(action, id);
+  }
+
+  replaceApplicationHistory(action) {
+    const remove = action._ === 'decryptedMessageActionDeleteMessages';
+    if (!remove && action._ !== 'decryptedMessageActionFlushHistory') {
+      return;
+    }
+    const ids = remove ? new Set(action.random_ids) : null;
+    for (const frame of this.history()) {
+      if (
+        frame.message._ === 'decryptedMessage' &&
+        secretCounter(frame.out_seq_no, this.originator ? 1 : 0) >=
+          this.sequence.state.acknowledged &&
+        (!ids || ids.has(frame.message.random_id))
+      ) {
+        const version = this.outbox.get(frame.out_seq_no).version;
+        this.replaceDeleted(
+          this.sequence.replaceUnacknowledged(frame.out_seq_no),
+          version
+        );
+      }
+    }
   }
 
   rotateIfNeeded() {
@@ -526,6 +561,7 @@ export class SecretSessionState {
     const queue = (action) => this.queueAction(action);
     this.keys.observe(frame, fingerprint, candidate, queue);
     for (const ordered of output.messages) {
+      this.messageTTL = secretObservedTTL(ordered.message, this.messageTTL);
       this.layers.observe(
         ordered,
         this.incomingVersions.get(ordered.out_seq_no)
@@ -629,6 +665,7 @@ export class SecretSessionState {
       originator: this.originator,
       peer: { ...this.peer, access_hash: String(this.peer.access_hash) },
       discardSubmitted: this.discardSubmitted,
+      messageTTL: this.phase === 'active' ? this.messageTTL : null,
       ...(this.phase === 'active'
         ? this.keys.exportState()
         : { key: null, keyState: null, rekey: null }),

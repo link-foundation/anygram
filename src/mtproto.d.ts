@@ -386,6 +386,8 @@ export declare class SecretChatSequence {
   create(message: TlRequest): SecretChatLayer;
   /** Upgrade future messages while retaining the exact cached older frames. */
   upgradeLayer(layer: number): void;
+  /** Replace in place; persist atomically with a separate new deletion action. */
+  replaceUnacknowledged(outSequence: number): SecretChatLayer;
   /** Replaces cached plaintext and creates a new deletion; persist both atomically. */
   deleteUnacknowledged(
     outSequence: number,
@@ -422,6 +424,8 @@ export interface SecretChatSessionStateV1 extends SecretChatSessionStateBase {
 }
 export interface SecretChatSessionStateV2 extends SecretChatSessionStateBase {
   version: 2;
+  /** Default lifetime for future messages; null after abort, zero in older state. */
+  messageTTL?: number | null;
   keyState: Omit<SecretChatKeyRingState, 'key'> | null;
   rekey: SecretChatRekeyState | null;
   incomingKeys: [number, string][];
@@ -504,6 +508,7 @@ export declare class SecretChatSession {
     sequence: SecretChatSequence['state'] | null;
     layers: SecretChatLayersState | null;
     discardSubmitted: boolean;
+    messageTTL: number | null;
     keys: SecretChatKeyRing['state'] | null;
     rekey: SecretChatRekey['state'] | null;
   };
@@ -516,6 +521,11 @@ export declare class SecretChatSession {
     message: TlRequest,
     file: TlRequest,
     options: SecretChatSessionSaveOptions
+  ): Promise<SecretChatLayer>;
+  /** Read/delete/screenshot/TTL/history/typing actions share the durable outbox. */
+  queueService(
+    action: TlRequest,
+    options: SecretChatSessionSaveOptions & { randomId?: bigint }
   ): Promise<SecretChatLayer>;
   notify(
     options: SecretChatSessionSaveOptions

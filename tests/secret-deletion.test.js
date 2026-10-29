@@ -15,6 +15,28 @@ const deletionAction = (id) => ({
   random_ids: [BigInt(id)],
 });
 
+it('replaces a full unacknowledged history entry without adding a sequence or requiring another slot', () => {
+  for (const originator of [true, false]) {
+    const sender = sequence(originator, { maxHistory: 1 });
+    const original = sender.create(text(1));
+    const replaced = sender.replaceUnacknowledged(original.out_seq_no);
+    assert.equal(replaced.out_seq_no, original.out_seq_no);
+    assert.equal(replaced.in_seq_no, original.in_seq_no);
+    assert.equal(sender.state.outgoing, 1);
+    assert.equal(sender.state.history, 1);
+    assert.deepEqual(replaced.message.action, deletionAction(1));
+    const codec = new SecretChatSequence({
+      originator,
+      maxHistory: 1,
+      state: JSON.parse(JSON.stringify(sender.exportState())),
+    });
+    assert.deepEqual(codec.unacknowledged(), [replaced]);
+    const before = sender.exportState();
+    assert.throws(() => sender.replaceUnacknowledged(original.out_seq_no));
+    assert.deepEqual(sender.exportState(), before);
+  }
+});
+
 it('substitutes unacknowledged secret text with self-deletion and a new deletion service', () => {
   for (const originator of [true, false]) {
     const sender = sequence(originator);

@@ -305,6 +305,22 @@ protocol violations clear owned key/message state and save an aborted snapshot;
 packets leave active state unchanged. Serialize operations on each session;
 overlapping operations reject. See `examples/typed-durable-secret-chat.ts`.
 
+`queueService(action, { save, randomId? })` queues read, delete, screenshot,
+history-clear, typing and TTL actions through the same durable outbox. Read,
+delete and screenshot lists retain exact signed 64-bit random IDs, deduplicate
+IDs and accept at most 1000 entries. A TTL service changes `state.messageTTL`
+atomically; future messages with an omitted `ttl` use that default. An explicit
+`ttl: 0` disables expiry for that message. Default settings range from zero to
+one year; explicit message lifetimes retain the positive TL integer range.
+Incoming settings follow official peer clamping and change defaults
+only when delivered in sequence. Received service actions accompany ordered
+message effects for application history and expiry handling. See
+`examples/typed-secret-services.ts`.
+Application delete/history-clear actions also replace matching unacknowledged
+text and attachment frames with self-deletions before queueing the new action.
+This preserves their sequence/key boundaries while removing their contents from
+retransmissions. Incoming history actions do not reset protocol sequence state.
+
 The default limits retain at most 1000 incoming gaps, 1000 outgoing frames and
 16 MiB of combined plaintext/ciphertext. Acknowledged history can be released
 under pressure; unacknowledged frames cannot be silently evicted. Snapshots

@@ -1024,3 +1024,39 @@ feedback streams remain empty; current main is an ancestor of the branch.
 Secret-chat service/TTL behavior and controlled production peer interoperability
 remain open, along with call media, runtime, compatibility and downstream
 scenario criteria. Local peers do not establish production interoperability.
+
+Application service checkpoint: `queueService` now durably submits read, delete,
+screenshot, history-clear, typing and TTL actions. ID vectors preserve signed
+64-bit values and are copied, deduplicated and bounded. Ordered TTL settings
+survive JSON restart and failed saves leave both defaults and ciphertext
+unchanged. Omitted message TTL uses the current default; explicit zero disables
+expiry and explicit positive message values retain the TL integer range.
+Invalid incoming chat defaults follow official Android clamping to one year.
+Batch deletion and history clearing replace unacknowledged message/attachment
+frames while preserving their original sequence and encryption boundaries.
+
+Eight new service regressions, a low-level capacity regression and a bilateral
+attachment-deletion regression bring Node, Bun and Deno to 339 passing tests.
+The native encrypted TCP file scenario also exchanges TTL and read services
+through real update-manager persistence before qts acknowledgement. Strict lint,
+formatting, full types and the zero-clone scan of 65 production sources pass;
+the package dry run has 70 permitted entries. The typed service example compiles.
+Failing-before logs preserve attachment retention during deletion and rejection
+of a valid explicit message TTL above the chat-default maximum.
+
+Durable attachment head 8d9027e passed all nine OS/runtime jobs and applicable
+gates in [run 40815695308](https://github.com/link-foundation/anygram/actions/runs/40815695308),
+created 2026-10-29T04:04:46Z and completed 2026-10-29T04:06:42Z. Fresh CI is
+required for this service checkpoint. Read-triggered expiry and application
+history deletion still need implementation evidence. Controlled production
+accounts, call media, complete compatibility and downstream criteria remain open.
+
+The service implementation follows the primary [TTL](https://core.telegram.org/constructor/decryptedMessageActionSetMessageTTL),
+[read](https://core.telegram.org/constructor/decryptedMessageActionReadMessages),
+[delete](https://core.telegram.org/constructor/decryptedMessageActionDeleteMessages)
+and [history-clear](https://core.telegram.org/constructor/decryptedMessageActionFlushHistory)
+constructor specifications, archived with hashes in `data/secret-service-sources.json`.
+Official Android [service processing at 3de37c8](https://github.com/DrKLO/Telegram/blob/3de37c8cfb039452be7398909461da6288babf15/TMessagesProj/src/main/java/org/telegram/messenger/SecretChatHelper.java#L1115-L1169)
+checks chat-default clamping and separates history deletion from protocol counters.
+The sequence specification requires a self-deletion in each missing original
+position plus a new service action; the batch operation retains that invariant.

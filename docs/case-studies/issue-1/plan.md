@@ -108,16 +108,16 @@ examples/. No live credentials or sessions may be included in research data.
 
 ## Next steps
 
-Current protocol work: finish encrypted file handling and controlled-peer
-interoperability. The PFS action state machine and key ring are now integrated
-with the durable session, pending key fingerprints, sequence gaps and exact
-cached ciphertext after erasure. Original handshakes provide the DH parameters.
-Reproduce remaining file/media and key-age edge cases before implementation.
+Current protocol work: implement read-triggered expiry and application history
+handling, then controlled-peer interoperability. Encrypted file transfer and
+references now survive durable submission, incoming gaps and restart. Application
+services and ordered TTL defaults share the durable encrypted outbox. Add failing
+minimal tests for expiry/read/delete semantics before implementation.
 
-The integrated checkpoint passes all 309 tests on Node, Bun and Deno, strict
-lint/format/types and a zero-clone scan of 61 production files. Key-ring
-head 21f5873 passed all nine runtime/OS jobs and gates in run 40809723730,
-created 2026-10-29T03:01:06Z and completed 2026-10-29T03:02:36Z.
+The service checkpoint passes all 339 tests on Node, Bun and Deno, strict
+lint/format/types and a zero-clone scan of 65 production files. Durable attachment
+head 8d9027e passed all nine runtime/OS jobs and gates in run 40815695308,
+created 2026-10-29T04:04:46Z and completed 2026-10-29T04:06:42Z.
 
 Keep protocol completion (secret chats/call media/transports), complete backend
 return/event/style compatibility and actual downstream scenarios open in the
@@ -159,8 +159,9 @@ local tests and strict checks pass; fresh CI is required after committing it.
 5. [x] Prepare initial request/accept RPCs with recoverable DH/key state and binding checks.
 6. [x] Integrate layer/cipher/sequence policy and the initial peer flow through native test peers.
 7. [x] Implement compulsory PFS rotation and simultaneous key-exchange rules.
-8. [ ] Integrate encrypted RPC ordering, durable effects/cursors and file media.
-9. [ ] Verify interoperable flows with controlled Telegram accounts.
+8. [x] Integrate encrypted RPC ordering, durable effects/cursors and file media.
+9. [ ] Implement read-triggered expiry and application history effects.
+10. [ ] Verify interoperable flows with controlled Telegram accounts.
 
 The subsequent TL ownership regression exposes Buffer.slice view aliasing.
 Copied byte/fixed-integer fields pass all 216 tests on each runtime and strict
@@ -346,3 +347,29 @@ feedback streams remain empty; current main is an ancestor of the branch.
 Secret-chat service/TTL behavior and controlled production peer interoperability
 remain open, along with call media, runtime, compatibility and downstream
 scenario criteria. Local peers do not establish production interoperability.
+
+Application service checkpoint: `queueService` now durably submits read, delete,
+screenshot, history-clear, typing and TTL actions. ID vectors preserve signed
+64-bit values and are copied, deduplicated and bounded. Ordered TTL settings
+survive JSON restart and failed saves leave both defaults and ciphertext
+unchanged. Omitted message TTL uses the current default; explicit zero disables
+expiry and explicit positive message values retain the TL integer range.
+Invalid incoming chat defaults follow official Android clamping to one year.
+Batch deletion and history clearing replace unacknowledged message/attachment
+frames while preserving their original sequence and encryption boundaries.
+
+Eight new service regressions, a low-level capacity regression and a bilateral
+attachment-deletion regression bring Node, Bun and Deno to 339 passing tests.
+The native encrypted TCP file scenario also exchanges TTL and read services
+through real update-manager persistence before qts acknowledgement. Strict lint,
+formatting, full types and the zero-clone scan of 65 production sources pass;
+the package dry run has 70 permitted entries. The typed service example compiles.
+Failing-before logs preserve attachment retention during deletion and rejection
+of a valid explicit message TTL above the chat-default maximum.
+
+Durable attachment head 8d9027e passed all nine OS/runtime jobs and applicable
+gates in [run 40815695308](https://github.com/link-foundation/anygram/actions/runs/40815695308),
+created 2026-10-29T04:04:46Z and completed 2026-10-29T04:06:42Z. Fresh CI is
+required for this service checkpoint. Read-triggered expiry and application
+history deletion still need implementation evidence. Controlled production
+accounts, call media, complete compatibility and downstream criteria remain open.

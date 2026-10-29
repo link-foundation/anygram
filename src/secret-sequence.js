@@ -125,13 +125,13 @@ export class SecretChatSequence {
     return this.#readCodec.decode(bytes, 'DecryptedMessageLayer');
   }
 
-  #reserve(bytes) {
+  #reserve(bytes, additionalEntries = 1) {
     let count = this.#history.size;
     let buffered = this.#bufferedBytes;
     const entries = this.#history.entries();
     const evicted = [];
     while (
-      count >= this.#maxHistory ||
+      count + additionalEntries > this.#maxHistory ||
       buffered + bytes > this.#maxBufferedBytes
     ) {
       const entry = entries.next().value;
@@ -177,7 +177,7 @@ export class SecretChatSequence {
     return this.#decode(bytes);
   }
 
-  deleteUnacknowledged(outSequence, deletionId = randomId()) {
+  #prepareDeletion(outSequence) {
     this.#assertActive();
     const index = secretCounter(outSequence, this.#originator ? 1 : 0);
     const cached = this.#history.get(index);
@@ -190,9 +190,6 @@ export class SecretChatSequence {
         'Only outgoing secret text/media messages can be deleted'
       );
     }
-    if (BigInt(deletionId) === original.message.random_id) {
-      throw new RangeError('Deletion service needs a distinct random ID');
-    }
     const originalCodec = new SecretChatCodec({
       layer: original.layer,
       maxBytes: this.#codec.maxBytes,
@@ -201,17 +198,51 @@ export class SecretChatSequence {
       ...original,
       message: secretDeletionMessage(original.message.random_id),
     });
-    const deletion = this.#encodeNext(
-      secretDeletionMessage(deletionId, original.message.random_id)
-    );
-    const additional = replacement.length + deletion.length - cached.length;
-    this.#reserve(additional);
+    return { index, original, cached, replacement };
+  }
+
+  #installDeletion({ index, cached, replacement }) {
     this.#history.set(index, replacement);
-    this.#history.set(this.#outgoing++, deletion);
-    this.#bufferedBytes += additional;
+    this.#bufferedBytes += replacement.length - cached.length;
     cached.fill(0);
+  }
+
+  /** Replace in place; persist atomically with a separate new deletion action. */
+  replaceUnacknowledged(outSequence) {
+    const prepared = this.#prepareDeletion(outSequence);
+    try {
+      this.#reserve(prepared.replacement.length - prepared.cached.length, 0);
+    } catch (error) {
+      prepared.replacement.fill(0);
+      throw error;
+    }
+    this.#installDeletion(prepared);
+    return this.#decode(prepared.replacement);
+  }
+
+  deleteUnacknowledged(outSequence, deletionId = randomId()) {
+    const prepared = this.#prepareDeletion(outSequence);
+    let deletion;
+    try {
+      if (BigInt(deletionId) === prepared.original.message.random_id) {
+        throw new RangeError('Deletion service needs a distinct random ID');
+      }
+      deletion = this.#encodeNext(
+        secretDeletionMessage(deletionId, prepared.original.message.random_id)
+      );
+      this.#reserve(
+        prepared.replacement.length + deletion.length - prepared.cached.length
+      );
+    } catch (error) {
+      prepared.replacement.fill(0);
+      deletion?.fill(0);
+      throw error;
+    }
+    this.#installDeletion(prepared);
+    this.#history.set(this.#outgoing++, deletion);
+    this.#bufferedBytes += deletion.length;
     return {
-      replacement: this.#decode(replacement),
+      replacement: this.#decode(prepared.replacement),
       deletion: this.#decode(deletion),
     };
   }

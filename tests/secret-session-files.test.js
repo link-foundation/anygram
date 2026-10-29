@@ -479,3 +479,43 @@ it('delivers photo, video and audio attachment metadata through their independen
     assert.deepEqual(received.message.media.key, upload.key);
   }
 });
+
+it('removes unacknowledged file contents from retransmissions when application deletion or history clear is queued', async () => {
+  for (const name of ['DeleteMessages', 'FlushHistory']) {
+    for (const options of [{}, { dh: { p, g: 3 } }]) {
+      const sender = create(true, options);
+      const receiver = create(false);
+      const { upload, message } = await attachment();
+      await sender.queueFile(message, upload.file, { save });
+      const before = sender.exportState();
+      const action = {
+        _: `decryptedMessageAction${name}`,
+        ...(name === 'DeleteMessages' ? { random_ids: [12n] } : {}),
+      };
+      await assert.rejects(
+        sender.queueService(action, {
+          randomId: 13n,
+          save: () => {
+            throw new Error('application delete save failed');
+          },
+        }),
+        /application delete save failed/
+      );
+      assert.deepEqual(sender.exportState(), before);
+      await sender.queueService(action, { save, randomId: 13n });
+      const restored = new SecretChatSession({
+        state: portable(sender.exportState()),
+      });
+      assert.equal(restored.state.sequence.outgoing, 3);
+      assert.equal(
+        restored.exportState().outbox.every((packet) => packet.file === null),
+        true
+      );
+      for (const packet of restored.pending()) {
+        assert.equal(packet.request._, 'messages.sendEncryptedService');
+        const received = await receiver.receive(packet.request.data, { save });
+        assert.equal(received.messages[0].message._, 'decryptedMessageService');
+      }
+    }
+  }
+});

@@ -4,6 +4,10 @@ import {
 } from './secret-session-state.js';
 import { throwFailures } from './errors.js';
 import { secretLimit } from './secret-sequence-state.js';
+import {
+  secretApplicationService,
+  secretOutgoingMessage,
+} from './secret-services.js';
 
 /** Active chat state with transactional key transitions and a durable outbox. */
 export class SecretChatSession {
@@ -40,6 +44,7 @@ export class SecretChatSession {
       layers:
         this.#data.phase === 'active' ? this.#data.layers.exportState() : null,
       discardSubmitted: this.#data.discardSubmitted,
+      messageTTL: this.#data.phase === 'active' ? this.#data.messageTTL : null,
       keys: this.#data.phase === 'active' ? this.#data.keys.ring.state : null,
       rekey:
         this.#data.phase === 'active'
@@ -116,7 +121,10 @@ export class SecretChatSession {
     return this.#exclusive(options, (save) =>
       this.#transaction(save, options?.signal, (draft) => {
         draft.assertActive();
-        const bytes = draft.codec.encode(message, 'DecryptedMessage');
+        const bytes = draft.codec.encode(
+          secretOutgoingMessage(message, draft.messageTTL),
+          'DecryptedMessage'
+        );
         let copy;
         try {
           copy = draft.codec.decode(bytes, 'DecryptedMessage');
@@ -135,6 +143,20 @@ export class SecretChatSession {
     return this.#exclusive(options, (save) =>
       this.#transaction(save, options?.signal, (draft) => {
         const frame = draft.notify();
+        draft.rotateIfNeeded();
+        return frame;
+      })
+    );
+  }
+
+  queueService(action, options) {
+    return this.#exclusive(options, (save) =>
+      this.#transaction(save, options?.signal, (draft) => {
+        draft.assertActive();
+        const frame = draft.queueApplicationAction(
+          secretApplicationService(action),
+          options?.randomId
+        );
         draft.rotateIfNeeded();
         return frame;
       })
