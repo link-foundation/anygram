@@ -7,7 +7,10 @@ const manifest = JSON.parse(
   await readFile(new globalThis.URL(manifestPath, root))
 );
 const installed = [];
-for (const name of Object.keys(manifest.dependencies)) {
+for (const name of Object.keys({
+  ...manifest.dependencies,
+  ...manifest.devDependencies,
+})) {
   const file = `experiments/bot-framework-runtime/node_modules/${name}/package.json`;
   const bytes = await readFile(new globalThis.URL(file, root));
   installed.push({

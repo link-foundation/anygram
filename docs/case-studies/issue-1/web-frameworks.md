@@ -124,3 +124,19 @@ This verifies the listed installed frameworks and local runtime contracts.
 Other adapters' actual frameworks, cloud provider hosting, complete SDK plugins
 and refined models, other runtime/platform integration, controlled Telegram
 delivery and all wider open criteria in the requirement ledger remain unfinished.
+
+## Clean CI dependency correction
+
+Run 40954349985 tested head baff2293a7163ff9dfdd847dc14684c56bbeefe4,
+created 2026-10-29T21:02:47Z after its 21:02:22Z commit. All six Node/Bun
+framework jobs passed, while all three Deno framework jobs stopped during type
+resolution: `Could not find a matching package for 'npm:@types/node'`.
+Preserved job logs locate the error at macOS line 198, Windows line 201 and
+Linux line 215. The isolated fixture now explicitly pins @types/node 22.18.3,
+including its compatible undici declarations. A fresh Deno 2.9.8 installation
+and empty DENO_DIR pass all 71 cases without disabling type checking.
+
+The same run exposed a separate macOS Bun five-second timeout in the existing
+10 MiB encrypted upload test (failed-run log lines 2304–2305). The input and
+deadline remain unchanged; encryption allocation tracing is the next investigation.
+Fresh matrix CI is required for both corrections before this checkpoint is verified.

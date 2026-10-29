@@ -1,5 +1,5 @@
 {
-  "retrieved": "2026-10-29T20:56:14.192Z",
+  "retrieved": "2026-10-29T21:07:58.175Z",
   "sources": [
     "https://expressjs.com/en/5x/api/",
     "https://koajs.com/",
@@ -48,6 +48,12 @@
       "version": "3.2.1",
       "file": "experiments/bot-framework-runtime/node_modules/koa/package.json",
       "sha256": "820f640e2e5cd48496f0df97334da81531058d62dd574bbad4bda63150e4f831"
+    },
+    {
+      "name": "@types/node",
+      "version": "22.18.3",
+      "file": "experiments/bot-framework-runtime/node_modules/@types/node/package.json",
+      "sha256": "be3ebb5ed67f80fbdeb1fd5bad9f5adb56f7518b75ec9e0c760b84959059c8a8"
     }
   ],
   "comparisons": {

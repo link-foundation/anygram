@@ -12,5 +12,8 @@
     "fastify": "5.12.7",
     "hono": "4.13.14",
     "koa": "3.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "22.18.3"
   }
 }
