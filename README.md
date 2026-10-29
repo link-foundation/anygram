@@ -313,6 +313,22 @@ owned memory, while applications manage their stored and returned copies.
 This is currently a single-key session: compulsory PFS rotation, encrypted
 file handling and controlled live-account interoperability remain unfinished.
 
+`SecretChatRekey` provides the separate ordered PFS action state machine using
+the original chat's DH parameters. `request()` starts one exchange;
+`receive(action)` returns actions and optional key installation. Its
+`installBeforeActions` flag keeps the initiator's commit under the old key and
+the recipient's noop under the new key. `candidate` allows authentication of
+a new-key message when the commit is missing; call `confirm(fingerprint)` only
+after successful authentication. Signed exchange IDs resolve simultaneous
+requests, and accepted/committed local exchanges cannot be aborted locally.
+
+`record({ sent, received })` and `shouldRotate()` implement the usage and key-age
+thresholds. Protected snapshots retain pending exponents or candidate keys.
+Work on a restored draft and persist actions, sequence and key changes together;
+see `examples/typed-secret-rekey.ts`. The active session does not yet invoke
+this policy automatically or retain/erase previous keys across gaps. Full PFS
+integration remains open.
+
 ## Select existing clients
 
 ```js

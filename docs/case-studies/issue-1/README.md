@@ -865,3 +865,44 @@ The session checkpoint passes all 279 tests on Node, Bun and Deno, strict lint,
 formatting, full TypeScript checks and the zero-clone scan of 57 production
 files. The package dry run contains 62 permitted entries. Fresh CI remains
 required after committing it.
+
+## PFS action state machine
+
+Telegram's [PFS specification](https://core.telegram.org/api/end-to-end/pfs)
+requires both initiating and accepting re-keying, including simultaneous
+requests, lost commits and erasure of previous keys after gaps close. The
+archived specification and the pinned official Android implementation were
+reviewed for the transition rules. The new independent `SecretChatRekey`
+component handles the request/accept/commit/abort actions using the original
+validated DH parameters. It reuses the bounded DH primitive and consumes its
+private exponent after deriving a key.
+
+The result explicitly describes whether to install a new key before or after
+queuing service actions. This preserves the old-key commit and new-key noop
+boundary. Authenticated candidate-key proof can complete a recipient exchange
+without its commit. Simultaneous requests compare signed 64-bit IDs; equal IDs
+clear both instances silently. A local participant cannot retract an acceptance
+or commit. Invalid public values and fingerprints destroy owned pending secret
+material and report a typed protocol failure.
+
+Eleven regressions cover bilateral DH, signed collisions, protected restart
+snapshots, usage/age thresholds, peer/local abort restrictions, conflicting IDs,
+malformed material, missing commits, copied inputs and atomic counter bounds.
+Real sequence frames, TL services and authenticated envelopes verify that a
+commit cannot decrypt under the new key and a noop cannot decrypt under the old
+key. A further failing-before restoration case exposed unchecked stored public
+values; safe-public validation now applies to every restored active phase.
+
+This component does not complete PFS support: the active session still needs
+automatic policy invocation, a bounded key ring, gap-aware previous-key erasure,
+original-key visualization hashes and durable transitions with its outbox.
+Those requirements remain open alongside live interoperability and other issue
+criteria.
+
+Durable session head 36f8f97 passed all nine runtime/OS jobs and applicable gates
+in [run 40806856623](https://github.com/link-foundation/anygram/actions/runs/40806856623).
+
+All 290 tests pass on Node, Bun and Deno, alongside strict lint, formatting,
+full declaration/example checking and the zero-clone scan of 58 production
+files. The package dry run has 63 permitted entries. Fresh CI is required for
+the PFS action checkpoint.

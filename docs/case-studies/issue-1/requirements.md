@@ -46,3 +46,10 @@ pass on Node, Bun and Deno; strict checks scan 57 production files with no
 clones. The R09 package dry run has 62 permitted entries. Compulsory PFS,
 encrypted media, controlled production peers and the other open criteria remain
 unfinished.
+
+The subsequent PFS action checkpoint passes 290 tests on each runtime and all
+strict checks. Its state machine covers request/accept/commit/abort, signed
+simultaneous exchanges, lost commits, cryptographic validation and usage/age
+thresholds. Real encrypted service frames verify the key-installation boundary.
+The clone scan covers 58 production files, and the package has 63 permitted
+entries. Automatic integration and gap-aware previous-key erasure remain open.

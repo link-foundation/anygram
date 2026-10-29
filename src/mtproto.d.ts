@@ -165,6 +165,60 @@ export declare function createSecretChatKeyExchange(
     timeout?: number;
   }
 ): Promise<{ exchange: SecretChatKeyExchange; config: SecretChatDhConfig }>;
+export type SecretChatRekeyPhase =
+  | 'idle'
+  | 'requesting'
+  | 'accepted'
+  | 'committed';
+/** Contains a pending exponent or shared key; use protected storage. */
+export interface SecretChatRekeyState {
+  version: 1;
+  p: string;
+  g: number;
+  phase: SecretChatRekeyPhase;
+  exchangeId: string | null;
+  publicValue: string | null;
+  exchange: SecretChatKeyExchangeState | null;
+  key: string | null;
+  fingerprint: string | null;
+  createdAt: number;
+  sent: number;
+  received: number;
+}
+export interface SecretChatRekeyResult {
+  actions: TlRequest[];
+  install?: { key: Uint8Array; fingerprint: bigint };
+  /** False for initiator commit, true for recipient noop. Commit all atomically. */
+  installBeforeActions: boolean;
+}
+/** Ordered action state machine; key retention and durable submission are separate. */
+export declare class SecretChatRekey {
+  constructor(
+    options: (
+      | { p: Uint8Array; g: number }
+      | { state: SecretChatRekeyState }
+    ) & { now?: () => number }
+  );
+  readonly state: {
+    phase: SecretChatRekeyPhase;
+    exchangeId: bigint | null;
+    fingerprint: bigint | null;
+    createdAt: number;
+    sent: number;
+    received: number;
+  };
+  readonly candidate: { key: Uint8Array; fingerprint: bigint } | undefined;
+  record(options?: { sent?: number; received?: number }): void;
+  shouldRotate(now?: number): boolean;
+  request(exchangeId?: bigint): TlRequest;
+  pendingAction(): TlRequest | undefined;
+  receive(action: TlRequest): SecretChatRekeyResult;
+  /** Only after authenticating a message with the candidate key. */
+  confirm(fingerprint: bigint): SecretChatRekeyResult;
+  abort(): TlRequest | undefined;
+  exportState(): SecretChatRekeyState;
+  destroy(): void;
+}
 export interface SecretChatLayer extends TlRequest {
   _: 'decryptedMessageLayer';
   random_bytes: Uint8Array;

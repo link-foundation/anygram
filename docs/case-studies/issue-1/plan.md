@@ -253,3 +253,16 @@ declaration/example checking and the zero-clone scan of 57 production files
 pass. The package dry run has 62 permitted entries. Refreshed issue comments,
 sub-issues and all three PR feedback streams remain empty. Fresh CI is required
 after committing this checkpoint.
+
+Durable session head 36f8f97 passed all nine runtime/OS jobs and applicable gates
+in CI run 40806856623. PFS action handling now has eleven regressions covering
+bilateral exchanges, signed collisions, lost commits, protected restart,
+abort restrictions, cryptographic validation, key-use/age thresholds and the
+old/new encryption boundary. A failing-before restore regression led to public
+value validation for every active phase. Automatic session invocation, the key
+ring, gap-aware erasure and visualization hashes remain the next PFS steps.
+
+The PFS action checkpoint passes all 290 tests on Node, Bun and Deno and all
+strict checks. The clone detector scans 58 production files with zero clones;
+the package dry run has 63 permitted entries. Its typed draft-planning example
+compiles. Fresh CI is required after committing the checkpoint.
