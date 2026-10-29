@@ -1,0 +1,30 @@
+{
+  "terminal-before.png": {
+    "bytes": 2716,
+    "sha256": "9c9469b83d33959bfc3f3e050e45c8d288cb3576ae8d685e3e3280abc5c482d3"
+  },
+  "terminal-before.gif": {
+    "bytes": 7169,
+    "sha256": "260aeb52bdfebb221bcc225b32f90a018b69e95bc9c8ac40ca52b511ffda04af"
+  },
+  "before": {
+    "width": 537,
+    "height": 614,
+    "frames": 4,
+    "foregroundPixels": [0, 0, 0, 0]
+  },
+  "terminal-after.png": {
+    "bytes": 7785,
+    "sha256": "5f6f5a1ea78a1b77b2e905d97d5bca7a21bc58df7e40b87ccc09b6bc1be1da1c"
+  },
+  "terminal-after.gif": {
+    "bytes": 15893,
+    "sha256": "e2cf53f935f4f1837f82dec7a52b067254a7dcb693ef58e94905c1d4986acd12"
+  },
+  "after": {
+    "width": 537,
+    "height": 614,
+    "frames": 4,
+    "foregroundPixels": [1077, 1077, 1077, 1077]
+  }
+}

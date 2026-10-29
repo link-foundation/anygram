@@ -4,8 +4,10 @@ The complete text and visual bot sources at
 `konard/telegram-terminal-bot@7f3aeee50965160b31dca62b6e5b4e4a7af99bea`
 now execute through the shared bot runner in bounded application scenarios.
 The loader verifies source byte counts and SHA-256 before selecting application
-handlers. It excludes imports, logger/environment startup and real polling;
-PTYs, timers, process signals and the GIF/canvas implementation are controlled.
+handlers. It excludes imports and logger/environment startup. Default scenarios
+control PTYs, timers, process signals and rendering. Separate startup scenarios
+execute the actual polling runner against a controlled fetch transport; a separate
+Node/Linux integration command uses actual PTYs, canvas and GIF encoding.
 The text application uses the complete actual pinned virtual terminal emulator.
 No test opens a shell, contacts Telegram or uses account credentials.
 
@@ -46,17 +48,51 @@ Upload preparation checks pre-cancellation, caps total bytes at 64 MiB by defaul
 limits and oversized uploads fail before fetch; no operation is replayed.
 Six separate upload regressions all fail before implementation.
 
-The controlled renderer records four captured frames and supplies a finite
-synthetic GIF byte sequence; this verifies frame data and multipart submission,
-not actual canvas pixels, GIF interoperability or Telegram delivery. The visual
+The default controlled renderer records four frames and supplies synthetic GIF
+bytes. The isolated native integration additionally uses actual canvas 3.1.2,
+gifencoder 2.0.1 and node-pty 1.1.0, with omggif 1.0.10 independently decoding
+uploaded bytes. All four frames are 537 by 614 pixels, with a one-second delay
+and looping enabled. The original source produces zero foreground pixels;
+the migrated source produces 1077 in each locally rendered frame. Exact hashes
+and sizes are in `docs/screenshots/terminal-rendering.json`.
+
+Before (original source):
+
+![Blank original animation frame](../../screenshots/terminal-before.png)
+
+After (explicit migration):
+
+![Actual migrated terminal rendering](../../screenshots/terminal-after.png)
+
+Both complete GIFs are adjacent to these PNGs. Regenerate with
+`node experiments/terminal-runtime/render-evidence.mjs` after
+`npm ci --prefix experiments/terminal-runtime`. The separate command
+`npm test --prefix experiments/terminal-runtime` checks independent GIF decoding
+and both application modes through real PTY children. Each child has a 64 MiB
+JavaScript heap, a fixed three-second lifetime and finite output; no user shell
+or account is opened. Its dedicated Ubuntu/Node CI job gates release. Native
+fixture dependencies remain isolated from the published dependency-free package.
+
+Three additional failing-before regressions exercise both signals while an
+actual owned polling request drains and during active animation capture.
+Both signals share one shutdown task; it stops polling, closes terminal state,
+cancels every owned frame/wait timer, settles the animation handler, awaits
+polling and accepted handlers, and only then exits once. No cancelled animation
+is submitted. The full derived patch retains these explicit application fixes.
+
+The visual
 source advertises static PNGs in help but implements regular-command text edits;
 there is no static-photo handler to claim as covered. InlineKeyboard is unused
-in these pinned sources. Full keyboard/photo scenarios, actual rendering/PTY
-integration, logger/startup behavior, awaited online polling shutdown and
-controlled-account delivery remain open. This advances R05/R08/R13/R16/R19;
+in these pinned sources. Full keyboard/photo scenarios, logger/environment startup behavior, native
+rendering on other runtimes/platforms and controlled-account delivery remain
+open. Polling shutdown is verified with the actual runner and a controlled
+transport; authenticated online delivery is still unverified. This advances R05/R08/R13/R16/R19;
 it does not close R13 or the broader feature-union criteria.
 
-All 610 tests pass on Node, Bun and Deno. Strict ESLint, formatting, full
+All 613 tests pass on Node, Bun and Deno. Strict ESLint, formatting, full
 TypeScript declarations/examples and the duplication gate pass with zero clones
 across 78 production sources. The package dry run contains 121 permitted entries.
-Fresh matrix CI is required for this checkpoint.
+The earlier 610-test head 5a232706 passed all nine runtime/OS jobs and applicable
+gates in [run 40847213870](https://github.com/link-foundation/anygram/actions/runs/40847213870),
+created 2026-10-29T09:07:50Z and completed 2026-10-29T09:10:19Z. Fresh matrix
+CI, including the new native integration job, is required for this checkpoint.

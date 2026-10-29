@@ -182,8 +182,13 @@ The [terminal source checkpoint](terminal-migration.md) reproduces and patches
 nine application failures and six upload failures. Sixteen source scenarios
 include the actual emulator, grammY comparisons and patch application; upload
 preparation reuses shared traversal guards and adds finite byte/file limits.
-Complete local checks and fresh CI, then continue real rendering/PTY integration,
-keyboard/photo helpers and awaited polling shutdown. Preserve all broader open
+The 610-test head 5a232706 passed all nine runtime/OS jobs and applicable gates
+in run 40847213870, created 09:07:50Z and completed 09:10:19Z on 2026-10-29.
+Three further failing-before regressions now verify polling drain, shared signal
+shutdown and active-animation cancellation. Three isolated Node/Linux integrations
+use real PTY children, actual canvas/GIF encoding and independent GIF decoding;
+before/after PNGs and GIFs are preserved. Verify fresh matrix and native-job CI,
+then continue keyboard/photo helpers and environment/logger startup. Preserve all broader open
 criteria and keep working independently of controlled-account credentials.
 
 Keep protocol completion (secret chats/call media/transports), complete backend

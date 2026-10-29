@@ -1,5 +1,5 @@
 diff --git a/src/text-bot.js b/src/text-bot.js
-index 186f91e..e31a5c2 100644
+index 186f91e..4b47f3e 100644
 --- a/src/text-bot.js
 +++ b/src/text-bot.js
 @@ -1,4 +1,4 @@
@@ -49,13 +49,14 @@ index 186f91e..e31a5c2 100644
        try {
          const formattedOutput = formatTerminalOutput(virtualTerminal);
          const messageText = `🚀 **Terminal ${name} (${cols}x${rows})** - Ready!
-@@ -322,6 +328,13 @@ ${formattedOutput}
+@@ -322,6 +328,14 @@ ${formattedOutput}
        virtualTerminal,
        messageId,
        updateTerminalMessage,
 +      cleanup() {
 +        clearTimeout(updateTimeout);
 +        clearTimeout(initialUpdateTimeout);
++        this.cancelAnimation?.();
 +        if (typeof unsubscribeFromChanges === 'function') {
 +          unsubscribeFromChanges();
 +        }
@@ -63,7 +64,7 @@ index 186f91e..e31a5c2 100644
        unsubscribeFromChanges,
        cols,
        rows,
-@@ -354,7 +367,7 @@ ${initialOutput}
+@@ -354,7 +368,7 @@ ${initialOutput}
      logger.debug({ userId, messageId }, 'Initial terminal message sent');
      
      // Wait a bit for initial shell prompt, then update
@@ -72,7 +73,7 @@ index 186f91e..e31a5c2 100644
      
    } catch (error) {
      logger.error({ userId, error: error.message, stack: error.stack }, 'Failed to start terminal session');
-@@ -363,81 +376,6 @@ ${initialOutput}
+@@ -363,81 +377,6 @@ ${initialOutput}
    }
  });
  
@@ -154,7 +155,7 @@ index 186f91e..e31a5c2 100644
  // Handle stop command
  bot.command("stop", async (ctx) => {
    const userId = ctx.from.id;
-@@ -447,6 +385,7 @@ bot.command("stop", async (ctx) => {
+@@ -447,6 +386,7 @@ bot.command("stop", async (ctx) => {
    
    if (session) {
      try {
@@ -162,7 +163,7 @@ index 186f91e..e31a5c2 100644
        session.terminal.kill();
        userSessions.delete(userId);
        logger.info({ userId }, 'Terminal session stopped successfully');
-@@ -477,7 +416,8 @@ bot.command("restart", async (ctx) => {
+@@ -477,7 +417,8 @@ bot.command("restart", async (ctx) => {
          from: ctx.from,
          chat: ctx.chat,
          date: Date.now(),
@@ -172,7 +173,7 @@ index 186f91e..e31a5c2 100644
        }
      });
      logger.info({ userId }, 'Terminal session restart initiated');
-@@ -521,6 +461,82 @@ bot.command("help", async (ctx) => {
+@@ -521,6 +462,82 @@ bot.command("help", async (ctx) => {
    logger.info({ userId: ctx.from.id }, 'Help command sent');
  });
  
@@ -255,40 +256,70 @@ index 186f91e..e31a5c2 100644
  // Error handling
  bot.catch((err) => {
    logger.error({ error: err.message, stack: err.stack }, 'Bot error occurred');
-@@ -534,12 +550,15 @@ process.once("SIGINT", () => {
-   for (const [userId, session] of userSessions) {
-     logger.debug({ userId }, 'Killing terminal session during shutdown');
-     try {
-+      session.cleanup();
-       session.terminal.kill();
-     } catch (error) {
-       logger.warn({ userId, error: error.message }, 'Error killing terminal session during shutdown');
-     }
-   }
-   logger.info('All terminal sessions closed, exiting...');
-+  bot.stop();
-+  userSessions.clear();
-   process.exit(0);
+@@ -528,39 +545,32 @@ bot.catch((err) => {
  });
  
-@@ -549,12 +568,15 @@ process.once("SIGTERM", () => {
-   for (const [userId, session] of userSessions) {
-     logger.debug({ userId }, 'Killing terminal session during shutdown');
-     try {
-+      session.cleanup();
-       session.terminal.kill();
-     } catch (error) {
-       logger.warn({ userId, error: error.message }, 'Error killing terminal session during shutdown');
+ // Graceful shutdown
+-process.once("SIGINT", () => {
+-  logger.info('Received SIGINT, shutting down gracefully...');
+-  // Kill all terminal sessions
+-  for (const [userId, session] of userSessions) {
+-    logger.debug({ userId }, 'Killing terminal session during shutdown');
+-    try {
+-      session.terminal.kill();
+-    } catch (error) {
+-      logger.warn({ userId, error: error.message }, 'Error killing terminal session during shutdown');
+-    }
+-  }
+-  logger.info('All terminal sessions closed, exiting...');
+-  process.exit(0);
+-});
+-
+-process.once("SIGTERM", () => {
+-  logger.info('Received SIGTERM, shutting down gracefully...');
+-  // Kill all terminal sessions
+-  for (const [userId, session] of userSessions) {
+-    logger.debug({ userId }, 'Killing terminal session during shutdown');
+-    try {
+-      session.terminal.kill();
+-    } catch (error) {
+-      logger.warn({ userId, error: error.message }, 'Error killing terminal session during shutdown');
++let shutdownTask;
++function shutdownTerminal() {
++  shutdownTask ??= (async () => {
++    bot.stop();
++    for (const [userId, session] of userSessions) {
++      try {
++        session.cleanup();
++        session.terminal.kill();
++      } catch (error) {
++        logger.warn({ userId, error: error.message }, 'Terminal cleanup failed');
++      }
      }
-   }
-   logger.info('All terminal sessions closed, exiting...');
-+  bot.stop();
-+  userSessions.clear();
-   process.exit(0);
- });
+-  }
+-  logger.info('All terminal sessions closed, exiting...');
+-  process.exit(0);
+-});
++    userSessions.clear();
++    await polling;
++    await bot.queue;
++    logger.info('All terminal sessions and polling closed');
++    process.exit(0);
++  })();
++  return shutdownTask;
++}
++process.once("SIGINT", shutdownTerminal);
++process.once("SIGTERM", shutdownTerminal);
  
+ // Start the bot
+ logger.info('Initializing bot...');
+-bot.start({
++const polling = bot.start({
+   onStart: () => {
+     logger.info('Telegram Terminal Bot started successfully!');
+     logger.info({ 
 diff --git a/src/visual-bot.js b/src/visual-bot.js
-index 9ad84e0..6db00fb 100644
+index 9ad84e0..e1ddcef 100644
 --- a/src/visual-bot.js
 +++ b/src/visual-bot.js
 @@ -1,4 +1,4 @@
@@ -343,13 +374,14 @@ index 9ad84e0..6db00fb 100644
        try {
          const formattedOutput = formatTerminalOutput(output, cols, rows);
          const messageText = `🚀 **Terminal ${name} (${cols}x${rows})** - Ready!
-@@ -365,6 +372,13 @@ ${formattedOutput}
+@@ -365,6 +372,14 @@ ${formattedOutput}
        output,
        messageId,
        updateTerminalMessage,
 +      cleanup() {
 +        clearTimeout(updateTimeout);
 +        clearTimeout(initialUpdateTimeout);
++        this.cancelAnimation?.();
 +        if (typeof unsubscribeFromChanges === 'function') {
 +          unsubscribeFromChanges();
 +        }
@@ -357,7 +389,7 @@ index 9ad84e0..6db00fb 100644
        cols,
        rows
      });
-@@ -391,7 +405,7 @@ ${initialOutput}
+@@ -391,7 +406,7 @@ ${initialOutput}
      
      logger.debug({ userId, messageId }, 'Initial terminal message sent');
      
@@ -366,7 +398,7 @@ index 9ad84e0..6db00fb 100644
      
    } catch (error) {
      logger.error({ userId, error: error.message, stack: error.stack }, 'Failed to start terminal session');
-@@ -400,6 +414,88 @@ ${initialOutput}
+@@ -400,6 +415,88 @@ ${initialOutput}
    }
  });
  
@@ -455,7 +487,27 @@ index 9ad84e0..6db00fb 100644
  // Handle all text messages as terminal commands
  bot.on("message:text", async (ctx) => {
    const userId = ctx.from.id;
-@@ -497,85 +593,6 @@ async function streamToBuffer(stream) {
+@@ -463,7 +560,18 @@ bot.on("message:text", async (ctx) => {
+       captureFrames();
+ 
+       // Wait for animation duration and generate GIF
+-      await new Promise(resolve => setTimeout(resolve, ANIMATION_DURATION + 500));
++      let animationTimeout;
++      await new Promise(resolve => {
++        session.cancelAnimation = () => {
++          clearTimeout(frameTimeout);
++          clearTimeout(animationTimeout);
++          resolve();
++        };
++        animationTimeout = setTimeout(resolve, ANIMATION_DURATION + 500);
++      });
++      clearTimeout(animationTimeout);
++      delete session.cancelAnimation;
++      if (userSessions.get(userId) !== session) { return; }
+       clearTimeout(frameTimeout);
+ 
+       const animationStream = await generateTerminalAnimation(frames, session.cols, session.rows);
+@@ -497,85 +605,6 @@ async function streamToBuffer(stream) {
    return Buffer.concat(chunks);
  }
  
@@ -541,35 +593,63 @@ index 9ad84e0..6db00fb 100644
  
  // Error handling
  bot.catch((err) => {
-@@ -589,12 +606,15 @@ process.once("SIGINT", () => {
-   for (const [userId, session] of userSessions) {
-     logger.debug({ userId }, 'Killing terminal session during shutdown');
-     try {
-+      session.cleanup();
-       session.terminal.kill();
-     } catch (error) {
-       logger.warn({ userId, error: error.message }, 'Error killing terminal session during shutdown');
-     }
-   }
-   logger.info('All terminal sessions closed, exiting...');
-+  bot.stop();
-+  userSessions.clear();
-   process.exit(0);
+@@ -584,37 +613,32 @@ bot.catch((err) => {
  });
  
-@@ -603,12 +623,15 @@ process.once("SIGTERM", () => {
-   for (const [userId, session] of userSessions) {
-     logger.debug({ userId }, 'Killing terminal session during shutdown');
-     try {
-+      session.cleanup();
-       session.terminal.kill();
-     } catch (error) {
-       logger.warn({ userId, error: error.message }, 'Error killing terminal session during shutdown');
+ // Graceful shutdown
+-process.once("SIGINT", () => {
+-  logger.info('Received SIGINT, shutting down gracefully...');
+-  for (const [userId, session] of userSessions) {
+-    logger.debug({ userId }, 'Killing terminal session during shutdown');
+-    try {
+-      session.terminal.kill();
+-    } catch (error) {
+-      logger.warn({ userId, error: error.message }, 'Error killing terminal session during shutdown');
+-    }
+-  }
+-  logger.info('All terminal sessions closed, exiting...');
+-  process.exit(0);
+-});
+-
+-process.once("SIGTERM", () => {
+-  logger.info('Received SIGTERM, shutting down gracefully...');
+-  for (const [userId, session] of userSessions) {
+-    logger.debug({ userId }, 'Killing terminal session during shutdown');
+-    try {
+-      session.terminal.kill();
+-    } catch (error) {
+-      logger.warn({ userId, error: error.message }, 'Error killing terminal session during shutdown');
++let shutdownTask;
++function shutdownTerminal() {
++  shutdownTask ??= (async () => {
++    bot.stop();
++    for (const [userId, session] of userSessions) {
++      try {
++        session.cleanup();
++        session.terminal.kill();
++      } catch (error) {
++        logger.warn({ userId, error: error.message }, 'Terminal cleanup failed');
++      }
      }
-   }
-   logger.info('All terminal sessions closed, exiting...');
-+  bot.stop();
-+  userSessions.clear();
-   process.exit(0);
- });
+-  }
+-  logger.info('All terminal sessions closed, exiting...');
+-  process.exit(0);
+-});
++    userSessions.clear();
++    await polling;
++    await bot.queue;
++    logger.info('All terminal sessions and polling closed');
++    process.exit(0);
++  })();
++  return shutdownTask;
++}
++process.once("SIGINT", shutdownTerminal);
++process.once("SIGTERM", shutdownTerminal);
  
+ // Start the bot
+ logger.info('Initializing bot...');
+-bot.start({
++const polling = bot.start({
+   onStart: () => {
+     logger.info('Telegram Terminal Bot (Visual Mode) started successfully!');
+     logger.info({ 

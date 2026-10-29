@@ -1,0 +1,19 @@
+{
+  "name": "anygram-terminal-integration",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test terminal-runtime.integration.js"
+  },
+  "dependencies": {
+    "canvas": "3.1.2",
+    "gifencoder": "2.0.1",
+    "node-pty": "1.1.0",
+    "omggif": "1.0.10"
+  },
+  "overrides": {
+    "gifencoder": {
+      "canvas": "$canvas"
+    }
+  }
+}

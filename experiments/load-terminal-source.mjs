@@ -43,7 +43,7 @@ export function loadVirtualTerminal() {
 export function loadTerminalSource(
   mode,
   dependencies,
-  { migrated = true } = {}
+  { migrated = true, startup = false } = {}
 ) {
   if (!['text', 'visual'].includes(mode)) {
     throw new TypeError('Unknown terminal mode');
@@ -57,9 +57,9 @@ export function loadTerminalSource(
   if (begin < 0 || end <= begin) {
     throw new Error('Pinned terminal application boundaries changed');
   }
-  const body = source.slice(begin, end);
+  const body = source.slice(begin, startup ? undefined : end);
   return new Function(
     ...Object.keys(dependencies),
-    `'use strict';\n${body}\nreturn { bot, userSessions, parseCommandInput, formatTerminalOutput };`
+    `'use strict';\n${body}\nreturn { bot, userSessions, parseCommandInput, formatTerminalOutput${startup ? ", polling: typeof polling === 'undefined' ? null : polling" : ''} };`
   )(...Object.values(dependencies));
 }

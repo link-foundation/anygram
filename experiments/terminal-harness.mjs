@@ -132,7 +132,14 @@ function rendering(frames) {
 
 export function terminalHarness(
   mode,
-  { Constructor = Bot, migrated = true, env = {} } = {}
+  {
+    Constructor = Bot,
+    migrated = true,
+    env = {},
+    dependencies = {},
+    startup = false,
+    fetch: transportFetch,
+  } = {}
 ) {
   const calls = [],
     exits = [],
@@ -149,6 +156,9 @@ export function terminalHarness(
         ? JSON.parse(options.body)
         : options.body;
     calls.push({ method, params });
+    if (transportFetch) {
+      return transportFetch(method, params, options);
+    }
     const result = failure?.(method, params) ?? {
       ok: true,
       result: { message_id: calls.length },
@@ -206,6 +216,7 @@ export function terminalHarness(
       Date: FixtureDate,
       setTimeout: clock.setTimeout,
       clearTimeout: clock.clearTimeout,
+      ...(startup ? {} : { polling: Promise.resolve() }),
       process: {
         env: { BOT_TOKEN: 'terminal:fixture', AUTHORIZED_USER_ID: '8', ...env },
         once(name, callback) {
@@ -218,8 +229,9 @@ export function terminalHarness(
           }
         },
       },
+      ...dependencies,
     },
-    { migrated }
+    { migrated, startup }
   );
   let updateId = 0;
   return {

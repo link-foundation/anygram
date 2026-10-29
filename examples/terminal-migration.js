@@ -24,6 +24,7 @@ function retireSessions(source) {
       cleanup() {
         clearTimeout(updateTimeout);
         clearTimeout(initialUpdateTimeout);
+        this.cancelAnimation?.();
         if (typeof unsubscribeFromChanges === 'function') {
           unsubscribeFromChanges();
         }
@@ -54,10 +55,60 @@ function retireSessions(source) {
     'async function updateTerminalMessage() {',
     `async function updateTerminalMessage() {\n      ${guard}`
   );
-  return source.replaceAll(
-    'process.exit(0);',
-    'bot.stop();\n  userSessions.clear();\n  process.exit(0);'
+  return source;
+}
+
+function cancelAnimation(source) {
+  return replaceOnce(
+    source,
+    'await new Promise(resolve => setTimeout(resolve, ANIMATION_DURATION + 500));',
+    `let animationTimeout;
+      await new Promise(resolve => {
+        session.cancelAnimation = () => {
+          clearTimeout(frameTimeout);
+          clearTimeout(animationTimeout);
+          resolve();
+        };
+        animationTimeout = setTimeout(resolve, ANIMATION_DURATION + 500);
+      });
+      clearTimeout(animationTimeout);
+      delete session.cancelAnimation;
+      if (userSessions.get(userId) !== session) { return; }`
   );
+}
+
+function gracefulShutdown(source) {
+  const begin = source.indexOf('process.once("SIGINT"');
+  const end = source.indexOf('// Start the bot', begin);
+  if (begin < 0 || end <= begin) {
+    throw new Error('Terminal shutdown boundaries changed');
+  }
+  const handlers = `let shutdownTask;
+function shutdownTerminal() {
+  shutdownTask ??= (async () => {
+    bot.stop();
+    for (const [userId, session] of userSessions) {
+      try {
+        session.cleanup();
+        session.terminal.kill();
+      } catch (error) {
+        logger.warn({ userId, error: error.message }, 'Terminal cleanup failed');
+      }
+    }
+    userSessions.clear();
+    await polling;
+    await bot.queue;
+    logger.info('All terminal sessions and polling closed');
+    process.exit(0);
+  })();
+  return shutdownTask;
+}
+process.once("SIGINT", shutdownTerminal);
+process.once("SIGTERM", shutdownTerminal);
+
+`;
+  source = source.slice(0, begin) + handlers + source.slice(end);
+  return replaceOnce(source, 'bot.start({', 'const polling = bot.start({');
 }
 
 /** Explicit patches for the pinned public-domain text/visual terminal sources. */
@@ -91,6 +142,7 @@ export function migrateTerminalSource(source) {
   );
   source = retireSessions(source);
   if (source.includes('output += data;')) {
+    source = cancelAnimation(source);
     source = replaceOnce(
       source,
       'output += data;',
@@ -98,5 +150,5 @@ export function migrateTerminalSource(source) {
       userSessions.get(userId).output = output;`
     );
   }
-  return source;
+  return gracefulShutdown(source);
 }
