@@ -591,3 +591,10 @@ and the wrong Telegraf callback contract. Ten cases cover original errors and
 contexts, asynchronous recovery, nested dispatch, retry and finite polling.
 All 757 core cases pass per runtime; strict gates and thirteen native terminal
 integrations pass. Complete framework and downstream parity remain open.
+
+The [original terminal execution checkpoint](terminal-original-tests.md) advances
+R05/R07/R13/R20/R21. All eight original test files and five debug scripts execute
+under finite child/heap/stack/output limits. Six scripts retain 46 assertion-driven
+scenarios; seven are diagnostics. All complete without emulator changes, with an
+explicit bridge for the original debug import error. The isolated native suite
+now has 26 checks. Wider terminal and protocol requirements remain open.

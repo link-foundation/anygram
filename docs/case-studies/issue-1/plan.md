@@ -691,5 +691,20 @@ Bot handler recovery work plan:
 - [x] Share catch boundaries across event and middleware dispatch without replay.
 - [x] Check declarations, all 757 cases on each runtime, strict static gates,
       25 focused Node 20 cases, 13 native terminal cases and package contents.
-- [ ] Commit the reviewed recovery change, push and verify fresh CI by SHA/time.
+- [x] Commit the reviewed recovery change, push and verify fresh CI by SHA/time.
+      Head 2c96128 passed every applicable job in run 40866197953, created
+      2026-10-29T11:32:41Z and completed 11:35:28Z.
 - [ ] Continue every other open acceptance criterion in this single draft PR.
+
+Original terminal suite execution work plan:
+
+- [x] Read all eight original test files and five debug scripts against the
+      pinned manifest; identify assertions, diagnostics and broken debug imports.
+- [x] Execute complete verified bodies in separate bounded child processes and
+      preserve their output; reproduce any real emulator or application failures.
+- [x] Bridge the demonstrated debug import error explicitly while keeping
+      archived sources immutable. All original assertions pass without emulator
+      changes; distinguish seven diagnostics from six assertion-driven suites.
+- [x] Pass strict static gates, all 26 native checks and thirteen Node 20 scripts.
+- [ ] Verify strict gates and native integration, commit and inspect fresh CI.
+- [ ] Continue keyboard/photo, platform/runtime and controlled Telegram criteria.

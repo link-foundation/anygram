@@ -120,3 +120,10 @@ gates in [run 40849679128](https://github.com/link-foundation/anygram/actions/ru
 created 2026-10-29T09:26:44Z and completed 2026-10-29T09:29:06Z. Fresh matrix
 CI is required for fatal-exit durability. The local isolated integration command
 now passes thirteen cases.
+
+The [complete original test execution](terminal-original-tests.md) adds thirteen
+bounded child executions to this same native command, bringing it to 26 checks.
+All eight upstream test files and five debug scripts complete; six scripts have
+46 assertion-driven scenarios and seven provide diagnostics. Each source and
+the unchanged emulator are hash-verified. This resolves original-suite execution
+coverage while leaving photo/keyboard, runtime/platform and live delivery open.
