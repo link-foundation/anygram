@@ -13,6 +13,10 @@ import type {
   GrammyContextDelivery,
   TelegrafContextDelivery,
 } from './bot-context-delivery.js';
+import type {
+  GrammyContextAdministration,
+  TelegrafContextAdministration,
+} from './bot-context-admin.js';
 export { Api } from './api.js';
 export type {
   TlObject,
@@ -743,7 +747,11 @@ export interface TelegrafApi extends BotContextApi, TelegrafPositionalApi {
     request?: RequestOptions | AbortSignal
   ): Promise<unknown>;
 }
-export interface Context extends ContextUpdateAliases, GrammyContextDelivery {}
+export interface Context
+  extends
+    ContextUpdateAliases,
+    GrammyContextDelivery,
+    GrammyContextAdministration {}
 export declare class Context {
   constructor(
     update: BotUpdate,
@@ -799,10 +807,18 @@ export type ContextMediaMethod = (
 ) => Promise<unknown>;
 export type CommonContext = Omit<
   Context,
-  'me' | 'replyWithDice' | 'replyWithInvoice'
+  | 'me'
+  | 'replyWithDice'
+  | 'replyWithInvoice'
+  | keyof GrammyContextAdministration
 >;
 export interface TelegrafContext
-  extends CommonContext, TelegrafContextDelivery {
+  extends
+    CommonContext,
+    TelegrafContextDelivery,
+    TelegrafContextAdministration,
+    Omit<GrammyContextAdministration, keyof TelegrafContextAdministration> {
+  assert(value: unknown, method: string): void;
   readonly me?: string;
   readonly updateType: string;
   readonly msg?: BotMessage & {

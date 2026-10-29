@@ -1,5 +1,9 @@
 # Unified Telegram client: investigation and implementation
 
+The [context administration comparison](bot-context-admin.md) verifies 55 grammY
+and 40 Telegraf chat, author and forum helpers against actual SDK contexts, with
+206 cases including selected-backend HTTP, errors and request controls.
+
 The current implementation provides independent Bot API and encrypted MTProto
 RPC paths, optional client adapters, shared account/media operations, and ordered
 update recovery. It does **not** yet establish the complete feature union or the

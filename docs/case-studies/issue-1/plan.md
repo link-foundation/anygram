@@ -794,5 +794,26 @@ Context chat delivery work plan:
       26 native checks, two vendor wire cases and the bounded FIFO probe.
       Strict checks scan 94 production sources with zero clones; the package
       contains 137 permitted entries. Main remains an ancestor of this branch.
-- [ ] Inspect fresh CI by SHA/time and continue all other open criteria without
+- [x] Inspect fresh CI by SHA/time and continue all other open criteria without
       presenting delivery helpers as complete context or ecosystem parity.
+      Committed and pushed as d14764f after all local gates passed.
+      Run 40882537426 was created 2026-10-29T13:30:22Z and completed successfully
+      2026-10-29T13:32:59Z for that exact head.
+
+Context chat administration work plan:
+
+- [x] Compare actual pinned chat administration, author and forum helpers before
+      implementation; cover all listed aliases and SDK-specific scope sources.
+- [x] Reuse selected positional operations and a shared context binding layer;
+      preserve scope errors, business fields, caller controls and input ownership.
+- [x] Compile checked SDK-specific signatures and examples; verify HTTP dispatch,
+      cancellation and author/topic resolution, including zero identifiers.
+      The complete 206-case suite reproduces 204 failures before the fix and now
+      passes. Its HTTP checks retain Telegraf's actual plural count endpoint.
+- [x] Pass full runtime/static/native/vendor/package gates, review and commit.
+      All 1,564 core cases pass on Node, Bun and Deno. The 206 focused Node 20
+      cases, 26 native checks, two vendor wire cases and bounded FIFO probe pass.
+      Strict checks scan 97 production sources with zero clones, compile all
+      examples and regenerate exact declarations. Package audit: 140 permitted
+      entries. Main remains an ancestor; source and local diff were reviewed.
+- [ ] Inspect fresh CI and continue all other open acceptance criteria.

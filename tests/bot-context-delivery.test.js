@@ -1,7 +1,7 @@
 import { it } from 'test-anywhere';
 import assert from 'node:assert/strict';
-import { Api as GrammyApi, Context as GrammyContext } from 'grammy';
-import { Telegram, Context as OriginalTelegrafContext } from 'telegraf';
+import { Context as GrammyContext } from 'grammy';
+import { Context as OriginalTelegrafContext } from 'telegraf';
 import {
   Bot,
   Telegraf,
@@ -17,6 +17,11 @@ import {
   deliveryUpdates,
 } from './fixtures/context-delivery.js';
 
+import {
+  recordingBot as recording,
+  contextOracle as oracle,
+} from './fixtures/context-oracle.js';
+
 const styles = [
   ['grammY', GrammyContext, Context, Bot, grammyDeliveryCases],
   [
@@ -27,47 +32,6 @@ const styles = [
     telegrafDeliveryCases,
   ],
 ];
-const plain = (value) => JSON.parse(JSON.stringify(value));
-
-function recording(Constructor) {
-  const calls = [];
-  const bot = new Constructor('delivery:fixture', {
-    api: {
-      callApi(method, params, options) {
-        calls.push({
-          method,
-          params: plain(params),
-          signal: options?.signal,
-          timeout: options?.timeout,
-        });
-        return Promise.resolve(true);
-      },
-    },
-  });
-  return { bot, calls };
-}
-
-function oracle(style) {
-  const calls = [];
-  const api =
-    style === 'grammY'
-      ? new GrammyApi('oracle:fixture')
-      : new Telegram('oracle:fixture');
-  const record = (method, params, signal) => {
-    calls.push({ method, params: plain(params), signal, timeout: undefined });
-    return Promise.resolve(true);
-  };
-  if (style === 'grammY') {
-    api.config.use(async (next, method, params, signal) => ({
-      ok: true,
-      result: await record(method, params, signal),
-    }));
-  } else {
-    api.callApi = record;
-  }
-  return { api, calls };
-}
-
 for (const [style, Reference, Owned, Constructor, cases] of styles) {
   it(`inventories every pinned ${style} chat delivery shortcut`, () => {
     assert.equal(cases.length, style === 'grammY' ? 25 : 41);

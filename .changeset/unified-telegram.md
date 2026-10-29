@@ -132,3 +132,8 @@ Add the pinned context chat delivery shortcuts and aliases, preserving business,
 forum and direct-message scope, caller overrides, SDK-specific dice/invoice
 signatures, draft identifiers, checklist scope errors and request controls through
 the shared positional APIs. Keep concrete context types in middleware and scenes.
+
+Bind pinned chat administration, author and forum context helpers through the
+shared positional APIs. Preserve business pin defaults, SDK-specific moderation
+arguments, topic sources, scope errors, dynamic aliases and cancellation, with
+checked declarations derived from the regenerated API argument tuples.

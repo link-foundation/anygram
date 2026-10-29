@@ -654,3 +654,16 @@ cases and FIFO probe pass. There are zero clones across 94 production sources
 and 137 permitted package entries.
 Full context APIs, SDK type models, plugins, controlled production behavior and
 every other open acceptance criterion remain unfinished.
+
+The [context administration comparison](bot-context-admin.md) advances
+R01/R05/R08/R13/R16/R17/R19 with 55 grammY and 40 Telegraf helper names.
+All 206 cases pass after reproducing 204 failures with the preceding source.
+They verify chat/author/forum scope, pinned business defaults, original SDK
+errors and assertion hooks, zero identifiers, aliases, cancellation and eight
+selected-backend HTTP cases. Checked declarations derive context arguments
+from regenerated API tuples and preserve the differing moderation signatures.
+All 1,564 core cases pass on each runtime, with strict gates, 206 focused Node 20
+cases, 26 native checks, two vendor wire cases and the bounded FIFO probe.
+The scan covers 97 production sources with zero clones; packaging permits 140
+entries, with exact declaration regeneration.
+Full SDK models and all other open criteria remain unfinished.

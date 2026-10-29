@@ -67,6 +67,11 @@ overrides, and dice/invoice argument order. They share the selected transport an
 request controls with the positional APIs. See the [delivery comparisons](docs/case-studies/issue-1/bot-context-delivery.md)
 and [typed example](examples/typed-bot-context-delivery.ts).
 
+Chat administration helpers bind membership, invite, metadata and forum calls to
+the current context. Each SDK retains its own author, topic, business and
+moderation argument rules. See the [administration comparisons](docs/case-studies/issue-1/bot-context-admin.md)
+and [typed example](examples/typed-bot-context-admin.ts).
+
 Query shortcuts such as `bot.callbackQuery('refresh').use(handler)` return a
 scoped composer. The six query shortcuts accept strings, regular expressions or
 arrays and share asynchronous `filter(predicate)` registration. See the

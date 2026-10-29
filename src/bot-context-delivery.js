@@ -1,4 +1,9 @@
 import { botRequestOptions } from './bot-operations.js';
+import {
+  contextRequired as required,
+  contextAlias as alias,
+  contextOptions as scopedOptions,
+} from './bot-context-scope.js';
 
 // name, positional API target, data argument count, context option fields.
 // b: business; t: topic-only thread; T: any thread; d: direct-message topic.
@@ -48,35 +53,6 @@ for (const media of [
   telegraf.push([`send${media}`, 1]);
 }
 
-function required(value, method, ctx) {
-  if (value !== undefined) {
-    return value;
-  }
-  if (ctx) {
-    throw new TypeError(
-      `Telegraf: "${method}" isn't available for "${ctx.updateType}"`
-    );
-  }
-  throw new Error(`Missing information for API call to ${method}`);
-}
-
-function scopedOptions(ctx, flags, other) {
-  const msg = ctx.msg;
-  return {
-    ...(flags.includes('b') && {
-      business_connection_id: ctx.businessConnectionId,
-    }),
-    ...((flags.includes('T') ||
-      (flags.includes('t') && msg?.is_topic_message)) && {
-      message_thread_id: msg?.message_thread_id,
-    }),
-    ...(flags.includes('d') && {
-      direct_messages_topic_id: msg?.direct_messages_topic?.topic_id,
-    }),
-    ...botRequestOptions(other),
-  };
-}
-
 function prefix(ctx, method) {
   const label = method === 'sendRichMessageDraft' ? 'sendMessageDraft' : method;
   if (method === 'sendChecklist') {
@@ -110,23 +86,14 @@ function installGrammy(Type) {
   alias(Type, 'sendPaidMedia', 'replyWithPaidMedia');
 }
 
-function alias(Type, name, target) {
-  Object.defineProperty(Type.prototype, name, {
-    configurable: true,
-    writable: true,
-    value(...args) {
-      return this[target](...args);
-    },
-  });
-}
-
 function installTelegraf(Type) {
   for (const [method, count] of telegraf) {
     Object.defineProperty(Type.prototype, method, {
       configurable: true,
       writable: true,
       value(...args) {
-        const chat = required(this.chat, method, this);
+        this.assert(this.chat, method);
+        const chat = this.chat;
         const msg = this.msg;
         const options = {
           message_thread_id:

@@ -4,6 +4,8 @@ import { positionalBotMethods } from './bot-positional.js';
 import { telegrafBotMethods } from './telegraf-positional.js';
 import { installContextData } from './bot-context-data.js';
 import { installContextDelivery } from './bot-context-delivery.js';
+import { installContextAdministration } from './bot-context-admin.js';
+import { contextRequired } from './bot-context-scope.js';
 import {
   botNoPayloadMethods,
   botRequestOptions,
@@ -157,12 +159,17 @@ export class TelegrafContext extends Context {
       `Cannot determine \`updateType\` of ${JSON.stringify(this.update)}`
     );
   }
+  assert(value, method) {
+    contextRequired(value, method, this);
+  }
 }
 
 installContextData(Context);
 installContextData(TelegrafContext, 'telegraf');
 installContextDelivery(Context);
 installContextDelivery(TelegrafContext, 'telegraf');
+installContextAdministration(Context);
+installContextAdministration(TelegrafContext, 'telegraf');
 
 export function compose(middleware) {
   return (ctx, last = () => Promise.resolve()) => {

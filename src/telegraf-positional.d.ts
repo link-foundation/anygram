@@ -254,6 +254,10 @@ interface Signatures {
   logOut: [];
   close: [];
 }
+export type TelegrafPositionalArguments<K extends keyof Signatures> = [
+  ...Signatures[K],
+  request?: RequestOptions | AbortSignal,
+];
 export type TelegrafPositionalApi = {
   [M in keyof Signatures]: (
     ...args: [...Signatures[M], request?: RequestOptions | AbortSignal]

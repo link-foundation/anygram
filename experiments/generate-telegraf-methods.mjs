@@ -52,7 +52,7 @@ for (const [name, item] of Object.entries(inventory.methods)) {
 }
 const files = {
   'src/telegraf-method-signatures.js': `// Public facts from pinned Telegraf 4.16.3; no SDK implementation.\n// Regenerate: node experiments/generate-telegraf-methods.mjs\nexport const telegrafMethodSignatures = Object.freeze([\n${runtime.join(',\n')}\n]);\n`,
-  'src/telegraf-positional.d.ts': `import type { RequestOptions } from './index.js';\n// Public argument facts share one callable declaration and request boundary.\ninterface Signatures {\n${declarations.join('\n')}\n}\nexport type TelegrafPositionalApi = {\n[M in keyof Signatures]: (...args: [...Signatures[M], request?: RequestOptions | AbortSignal]) => Promise<unknown>;\n};\n`,
+  'src/telegraf-positional.d.ts': `import type { RequestOptions } from './index.js';\n// Public argument facts share one callable declaration and request boundary.\ninterface Signatures {\n${declarations.join('\n')}\n}\nexport type TelegrafPositionalArguments<K extends keyof Signatures> = [...Signatures[K], request?: RequestOptions | AbortSignal];\nexport type TelegrafPositionalApi = {\n[M in keyof Signatures]: (...args: [...Signatures[M], request?: RequestOptions | AbortSignal]) => Promise<unknown>;\n};\n`,
 };
 for (const [file, source] of Object.entries(files)) {
   const output = await format(source, {

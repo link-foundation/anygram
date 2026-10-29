@@ -202,6 +202,9 @@ type Arguments<S extends string> = S extends '?'
         signal?: RequestOptions | AbortSignal,
       ]
     : [...RequiredArguments<S>, options?: RequestOptions | AbortSignal];
+export type GrammyPositionalArguments<K extends keyof Signatures> = Arguments<
+  Signatures[K]
+>;
 export type GrammyPositionalApi = {
   [M in keyof Signatures]: Signatures[M] extends '' | '?'
     ? (...args: Arguments<Signatures[M]>) => Promise<unknown>
