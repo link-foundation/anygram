@@ -2,7 +2,8 @@ import { gunzipSync } from 'node:zlib';
 import { TlCodec, TlReader } from './tl.js';
 import { createAuthKey } from './auth-key.js';
 import { MtprotoCipher } from './crypto.js';
-import { TelegramError } from './errors.js';
+import { TelegramError, throwFailures } from './errors.js';
+import { validatePollCount } from './polling.js';
 import { Session } from './session.js';
 import { Authentication } from './authentication.js';
 import { DatacenterPool } from './datacenters.js';
@@ -129,6 +130,7 @@ export class Mtproto {
     this.acknowledgements = [];
     this.queue = Promise.resolve();
     this.updateQueue = Promise.resolve();
+    this.updateFailures = [];
     this.pendingUpdates = [];
     this.initialized = false;
     this.datacenters = new DatacenterPool(
@@ -257,10 +259,38 @@ export class Mtproto {
     for (const update of updates) {
       this.updateQueue = this.updateQueue
         .then(() => this.onUpdate?.(update))
-        .catch((error) => {
-          this.updateError = error;
-        });
+        .catch((error) => this.captureUpdateFailure(error));
     }
+  }
+
+  captureUpdateFailure(error) {
+    if (this.updateFailures.length < 1000) {
+      this.updateFailures.push(error);
+    } else if (this.updateFailures.length === 1000) {
+      this.updateFailures.push(
+        new RangeError('MTProto retained handler failure limit exceeded')
+      );
+    }
+  }
+
+  async drainUpdates(signal) {
+    let clients;
+    for (;;) {
+      this.dispatchDatacenterUpdates();
+      clients = [...this.datacenters.clients.values()];
+      const queues = clients.map((client) => client.updateQueue);
+      await Promise.all(queues);
+      if (
+        clients.length === this.datacenters.clients.size &&
+        clients.every((client, index) => client.updateQueue === queues[index])
+      ) {
+        break;
+      }
+    }
+    const failures = clients
+      .flatMap((client) => client.updateFailures.splice(0))
+      .filter((error) => !(signal?.aborted && error === signal.reason));
+    throwFailures(failures, 'Telegram update handlers failed');
   }
 
   pollUpdates(options = {}) {
@@ -304,16 +334,20 @@ export class Mtproto {
     if (this.updatesController) {
       throw new Error('Updates are already running');
     }
+    validatePollCount(maxPolls);
     const controller = new globalThis.AbortController();
     this.updatesController = controller;
     const signal = options.signal
       ? globalThis.AbortSignal.any([options.signal, controller.signal])
       : controller.signal;
     const previous = this.onUpdate;
-    this.updateError = undefined;
+    const failures = [];
+    let manager;
     try {
+      signal.throwIfAborted();
       const stored = await readUpdateState(state, stateStore);
-      const manager = new UpdateManager({
+      signal.throwIfAborted();
+      manager = new UpdateManager({
         ...options,
         state: stored ?? undefined,
         invoke: (method, params) => this.call(method, params, { signal }),
@@ -335,22 +369,24 @@ export class Mtproto {
       await manager.initialize();
       for (let count = 0; count < maxPolls && !signal.aborted; count++) {
         await manager.tick();
-        if (!(await pollUntilStopped(this, { ...options, signal }))) {
-          break;
-        }
-        for (const client of this.datacenters.clients.values()) {
-          await client.updateQueue;
-          if (client.updateError) {
-            throw client.updateError;
-          }
-        }
+        signal.throwIfAborted();
+        await this.pollUpdates({ ...options, signal });
+        await this.drainUpdates(signal);
       }
-      return manager.state;
+    } catch (error) {
+      recordUpdateFailure(failures, error, signal);
     } finally {
+      try {
+        await this.drainUpdates(signal);
+      } catch (error) {
+        recordUpdateFailure(failures, error, signal);
+      }
       this.onUpdate = previous;
       this.updatesController = undefined;
       this.updateManager = undefined;
     }
+    throwFailures(failures, 'Telegram update loop failed');
+    return manager?.state;
   }
 
   invoke(request, options) {
@@ -547,10 +583,10 @@ export class Mtproto {
         code: value.error_code,
         type: 'BAD_MSG_NOTIFICATION',
       });
-    } else if (value._ === 'new_session_created') {
-      this.salt = value.server_salt;
-      this.pendingUpdates.push(value);
     } else if (!['msgs_ack', 'msgs_state_info', 'pong'].includes(value._)) {
+      if (value._ === 'new_session_created') {
+        this.salt = value.server_salt;
+      }
       if (this.pendingUpdates.length >= 1000) {
         throw new RangeError('MTProto pending update limit exceeded');
       }
@@ -699,14 +735,11 @@ async function readUpdateState(state, store) {
   return store ? JSON.parse((await store.load()) || 'null') : undefined;
 }
 
-async function pollUntilStopped(client, options) {
-  try {
-    await client.pollUpdates(options);
-    return true;
-  } catch (error) {
-    if (options.signal.aborted && error === options.signal.reason) {
-      return false;
-    }
-    throw error;
+function recordUpdateFailure(failures, error, signal) {
+  if (
+    !(signal.aborted && error === signal.reason) &&
+    !failures.includes(error)
+  ) {
+    failures.push(error);
   }
 }

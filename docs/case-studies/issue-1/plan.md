@@ -85,7 +85,10 @@ examples/. No live credentials or sessions may be included in research data.
 - The first repaired-gate CI run passed all runtime jobs but rejected a CLI flag
   accepted by a newer Deno-created local shim. The check now invokes locked
   jscpd 4.0.5 directly without that flag; its fixture and source scan pass locally.
-- Node/Bun/Deno each pass 166 tests; strict lint, format, the repaired duplication
+- Thirteen failing-before update lifecycle regressions cover cancellation during
+  initialization/scheduled recovery, draining accepted/reentrant handlers and
+  saved cursors, independent failures and bounded notification/error retention.
+- Node/Bun/Deno each pass 179 tests; strict lint, format, the repaired duplication
   gate and declaration/example checks pass. Each later code change requires
   fresh checks. The package contains 49 permitted files.
 - Refreshed issue/sub-issue and all three PR feedback streams are empty. Main is

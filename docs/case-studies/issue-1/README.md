@@ -453,3 +453,26 @@ locked 4.0.5, which rejects it. The command now invokes the locked package's
 JavaScript entry point directly, omits the unsupported flag, and bounds its heap
 at 384 MiB. The detector fixture and production scan both pass with that exact
 entry point. Fresh CI is still required for the corrected head.
+
+## Update lifecycle checkpoint
+
+Thirteen new regressions reproduce lifecycle failures before the fix. Stopping
+during initialization or watched-channel recovery previously rejected the loop
+with its own cancellation; stopping during a poll could restore the old handler
+before accepted handlers and cursor persistence finished. A single error slot
+also overwrote earlier handler failures, and new-session notifications bypassed
+the pending-update bound. Tests use controlled promises and two-second bounds,
+with finite 1000-entry overflow probes under a 128 MiB Node heap.
+
+The loop now drains each DC's queues until stable before restoring dispatch,
+including updates appended by accepted handlers. Only its own cancellation reason
+is discarded; unrelated handler, persistence and polling failures propagate,
+with independent failures aggregated. Retained handler failures are bounded to
+1000 plus an explicit overflow error, and session notifications share the
+1000-entry pending limit. Invalid polling counts fail before storage or RPCs.
+
+All 179 tests pass on Node, Bun and Deno, including thirteen lifecycle cases and
+the existing asynchronous DC cleanup tests. Strict lint, formatting, the locked
+duplication gate and declaration/example checks pass locally. This verifies the
+documented `stopUpdates(); await runPromise` lifecycle, not full client event or
+account parity. Fresh CI is required for this head.

@@ -24,16 +24,20 @@ export function acquirePolling(key) {
   return () => active.delete(key);
 }
 
-export function validatePolling(maxPolls, timeout) {
+export function validatePollCount(maxPolls) {
   if (
     !(
       maxPolls === Infinity ||
       (Number.isSafeInteger(maxPolls) && maxPolls >= 0)
-    ) ||
-    !Number.isSafeInteger(timeout) ||
-    timeout < 0 ||
-    timeout > 2147473
+    )
   ) {
+    throw new RangeError('Invalid polling limit');
+  }
+}
+
+export function validatePolling(maxPolls, timeout) {
+  validatePollCount(maxPolls);
+  if (!Number.isSafeInteger(timeout) || timeout < 0 || timeout > 2147473) {
     throw new RangeError('Invalid polling controls');
   }
 }

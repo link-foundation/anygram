@@ -19,3 +19,5 @@ release readers, enforce cancellation and per-request deadlines, and await
 all DC transport closures while retaining cleanup failures. Use shared receive
 buffers to bound assembly copies for fragmented TCP/WebSocket streams. Preserve
 exact IDs and expose typed failures without retrying ambiguous side effects.
+Drain accepted updates and persisted cursors before stopping recovery, preserve
+independent failures, and bound pending session notifications and handler errors.

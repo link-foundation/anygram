@@ -1,4 +1,4 @@
-import { TelegramError } from './errors.js';
+import { TelegramError, throwFailures } from './errors.js';
 
 /** Follow explicit server migrations; ambiguous request failures are never replayed. */
 export class DatacenterPool {
@@ -99,14 +99,6 @@ export class DatacenterPool {
     const failures = results
       .filter((result) => result.status === 'rejected')
       .map((result) => result.reason);
-    if (failures.length === 1) {
-      throw failures[0];
-    }
-    if (failures.length > 1) {
-      throw new globalThis.AggregateError(
-        failures,
-        'Telegram DC cleanup failed'
-      );
-    }
+    throwFailures(failures, 'Telegram DC cleanup failed');
   }
 }

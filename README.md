@@ -172,6 +172,12 @@ await updates;
 
 Update handlers finish before their cursors are saved. Delivery can repeat after
 handler or persistence failures; application side effects should be idempotent.
+`stopUpdates()` requests cancellation; awaiting the `runUpdates()` promise drains
+accepted handlers and their saved cursors before restoring the previous handler.
+Cancellation during initial or scheduled recovery also stops cleanly. Other
+handler, persistence and polling failures still reject that promise; independent
+failures are retained in an `AggregateError`. At most 1000 handler failures are
+retained between drains, followed by an explicit overflow error.
 `onReset` reports a missing initial channel cursor or a difference too old for
 server recovery. `watchedChannels` takes IDs of up to ten currently open channels;
 provide `resolveChannel` when their access hashes are absent from saved state.
