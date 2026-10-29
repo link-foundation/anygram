@@ -32,7 +32,7 @@ export class UpdateScheduler {
       if (schedule.next > now) {
         continue;
       }
-      const timeout = (await this.manager.recoverChannel(BigInt(id))) ?? 30;
+      const timeout = (await this.manager.recoverChannel(BigInt(id))) ?? 1;
       if (!Number.isFinite(timeout) || timeout < 0) {
         throw new RangeError('Invalid channel difference timeout');
       }

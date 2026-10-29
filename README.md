@@ -183,7 +183,8 @@ server recovery. `watchedChannels` takes IDs of up to ten currently open channel
 provide `resolveChannel` when their access hashes are absent from saved state.
 `watchChannel` and `unwatchChannel` change that set while recovery runs. One
 polling-loop clock follows server timeouts and recovers common state after
-fifteen minutes without pushes. A standalone `UpdateManager` needs periodic
+fifteen minutes without pushes. Watched channels use Telegram's one-second
+fallback when a final difference omits its timeout. A standalone `UpdateManager` needs periodic
 `tick()` calls from the application's existing loop.
 `uploadFile`, `iterDownload`, `downloadMedia`, `sendFile`, and `sendAlbum`
 share chunking and bounds across raw MTProto backends. Downloads accept

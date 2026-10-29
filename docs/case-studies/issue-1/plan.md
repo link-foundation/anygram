@@ -88,13 +88,16 @@ examples/. No live credentials or sessions may be included in research data.
 - Thirteen failing-before update lifecycle regressions cover cancellation during
   initialization/scheduled recovery, draining accepted/reentrant handlers and
   saved cursors, independent failures and bounded notification/error retention.
-- Node/Bun/Deno each pass 179 tests; strict lint, format, the repaired duplication
+- The channel scheduler uses the documented one-second fallback when a final
+  difference omits its timeout; a failing-before fake-clock regression covers it.
+- Node/Bun/Deno each pass 180 tests; strict lint, format, the repaired duplication
   gate and declaration/example checks pass. Each later code change requires
   fresh checks. The package contains 49 permitted files.
 - Refreshed issue/sub-issue and all three PR feedback streams are empty. Main is
   an ancestor of the branch. CI for 2598e6d passed all nine runtime/OS jobs and
   release gates in run 40791774228, including email authentication. Later heads
-  require fresh CI evidence.
+  require fresh CI evidence. The locked checker repair at e87752c passed all nine
+  runtime/OS jobs and gates in run 40793885312.
 - Research includes 32 complete discussions, 26 inspected images, nineteen pinned
   test-path inventories and all 333 Telegram-related meta-sovereign JS files.
 - The npm dry run contains only source/package/README/LICENSE entries and

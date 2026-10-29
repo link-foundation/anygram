@@ -476,3 +476,13 @@ the existing asynchronous DC cleanup tests. Strict lint, formatting, the locked
 duplication gate and declaration/example checks pass locally. This verifies the
 documented `stopUpdates(); await runPromise` lifecycle, not full client event or
 account parity. Fresh CI is required for this head.
+
+The archived primary update documentation also specifies one second for an open
+channel when a final difference omits `timeout`. The scheduler incorrectly used
+thirty seconds. A fake-clock regression fails before the fallback correction,
+checks the 999/1000 millisecond boundary, and verifies polling stops on unwatch.
+All 180 tests pass on Node, Bun and Deno, with strict lint, format and duplication
+checks. The locked checker repair at e87752c passed all nine OS/runtime jobs and
+applicable gates in
+[run 40793885312](https://github.com/link-foundation/anygram/actions/runs/40793885312).
+This run predates the lifecycle and channel-timeout changes.

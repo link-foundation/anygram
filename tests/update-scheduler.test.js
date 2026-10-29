@@ -95,3 +95,29 @@ it('keeps failed scheduled recovery retryable and validates watched IDs', async 
   await manager.tick();
   assert.equal(calls, 2);
 });
+
+it('rechecks an open channel after one second when Telegram omits its timeout', async () => {
+  let now = 0;
+  let calls = 0;
+  const manager = new UpdateManager({
+    state: { date: 1, channels: { 1: { pts: 1, access_hash: 2n } } },
+    clock: () => now,
+    invoke: async () => {
+      calls++;
+      return { _: 'updates.channelDifferenceEmpty', pts: 1, final: true };
+    },
+  });
+  manager.watchChannel(1n);
+  await manager.tick();
+  assert.equal(calls, 1);
+  now = 999;
+  await manager.tick();
+  assert.equal(calls, 1);
+  now = 1000;
+  await manager.tick();
+  assert.equal(calls, 2);
+  manager.unwatchChannel(1n);
+  now = 2000;
+  await manager.tick();
+  assert.equal(calls, 2);
+});
