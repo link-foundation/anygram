@@ -732,3 +732,50 @@ test. Failed-job log lines 1028–1045 point to test line 54. Its 30 ms transpor
 default also constrained connection setup; the intended assertion tests an idle
 read. The test now applies that deadline to the read alone, while connection
 setup retains the normal test budget. Production behavior is unchanged.
+
+## Initial secret-chat request and acceptance
+
+Telegram's primary
+[requestEncryption documentation](https://core.telegram.org/method/messages.requestEncryption)
+states that the deduplication random ID also serves as the chat ID. The
+[acceptEncryption method](https://core.telegram.org/method/messages.acceptEncryption)
+submits the recipient's public value and shared-key fingerprint. The final
+[encryptedChat constructor](https://core.telegram.org/constructor/encryptedChat)
+carries the other participant's public value for each role.
+
+The new preparation helpers refresh DH configuration, copy participant/input
+data before asynchronous work and return a `SecretChatHandshake`. Its mandatory
+`save` callback commits pending private state before request/accept RPCs. Request
+snapshots retain the same random ID, InputUser and exponent across retries;
+acceptance snapshots retain the derived key. Exact signed longs avoid rounding
+user IDs and fingerprints. Restore validates canonical encodings, phase/material
+consistency, private/public correspondence and stored key fingerprints before
+exposing restored state.
+
+Incoming completion checks the chat ID, both participant roles, access hash,
+public value and fingerprint. Unrelated IDs preserve the pending exchange.
+Invalid exchanges clear owned secret material, save the discarded state and
+invoke discardEncryption. Independent protocol, persistence and discard errors
+remain visible. Final persistence failures withhold credentials until a save
+succeeds; a lost acceptance may need its recovered encryption update if a retry
+reports that the server already accepted it.
+
+Five minimal tests initially failed because the APIs did not exist. Ten focused
+regressions now cover bilateral DH, exact request/accept replay after JSON
+restart, save ordering/failure, concurrent operation rejection, role/public/key
+validation, cancellation, copied inputs, malformed snapshots and independent
+discard failures. A finite local integration peer exercises both native clients
+over encrypted framed TCP, including initialization, real TL method/result
+serialization and an unsolicited encryption update. It does not authorize a
+Telegram account. Layer/cipher/sequence integration, atomic message effects and
+qts cursors, compulsory PFS, encrypted media and controlled live accounts remain
+open.
+
+The scoped TCP deadline repair f083ace passed all nine runtime/OS jobs and
+applicable gates in
+[run 40802116364](https://github.com/link-foundation/anygram/actions/runs/40802116364).
+
+All 254 tests pass on Node, Bun and Deno; strict lint, formatting and full
+TypeScript checks pass. The clone detector scans 54 production files with no
+clones. The npm dry run has 59 permitted entries and excludes experiments and
+research. Live authenticated initial handshakes remain unverified.

@@ -4,8 +4,10 @@ import {
   SecretChatCodec,
   SecretChatSequence,
   createSecretChatKeyExchange,
+  createSecretChatRequest,
   type SecretChatDhConfig,
   type SecretChatSequenceState,
+  type SecretChatHandshakeState,
 } from 'anygram/mtproto';
 import type { TlRequest } from 'anygram';
 
@@ -16,6 +18,28 @@ export function prepareSecretExchange(
   config?: SecretChatDhConfig
 ) {
   return createSecretChatKeyExchange(client.call.bind(client), { config });
+}
+
+// save must durably commit the protected snapshot before it resolves. Feed
+// matching updateEncryption.chat objects to handshake.apply() with the same save.
+export async function requestSecretChat(options: {
+  client: Mtproto;
+  selfId: bigint;
+  userId: bigint;
+  accessHash: bigint;
+  save: (state: SecretChatHandshakeState) => Promise<void>;
+}) {
+  const invoke = options.client.call.bind(options.client);
+  const { handshake } = await createSecretChatRequest(invoke, {
+    selfId: options.selfId,
+    user: {
+      _: 'inputUser',
+      user_id: options.userId,
+      access_hash: options.accessHash,
+    },
+  });
+  await handshake.submit(invoke, { save: options.save });
+  return handshake;
 }
 
 // Requires a separately negotiated chat/key. Persist the snapshot before RPCs;

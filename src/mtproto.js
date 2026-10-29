@@ -29,6 +29,11 @@ export { SecretChatCodec } from './secret-codec.js';
 export { SecretChatSequence } from './secret-sequence.js';
 export { SecretChatLayers } from './secret-layers.js';
 export {
+  SecretChatHandshake,
+  createSecretChatRequest,
+  createSecretChatAcceptance,
+} from './secret-handshake.js';
+export {
   SecretChatKeyExchange,
   createSecretChatKeyExchange,
 } from './secret-key-exchange.js';

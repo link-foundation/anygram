@@ -20,6 +20,87 @@ export interface SecretChatDhConfig {
   g: number;
   version: number;
 }
+export type SecretChatInvoke = (
+  method: string,
+  parameters: Parameters,
+  options?: RequestOptions
+) => Promise<unknown>;
+export type SecretChatHandshakePhase =
+  | 'requesting'
+  | 'waiting'
+  | 'accepting'
+  | 'ready'
+  | 'discarded';
+/** Contains private exponents or shared keys; protect persisted snapshots. */
+export interface SecretChatHandshakeState {
+  version: 1;
+  phase: SecretChatHandshakePhase;
+  originator: boolean;
+  selfId: string;
+  remoteId: string;
+  chatId: number;
+  accessHash: string | null;
+  user: string | null;
+  publicValue: string;
+  remotePublic: string | null;
+  exchange: SecretChatKeyExchangeState | null;
+  key: string | null;
+  fingerprint: string | null;
+}
+export interface SecretChatHandshakeOptions extends RequestOptions {
+  save: (state: SecretChatHandshakeState) => void | Promise<void>;
+}
+export interface SecretChatHandshakeStatus {
+  phase: SecretChatHandshakePhase;
+  originator: boolean;
+  selfId: bigint;
+  remoteId: bigint;
+  chatId: number;
+}
+export declare class SecretChatHandshake {
+  constructor(options: { state: SecretChatHandshakeState });
+  readonly state: SecretChatHandshakeStatus;
+  exportState(): SecretChatHandshakeState;
+  /** Available only after a ready state has been saved successfully. */
+  credentials(): {
+    peer: TlRequest & {
+      _: 'inputEncryptedChat';
+      chat_id: number;
+      access_hash: bigint;
+    };
+    originator: boolean;
+    key: Uint8Array;
+    fingerprint: bigint;
+  };
+  submit(
+    invoke: SecretChatInvoke,
+    options: SecretChatHandshakeOptions
+  ): Promise<SecretChatHandshakeStatus>;
+  apply(
+    invoke: SecretChatInvoke,
+    chat: TlRequest,
+    options: SecretChatHandshakeOptions
+  ): Promise<SecretChatHandshakeStatus>;
+  destroy(): void;
+}
+export interface SecretChatPreparationOptions {
+  selfId: bigint | string;
+  config?: SecretChatDhConfig;
+  signal?: AbortSignal;
+  timeout?: number;
+}
+/** Prepares a request; call handshake.submit() with durable persistence. */
+export declare function createSecretChatRequest(
+  invoke: SecretChatInvoke,
+  options: SecretChatPreparationOptions & {
+    user: TlRequest & { user_id: bigint | string };
+  }
+): Promise<{ handshake: SecretChatHandshake; config: SecretChatDhConfig }>;
+/** Call after the application explicitly accepts the incoming chat. */
+export declare function createSecretChatAcceptance(
+  invoke: SecretChatInvoke,
+  options: SecretChatPreparationOptions & { chat: TlRequest }
+): Promise<{ handshake: SecretChatHandshake; config: SecretChatDhConfig }>;
 export interface SecretChatLayersState {
   version: 1;
   localLayer: number;

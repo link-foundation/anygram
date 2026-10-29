@@ -40,3 +40,6 @@ Support explicitly selected legacy secret-chat envelopes for initial layer
 negotiation, retaining MTProto 2.0 as the default without automatic fallback.
 Track secret-chat layer notifications and sequence-based modern-envelope
 cutovers, preserving initial negotiation races and rejecting late downgrades.
+Prepare initial secret-chat request/accept RPCs with protected recoverable state,
+participant/key validation and mandatory persistence before sending or exposing
+ready credentials. Discard invalid exchanges and preserve independent failures.

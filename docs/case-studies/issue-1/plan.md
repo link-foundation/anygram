@@ -81,7 +81,7 @@ examples/. No live credentials or sessions may be included in research data.
   Fragmented replies, rejection codes, deadlines and TLS WebSocket tunnels pass.
 - The inherited duplication configuration scanned no files. A failing-before
   fixture now guards the detector, and shared helpers consolidate eleven actual
-  clones. The repaired gate scans all 52 production JS/TS files with zero clones.
+  clones. The repaired gate scans all 54 production JS/TS files with zero clones.
 - The first repaired-gate CI run passed all runtime jobs but rejected a CLI flag
   accepted by a newer Deno-created local shim. The check now invokes locked
   jscpd 4.0.5 directly without that flag; its fixture and source scan pass locally.
@@ -93,9 +93,9 @@ examples/. No live credentials or sessions may be included in research data.
 - All 90 independently versioned secret-schema constructors round-trip. The
   codec retains historical IDs and flag-only fields missing from primary JSON;
   a handwritten wire vector and source-hash comparison verify serialization.
-- Node/Bun/Deno each pass 244 tests; strict lint, format, the repaired duplication
+- Node/Bun/Deno each pass 254 tests; strict lint, format, the repaired duplication
   gate and declaration/example checks pass. Each later code change requires
-  fresh checks. The package contains 57 permitted files.
+  fresh checks. The package contains 59 permitted files.
 - Refreshed issue/sub-issue and all three PR feedback streams are empty. Main is
   an ancestor of the branch. CI for 2598e6d passed all nine runtime/OS jobs and
   release gates in run 40791774228, including email authentication. Later heads
@@ -145,10 +145,11 @@ local tests and strict checks pass; fresh CI is required after committing it.
 2. [x] Track ordered sequence/acknowledgement state and bounded resend caches.
 3. [x] Export/validate copied snapshots and recover unsent frames/gap requests.
 4. [x] Replace deleted unacknowledged frames with protocol deletion services.
-5. [ ] Negotiate/accept DH keys, agree layers and support initial peer exchange.
-6. [ ] Implement compulsory PFS rotation and simultaneous key-exchange rules.
-7. [ ] Integrate encrypted RPC ordering, durable effects/cursors and file media.
-8. [ ] Verify interoperable flows with controlled Telegram accounts.
+5. [x] Prepare initial request/accept RPCs with recoverable DH/key state and binding checks.
+6. [ ] Integrate layer/cipher/sequence policy and the complete initial peer flow.
+7. [ ] Implement compulsory PFS rotation and simultaneous key-exchange rules.
+8. [ ] Integrate encrypted RPC ordering, durable effects/cursors and file media.
+9. [ ] Verify interoperable flows with controlled Telegram accounts.
 
 The subsequent TL ownership regression exposes Buffer.slice view aliasing.
 Copied byte/fixed-integer fields pass all 216 tests on each runtime and strict
@@ -203,3 +204,17 @@ The layer-policy checkpoint passes all 244 tests on Node, Bun and Deno, strict
 lint, formatting, full declaration/example checks and the zero-clone scan of
 52 production files. The package contains 57 permitted entries. Legacy envelope
 head c465b65 passed all nine runtime/OS jobs and applicable gates in CI run 40800440156. Fresh CI is required for the policy commit.
+
+Initial request/accept helpers now use mandatory persistence before RPCs and
+before ready credentials, preserve deduplication IDs/exponents/keys through
+restart, validate participant and final key bindings and discard invalid peers.
+Ten focused tests include two native encrypted TCP clients and a real TL
+encryption update. Full runtime and static checks are the next checkpoint.
+TCP deadline repair f083ace passed all nine runtime/OS jobs and applicable gates
+in CI run 40802116364; preserved logs identify the preceding macOS test failure.
+
+The initial-handshake checkpoint passes all 254 tests on Node, Bun and Deno,
+strict ESLint, Prettier, full declaration/example checks and the zero-clone scan
+of 54 production files. The package dry run has 59 permitted entries. Main is
+an ancestor, and refreshed issue/sub-issue and all three PR feedback streams
+remain empty. Fresh CI is required after committing the handshake.

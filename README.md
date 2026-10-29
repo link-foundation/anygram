@@ -230,7 +230,8 @@ application-owned copies. Capacity failures leave cached state unchanged.
 cached frames keep their exact bytes and headers through resends, deletion and
 restart; layer downgrades are rejected. Send the required layer notification
 and persist the upgraded snapshot as part of the application's negotiation.
-Key negotiation, re-keying and the complete secret-chat client remain unfinished.
+Integrated layer negotiation, re-keying and the complete secret-chat client
+remain unfinished.
 
 `createSecretChatKeyExchange(invoke, { config? })` refreshes Telegram's DH
 configuration before generating a pending exchange. It validates the 2048-bit
@@ -252,6 +253,29 @@ observe its service action when delivered in order. Queue `notification()` in
 durable outgoing state before `markNotified()`. Persist `exportState()` with
 sequence state. Downgrade errors require aborting the chat. The policy does not
 perform RPCs or replace the complete secret-chat client.
+
+`createSecretChatRequest(invoke, { selfId, user, config? })` prepares an initial
+DH request. `user` is an `inputUser` or `inputUserFromMessage` with an exact
+`user_id`. Call the returned `handshake.submit(invoke, { save })` to persist the
+private exponent and deduplication/chat ID before sending the request RPC.
+`createSecretChatAcceptance(invoke, { selfId, chat, config? })` prepares acceptance
+of an `encryptedChatRequested`; call it after the application has explicitly
+accepted the request. Its `submit()` saves the derived key before the accept RPC.
+Both helpers refresh DH configuration and return it for subsequent caching.
+
+Feed matching `updateEncryption.chat` objects to
+`handshake.apply(invoke, chat, { save })`. It verifies chat/participant bindings,
+the peer public value and final fingerprint, saves the completed state and then
+enables `credentials()`. Invalid key exchanges discard the chat and clear owned
+key material. Unrelated chat IDs leave its pending exchange intact. A final
+storage failure keeps credentials unavailable until a successful save. Protected
+JSON snapshots restore through `new SecretChatHandshake({ state })`; lost
+requests retain their exact random ID/public value, and lost acceptances retain
+their key. An already-accepted RPC error needs the corresponding recovered
+encryption update before readiness can be verified. `destroy()` clears local
+owned key material; callers manage persisted copies. These initial handshakes
+still require layer/sequence/cipher integration, durable message effects, PFS,
+encrypted media and validation with controlled accounts.
 
 ## Select existing clients
 
