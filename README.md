@@ -186,6 +186,13 @@ and its scenes use those same fluent rules. Command handlers receive Telegraf's
 [composition example](examples/typed-composers.ts) and
 [SDK comparisons](docs/case-studies/issue-1/composer-scopes.md).
 
+TypeScript handlers infer selected update fields and retain custom contexts.
+For example, `on('message:text')` requires `ctx.message.text`, and
+`ctx.has('callback_query:data')` refines the context inside its guard. Invalid
+literal filter queries are rejected. See the checked
+[filter example](examples/typed-filter-narrowing.ts) and
+[type comparisons](docs/case-studies/issue-1/bot-filter-types.md).
+
 `Scenes.BaseScene`, `Scenes.WizardScene` and `Scenes.Stage` provide persisted
 conversation steps on that same middleware path. Install session middleware
 before a stage; the current scene, state, expiry and wizard cursor live in

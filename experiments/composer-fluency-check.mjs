@@ -12,12 +12,28 @@ import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new globalThis.URL('../', import.meta.url));
-const models = process.argv.includes('--models');
-const fixture = models ? 'typed-bot-models.ts' : 'typed-composer-fluency.ts';
-const revision = models
-  ? 'baa796927da5cc69ea00040e00c3936c25e4ea60'
-  : '84328a107c89a8b4cbd7eddd67dfdb2444603688';
-const frozen = new Set(['src/index.d.ts', 'src/telegraf-composer.d.ts']);
+const modes = {
+  '--filters': [
+    'typed-filter-narrowing.ts',
+    '4d6c1ca33b62a06500312a106e2638a9f80b66d0',
+  ],
+  '--models': [
+    'typed-bot-models.ts',
+    'baa796927da5cc69ea00040e00c3936c25e4ea60',
+  ],
+  default: [
+    'typed-composer-fluency.ts',
+    '84328a107c89a8b4cbd7eddd67dfdb2444603688',
+  ],
+};
+const mode =
+  Object.keys(modes).find((key) => process.argv.includes(key)) ?? 'default';
+const [fixture, revision] = modes[mode];
+const frozen = new Set([
+  'src/index.d.ts',
+  'src/telegraf-composer.d.ts',
+  ...(mode === '--filters' ? ['src/bot-context-checkers.d.ts'] : []),
+]);
 const before = process.argv.includes('--before');
 const workspace = await mkdtemp(join(tmpdir(), 'anygram-fluency-'));
 

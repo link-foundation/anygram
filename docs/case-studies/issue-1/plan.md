@@ -954,5 +954,29 @@ Bot API model declaration work plan:
       production sources with zero clones. Packaging permits 169 entries and
       includes all ten model files. Main remains an ancestor. The atomic diff,
       declarations, field graph and primary archive pins were reviewed.
-- [ ] Commit/push model declarations and inspect fresh CI by SHA and timestamp.
+- [x] Commit/push model declarations and inspect fresh CI by SHA and timestamp.
+      Head 4d6c1ca33b62a06500312a106e2638a9f80b66d0 passed run 40904346624,
+      created 2026-10-29T15:42:52Z; all runtime, native integration and static gates
+      passed.
 - [ ] Continue refined models, filter narrowing and every wider issue criterion.
+
+Filter declaration work plan:
+
+- [x] Reproduce callback and checker narrowing failures before changing types.
+- [x] Generate query grammar from reviewed filter facts, compare its complete
+      union with the pinned SDK and reject invalid literal queries.
+- [x] Narrow selected update fields, aliases, correlated alternatives and
+      implied message fields while preserving custom application contexts.
+- [x] Add scoped helper/checker predicates and portable checked examples;
+      compare valid programs against actual SDK types with strict checking.
+- [ ] Preserve an immutable before reproduction, pass appropriate gates and
+      review before committing/pushing; inspect fresh CI by SHA and timestamp.
+      Local validation passes: 80 diagnostics with frozen preceding declarations,
+      isolated current compilation, complete actual-SDK grammar equality and
+      equivalent positive/negative fixture compilation. All 2,007 tests pass on
+      Node, Bun and Deno; both focused grammar cases also pass on Node 20. Strict
+      gates scan 138 production sources with zero clones. The package permits
+      181 entries. Main remains an ancestor, feedback streams remain empty and
+      the atomic implementation, generator, declarations and workflow diff were
+      reviewed. Commit/push and exact-head CI remain next.
+- [ ] Continue all remaining framework and wider acceptance criteria.

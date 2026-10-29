@@ -39,7 +39,7 @@
     "schema:update": "node scripts/update-schema.mjs",
     "schema:update:secret": "node scripts/update-secret-schema.mjs",
     "schema:types": "node scripts/update-api-types.mjs",
-    "typecheck": "tsc --project tsconfig.json && node scripts/update-api-types.mjs --check && node experiments/generate-bot-methods.mjs --check && node experiments/generate-telegraf-methods.mjs --check && node experiments/generate-context-filter-facts.mjs --check && node experiments/generate-bot-models.mjs --check && node experiments/generate-bot-model-oracle.mjs --check"
+    "typecheck": "tsc --project tsconfig.json && node scripts/update-api-types.mjs --check && node experiments/generate-bot-methods.mjs --check && node experiments/generate-telegraf-methods.mjs --check && node experiments/generate-context-filter-facts.mjs --check && node experiments/generate-bot-models.mjs --check && node experiments/generate-bot-model-oracle.mjs --check && node experiments/generate-filter-type-oracle.mjs --check"
   },
   "keywords": [
     "telegram",

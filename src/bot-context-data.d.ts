@@ -1,6 +1,6 @@
 import type { BotUpdate } from './index.js';
 
-interface Fields {
+export interface ContextAliasFields {
   message: 'message';
   editedMessage: 'edited_message';
   channelPost: 'channel_post';
@@ -31,5 +31,5 @@ interface Fields {
 }
 
 export type ContextUpdateAliases = {
-  readonly [K in keyof Fields]: BotUpdate[Fields[K]];
+  readonly [K in keyof ContextAliasFields]: BotUpdate[ContextAliasFields[K]];
 };

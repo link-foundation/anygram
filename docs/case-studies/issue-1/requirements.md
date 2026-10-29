@@ -747,3 +747,16 @@ normal gates. All 2,005 core cases pass on Node, Bun and Deno; all eight parser
 regressions and strict static checks pass, with zero clones across 126 sources
 and 169 permitted package entries. SDK-specific refined message/chat unions, filter narrowing,
 per-method models and all wider unmet acceptance criteria remain unfinished.
+
+The [filter declaration comparison](bot-filter-types.md) advances
+R01/R05/R08/R13/R16/R17/R19 with the complete 1,908-spelling grammY query union,
+scoped callback/checker refinements, implied message fields, correlated
+alternatives, aggregate aliases and chat-type narrowing. The checked example
+fails against frozen preceding declarations and compiles after the change.
+An equivalent generated fixture and complete grammar equality check compile
+against actual grammY with strict library checking in CI. Two runtime cases
+compare every spelling and its concrete witness against the pinned SDK.
+All 2,007 core cases pass on Node, Bun and Deno. Static checks scan 138 production
+sources with zero clones; the package permits 181 entries. Telegraf predicate
+refinements, SDK-specific subtype names, per-method models and every wider unmet
+acceptance criterion remain unfinished.

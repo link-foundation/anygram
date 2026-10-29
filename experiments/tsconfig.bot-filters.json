@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "noEmit": true,
+    "types": ["node", "node-fetch"],
+    "typeRoots": ["./composer-types-runtime/node_modules/@types"],
+    "paths": {
+      "node-fetch": [
+        "./composer-types-runtime/node_modules/@types/node-fetch/index.d.ts"
+      ]
+    }
+  },
+  "include": ["typed-grammy-filter-oracle.ts", "typed-filter-sdk-fixture.ts"]
+}

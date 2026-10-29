@@ -210,6 +210,11 @@ jobs:
       - name: Check TypeScript declarations and examples
         run: npm run typecheck
 
+      - name: Check actual grammY filter type compatibility
+        run: |
+          npm ci --prefix experiments/composer-types-runtime --ignore-scripts
+          node node_modules/typescript/bin/tsc --project experiments/tsconfig.bot-filters.json
+
       - name: Check official Bot API fact extraction
         run: python3 experiments/test-bot-model-facts.py
 

@@ -50,6 +50,32 @@ import type {
   GrammyContextContent,
   TelegrafContextContent,
 } from './bot-context-content.js';
+import type { Filter } from './bot-filter-types.js';
+import type { ChatType, ChatTypeContext } from './bot-chat-types.js';
+export type { ChatType, ChatTypeContext } from './bot-chat-types.js';
+import type {
+  HearsContext,
+  CommandContext,
+  ReactionContext,
+  CallbackQueryContext,
+  GameQueryContext,
+  InlineQueryContext,
+  ChosenInlineResultContext,
+  PreCheckoutQueryContext,
+  ShippingQueryContext,
+} from './bot-filter-context.js';
+export type { Filter, FilterCore } from './bot-filter-types.js';
+export type {
+  HearsContext,
+  CommandContext,
+  ReactionContext,
+  CallbackQueryContext,
+  GameQueryContext,
+  InlineQueryContext,
+  ChosenInlineResultContext,
+  PreCheckoutQueryContext,
+  ShippingQueryContext,
+} from './bot-filter-context.js';
 export type {
   FilterQuery,
   ReactionTrigger,
@@ -62,9 +88,10 @@ export {
   type Reaction,
   type ReactionArgument,
 } from './bot-reactions.js';
-export declare function matchFilter(
-  filter: FilterQuery
-): (ctx: Context) => boolean;
+export declare function matchFilter<
+  C extends CommonContext = Context,
+  Q extends FilterQuery = FilterQuery,
+>(filter: Q | readonly Q[]): <D extends C>(ctx: D) => ctx is Filter<D, Q>;
 export { Api } from './api.js';
 export type {
   TlObject,
@@ -941,24 +968,30 @@ export declare function run<C extends CommonContext>(
 export declare class Composer<C extends CommonContext = Context> {
   constructor(...middleware: MiddlewareLike<C>[]);
   use(...middleware: MiddlewareLike<C>[]): Composer<C>;
-  on(filters: FilterQuery, ...middleware: MiddlewareLike<C>[]): Composer<C>;
+  on<Q extends FilterQuery>(
+    filters: Q | readonly Q[],
+    ...middleware: MiddlewareLike<Filter<C, Q>>[]
+  ): Composer<Filter<C, Q>>;
   command(
     commands: string | readonly string[],
-    ...middleware: MiddlewareLike<C>[]
-  ): Composer<C>;
-  hears(pattern: QueryTrigger, ...middleware: MiddlewareLike<C>[]): Composer<C>;
+    ...middleware: MiddlewareLike<CommandContext<C>>[]
+  ): Composer<CommandContext<C>>;
+  hears(
+    pattern: QueryTrigger,
+    ...middleware: MiddlewareLike<HearsContext<C>>[]
+  ): Composer<HearsContext<C>>;
   reaction(
     reaction: ReactionTrigger,
-    ...middleware: MiddlewareLike<C>[]
-  ): Composer<C>;
-  chatType(
-    types: string | readonly string[],
-    ...middleware: MiddlewareLike<C>[]
-  ): Composer<C>;
+    ...middleware: MiddlewareLike<ReactionContext<C>>[]
+  ): Composer<ReactionContext<C>>;
+  chatType<T extends ChatType>(
+    types: T | readonly T[],
+    ...middleware: MiddlewareLike<ChatTypeContext<C, T>>[]
+  ): Composer<ChatTypeContext<C, T>>;
   action(
     pattern: string | RegExp,
-    ...middleware: MiddlewareLike<C>[]
-  ): Composer<C>;
+    ...middleware: MiddlewareLike<CallbackQueryContext<C>>[]
+  ): Composer<CallbackQueryContext<C>>;
   filter<D extends C>(
     predicate: (ctx: C) => ctx is D,
     ...middleware: MiddlewareLike<D>[]
@@ -999,28 +1032,28 @@ export declare class Composer<C extends CommonContext = Context> {
   ): Composer<C>;
   callbackQuery(
     trigger: QueryTrigger,
-    ...middleware: MiddlewareLike<C>[]
-  ): Composer<C>;
+    ...middleware: MiddlewareLike<CallbackQueryContext<C>>[]
+  ): Composer<CallbackQueryContext<C>>;
   gameQuery(
     trigger: QueryTrigger,
-    ...middleware: MiddlewareLike<C>[]
-  ): Composer<C>;
+    ...middleware: MiddlewareLike<GameQueryContext<C>>[]
+  ): Composer<GameQueryContext<C>>;
   inlineQuery(
     trigger: QueryTrigger,
-    ...middleware: MiddlewareLike<C>[]
-  ): Composer<C>;
+    ...middleware: MiddlewareLike<InlineQueryContext<C>>[]
+  ): Composer<InlineQueryContext<C>>;
   chosenInlineResult(
     trigger: QueryTrigger,
-    ...middleware: MiddlewareLike<C>[]
-  ): Composer<C>;
+    ...middleware: MiddlewareLike<ChosenInlineResultContext<C>>[]
+  ): Composer<ChosenInlineResultContext<C>>;
   preCheckoutQuery(
     trigger: QueryTrigger,
-    ...middleware: MiddlewareLike<C>[]
-  ): Composer<C>;
+    ...middleware: MiddlewareLike<PreCheckoutQueryContext<C>>[]
+  ): Composer<PreCheckoutQueryContext<C>>;
   shippingQuery(
     trigger: QueryTrigger,
-    ...middleware: MiddlewareLike<C>[]
-  ): Composer<C>;
+    ...middleware: MiddlewareLike<ShippingQueryContext<C>>[]
+  ): Composer<ShippingQueryContext<C>>;
   middleware(): Middleware<C>;
 }
 export declare class Bot<

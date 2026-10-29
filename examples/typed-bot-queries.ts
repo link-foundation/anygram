@@ -1,7 +1,7 @@
-import { Bot, type Composer, type Context } from '../src/index.js';
+import { Bot } from '../src/index.js';
 
 export function registerQueries(bot: Bot) {
-  const callbacks: Composer<Context> = bot.callbackQuery(['refresh', /^page:/]);
+  const callbacks = bot.callbackQuery(['refresh', /^page:/]);
   callbacks.use(async (ctx) => {
     await ctx.answerCallbackQuery({ text: String(ctx.match) });
   });

@@ -170,3 +170,9 @@ Export independently generated official Bot API field models through a type-only
 Telegram namespace. Preserve nested message/update fields, recursive rich text,
 tagged unions, keyboard strings and owned upload inputs, with reviewed primary
 facts, exact regeneration and explicit comparisons against pinned SDK types.
+
+Refine grammY-style filter, checker and scoped helper declarations from the
+reviewed public query grammar. Preserve custom contexts, correlated alternatives,
+implied fields, aggregate accessors and chat types; reject invalid literal
+queries. Compare the complete query union and a shared checked migration fixture
+against actual grammY with strict library checking in CI.
