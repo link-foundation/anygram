@@ -1,4 +1,4 @@
-import { Composer } from './composer.js';
+import { TelegrafComposer as Composer } from './telegraf-composer.js';
 import { compose } from './bot-context.js';
 
 const noop = async () => {};

@@ -709,3 +709,18 @@ regeneration and 154 permitted package entries. Every pinned context member
 has runtime inventory coverage. Full SDK type narrowing, Composer scoping,
 webhook fast responses, plugin/model parity and every other open acceptance
 criterion remain unfinished.
+
+The [Composer comparison](composer-scopes.md) advances
+R01/R05/R08/R13/R16/R17/R19 with all pinned grammY scoped middleware helpers
+and the Telegraf fluent/static factory surface. The final 118 cases reproduce
+111 failures and seven passes against frozen preceding modules. Actual SDK
+comparisons cover late registrations, snapshots, async predicates, fork order,
+error boundaries, context replacement, raw-update and entity guards, reactions,
+command payload/argument parsing and bot/scene integration. Existing scoped
+query extensions and Symbol error handling remain available. Checked declarations
+and examples compile. All 2,002 core tests pass on Node, Bun and Deno; the
+118 focused cases pass on Node 20. Strict gates report zero clones across 116
+production sources, exact regeneration and 159 permitted package entries. All
+26 native checks, two vendor wire cases and the bounded FIFO probe pass. Full
+SDK filter narrowing, exhaustive public models, subclass fluent type precision
+and every other open acceptance criterion remain unfinished.

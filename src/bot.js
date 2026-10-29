@@ -1,6 +1,8 @@
 import { BotApi } from './bot-api.js';
 import { Context, TelegrafContext, botApi, matchText } from './bot-context.js';
 import { Composer } from './composer.js';
+import { installTelegrafComposer } from './telegraf-composer.js';
+import { BotError } from './bot-error.js';
 import { TelegramError } from './errors.js';
 import { pollingKey, acquirePolling, validatePolling } from './polling.js';
 import { joinBytes } from './bytes.js';
@@ -71,16 +73,13 @@ export class Bot extends Composer {
     let result;
     try {
       await this.emitUpdate?.(update);
-      await this.middleware()(ctx);
+      await this.middleware()(ctx, () => Promise.resolve());
     } catch (error) {
       if (!this.errorHandler) {
         throw error;
       }
       result = await this.errorHandler(
-        Object.assign(
-          new Error('Bot update handler failed', { cause: error }),
-          { error, ctx }
-        )
+        Object.assign(new BotError(error, ctx), { cause: error })
       );
     }
     this.seen.add(update.update_id);
@@ -161,6 +160,8 @@ export class Telegraf extends Bot {
     return super.start(options);
   }
 }
+
+installTelegrafComposer(Telegraf);
 
 /** Event and positional-method facade used by node-telegram-bot-api 0.x. */
 export class TelegramBot extends Bot {

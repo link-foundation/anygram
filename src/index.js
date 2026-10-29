@@ -37,7 +37,9 @@ export { InputFile } from './input-file.js';
 export { createClient } from './factory.js';
 export { Session } from './session.js';
 export { Bot, Telegraf, TelegramBot, webhookCallback } from './bot.js';
-export { Composer } from './composer.js';
+export { Composer, run } from './composer.js';
+export { TelegrafComposer } from './telegraf-composer.js';
+export { BotError } from './bot-error.js';
 export {
   Scenes,
   BaseScene,

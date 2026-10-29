@@ -1,5 +1,5 @@
 import type {
-  Composer,
+  TelegrafComposer as Composer,
   CommonContext,
   Middleware,
   MiddlewareLike,

@@ -30,7 +30,20 @@ import type {
   GrammyContextCheckers,
   TelegrafContextCheckers,
   FilterQuery,
+  ReactionTrigger,
 } from './bot-context-checkers.js';
+import type {
+  TelegrafComposer,
+  TelegrafComposerConstructor,
+  TelegrafRegistrations,
+  TelegrafQueryExtensions,
+} from './telegraf-composer.js';
+export { TelegrafComposer } from './telegraf-composer.js';
+export type {
+  TelegrafMiddleware,
+  TelegrafMiddlewareLike,
+  TelegrafTrigger,
+} from './telegraf-composer.js';
 import type {
   GrammyContextContent,
   TelegrafContextContent,
@@ -871,6 +884,10 @@ export interface TelegrafContext
   assert(value: unknown, method: string): void;
   readonly me?: string;
   readonly updateType: string;
+  command?: string;
+  payload?: string;
+  args?: string[];
+  startPayload?: string;
   readonly msg?: BotMessage & {
     has(...keys: string[]): boolean;
     isAccessible(): boolean;
@@ -958,37 +975,97 @@ export type QueryTrigger = string | RegExp | readonly (string | RegExp)[];
 export type BotPredicate<C extends CommonContext = Context> = (
   ctx: C
 ) => boolean | Promise<boolean>;
+export declare class BotError<C extends CommonContext = Context> extends Error {
+  constructor(error: unknown, ctx: C);
+  error: unknown;
+  ctx: C;
+}
+export declare function run<C extends CommonContext>(
+  middleware: Middleware<C>,
+  ctx: C
+): Promise<void>;
 export declare class Composer<C extends CommonContext = Context> {
   constructor(...middleware: MiddlewareLike<C>[]);
-  use(...middleware: MiddlewareLike<C>[]): this;
-  on(filters: string | string[], ...middleware: Middleware<C>[]): this;
-  command(commands: string | string[], ...middleware: Middleware<C>[]): this;
-  hears(pattern: string | RegExp, ...middleware: Middleware<C>[]): this;
-  action(pattern: string | RegExp, ...middleware: Middleware<C>[]): this;
+  use(...middleware: MiddlewareLike<C>[]): Composer<C>;
+  on(filters: FilterQuery, ...middleware: MiddlewareLike<C>[]): Composer<C>;
+  command(
+    commands: string | readonly string[],
+    ...middleware: MiddlewareLike<C>[]
+  ): Composer<C>;
+  hears(pattern: QueryTrigger, ...middleware: MiddlewareLike<C>[]): Composer<C>;
+  reaction(
+    reaction: ReactionTrigger,
+    ...middleware: MiddlewareLike<C>[]
+  ): Composer<C>;
+  chatType(
+    types: string | readonly string[],
+    ...middleware: MiddlewareLike<C>[]
+  ): Composer<C>;
+  action(
+    pattern: string | RegExp,
+    ...middleware: MiddlewareLike<C>[]
+  ): Composer<C>;
+  filter<D extends C>(
+    predicate: (ctx: C) => ctx is D,
+    ...middleware: MiddlewareLike<D>[]
+  ): Composer<D>;
   filter(
     predicate: BotPredicate<C>,
-    ...middleware: Middleware<C>[]
+    ...middleware: MiddlewareLike<C>[]
+  ): Composer<C>;
+  drop(
+    predicate: BotPredicate<C>,
+    ...middleware: MiddlewareLike<C>[]
+  ): Composer<C>;
+  fork(...middleware: MiddlewareLike<C>[]): Composer<C>;
+  lazy(
+    factory: (
+      ctx: C
+    ) =>
+      | MiddlewareLike<C>
+      | MiddlewareLike<C>[]
+      | Promise<MiddlewareLike<C> | MiddlewareLike<C>[]>
+  ): Composer<C>;
+  route<K extends PropertyKey>(
+    router: (ctx: C) => K | undefined | Promise<K | undefined>,
+    handlers: Partial<Record<K, MiddlewareLike<C> | MiddlewareLike<C>[]>>,
+    fallback?: MiddlewareLike<C> | MiddlewareLike<C>[]
+  ): Composer<C>;
+  branch(
+    predicate: BotPredicate<C>,
+    yes: MiddlewareLike<C> | MiddlewareLike<C>[],
+    no: MiddlewareLike<C> | MiddlewareLike<C>[]
+  ): Composer<C>;
+  errorBoundary(
+    handler: (
+      error: BotError<C>,
+      next: () => Promise<void>
+    ) => unknown | Promise<unknown>,
+    ...middleware: MiddlewareLike<C>[]
   ): Composer<C>;
   callbackQuery(
     trigger: QueryTrigger,
-    ...middleware: Middleware<C>[]
+    ...middleware: MiddlewareLike<C>[]
   ): Composer<C>;
-  gameQuery(trigger: QueryTrigger, ...middleware: Middleware<C>[]): Composer<C>;
+  gameQuery(
+    trigger: QueryTrigger,
+    ...middleware: MiddlewareLike<C>[]
+  ): Composer<C>;
   inlineQuery(
     trigger: QueryTrigger,
-    ...middleware: Middleware<C>[]
+    ...middleware: MiddlewareLike<C>[]
   ): Composer<C>;
   chosenInlineResult(
     trigger: QueryTrigger,
-    ...middleware: Middleware<C>[]
+    ...middleware: MiddlewareLike<C>[]
   ): Composer<C>;
   preCheckoutQuery(
     trigger: QueryTrigger,
-    ...middleware: Middleware<C>[]
+    ...middleware: MiddlewareLike<C>[]
   ): Composer<C>;
   shippingQuery(
     trigger: QueryTrigger,
-    ...middleware: Middleware<C>[]
+    ...middleware: MiddlewareLike<C>[]
   ): Composer<C>;
   middleware(): Middleware<C>;
 }
@@ -1008,13 +1085,30 @@ export declare class Bot<
   start(options?: PollingOptions): Promise<void>;
   launch(options?: PollingOptions): Promise<void>;
 }
-export interface Telegraf<
-  C extends CommonContext = TelegrafContext,
-> extends Omit<Bot<C>, 'start' | 'catch'> {
-  start(...middleware: Middleware<C>[]): this;
+export interface Telegraf<C extends CommonContext = TelegrafContext>
+  extends
+    Omit<Bot<C>, keyof Composer<C> | 'start' | 'catch'>,
+    TelegrafRegistrations<C, Telegraf<C>>,
+    TelegrafQueryExtensions<C>,
+    Pick<TelegrafComposer<C>, 'middleware'> {
+  use(
+    ...middleware: import('./telegraf-composer.js').TelegrafMiddlewareLike<C>[]
+  ): this;
+  start(
+    ...middleware: import('./telegraf-composer.js').TelegrafMiddlewareLike<C>[]
+  ): this;
+  help(
+    ...middleware: import('./telegraf-composer.js').TelegrafMiddlewareLike<C>[]
+  ): this;
+  settings(
+    ...middleware: import('./telegraf-composer.js').TelegrafMiddlewareLike<C>[]
+  ): this;
   catch(handler: (error: unknown, ctx: C) => unknown | Promise<unknown>): this;
 }
-export declare const Telegraf: {
+export declare const Telegraf: Omit<
+  TelegrafComposerConstructor,
+  'prototype'
+> & {
   new <C extends CommonContext = TelegrafContext>(
     token: string,
     options?: BotOptions

@@ -1,120 +1,104 @@
-import { compose, matchesFilter, matchText } from './bot-context.js';
+import { Context, matchText } from './bot-context.js';
+import { BotError } from './bot-error.js';
 
-function matching(pattern, valueOf, middleware) {
-  const run = compose(middleware);
-  return (ctx, next) => {
-    const match = matchText(pattern, valueOf(ctx));
-    if (!match) {
-      return next();
-    }
-    ctx.match = match;
-    return run(ctx, next);
+const pass = (_ctx, next) => next();
+const leaf = () => Promise.resolve();
+const flatten = (entry) =>
+  typeof entry === 'function'
+    ? entry
+    : (ctx, next) => entry.middleware()(ctx, next);
+
+function append(first, second) {
+  return async (ctx, next) => {
+    let continued = false;
+    await first(ctx, async () => {
+      if (continued) {
+        throw new Error('`next` already called before!');
+      }
+      continued = true;
+      await second(ctx, next);
+    });
   };
 }
 
-/** Shared registration and dispatch for bots, nested composers and scenes. */
+/** Run middleware to completion without an enclosing middleware stack. */
+export async function run(middleware, ctx) {
+  await middleware(ctx, leaf);
+}
+
+/** grammY-style registration, including independently extensible scopes. */
 export class Composer {
   constructor(...middleware) {
-    this.handlers = [];
-    this.use(...middleware);
+    this.handler = middleware.length
+      ? middleware.map(flatten).reduce(append)
+      : pass;
   }
   use(...middleware) {
-    for (const entry of middleware) {
-      this.handlers.push(
-        typeof entry === 'function' ? entry : entry.middleware()
-      );
-    }
-    return this;
+    const scope = new Composer(...middleware);
+    this.handler = append(this.handler, flatten(scope));
+    return scope;
   }
-  on(filters, ...middleware) {
-    const values = Array.isArray(filters) ? filters : [filters];
-    const run = compose(middleware);
-    return this.use((ctx, next) =>
-      values.some((filter) => matchesFilter(ctx, filter))
-        ? run(ctx, next)
-        : next()
-    );
+  on(query, ...middleware) {
+    return this.filter(Context.has.filterQuery(query), ...middleware);
   }
   filter(predicate, ...middleware) {
-    const branch = new Composer(...middleware);
-    const run = branch.middleware();
-    this.use(async (ctx, next) =>
-      (await predicate(ctx)) ? run(ctx, next) : next()
-    );
-    return branch;
+    const scope = new Composer(...middleware);
+    this.branch(predicate, scope, pass);
+    return scope;
   }
-  command(commands, ...middleware) {
-    const names = Array.isArray(commands) ? commands : [commands];
-    const run = compose(middleware);
-    return this.use((ctx, next) => {
-      const message = ctx.message;
-      const entity = message?.entities?.find(
-        (entry) => entry.type === 'bot_command' && entry.offset === 0
-      );
-      if (!entity) {
-        return next();
-      }
-      const [command, username] = message.text
-        .slice(1, entity.length)
-        .split('@');
-      if (
-        !names.includes(command) ||
-        (username &&
-          username.toLowerCase() !== ctx.botInfo?.username?.toLowerCase())
-      ) {
-        return next();
-      }
-      ctx.match = message.text.slice(entity.length).trimStart();
-      return run(ctx, next);
+  drop(predicate, ...middleware) {
+    return this.filter(async (ctx) => !(await predicate(ctx)), ...middleware);
+  }
+  fork(...middleware) {
+    const scope = new Composer(...middleware);
+    this.use((ctx, next) =>
+      Promise.all([next(), run(scope.middleware(), ctx)])
+    );
+    return scope;
+  }
+  lazy(factory) {
+    return this.use(async (ctx, next) => {
+      const selected = await factory(ctx);
+      const entries = Array.isArray(selected) ? selected : [selected];
+      await new Composer(...entries).middleware()(ctx, next);
     });
   }
-  hears(pattern, ...middleware) {
-    return this.use(matching(pattern, (ctx) => ctx.msg?.text, middleware));
+  route(router, handlers, fallback = pass) {
+    return this.lazy(async (ctx) => {
+      const key = await router(ctx);
+      return (
+        (key === undefined || !handlers[key] ? fallback : handlers[key]) ?? []
+      );
+    });
   }
+  branch(predicate, yes, no) {
+    return this.lazy(async (ctx) => ((await predicate(ctx)) ? yes : no));
+  }
+  errorBoundary(handleError, ...middleware) {
+    const scope = new Composer(...middleware);
+    this.use(async (ctx, next) => {
+      let continueOutside = false;
+      const resume = () => {
+        continueOutside = true;
+        return Promise.resolve();
+      };
+      try {
+        await scope.middleware()(ctx, resume);
+      } catch (error) {
+        continueOutside = false;
+        await handleError(new BotError(error, ctx), resume);
+      }
+      if (continueOutside) {
+        await next();
+      }
+    });
+    return scope;
+  }
+  // Retained extension for existing applications using the action alias.
   action(pattern, ...middleware) {
-    return this.use(
-      matching(pattern, (ctx) => ctx.callbackQuery?.data, middleware)
-    );
-  }
-  middleware() {
-    return compose(this.handlers);
-  }
-}
-
-function queryMatch(triggers, value) {
-  if (typeof value !== 'string') {
-    return null;
-  }
-  for (const trigger of triggers) {
-    const match =
-      typeof trigger === 'string'
-        ? value === trigger && trigger
-        : value.match(trigger);
-    if (match) {
-      return match;
-    }
-  }
-  return null;
-}
-
-// Query shortcuts share filtering, matching and the normal dispatch boundary.
-for (const signature of [
-  'callbackQuery callback_query data',
-  'gameQuery callback_query game_short_name',
-  'inlineQuery inline_query query',
-  'chosenInlineResult chosen_inline_result result_id',
-  'preCheckoutQuery pre_checkout_query invoice_payload',
-  'shippingQuery shipping_query invoice_payload',
-]) {
-  const [method, event, field] = signature.split(' ');
-  Composer.prototype[method] = function (trigger, ...middleware) {
-    if (Array.isArray(trigger) && trigger.length > 1000) {
-      throw new RangeError('Query trigger limit exceeded');
-    }
-    const triggers = Array.isArray(trigger) ? [...trigger] : [trigger];
     return this.filter(
       (ctx) => {
-        const match = queryMatch(triggers, ctx.update[event]?.[field]);
+        const match = matchText(pattern, ctx.callbackQuery?.data);
         if (!match) {
           return false;
         }
@@ -123,5 +107,30 @@ for (const signature of [
       },
       ...middleware
     );
+  }
+  middleware() {
+    return this.handler;
+  }
+}
+
+for (const [name, checker] of [
+  ['hears', 'text'],
+  ['command', 'command'],
+  ['reaction', 'reaction'],
+  ['chatType', 'chatType'],
+  ['callbackQuery', 'callbackQuery'],
+  ['gameQuery', 'gameQuery'],
+  ['inlineQuery', 'inlineQuery'],
+  ['chosenInlineResult', 'chosenInlineResult'],
+  ['preCheckoutQuery', 'preCheckoutQuery'],
+  ['shippingQuery', 'shippingQuery'],
+]) {
+  Composer.prototype[name] = function (trigger, ...middleware) {
+    if (name.endsWith('Query') || name === 'chosenInlineResult') {
+      if (Array.isArray(trigger) && trigger.length > 1000) {
+        throw new RangeError('Query trigger limit exceeded');
+      }
+    }
+    return this.filter(Context.has[checker](trigger), ...middleware);
   };
 }

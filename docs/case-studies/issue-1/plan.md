@@ -892,5 +892,25 @@ Context filters and entities work plan:
       compile declarations/examples and regenerate exactly. All 26 native
       checks, two vendor wire cases and the bounded FIFO probe pass.
       Packaging permits 154 entries, and main remains an ancestor.
-- [ ] Commit/push context inspection and inspect fresh CI by exact SHA/time.
+- [x] Commit/push context inspection and inspect fresh CI by exact SHA/time.
+      Head 8835d73871b4ebd1076b653b5286755890f67bb8 passed run 40894142765,
+      created 2026-10-29T14:42:19Z.
 - [ ] Continue the Composer filter/scoping and all wider issue requirements.
+
+Composer work plan:
+
+- [x] Compare registration return values, delayed nested registrations, filter
+      shortcuts, commands, reactions and all routing/concurrency/error helpers
+      with the actual pinned SDKs before implementation.
+- [x] Separate grammY scoped composition from Telegraf fluent registration,
+      retaining scene integration and the shared bot transport/dispatch path.
+- [x] Add declarations, checked examples and immutable before reproduction.
+- [x] Run focused comparisons, complete runtime/static/integration/package gates
+      and review. The 118-case suite reproduces 111 failures and seven passes
+      against frozen preceding modules, then passes on Node 20. All 2,002 tests
+      pass on Node, Bun and Deno. Strict gates scan 116 sources with zero clones;
+      exact regeneration and 159 permitted package entries pass. All 26 native
+      checks, two vendor wire cases and the bounded FIFO probe pass. Main is an
+      ancestor; the atomic diff and paginated PR file inventory were reviewed.
+- [ ] Commit/push Composer changes and inspect fresh CI by exact SHA/time.
+- [ ] Continue every other open requirement in this draft, unmerged PR.

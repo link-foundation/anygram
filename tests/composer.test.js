@@ -78,12 +78,20 @@ it('supports a Telegraf start handler while launch controls polling', async () =
 });
 
 it('shares middleware composition with Bot and rejects repeated next calls', async () => {
-  const composer = new anygram.Composer(async (ctx, next) => {
-    await next();
-    await next();
-  });
+  const composer = new anygram.Composer(
+    async (ctx, next) => {
+      await next();
+      await next();
+    },
+    async (_ctx, next) => {
+      await next();
+    }
+  );
   const bot = new anygram.Bot('123:offline', { botInfo: { id: 123 } });
   bot.use(composer);
-  await assert.rejects(bot.handleUpdate(update('hello')), /more than once/);
+  await assert.rejects(
+    bot.handleUpdate(update('hello')),
+    /`next` already called before!/
+  );
   assert.equal(bot.seen.size, 0);
 });

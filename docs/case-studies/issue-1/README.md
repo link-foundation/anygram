@@ -1,10 +1,15 @@
 # Unified Telegram client: investigation and implementation
 
+The [Composer comparison](composer-scopes.md) separates grammY's extensible
+registration scopes from Telegraf's fluent methods and static factories. Actual
+SDK comparisons cover routing, forks, error isolation, commands/entities and
+scene/bot dispatch. Complete SDK models and filter type narrowing remain open.
+
 The [context inspection comparison](bot-context-filters.md) covers all 1,140
 concrete grammY filter paths, 11 checker factories, SDK-specific entity/text
 extraction and reaction summaries/views. Its 104 cases include immutable
-reproduction, public hooks and Telegraf context data aliases. Full Composer
-semantics and SDK type narrowing remain open.
+reproduction, public hooks and Telegraf context data aliases. The Composer
+comparison extends this runtime coverage; SDK type narrowing remains open.
 
 The [context message action comparison](bot-context-message-actions.md) verifies
 29 grammY and 14 Telegraf scoped helpers plus persistent chat action lifecycle.

@@ -156,3 +156,9 @@ registration/cache state, context checker factories and SDK validation semantics
 Preserve SDK-specific entity/text sources, reaction summaries/views and Telegraf
 passport/web-app/telegram/webhook aliases, including dynamic bot usernames.
 Expose the standalone filter predicate and indexed reaction-list utilities.
+
+Separate grammY registration scopes from Telegraf fluent composition, sharing
+context filters with lazy routes, branches, forks and scoped error boundaries.
+Add Telegraf static middleware factories, entity/reaction guards and exact command
+payload/argument parsing; retain scenes, query extensions and the shared bot
+runner. Export BotError with original context/value and preserve catcher causes.

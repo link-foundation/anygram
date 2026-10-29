@@ -176,6 +176,16 @@ the same dispatch path as `Bot`. `Telegraf` provides `start(handler)` for the
 `/start` command and `launch(options)` for polling. The grammY-style `Bot` uses
 `command('start', handler)` and `start(options)` respectively.
 
+`Composer` follows grammY's scope rules: `on('msg:text').use(handler)` runs the
+chained handler only for matching updates. It also supports async filters,
+reactions, chat types, forks, lazy routing, branches and scoped error boundaries.
+Use `TelegrafComposer` (or import it as `Composer`) for Telegraf's fluent
+registrations, raw-update guards and static middleware factories. `Telegraf`
+and its scenes use those same fluent rules. Command handlers receive Telegraf's
+`command`, `payload`, lazy `args` and `startPayload` fields. See the checked
+[composition example](examples/typed-composers.ts) and
+[SDK comparisons](docs/case-studies/issue-1/composer-scopes.md).
+
 `Scenes.BaseScene`, `Scenes.WizardScene` and `Scenes.Stage` provide persisted
 conversation steps on that same middleware path. Install session middleware
 before a stage; the current scene, state, expiry and wizard cursor live in
