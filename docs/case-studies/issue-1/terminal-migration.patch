@@ -1,14 +1,35 @@
 diff --git a/src/text-bot.js b/src/text-bot.js
-index 186f91e..4b47f3e 100644
+index 186f91e..78d2df9 100644
 --- a/src/text-bot.js
 +++ b/src/text-bot.js
-@@ -1,4 +1,4 @@
+@@ -1,12 +1,15 @@
 -import { Bot, InlineKeyboard } from "grammy";
 +import { Bot } from "anygram";
  import * as pty from "node-pty";
  import { config } from "dotenv";
  import pino from "pino";
-@@ -157,6 +157,7 @@ bot.command("start", async (ctx) => {
+-import { createWriteStream } from "fs";
++import { createWriteStream, mkdirSync } from "fs";
+ import VirtualTerminal from "./virtual-terminal.js";
+ 
+ config();
+ 
++mkdirSync('./logs', { recursive: true });
++const logStream = createWriteStream('./logs/bot.log', { flags: 'a' });
++
+ // Setup logger with file and console output
+ const logger = pino({
+   level: 'debug',
+@@ -18,7 +21,7 @@ const logger = pino({
+   },
+ }, pino.multistream([
+   { stream: process.stdout },
+-  { stream: createWriteStream('./logs/bot.log', { flags: 'a' }) }
++  { stream: logStream }
+ ]));
+ 
+ // Global error handlers
+@@ -157,6 +160,7 @@ bot.command("start", async (ctx) => {
      // Kill existing session if any
      if (userSessions.has(userId)) {
        logger.info({ userId }, 'Killing existing terminal session');
@@ -16,7 +37,7 @@ index 186f91e..4b47f3e 100644
        userSessions.get(userId).terminal.kill();
        userSessions.delete(userId);
      }
-@@ -175,6 +176,7 @@ bot.command("start", async (ctx) => {
+@@ -175,6 +179,7 @@ bot.command("start", async (ctx) => {
      const virtualTerminal = new VirtualTerminal(cols, rows);
      let messageId = null;
      let updateTimeout = null;
@@ -24,7 +45,7 @@ index 186f91e..4b47f3e 100644
      let lastMessageContent = '';
      
      // Subscribe to terminal changes for optimized updates
-@@ -201,6 +203,7 @@ bot.command("start", async (ctx) => {
+@@ -201,6 +206,7 @@ bot.command("start", async (ctx) => {
      
      // Handle terminal output
      terminal.onData((data) => {
@@ -32,7 +53,7 @@ index 186f91e..4b47f3e 100644
        logger.debug({ 
          userId, 
          dataLength: data.length,
-@@ -214,6 +217,8 @@ bot.command("start", async (ctx) => {
+@@ -214,6 +220,8 @@ bot.command("start", async (ctx) => {
      
      // Handle terminal exit
      terminal.onExit((exitCode, signal) => {
@@ -41,7 +62,7 @@ index 186f91e..4b47f3e 100644
        logger.info({ userId, exitCode, signal }, 'Terminal session ended');
        if (updateTimeout) {
          clearTimeout(updateTimeout);
-@@ -226,6 +231,7 @@ bot.command("start", async (ctx) => {
+@@ -226,6 +234,7 @@ bot.command("start", async (ctx) => {
      
      // Function to update the terminal message
      async function updateTerminalMessage() {
@@ -49,7 +70,7 @@ index 186f91e..4b47f3e 100644
        try {
          const formattedOutput = formatTerminalOutput(virtualTerminal);
          const messageText = `🚀 **Terminal ${name} (${cols}x${rows})** - Ready!
-@@ -322,6 +328,14 @@ ${formattedOutput}
+@@ -322,6 +331,14 @@ ${formattedOutput}
        virtualTerminal,
        messageId,
        updateTerminalMessage,
@@ -64,7 +85,7 @@ index 186f91e..4b47f3e 100644
        unsubscribeFromChanges,
        cols,
        rows,
-@@ -354,7 +368,7 @@ ${initialOutput}
+@@ -354,7 +371,7 @@ ${initialOutput}
      logger.debug({ userId, messageId }, 'Initial terminal message sent');
      
      // Wait a bit for initial shell prompt, then update
@@ -73,7 +94,7 @@ index 186f91e..4b47f3e 100644
      
    } catch (error) {
      logger.error({ userId, error: error.message, stack: error.stack }, 'Failed to start terminal session');
-@@ -363,81 +377,6 @@ ${initialOutput}
+@@ -363,81 +380,6 @@ ${initialOutput}
    }
  });
  
@@ -155,7 +176,7 @@ index 186f91e..4b47f3e 100644
  // Handle stop command
  bot.command("stop", async (ctx) => {
    const userId = ctx.from.id;
-@@ -447,6 +386,7 @@ bot.command("stop", async (ctx) => {
+@@ -447,6 +389,7 @@ bot.command("stop", async (ctx) => {
    
    if (session) {
      try {
@@ -163,7 +184,7 @@ index 186f91e..4b47f3e 100644
        session.terminal.kill();
        userSessions.delete(userId);
        logger.info({ userId }, 'Terminal session stopped successfully');
-@@ -477,7 +417,8 @@ bot.command("restart", async (ctx) => {
+@@ -477,7 +420,8 @@ bot.command("restart", async (ctx) => {
          from: ctx.from,
          chat: ctx.chat,
          date: Date.now(),
@@ -173,7 +194,7 @@ index 186f91e..4b47f3e 100644
        }
      });
      logger.info({ userId }, 'Terminal session restart initiated');
-@@ -521,6 +462,82 @@ bot.command("help", async (ctx) => {
+@@ -521,6 +465,82 @@ bot.command("help", async (ctx) => {
    logger.info({ userId: ctx.from.id }, 'Help command sent');
  });
  
@@ -256,7 +277,7 @@ index 186f91e..4b47f3e 100644
  // Error handling
  bot.catch((err) => {
    logger.error({ error: err.message, stack: err.stack }, 'Bot error occurred');
-@@ -528,39 +545,32 @@ bot.catch((err) => {
+@@ -528,39 +548,36 @@ bot.catch((err) => {
  });
  
  // Graceful shutdown
@@ -304,6 +325,10 @@ index 186f91e..4b47f3e 100644
 +    await polling;
 +    await bot.queue;
 +    logger.info('All terminal sessions and polling closed');
++    await new Promise((resolve, reject) => {
++      logStream.once('error', reject);
++      logStream.end(resolve);
++    });
 +    process.exit(0);
 +  })();
 +  return shutdownTask;
@@ -319,16 +344,39 @@ index 186f91e..4b47f3e 100644
      logger.info('Telegram Terminal Bot started successfully!');
      logger.info({ 
 diff --git a/src/visual-bot.js b/src/visual-bot.js
-index 9ad84e0..e1ddcef 100644
+index 9ad84e0..062aff4 100644
 --- a/src/visual-bot.js
 +++ b/src/visual-bot.js
-@@ -1,4 +1,4 @@
+@@ -1,14 +1,17 @@
 -import { Bot, InlineKeyboard } from "grammy";
 +import { Bot } from "anygram";
  import * as pty from "node-pty";
  import { config } from "dotenv";
  import pino from "pino";
-@@ -233,6 +233,7 @@ bot.command("start", async (ctx) => {
+-import { createWriteStream } from "fs";
++import { createWriteStream, mkdirSync } from "fs";
+ import GIFEncoder from "gifencoder";
+ import { createCanvas } from "canvas";
+ import { Readable } from "stream";
+ 
+ config();
+ 
++mkdirSync('./logs', { recursive: true });
++const logStream = createWriteStream('./logs/bot.log', { flags: 'a' });
++
+ // Setup logger with file and console output
+ const logger = pino({
+   level: 'debug',
+@@ -20,7 +23,7 @@ const logger = pino({
+   },
+ }, pino.multistream([
+   { stream: process.stdout },
+-  { stream: createWriteStream('./logs/bot.log', { flags: 'a' }) }
++  { stream: logStream }
+ ]));
+ 
+ // Global error handlers
+@@ -233,6 +236,7 @@ bot.command("start", async (ctx) => {
    try {
      if (userSessions.has(userId)) {
        logger.info({ userId }, 'Killing existing terminal session');
@@ -336,7 +384,7 @@ index 9ad84e0..e1ddcef 100644
        userSessions.get(userId).terminal.kill();
        userSessions.delete(userId);
      }
-@@ -248,16 +249,19 @@ bot.command("start", async (ctx) => {
+@@ -248,16 +252,19 @@ bot.command("start", async (ctx) => {
      let output = '';
      let messageId = null;
      let updateTimeout = null;
@@ -357,7 +405,7 @@ index 9ad84e0..e1ddcef 100644
        
        if (updateTimeout) {
          clearTimeout(updateTimeout);
-@@ -271,6 +275,8 @@ bot.command("start", async (ctx) => {
+@@ -271,6 +278,8 @@ bot.command("start", async (ctx) => {
      });
      
      terminal.onExit((exitCode, signal) => {
@@ -366,7 +414,7 @@ index 9ad84e0..e1ddcef 100644
        logger.info({ userId, exitCode, signal }, 'Terminal session ended');
        if (updateTimeout) {
          clearTimeout(updateTimeout);
-@@ -280,6 +286,7 @@ bot.command("start", async (ctx) => {
+@@ -280,6 +289,7 @@ bot.command("start", async (ctx) => {
      });
      
      async function updateTerminalMessage() {
@@ -374,7 +422,7 @@ index 9ad84e0..e1ddcef 100644
        try {
          const formattedOutput = formatTerminalOutput(output, cols, rows);
          const messageText = `🚀 **Terminal ${name} (${cols}x${rows})** - Ready!
-@@ -365,6 +372,14 @@ ${formattedOutput}
+@@ -365,6 +375,14 @@ ${formattedOutput}
        output,
        messageId,
        updateTerminalMessage,
@@ -389,7 +437,7 @@ index 9ad84e0..e1ddcef 100644
        cols,
        rows
      });
-@@ -391,7 +406,7 @@ ${initialOutput}
+@@ -391,7 +409,7 @@ ${initialOutput}
      
      logger.debug({ userId, messageId }, 'Initial terminal message sent');
      
@@ -398,7 +446,7 @@ index 9ad84e0..e1ddcef 100644
      
    } catch (error) {
      logger.error({ userId, error: error.message, stack: error.stack }, 'Failed to start terminal session');
-@@ -400,6 +415,88 @@ ${initialOutput}
+@@ -400,6 +418,88 @@ ${initialOutput}
    }
  });
  
@@ -487,7 +535,7 @@ index 9ad84e0..e1ddcef 100644
  // Handle all text messages as terminal commands
  bot.on("message:text", async (ctx) => {
    const userId = ctx.from.id;
-@@ -463,7 +560,18 @@ bot.on("message:text", async (ctx) => {
+@@ -463,7 +563,18 @@ bot.on("message:text", async (ctx) => {
        captureFrames();
  
        // Wait for animation duration and generate GIF
@@ -507,7 +555,7 @@ index 9ad84e0..e1ddcef 100644
        clearTimeout(frameTimeout);
  
        const animationStream = await generateTerminalAnimation(frames, session.cols, session.rows);
-@@ -497,85 +605,6 @@ async function streamToBuffer(stream) {
+@@ -497,85 +608,6 @@ async function streamToBuffer(stream) {
    return Buffer.concat(chunks);
  }
  
@@ -593,7 +641,7 @@ index 9ad84e0..e1ddcef 100644
  
  // Error handling
  bot.catch((err) => {
-@@ -584,37 +613,32 @@ bot.catch((err) => {
+@@ -584,37 +616,36 @@ bot.catch((err) => {
  });
  
  // Graceful shutdown
@@ -639,6 +687,10 @@ index 9ad84e0..e1ddcef 100644
 +    await polling;
 +    await bot.queue;
 +    logger.info('All terminal sessions and polling closed');
++    await new Promise((resolve, reject) => {
++      logStream.once('error', reject);
++      logStream.end(resolve);
++    });
 +    process.exit(0);
 +  })();
 +  return shutdownTask;

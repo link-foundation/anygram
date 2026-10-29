@@ -39,11 +39,11 @@ export function loadVirtualTerminal() {
   )();
 }
 
-/** Imports/logger initialization and real polling are excluded; handlers are executed. */
+/** Verify immutable source, then execute selected startup and handler boundaries. */
 export function loadTerminalSource(
   mode,
   dependencies,
-  { migrated = true, startup = false } = {}
+  { migrated = true, startup = false, initialization = false } = {}
 ) {
   if (!['text', 'visual'].includes(mode)) {
     throw new TypeError('Unknown terminal mode');
@@ -52,14 +52,21 @@ export function loadTerminalSource(
   if (migrated) {
     source = migrateTerminalSource(source);
   }
-  const begin = source.indexOf('const bot = new Bot(');
+  const begin = initialization
+    ? source.indexOf('config();')
+    : source.indexOf('const bot = new Bot(');
   const end = source.indexOf('// Start the bot');
   if (begin < 0 || end <= begin) {
     throw new Error('Pinned terminal application boundaries changed');
   }
   const body = source.slice(begin, startup ? undefined : end);
+  if (initialization) {
+    dependencies = { ...dependencies };
+    delete dependencies.logger;
+    delete dependencies.logStream;
+  }
   return new Function(
     ...Object.keys(dependencies),
-    `'use strict';\n${body}\nreturn { bot, userSessions, parseCommandInput, formatTerminalOutput${startup ? ", polling: typeof polling === 'undefined' ? null : polling" : ''} };`
+    `'use strict';\n${body}\nreturn { bot, userSessions, parseCommandInput, formatTerminalOutput${initialization ? ', logger, logStream' : ''}${startup ? ", polling: typeof polling === 'undefined' ? null : polling" : ''} };`
   )(...Object.values(dependencies));
 }

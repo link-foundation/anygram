@@ -84,3 +84,35 @@ it('cancels an active visual animation before signal shutdown drains accepted ha
     await shutdown;
   }
 });
+
+it('awaits the terminal log destination before reporting a successful exit', async () => {
+  const flushing = deferred(),
+    release = deferred();
+  const app = terminalHarness('text', {
+    dependencies: {
+      logStream: {
+        once() {},
+        end(done) {
+          flushing.resolve();
+          release.promise.then(done);
+        },
+      },
+    },
+  });
+  const shutdown = app.signal('SIGINT');
+  try {
+    await turn();
+    assert.deepEqual(
+      app.exits,
+      [],
+      'buffered log writes must finish before process.exit'
+    );
+    release.resolve();
+    await flushing.promise;
+    await shutdown;
+    assert.deepEqual(app.exits, [0]);
+  } finally {
+    release.resolve();
+    await shutdown;
+  }
+});

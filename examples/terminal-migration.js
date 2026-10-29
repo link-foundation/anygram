@@ -77,6 +77,27 @@ function cancelAnimation(source) {
   );
 }
 
+function logDestination(source) {
+  source = replaceOnce(
+    source,
+    'import { createWriteStream } from "fs";',
+    'import { createWriteStream, mkdirSync } from "fs";'
+  );
+  source = replaceOnce(
+    source,
+    "createWriteStream('./logs/bot.log', { flags: 'a' })",
+    'logStream'
+  );
+  return replaceOnce(
+    source,
+    '// Setup logger with file and console output',
+    `mkdirSync('./logs', { recursive: true });
+const logStream = createWriteStream('./logs/bot.log', { flags: 'a' });
+
+// Setup logger with file and console output`
+  );
+}
+
 function gracefulShutdown(source) {
   const begin = source.indexOf('process.once("SIGINT"');
   const end = source.indexOf('// Start the bot', begin);
@@ -99,6 +120,10 @@ function shutdownTerminal() {
     await polling;
     await bot.queue;
     logger.info('All terminal sessions and polling closed');
+    await new Promise((resolve, reject) => {
+      logStream.once('error', reject);
+      logStream.end(resolve);
+    });
     process.exit(0);
   })();
   return shutdownTask;
@@ -140,7 +165,7 @@ export function migrateTerminalSource(source) {
     'text: "/start"',
     'text: "/start",\n        entities: [{ type: "bot_command", offset: 0, length: 6 }]'
   );
-  source = retireSessions(source);
+  source = logDestination(retireSessions(source));
   if (source.includes('output += data;')) {
     source = cancelAnimation(source);
     source = replaceOnce(

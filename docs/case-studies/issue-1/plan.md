@@ -188,7 +188,15 @@ Three further failing-before regressions now verify polling drain, shared signal
 shutdown and active-animation cancellation. Three isolated Node/Linux integrations
 use real PTY children, actual canvas/GIF encoding and independent GIF decoding;
 before/after PNGs and GIFs are preserved. Verify fresh matrix and native-job CI,
-then continue keyboard/photo helpers and environment/logger startup. Preserve all broader open
+then continue keyboard/photo helpers and complete remaining lifecycle scenarios.
+Rendering/shutdown head 2b8ef53f passed all nine runtime/OS jobs, native
+integration and applicable gates in run 40848702436, created 09:19:14Z and
+completed 09:22:16Z on 2026-10-29. Six native scenarios now execute complete
+actual dotenv/pino startup and validate missing credentials, isolated paths and
+successful file-log drain. One more failing-before regression verifies log
+completion before successful exit. Preserve the checkpoint after full local
+checks and verify its fresh CI. Fatal-exit log recovery and native runtime/OS
+coverage remain open alongside keyboard/photo/account evidence. Preserve all broader open
 criteria and keep working independently of controlled-account credentials.
 
 Keep protocol completion (secret chats/call media/transports), complete backend

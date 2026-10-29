@@ -130,6 +130,19 @@ function rendering(frames) {
   };
 }
 
+function fixtureLogger(errors) {
+  return Object.fromEntries(
+    ['info', 'warn', 'debug', 'fatal', 'error'].map((level) => [
+      level,
+      (...args) => {
+        if (level === 'error') {
+          errors.push(args);
+        }
+      },
+    ])
+  );
+}
+
 export function terminalHarness(
   mode,
   {
@@ -138,6 +151,9 @@ export function terminalHarness(
     env = {},
     dependencies = {},
     startup = false,
+    initialization = false,
+    botOptions = {},
+    processExtras = {},
     fetch: transportFetch,
   } = {}
 ) {
@@ -174,6 +190,7 @@ export function terminalHarness(
       super(token, {
         botInfo: { id: 1, is_bot: true, username: 'terminalbot' },
         fetch: fetcher,
+        ...botOptions,
       });
       if (Object.hasOwn(this.api, 'config')) {
         this.api.config.use((next, method, params) => {
@@ -188,16 +205,7 @@ export function terminalHarness(
       }
     }
   }
-  const logger = Object.fromEntries(
-    ['info', 'warn', 'debug', 'fatal', 'error'].map((level) => [
-      level,
-      (...args) => {
-        if (level === 'error') {
-          errors.push(args);
-        }
-      },
-    ])
-  );
+  const logger = fixtureLogger(errors);
   class FixtureDate extends Date {
     static now() {
       return clock.now;
@@ -217,8 +225,17 @@ export function terminalHarness(
       setTimeout: clock.setTimeout,
       clearTimeout: clock.clearTimeout,
       ...(startup ? {} : { polling: Promise.resolve() }),
+      logStream: {
+        once() {},
+        end(done) {
+          done();
+        },
+      },
       process: {
         env: { BOT_TOKEN: 'terminal:fixture', AUTHORIZED_USER_ID: '8', ...env },
+        on(name, callback) {
+          signals.set(name, callback);
+        },
         once(name, callback) {
           signals.set(name, callback);
         },
@@ -228,10 +245,11 @@ export function terminalHarness(
             throw new Error(`Terminal fixture requested failure exit ${code}`);
           }
         },
+        ...processExtras,
       },
       ...dependencies,
     },
-    { migrated, startup }
+    { migrated, startup, initialization }
   );
   let updateId = 0;
   return {
