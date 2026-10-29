@@ -13,6 +13,54 @@ const sequence = (options = {}) =>
 const wire = (frame) =>
   new SecretChatCodec({ layer: frame.layer }).encode(frame);
 
+it('preserves newer incoming message flags without upgrading the outgoing layer', () => {
+  for (const originator of [true, false]) {
+    const receiver = sequence({ originator });
+    const remote = sequence({ originator: !originator, layer: 144 });
+    const frame = remote.create({
+      ...message(1),
+      no_webpage: true,
+      silent: true,
+      grouped_id: 123n,
+    });
+    assert.deepEqual(receiver.receive(frame).messages, [frame]);
+    assert.equal(receiver.exportState().layer, 46);
+    assert.equal(receiver.create(message(2)).layer, 46);
+  }
+});
+
+it('preserves newer incoming nested constructors and exact queued bytes through restart', () => {
+  const receiver = sequence();
+  const remote = sequence({ originator: false, layer: 144 });
+  const first = remote.create(message(1));
+  const second = remote.create({
+    ...message(2),
+    grouped_id: 123n,
+    media: {
+      _: 'decryptedMessageMediaDocument',
+      thumb: new Uint8Array(),
+      thumb_w: 0,
+      thumb_h: 0,
+      mime_type: 'application/octet-stream',
+      size: 0x100000000n,
+      key: new Uint8Array(32),
+      iv: new Uint8Array(32),
+      attributes: [],
+      caption: 'large document',
+    },
+  });
+  assert.deepEqual(receiver.receive(second).messages, []);
+  const saved = JSON.parse(JSON.stringify(receiver.exportState()));
+  assert.deepEqual(saved.pending, [
+    Buffer.from(wire(second)).toString('base64'),
+  ]);
+  const restored = sequence({ state: saved });
+  assert.deepEqual(restored.exportState(), saved);
+  assert.deepEqual(restored.receive(first).messages, [first, second]);
+  assert.equal(restored.state.pending, 0);
+  assert.equal(restored.create(message(3)).layer, 46);
+});
+
 it('upgrades outgoing secret layers while preserving exact cached frames across restart and resends', () => {
   const sender = sequence();
   const first = sender.create(message(1));

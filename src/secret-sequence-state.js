@@ -68,7 +68,7 @@ function historyOf(state, context) {
       ack < acknowledgement ||
       ack > state.incoming ||
       frame.layer < layer ||
-      frame.layer > context.codec.layer
+      frame.layer > context.layer
     ) {
       throw new RangeError('Invalid secret chat history continuity');
     }
@@ -114,7 +114,7 @@ export function restoreSecretSequence(state, options) {
     !state ||
     state.version !== 1 ||
     state.originator !== options.originator ||
-    state.layer !== options.codec.layer
+    state.layer !== options.layer
   ) {
     throw new TypeError('Invalid secret chat state version, role or layer');
   }

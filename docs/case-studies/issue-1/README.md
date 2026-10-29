@@ -779,3 +779,22 @@ All 254 tests pass on Node, Bun and Deno; strict lint, formatting and full
 TypeScript checks pass. The clone detector scans 54 production files with no
 clones. The npm dry run has 59 permitted entries and excludes experiments and
 research. Live authenticated initial handshakes remain unverified.
+
+The handshake head 7134040 passed all nine runtime/OS jobs and applicable gates
+in [run 40802763164](https://github.com/link-foundation/anygram/actions/runs/40802763164).
+
+## Independent incoming secret layers
+
+Two minimal regressions demonstrated that a sequence still sending at layer 46
+silently removed layer-73 flags and album IDs from an incoming layer-144 message,
+and rejected a layer-143 document whose size exceeded a signed 32-bit integer.
+The receive path had reserialized incoming messages with the outgoing codec.
+
+Incoming frames now use their declared layer for serialization and the complete
+supported constructor registry for decoding, including queued messages restored
+from JSON. Outgoing serialization stays at its explicitly selected layer;
+persisted outgoing history still rejects future or decreasing layers. Tests
+cover both roles, exact queued bytes, large nested document sizes, restart and
+ordered delivery. The failing-before log is retained locally in
+`ci-logs/secret-incoming-layer-before.log`. Integrated durable delivery and the
+other open criteria remain unfinished.

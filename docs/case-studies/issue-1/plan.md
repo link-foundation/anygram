@@ -218,3 +218,12 @@ strict ESLint, Prettier, full declaration/example checks and the zero-clone scan
 of 54 production files. The package dry run has 59 permitted entries. Main is
 an ancestor, and refreshed issue/sub-issue and all three PR feedback streams
 remain empty. Fresh CI is required after committing the handshake.
+
+Handshake head 7134040 passed all nine runtime/OS jobs and applicable gates in
+CI run 40802763164. Two new failing-before regressions isolate an incoming-layer
+bug: outgoing layer 46 serialization stripped incoming layer-144 fields and
+rejected large layer-143 document sizes. Separate receive serialization/decoding
+now preserves exact queued frames through restart without upgrading outgoing
+policy or relaxing outgoing-history validation. Focused sequence/layer tests
+pass. All 256 tests pass on Node, Bun and Deno; strict lint, formatting, full
+declaration/example checks and the zero-clone production scan also pass.

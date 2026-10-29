@@ -22,6 +22,7 @@ const result = () => ({
 export class SecretChatSequence {
   #originator;
   #codec;
+  #readCodec;
   #incoming = 0;
   #outgoing = 0;
   #acknowledged = 0;
@@ -58,11 +59,16 @@ export class SecretChatSequence {
       layer,
       maxBytes: Math.min(maxBufferedBytes, 16 * 1024 * 1024),
     });
+    this.#readCodec = new SecretChatCodec({
+      layer: 216,
+      maxBytes: this.#codec.maxBytes,
+    });
     this.#originator = originator;
     if (state !== undefined) {
       const restored = restoreSecretSequence(state, {
         originator,
-        codec: this.#codec,
+        layer,
+        codec: this.#readCodec,
         maxHistory,
         maxPending,
         maxBytes: maxBufferedBytes,
@@ -115,7 +121,7 @@ export class SecretChatSequence {
   }
 
   #decode(bytes) {
-    return this.#codec.decode(bytes, 'DecryptedMessageLayer');
+    return this.#readCodec.decode(bytes, 'DecryptedMessageLayer');
   }
 
   #reserve(bytes) {
@@ -326,7 +332,11 @@ export class SecretChatSequence {
     if (!(frame.random_bytes instanceof Uint8Array)) {
       this.#abort('Invalid secret chat random padding');
     }
-    const bytes = this.#codec.encode(frame, 'DecryptedMessageLayer');
+    const receivedCodec = new SecretChatCodec({
+      layer: frame.layer,
+      maxBytes: this.#codec.maxBytes,
+    });
+    const bytes = receivedCodec.encode(frame, 'DecryptedMessageLayer');
     const copy = this.#decode(bytes);
     const handledResend = this.#resend(copy, output);
     if (index === this.#incoming) {
