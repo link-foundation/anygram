@@ -114,3 +114,13 @@ ledger. Continue with transport resource/cancellation gaps and the shared bot
 session/scene and account scenario surfaces, each with a reproducing test.
 Update PR #2 with current implementation and evidence; keep it draft until the
 remaining requirements are genuinely implemented and verified.
+
+## Current CI investigation
+
+1. [x] List recent runs with timestamps and verify b11141b's SHA.
+2. [x] Download run 40795826588 and all three failed Windows job logs.
+3. [x] Identify the source-hash failure and reproduce the exact CRLF hash locally.
+4. [x] Preserve archived bytes with Git attributes; add a checkout regression.
+5. [ ] Verify the repair in fresh CI, including all Windows runtime jobs.
+
+The archive repair passes 196 local tests on each runtime and strict checks.

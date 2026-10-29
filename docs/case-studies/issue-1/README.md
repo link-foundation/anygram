@@ -539,3 +539,22 @@ clones; the npm dry run has 52 permitted entries. Cipher head 8e1b759 passed eve
 applicable job in [run 40794806160](https://github.com/link-foundation/anygram/actions/runs/40794806160).
 This codec change requires fresh CI. Full secret-chat negotiation, sequence
 recovery, persistence, PFS and controlled-account interoperability remain open.
+
+## Windows archive integrity repair
+
+Codec run [40795826588](https://github.com/link-foundation/anygram/actions/runs/40795826588)
+was created at 2026-10-29T00:42:41Z for b11141b. Six runtime jobs and all release
+checks passed; all three Windows jobs failed the source-hash assertion. The
+archived Node log identifies the two hashes at lines 904–905; Bun reports the
+same mismatch at 460–461 and Deno at 1269–1270. Each failed job and the full
+workflow log are preserved locally in `ci-logs/`.
+
+A finite Git checkout experiment with `core.autocrlf=true` and `core.eol=crlf`
+reproduces the exact Windows hash `fbf73e2f…`. Windows Git had changed captured
+LF bytes into CRLF, invalidating their recorded provenance. `.gitattributes`
+now disables text conversion for archived research data. The assertion still
+checks the original bytes and hash. A failing-before/passing-after regression
+checks a temporary Windows-style checkout and always removes it. Deno's test
+permissions allow only `git` for this new subprocess fixture. All 196 tests and
+strict lint, format and duplication checks pass locally on Node, Bun and Deno.
+A fresh CI run must verify the repair on the actual Windows runners.

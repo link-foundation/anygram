@@ -1,0 +1,2 @@
+# Captured primary-source bytes and their hashes must survive every checkout.
+docs/case-studies/**/data/** -text
