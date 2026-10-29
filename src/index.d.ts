@@ -9,6 +9,10 @@ import type {
 import type { GrammyPositionalApi } from './bot-positional.js';
 import type { TelegrafPositionalApi } from './telegraf-positional.js';
 import type { ContextUpdateAliases } from './bot-context-data.js';
+import type {
+  GrammyContextDelivery,
+  TelegrafContextDelivery,
+} from './bot-context-delivery.js';
 export { Api } from './api.js';
 export type {
   TlObject,
@@ -739,7 +743,7 @@ export interface TelegrafApi extends BotContextApi, TelegrafPositionalApi {
     request?: RequestOptions | AbortSignal
   ): Promise<unknown>;
 }
-export interface Context extends ContextUpdateAliases {}
+export interface Context extends ContextUpdateAliases, GrammyContextDelivery {}
 export declare class Context {
   constructor(
     update: BotUpdate,
@@ -793,8 +797,14 @@ export type ContextMediaMethod = (
   options?: Parameters,
   signal?: AbortSignal
 ) => Promise<unknown>;
-export interface TelegrafContext extends Omit<Context, 'me'> {
+export type CommonContext = Omit<
+  Context,
+  'me' | 'replyWithDice' | 'replyWithInvoice'
+>;
+export interface TelegrafContext
+  extends CommonContext, TelegrafContextDelivery {
   readonly me?: string;
+  readonly updateType: string;
   readonly msg?: BotMessage & {
     has(...keys: string[]): boolean;
     isAccessible(): boolean;
@@ -808,7 +818,7 @@ export declare const TelegrafContext: {
     telegram?: TelegrafApi
   ): TelegrafContext;
 };
-export type Middleware<C extends Omit<Context, 'me'> = Context> = (
+export type Middleware<C extends CommonContext = Context> = (
   ctx: C,
   next: () => Promise<void>
 ) => unknown | Promise<unknown>;
@@ -825,7 +835,7 @@ export interface BotSessionStore<S> {
   set(key: string, value: S): void | Promise<void>;
   delete(key: string): void | Promise<void>;
 }
-export interface BotSessionOptions<S, C extends Omit<Context, 'me'> = Context> {
+export interface BotSessionOptions<S, C extends CommonContext = Context> {
   initial?: (ctx: C) => S | Promise<S>;
   defaultSession?: (ctx: C) => S | Promise<S>;
   storage?: BotSessionStorage<S>;
@@ -849,7 +859,7 @@ export declare class MemorySessionStore<S = Parameters>
   delete(key: string): void;
 }
 export { MemorySessionStore as MemorySessionStorage };
-export declare function session<S, C extends Omit<Context, 'me'> = Context>(
+export declare function session<S, C extends CommonContext = Context>(
   options?: BotSessionOptions<S, C>
 ): Middleware<C & SessionFlavor<S>>;
 export declare const grammySession: typeof session;
@@ -869,20 +879,20 @@ export interface BotOptions extends Partial<BotApiOptions> {
     api: ContextApi,
     me?: Parameters,
     telegram?: TelegrafApi
-  ) => Omit<Context, 'me'>;
+  ) => CommonContext;
   polling?: boolean | PollingOptions;
 }
-export type MiddlewareLike<C extends Omit<Context, 'me'> = Context> =
+export type MiddlewareLike<C extends CommonContext = Context> =
   | Middleware<C>
   | { middleware(): Middleware<C> };
-export type BotErrorHandler<C extends Omit<Context, 'me'> = Context> = (
+export type BotErrorHandler<C extends CommonContext = Context> = (
   error: Error & { error: unknown; ctx: C }
 ) => unknown | Promise<unknown>;
 export type QueryTrigger = string | RegExp | readonly (string | RegExp)[];
-export type BotPredicate<C extends Omit<Context, 'me'> = Context> = (
+export type BotPredicate<C extends CommonContext = Context> = (
   ctx: C
 ) => boolean | Promise<boolean>;
-export declare class Composer<C extends Omit<Context, 'me'> = Context> {
+export declare class Composer<C extends CommonContext = Context> {
   constructor(...middleware: MiddlewareLike<C>[]);
   use(...middleware: MiddlewareLike<C>[]): this;
   on(filters: string | string[], ...middleware: Middleware<C>[]): this;
@@ -917,7 +927,7 @@ export declare class Composer<C extends Omit<Context, 'me'> = Context> {
   middleware(): Middleware<C>;
 }
 export declare class Bot<
-  C extends Omit<Context, 'me'> = Context,
+  C extends CommonContext = Context,
 > extends Composer<C> {
   constructor(token: string, options?: BotOptions);
   api: ContextApi;
@@ -933,13 +943,13 @@ export declare class Bot<
   launch(options?: PollingOptions): Promise<void>;
 }
 export interface Telegraf<
-  C extends Omit<Context, 'me'> = TelegrafContext,
+  C extends CommonContext = TelegrafContext,
 > extends Omit<Bot<C>, 'start' | 'catch'> {
   start(...middleware: Middleware<C>[]): this;
   catch(handler: (error: unknown, ctx: C) => unknown | Promise<unknown>): this;
 }
 export declare const Telegraf: {
-  new <C extends Omit<Context, 'me'> = TelegrafContext>(
+  new <C extends CommonContext = TelegrafContext>(
     token: string,
     options?: BotOptions
   ): Telegraf<C>;

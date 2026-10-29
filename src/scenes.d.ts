@@ -1,13 +1,12 @@
 import type {
   Composer,
-  Context,
+  CommonContext,
   Middleware,
   MiddlewareLike,
   Parameters,
   TelegrafContext,
 } from './index.js';
 
-type CommonContext = Omit<Context, 'me'>;
 export interface SceneSessionData {
   current?: string;
   expires?: number;

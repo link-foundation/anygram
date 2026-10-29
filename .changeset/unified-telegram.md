@@ -127,3 +127,8 @@ request controls when a final options object supplies undefined controls.
 Share complete pinned context update aliases and aggregate source resolution,
 preserving grammY/Telegraf precedence, business/reaction identifiers and detached
 Telegraf message helpers without changing incoming updates.
+
+Add the pinned context chat delivery shortcuts and aliases, preserving business,
+forum and direct-message scope, caller overrides, SDK-specific dice/invoice
+signatures, draft identifiers, checklist scope errors and request controls through
+the shared positional APIs. Keep concrete context types in middleware and scenes.

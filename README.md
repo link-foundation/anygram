@@ -62,6 +62,11 @@ reactions and boosts, with `msgId`, `inlineMessageId` and `businessConnectionId`
 The two styles preserve their SDK source precedence. See the
 [context data comparisons](docs/case-studies/issue-1/bot-context-data.md).
 
+Chat delivery shortcuts preserve each SDK's business and topic defaults, caller
+overrides, and dice/invoice argument order. They share the selected transport and
+request controls with the positional APIs. See the [delivery comparisons](docs/case-studies/issue-1/bot-context-delivery.md)
+and [typed example](examples/typed-bot-context-delivery.ts).
+
 Query shortcuts such as `bot.callbackQuery('refresh').use(handler)` return a
 scoped composer. The six query shortcuts accept strings, regular expressions or
 arrays and share asynchronous `filter(predicate)` registration. See the

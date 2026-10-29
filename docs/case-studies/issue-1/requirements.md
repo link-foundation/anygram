@@ -640,3 +640,17 @@ Node 20 cases, strict gates and exact regeneration pass. The scan covers 92
 production sources with zero clones; the package has 135 permitted entries.
 Complete context methods, models, framework filtering and every broader open
 criterion remain unfinished.
+
+The [context delivery comparison](bot-context-delivery.md) advances
+R01/R05/R08/R13/R16/R17/R19 with 25 grammY and 41 Telegraf delivery helper names.
+The preceding context source reproduces 154 failures in the complete 156-case
+suite. The fix derives business, forum and direct-message fields, preserves
+SDK-specific signatures, missing-scope errors, caller precedence and dynamic
+aliases, and reuses the shared positional request boundary. Actual selected
+backends receive location and media-group HTTP requests; blocked-upload deadlines
+are independently bounded. All 1,358 core cases pass on Node, Bun and Deno.
+The 156 focused Node 20 cases, strict gates, 26 native checks, two vendor wire
+cases and FIFO probe pass. There are zero clones across 94 production sources
+and 137 permitted package entries.
+Full context APIs, SDK type models, plugins, controlled production behavior and
+every other open acceptance criterion remain unfinished.

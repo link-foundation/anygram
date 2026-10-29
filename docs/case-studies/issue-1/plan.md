@@ -751,9 +751,9 @@ Complete pinned Telegraf positional API work plan:
       complete declaration examples and exact metadata generation.
 - [x] Pass 1,140 core cases on Node/Bun/Deno, 151 focused Node 20 cases, strict
       gates, 26 native terminal checks, vendor wire/FIFO and the package audit.
-- [ ] Commit/push the reviewed atomic change and inspect fresh CI for this head.
-      Committed and pushed as 5b6b1a8; run 40877995122 was created
-      2026-10-29T13:00:13Z and remains pending.
+- [x] Commit/push the reviewed atomic change and inspect fresh CI for this head.
+      Head 5b6b1a8 passed every applicable job in run 40877995122, created
+      2026-10-29T13:00:13Z and completed 2026-10-29T13:18:26Z.
 - [ ] Continue every other open criterion in this draft, unmerged PR.
 
 The independent proxy serialization head fdb6a2a passed every applicable CI job
@@ -774,5 +774,25 @@ Context update data work plan:
       exercise business/reaction HTTP requests over all four selected backends.
 - [x] Pass 1,202 tests on each runtime, 62 focused Node 20 cases, strict gates,
       26 native terminal checks, vendor wire/FIFO and the 135-entry package audit.
-- [ ] Commit/push the reviewed atomic change and verify fresh CI by SHA/time.
+- [x] Commit/push the reviewed atomic change and verify fresh CI by SHA/time.
+      Head 0e55209 passed every applicable job in run 40879885613, created
+      2026-10-29T13:12:56Z and completed 2026-10-29T13:23:09Z.
 - [ ] Continue all remaining issue criteria in this single draft, unmerged PR.
+
+Context chat delivery work plan:
+
+- [x] Compare every pinned SDK chat send/reply helper and alias against actual
+      SDK calls before changing the implementation, including business, forum,
+      direct-message topics, inaccessible messages and caller overrides.
+- [x] Share context scope selection and reuse the complete positional APIs;
+      preserve SDK-specific dice, invoice, draft and checklist signatures.
+- [x] Verify missing-context errors, immutable inputs, signal/deadline controls,
+      selected-backend HTTP requests and concrete checked declaration examples.
+- [x] Run all runtime suites, strict static gates, native integration, vendor
+      wire/FIFO and package audit before the atomic commit and push.
+      All 1,358 core cases pass per runtime, as do 156 focused Node 20 cases,
+      26 native checks, two vendor wire cases and the bounded FIFO probe.
+      Strict checks scan 94 production sources with zero clones; the package
+      contains 137 permitted entries. Main remains an ancestor of this branch.
+- [ ] Inspect fresh CI by SHA/time and continue all other open criteria without
+      presenting delivery helpers as complete context or ecosystem parity.

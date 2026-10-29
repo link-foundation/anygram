@@ -36,6 +36,11 @@ Telegraf update aliases, aggregate source precedence and detached message helper
 Fifty-three initial failures reproduce missing business, reaction, boost and
 edited-channel data. Sixty-two cases include actual selected-backend HTTP requests.
 
+The [context delivery comparison](bot-context-delivery.md) covers 25 grammY and
+41 Telegraf helper names, business/topic defaults, caller precedence, SDK-specific
+signatures and missing-scope errors. The 156 cases include actual selected-backend
+HTTP requests and bounded blocked-upload deadlines. Other context APIs remain open.
+
 The [query registration comparison](bot-query-composer.md) covers all six grammY
 query shortcuts, exact and regular-expression match values, asynchronous filters
 and returned scoped composers. Actual selected-backend HTTP cases acknowledge

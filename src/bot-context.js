@@ -3,6 +3,7 @@ import { botTextParams } from './formatting.js';
 import { positionalBotMethods } from './bot-positional.js';
 import { telegrafBotMethods } from './telegraf-positional.js';
 import { installContextData } from './bot-context-data.js';
+import { installContextDelivery } from './bot-context-delivery.js';
 import {
   botNoPayloadMethods,
   botRequestOptions,
@@ -107,9 +108,6 @@ export class Context {
   get botInfo() {
     return this.me;
   }
-  reply(text, options, signal) {
-    return this.api.sendMessage(this.chat.id, text, options, signal);
-  }
   editMessageText(text, options, signal) {
     return callBotOperation(
       this.api,
@@ -149,24 +147,22 @@ export class TelegrafContext extends Context {
     Object.defineProperty(this, 'me', { value: me?.username, writable: false });
     Object.defineProperty(this, 'botInfo', { value: me });
   }
+  get updateType() {
+    for (const field in this.update) {
+      if (typeof this.update[field] === 'object') {
+        return field;
+      }
+    }
+    throw new Error(
+      `Cannot determine \`updateType\` of ${JSON.stringify(this.update)}`
+    );
+  }
 }
 
 installContextData(Context);
 installContextData(TelegrafContext, 'telegraf');
-
-for (const media of [
-  'Photo',
-  'Animation',
-  'Video',
-  'Audio',
-  'Voice',
-  'Document',
-  'Sticker',
-]) {
-  Context.prototype[`replyWith${media}`] = function (file, options, signal) {
-    return this.api[`send${media}`](this.chat.id, file, options, signal);
-  };
-}
+installContextDelivery(Context);
+installContextDelivery(TelegrafContext, 'telegraf');
 
 export function compose(middleware) {
   return (ctx, last = () => Promise.resolve()) => {
