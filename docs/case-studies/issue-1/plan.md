@@ -322,3 +322,27 @@ and the zero-clone scan of 63 production files pass. The package dry run has
 all nine runtime/OS jobs in run 40812653369. Durable attachment submission and
 incoming gap persistence remain open, as do controlled production peers and
 the wider issue requirements.
+
+Durable attachment submission and incoming gap persistence now have nine unit
+regressions and a bilateral encrypted TCP test. The session persists uploaded
+or reusable file references with exact ciphertext before submission, validates
+returned references before saving submitted state and commits file effects
+atomically. Restored gaps retain references until ordered delivery. References
+count toward buffer limits and are removed from replacement deletions. Canonical
+reference digests reject inconsistent protected snapshots. Two failing-before
+checks caught the legacy layer's 32-bit document size and undetected incoming
+reference corruption; both now pass. Photo, video, audio, document, reusable
+and big-upload references have coverage.
+
+All 329 tests pass on Node, Bun and Deno. Strict checks pass with zero clones
+across 64 production sources; the npm dry run has 69 permitted entries. The typed
+attachment example compiles. Standalone transfer head 56cfb79 passed every
+applicable gate and all nine OS/runtime jobs in
+[run 40813667642](https://github.com/link-foundation/anygram/actions/runs/40813667642),
+created 2026-10-29T03:42:36Z and completed 2026-10-29T03:44:52Z. Fresh CI is
+required for durable attachments. Issue comments, sub-issues and all three PR
+feedback streams remain empty; current main is an ancestor of the branch.
+
+Secret-chat service/TTL behavior and controlled production peer interoperability
+remain open, along with call media, runtime, compatibility and downstream
+scenario criteria. Local peers do not establish production interoperability.

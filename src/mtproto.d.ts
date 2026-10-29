@@ -425,17 +425,39 @@ export interface SecretChatSessionStateV2 extends SecretChatSessionStateBase {
   keyState: Omit<SecretChatKeyRingState, 'key'> | null;
   rekey: SecretChatRekeyState | null;
   incomingKeys: [number, string][];
+  /** Added by attachment-capable sessions; empty for older snapshots. */
+  incomingFiles?: [number, string, string][];
   outbox: (SecretChatSessionStateBase['outbox'][number] & {
     digest: string;
     replacement: { data: string; digest: string } | null;
+    file?: string | null;
   })[];
 }
 export type SecretChatSessionState =
   | SecretChatSessionStateV1
   | SecretChatSessionStateV2;
 export interface SecretChatSessionEffects {
-  messages: SecretChatLayer[];
+  messages: SecretChatReceivedLayer[];
   aborted: boolean;
+  /** Save returned outgoing file references with the submitted outbox state. */
+  files?: {
+    outSequence: number;
+    randomId: bigint;
+    file: EncryptedFileDownload['file'];
+  }[];
+}
+export interface SecretChatReceivedLayer extends SecretChatLayer {
+  file?: EncryptedFileDownload['file'];
+}
+export interface SecretChatSessionResult extends Omit<
+  SecretChatSequenceResult,
+  'messages'
+> {
+  messages: SecretChatReceivedLayer[];
+}
+export interface SecretChatSessionReceiveOptions extends SecretChatSessionSaveOptions {
+  /** Pass update.message.file with update.message.bytes, including across gaps. */
+  file?: TlRequest;
 }
 export interface SecretChatSessionSaveOptions {
   /** Commit messages and private state in one transaction before returning. */
@@ -490,6 +512,11 @@ export declare class SecretChatSession {
     message: TlRequest,
     options: SecretChatSessionSaveOptions
   ): Promise<SecretChatLayer>;
+  queueFile(
+    message: TlRequest,
+    file: TlRequest,
+    options: SecretChatSessionSaveOptions
+  ): Promise<SecretChatLayer>;
   notify(
     options: SecretChatSessionSaveOptions
   ): Promise<SecretChatLayer | undefined>;
@@ -508,8 +535,8 @@ export declare class SecretChatSession {
   ): Promise<{ replacement: SecretChatLayer; deletion: SecretChatLayer }>;
   receive(
     data: Uint8Array,
-    options: SecretChatSessionSaveOptions
-  ): Promise<SecretChatSequenceResult>;
+    options: SecretChatSessionReceiveOptions
+  ): Promise<SecretChatSessionResult>;
   flush(
     client: Pick<Mtproto, 'callWithReceipt'>,
     options: SecretChatSessionSaveOptions

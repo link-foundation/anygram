@@ -296,7 +296,7 @@ post-RPC save failures retain the exact encrypted packet and its random ID for
 retry. Restore protected JSON through `new SecretChatSession({ state })`.
 
 For each `updateNewEncryptedMessage`, await
-`session.receive(update.message.bytes, { save })` before advancing the account
+`session.receive(update.message.bytes, { file: update.message.file, save })` before advancing the account
 qts cursor. Then flush any queued notifications or gap requests. Received
 messages may repeat after a failed save; the atomic transaction prevents their
 effects from being committed separately from sequence state. Authenticated
@@ -335,16 +335,27 @@ interoperability remains unfinished.
 `uploadEncryptedFile(invoke, source, options)` encrypts a byte buffer, Blob or
 local path using a fresh one-time file key and IV. It returns `{ file, key, iv,
 size, name }`; place the key, IV and original size inside the encrypted media
-body and pass `file` to `messages.sendEncryptedFile`. The helpers are also
+body and pass `file` to `session.queueFile(message, file, { save })`. The helpers are also
 available on `Anygram` through raw-capable backends. Uploads share bounded
 sequential parts with cloud files; small-file MD5 checksums cover ciphertext.
 `iterDownloadEncryptedFile(invoke, { file, key, iv, size }, options)` downloads
 from the file's DC, decrypts continuous IGE blocks and removes final padding.
 It defaults to a 512 MiB limit; the collecting `downloadEncryptedFile` defaults
 to 64 MiB. Both accept cancellation and progress callbacks. IGE provides no file
-MAC: the fingerprint checks key/IV consistency, and file metadata must come
-from the authenticated secret message. See `examples/typed-secret-files.ts`.
-Durable attachment submission and incoming gap handling remain the next steps.
+MAC: the fingerprint checks key/IV consistency. Obtain the key, IV and original
+size from the authenticated secret body and the file reference from its Telegram
+update. See `examples/typed-secret-files.ts`.
+
+The session binds uploaded or reusable file references to its durable outbox.
+`flush()` sends them with `messages.sendEncryptedFile` and saves returned file
+references in `effects.files` with the submitted state. Save these effects in the
+same transaction as received messages and state. Incoming out-of-order file
+references survive protected JSON restart and accompany `effects.messages` when
+their gap closes. Attachment bytes count toward session buffer limits. Cached
+reference digests detect inconsistent snapshots; they are not file MACs.
+Photo, video, audio and document metadata are validated against their encrypted
+file fingerprints and sizes. The initial legacy layer accepts only 32-bit
+document sizes; oversized documents reject until a newer layer is negotiated.
 
 `SecretChatRekey` provides the separate ordered PFS action state machine using
 the original chat's DH parameters. `request()` starts one exchange;

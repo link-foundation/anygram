@@ -1,10 +1,11 @@
 import { hash } from './crypto.js';
 import { secretDecodedBytes } from './secret-handshake-state.js';
 import { secretDeletionMessage } from './secret-sequence-state.js';
+import { restoreSecretAttachment } from './secret-attachments.js';
 
 /** Protected snapshots bind exact cached ciphertext to its retained plaintext. */
-export function secretPacketDigest(body, data) {
-  const bytes = Buffer.concat([body, data]);
+export function secretPacketDigest(body, data, file) {
+  const bytes = Buffer.concat(file ? [body, data, file] : [body, data]);
   try {
     return hash('sha256', bytes).toString('base64');
   } finally {
@@ -19,7 +20,8 @@ export function secretDeletionFrame(frame) {
   };
 }
 
-function restorePacket(session, state, packet, frame, version, remaining) {
+function restorePacket(session, state, packet, frame, remaining, file) {
+  const version = frame.layer >= 73 ? 2 : 1;
   const data = secretDecodedBytes(
     packet?.data,
     40,
@@ -37,7 +39,7 @@ function restorePacket(session, state, packet, frame, version, remaining) {
       throw new Error('Secret chat outgoing packet has an unknown key');
     }
     expected = session.frameBytes(frame);
-    const digest = secretPacketDigest(expected, data);
+    const digest = secretPacketDigest(expected, data, file);
     if (
       (body && Buffer.compare(body, expected) !== 0) ||
       (state.version === 2 && packet.digest !== digest)
@@ -61,7 +63,6 @@ function restoreReplacement(session, state, entry, frame, packet, remaining) {
       state,
       entry.replacement,
       secretDeletionFrame(frame),
-      entry.version,
       remaining
     );
     if (
@@ -96,13 +97,19 @@ export function restoreSecretOutbox(session, state) {
     ) {
       throw new TypeError('Invalid secret chat outbox entry');
     }
+    const file = restoreSecretAttachment(frame.message, entry.file);
     const packet = {
-      ...restorePacket(session, state, entry, frame, entry.version, remaining),
+      file,
       version: entry.version,
       submitted: entry.submitted,
       replacement: null,
     };
     session.outbox.set(entry.outSequence, packet);
+    remaining -= file?.length ?? 0;
+    Object.assign(
+      packet,
+      restorePacket(session, state, entry, frame, remaining, file)
+    );
     remaining -= packet.data.length;
     remaining -= restoreReplacement(
       session,

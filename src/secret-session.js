@@ -94,6 +94,7 @@ export class SecretChatSession {
       await this.#commit(draft, save, {
         messages: output?.messages ?? [],
         aborted: false,
+        ...(output?.files ? { files: output.files } : {}),
       });
       return output;
     } finally {
@@ -104,6 +105,14 @@ export class SecretChatSession {
   }
 
   queue(message, options) {
+    return this.#queue(message, undefined, options);
+  }
+
+  queueFile(message, file, options) {
+    return this.#queue(message, file, options);
+  }
+
+  #queue(message, file, options) {
     return this.#exclusive(options, (save) =>
       this.#transaction(save, options?.signal, (draft) => {
         draft.assertActive();
@@ -115,7 +124,7 @@ export class SecretChatSession {
           bytes.fill(0);
         }
         draft.notify();
-        const frame = draft.queue(copy);
+        const frame = draft.queue(copy, file);
         draft.rotateIfNeeded();
         return frame;
       })
@@ -185,7 +194,7 @@ export class SecretChatSession {
       try {
         return await this.#transaction(save, options?.signal, (draft) => {
           try {
-            return draft.receive(owned);
+            return draft.receive(owned, options?.file);
           } catch (error) {
             if (error.type === 'SECRET_CHAT_ABORTED') {
               protocolFailure = error;
@@ -237,13 +246,15 @@ export class SecretChatSession {
             ? [this.#lastReceipt.messageId]
             : [],
         });
-        validateReceipt(receipt);
+        validateReceipt(receipt, _);
+        const effects = this.#data.receiptEffects(outSequence, receipt.value);
         this.#lastReceipt = {
           messageId: receipt.messageId,
           dc: receipt.dc,
         };
         await this.#transaction(save, undefined, (draft) => {
           draft.outbox.get(outSequence).submitted = true;
+          return effects;
         });
         receipts.push(receipt);
       }
@@ -293,7 +304,7 @@ export class SecretChatSession {
   }
 }
 
-function validateReceipt(receipt) {
+function validateReceipt(receipt, method) {
   if (
     typeof receipt?.messageId !== 'bigint' ||
     receipt.messageId <= 0n ||
@@ -303,7 +314,11 @@ function validateReceipt(receipt) {
     throw new TypeError('Invalid secret chat RPC message receipt');
   }
   secretLimit(receipt.dc, 1, 5, 'receipt data center');
-  if (receipt.value?._ !== 'messages.sentEncryptedMessage') {
+  const expected =
+    method === 'messages.sendEncryptedFile'
+      ? 'messages.sentEncryptedFile'
+      : 'messages.sentEncryptedMessage';
+  if (receipt.value?._ !== expected) {
     throw new TypeError('Invalid secret chat send response');
   }
   secretLimit(receipt.value.date, 0, 0x7fffffff, 'message date');
