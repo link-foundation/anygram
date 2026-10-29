@@ -249,3 +249,20 @@ existing cloud comparisons with actual pinned clients. All 195 Node/Bun/Deno
 tests, strict lint, formatting, duplication and declaration checks pass. This
 establishes serialization and envelope behavior, not full peer interoperability
 or call-media support; sequence handling and key negotiation remain open.
+
+## Ordered secret-chat recovery
+
+The bounded sequence tracker requires authenticated layer messages and applies
+the original creator/recipient parity to both sequence counters. It discards
+duplicates before inspecting their message bodies, validates acknowledgements
+in delivery order and handles resend services immediately without replaying
+them after gaps close. Cached retransmissions retain their creation-time headers.
+Portable snapshots retain pending frames, acknowledged history and active gaps;
+restoration validates and copies them before use. Unacknowledged frames and
+current resend requests remain available after restart. Nineteen regressions
+verify these mechanisms, including memory bounds and counter exhaustion.
+
+Applications must persist snapshots and returned effects together atomically;
+snapshots contain plaintext. The typed send example requires a negotiated key
+and peer. Full key exchange, PFS, deleted-message substitution, durable RPC/update
+integration and peer interoperability remain unfinished.

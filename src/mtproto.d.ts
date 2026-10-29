@@ -15,6 +15,63 @@ export declare class SecretChatCodec extends TlCodec {
     maxBytes?: number;
   });
 }
+export interface SecretChatLayer extends TlRequest {
+  _: 'decryptedMessageLayer';
+  random_bytes: Uint8Array;
+  layer: number;
+  in_seq_no: number;
+  out_seq_no: number;
+  message: TlRequest;
+}
+/** Contains cached plaintext; protect snapshots as secret-chat message data. */
+export interface SecretChatSequenceState {
+  version: 1;
+  originator: boolean;
+  layer: number;
+  incoming: number;
+  outgoing: number;
+  acknowledged: number;
+  history: string[];
+  pending: string[];
+  requestedUntil: number | null;
+}
+export interface SecretChatResend extends TlRequest {
+  _: 'decryptedMessageActionResend';
+  start_seq_no: number;
+  end_seq_no: number;
+}
+export interface SecretChatSequenceResult {
+  messages: SecretChatLayer[];
+  retransmit: SecretChatLayer[];
+  resend: SecretChatResend | undefined;
+  duplicate: boolean;
+  ignored: boolean;
+}
+export declare class SecretChatSequence {
+  constructor(options: {
+    originator: boolean;
+    layer?: number;
+    maxPending?: number;
+    maxHistory?: number;
+    maxBufferedBytes?: number;
+    state?: SecretChatSequenceState;
+  });
+  readonly state: {
+    incoming: number;
+    outgoing: number;
+    acknowledged: number;
+    pending: number;
+    history: number;
+    bufferedBytes: number;
+    aborted: boolean;
+  };
+  create(message: TlRequest): SecretChatLayer;
+  receive(frame: SecretChatLayer): SecretChatSequenceResult;
+  resendRequest(): SecretChatResend | undefined;
+  unacknowledged(): SecretChatLayer[];
+  exportState(): SecretChatSequenceState;
+  destroy(): void;
+}
 /** MTProto 2.0 envelopes only; callers manage chat keys, layers and sequence state. */
 export declare class SecretChatCipher {
   constructor(

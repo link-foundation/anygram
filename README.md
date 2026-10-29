@@ -206,6 +206,19 @@ clears its owned key bytes and disables further use. This primitive requires
 separate chat negotiation, layer agreement, sequence tracking, persistence and re-keying;
 the high-level secret-chat client remains unfinished.
 
+`SecretChatSequence` tracks role-specific sequence numbers and acknowledgements,
+buffers gaps, requests missing ranges once and returns exact cached frames for
+resends. `receive()` accepts only authenticated, decoded layer messages. Its
+result separates ordered messages, retransmissions and a new resend request.
+Limits bound history, pending frames and their combined bytes; protocol errors
+abort the tracker. `exportState()` produces a JSON snapshot for the constructor's
+`state` option. It contains plaintext messages and needs protected storage.
+Persist each snapshot together with its returned effects atomically before
+sending or acknowledging them. `unacknowledged()` and `resendRequest()` recover
+outgoing work after restart. See `examples/typed-secret-chat.ts` for a send using
+a separately negotiated chat/key. Key negotiation, re-keying and the complete
+secret-chat client remain unfinished.
+
 ## Select existing clients
 
 ```js

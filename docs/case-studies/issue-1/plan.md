@@ -81,7 +81,7 @@ examples/. No live credentials or sessions may be included in research data.
   Fragmented replies, rejection codes, deadlines and TLS WebSocket tunnels pass.
 - The inherited duplication configuration scanned no files. A failing-before
   fixture now guards the detector, and shared helpers consolidate eleven actual
-  clones. The repaired gate scans all 47 production JS/TS files with zero clones.
+  clones. The repaired gate scans all 49 production JS/TS files with zero clones.
 - The first repaired-gate CI run passed all runtime jobs but rejected a CLI flag
   accepted by a newer Deno-created local shim. The check now invokes locked
   jscpd 4.0.5 directly without that flag; its fixture and source scan pass locally.
@@ -93,9 +93,9 @@ examples/. No live credentials or sessions may be included in research data.
 - All 90 independently versioned secret-schema constructors round-trip. The
   codec retains historical IDs and flag-only fields missing from primary JSON;
   a handwritten wire vector and source-hash comparison verify serialization.
-- Node/Bun/Deno each pass 195 tests; strict lint, format, the repaired duplication
+- Node/Bun/Deno each pass 215 tests; strict lint, format, the repaired duplication
   gate and declaration/example checks pass. Each later code change requires
-  fresh checks. The package contains 52 permitted files.
+  fresh checks. The package contains 54 permitted files.
 - Refreshed issue/sub-issue and all three PR feedback streams are empty. Main is
   an ancestor of the branch. CI for 2598e6d passed all nine runtime/OS jobs and
   release gates in run 40791774228, including email authentication. Later heads
@@ -121,6 +121,23 @@ remaining requirements are genuinely implemented and verified.
 2. [x] Download run 40795826588 and all three failed Windows job logs.
 3. [x] Identify the source-hash failure and reproduce the exact CRLF hash locally.
 4. [x] Preserve archived bytes with Git attributes; add a checkout regression.
-5. [ ] Verify the repair in fresh CI, including all Windows runtime jobs.
+5. [x] Verify the repair in fresh CI, including all Windows runtime jobs.
 
 The archive repair passes 196 local tests on each runtime and strict checks.
+
+Archive repair head c996d26 passed all nine OS/runtime jobs and applicable gates
+in run 40796417220. The sequence checkpoint adds nineteen regressions covering
+role parity, ordered acknowledgements, duplicates, immediate resend processing,
+bounded gaps/history, aborts, copied snapshots and restart recovery. Its 215
+local tests and strict checks pass; fresh CI is required after committing it.
+
+## Secret-chat implementation checklist
+
+1. [x] Authenticate bounded MTProto 2.0 envelopes and retain historical TL IDs.
+2. [x] Track ordered sequence/acknowledgement state and bounded resend caches.
+3. [x] Export/validate copied snapshots and recover unsent frames/gap requests.
+4. [ ] Replace deleted unacknowledged frames with protocol deletion services.
+5. [ ] Negotiate/accept DH keys, agree layers and support initial peer exchange.
+6. [ ] Implement compulsory PFS rotation and simultaneous key-exchange rules.
+7. [ ] Integrate encrypted RPC ordering, durable effects/cursors and file media.
+8. [ ] Verify interoperable flows with controlled Telegram accounts.

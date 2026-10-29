@@ -546,7 +546,7 @@ Codec run [40795826588](https://github.com/link-foundation/anygram/actions/runs/
 was created at 2026-10-29T00:42:41Z for b11141b. Six runtime jobs and all release
 checks passed; all three Windows jobs failed the source-hash assertion. The
 archived Node log identifies the two hashes at lines 904–905; Bun reports the
-same mismatch at 460–461 and Deno at 1269–1270. Each failed job and the full
+same mismatch at 459–460 and Deno at 1268–1269. Each failed job and the full
 workflow log are preserved locally in `ci-logs/`.
 
 A finite Git checkout experiment with `core.autocrlf=true` and `core.eol=crlf`
@@ -557,4 +557,33 @@ checks the original bytes and hash. A failing-before/passing-after regression
 checks a temporary Windows-style checkout and always removes it. Deno's test
 permissions allow only `git` for this new subprocess fixture. All 196 tests and
 strict lint, format and duplication checks pass locally on Node, Bun and Deno.
-A fresh CI run must verify the repair on the actual Windows runners.
+Repair head c996d26 passed all nine runtime/OS jobs and applicable gates in
+[run 40796417220](https://github.com/link-foundation/anygram/actions/runs/40796417220),
+including all three Windows jobs.
+
+## Secret-chat sequence checkpoint
+
+`SecretChatSequence` implements the role parity, immutable creation-time
+headers, ordered acknowledgement validation, duplicate suppression and gap
+recovery from Telegram's [sequence specification](https://core.telegram.org/api/end-to-end/seq_no).
+Resend services act immediately even behind gaps and run once. Cached frames
+retain their exact sequence headers. Unavailable ranges and malformed counters
+abort the tracker; pending/history counts and combined byte budgets are bounded.
+Frames with fewer than fifteen random bytes are ignored without advancing.
+
+Nineteen regressions include failing-before mechanism, portable-state and restart
+cases. They cover both roles, concurrent gaps, reordered acknowledgements,
+malicious ranges, bounded queue overflow, history backpressure, independent
+returned frames and snapshots, handled services across restart, unsent outbox
+recovery and finite counter exhaustion. Snapshots validate canonical encodings,
+cache continuity and gap anchors before restoring copied buffers.
+
+All 215 tests pass on Node, Bun and Deno. Strict lint, format, declaration checks
+without skipped library checking and the duplication gate pass. The detector
+scans 49 production JS/TS files with zero clones; the package dry run contains
+54 permitted entries. `examples/typed-secret-chat.ts` demonstrates sending with
+a separately negotiated chat and key. Applications must protect plaintext
+snapshots and atomically persist returned effects with state before network
+operations. This primitive does not yet integrate that transaction with RPCs;
+key negotiation, compulsory PFS, deleted-message replacement, encrypted media and
+controlled-account interoperability remain acceptance work.

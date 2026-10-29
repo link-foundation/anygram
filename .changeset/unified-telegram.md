@@ -25,3 +25,6 @@ Add bounded MTProto 2.0 secret-chat envelope encryption/decryption with explicit
 originator direction, integrity/padding checks and owned-key destruction.
 Add the independently versioned secret-chat TL codec, preserve historical
 constructor IDs and retain flag-only fields from the primary TL text.
+Track secret-chat sequence parity, ordered acknowledgements, duplicate/gap
+recovery and exact cached retransmissions with bounded private state. Validate
+portable snapshots and recover unsent messages and active gaps after restart.
