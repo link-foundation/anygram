@@ -147,12 +147,29 @@ export declare class UnsupportedError extends Error {
   backend?: string;
   constructor(operation: string, backend?: string);
 }
+export interface BotApiFailureParameters {
+  retry_after?: number;
+  migrate_to_chat_id?: number;
+  [key: string]: unknown;
+}
+export interface BotApiFailure {
+  ok: false;
+  error_code: number;
+  description: string;
+  parameters: BotApiFailureParameters;
+}
 export declare class TelegramError extends Error {
   code?: number;
   type?: string;
   backend?: string;
   retryAfter?: number;
   migrateTo?: number;
+  ok?: false;
+  error_code?: number;
+  description?: string;
+  parameters?: BotApiFailureParameters;
+  response?: BotApiFailure;
+  method?: string;
   constructor(
     message: string,
     options?: {
@@ -544,7 +561,7 @@ export interface BotUpdate extends Parameters {
     from?: Parameters;
   };
 }
-export interface ContextApi {
+export interface BotContextApi {
   raw: BotMethods;
   callApi: BotApi['callApi'];
   getMe(): Promise<Parameters>;
@@ -553,6 +570,26 @@ export interface ContextApi {
     text: string | TextWithEntities,
     options?: Parameters
   ): Promise<BotMessage>;
+  deleteMessage(chat: unknown, id: number): Promise<unknown>;
+  answerCallbackQuery(id: string, options?: Parameters): Promise<unknown>;
+  [key: string]: unknown;
+}
+export interface ContextApi extends BotContextApi {
+  editMessageText(
+    chat: unknown,
+    id: number,
+    text: string | TextWithEntities,
+    options?: Parameters,
+    signal?: AbortSignal
+  ): Promise<unknown>;
+  editMessageTextInline(
+    inlineId: string,
+    text: string | TextWithEntities,
+    options?: Parameters,
+    signal?: AbortSignal
+  ): Promise<unknown>;
+}
+export interface TelegrafApi extends BotContextApi {
   editMessageText(
     chat: unknown,
     id: number | undefined,
@@ -560,15 +597,17 @@ export interface ContextApi {
     text: string | TextWithEntities,
     options?: Parameters
   ): Promise<unknown>;
-  deleteMessage(chat: unknown, id: number): Promise<unknown>;
-  answerCallbackQuery(id: string, options?: Parameters): Promise<unknown>;
-  [key: string]: unknown;
 }
 export declare class Context {
-  constructor(update: BotUpdate, api: ContextApi, me?: Parameters);
+  constructor(
+    update: BotUpdate,
+    api: ContextApi,
+    me?: Parameters,
+    telegram?: TelegrafApi
+  );
   update: BotUpdate;
   api: ContextApi;
-  telegram: ContextApi;
+  telegram: TelegrafApi;
   me?: Parameters;
   readonly botInfo?: Parameters;
   state: Parameters;
@@ -603,7 +642,12 @@ export interface TelegrafContext extends Omit<Context, 'me'> {
   readonly me?: string;
 }
 export declare const TelegrafContext: {
-  new (update: BotUpdate, api: ContextApi, me?: Parameters): TelegrafContext;
+  new (
+    update: BotUpdate,
+    api: ContextApi,
+    me?: Parameters,
+    telegram?: TelegrafApi
+  ): TelegrafContext;
 };
 export type Middleware<C extends Omit<Context, 'me'> = Context> = (
   ctx: C,
@@ -664,7 +708,8 @@ export interface BotOptions extends Partial<BotApiOptions> {
   Context?: new (
     update: BotUpdate,
     api: ContextApi,
-    me?: Parameters
+    me?: Parameters,
+    telegram?: TelegrafApi
   ) => Omit<Context, 'me'>;
   polling?: boolean | PollingOptions;
 }
@@ -685,7 +730,7 @@ export declare class Bot<
 > extends Composer<C> {
   constructor(token: string, options?: BotOptions);
   api: ContextApi;
-  telegram: ContextApi;
+  telegram: TelegrafApi;
   botInfo?: Parameters;
   offset: number;
   catch(
@@ -714,7 +759,7 @@ export declare const Telegraf: {
 export declare class TelegramBot {
   constructor(token: string, options?: BotOptions);
   api: ContextApi;
-  telegram: ContextApi;
+  telegram: TelegrafApi;
   handleUpdate(update: BotUpdate): Promise<void>;
   stop(): void;
   isRunning(): boolean;

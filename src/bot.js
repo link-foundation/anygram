@@ -10,8 +10,9 @@ import { taskContext } from './task-context.js';
 export class Bot extends Composer {
   constructor(token, options = {}) {
     super();
-    this.api = botApi(options.api ?? new BotApi({ ...options, token }));
-    this.telegram = this.api;
+    const transport = options.api ?? new BotApi({ ...options, token });
+    this.api = botApi(transport);
+    this.telegram = botApi(transport, 'telegraf');
     this.botInfo = options.botInfo;
     this.offset = options.offset ?? 0;
     this.seen = new Set();
@@ -66,7 +67,7 @@ export class Bot extends Composer {
   }
   async #dispatchUpdate(update) {
     await this.emitUpdate?.(update);
-    const ctx = new this.Context(update, this.api, this.botInfo);
+    const ctx = new this.Context(update, this.api, this.botInfo, this.telegram);
     try {
       await this.middleware()(ctx);
     } catch (error) {

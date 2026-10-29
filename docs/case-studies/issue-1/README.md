@@ -36,6 +36,10 @@ through the shared camelCase view and applies existing normalization guards to
 root response arrays. Sixteen regressions cover this data-view contract and
 finite failing-before resource probes. Vendor custom models remain open.
 
+The [Bot API edit/error checkpoint](bot-api-compatibility.md) fixes the
+terminal's grammY edit argument mapping and structured failure handling, while
+preserving Telegraf's separate signature. Full terminal migration remains open.
+
 The [nested bot checkpoint](bot-reentrancy.md) fixes an awaited-child update
 deadlock and shares active session transactions without losing replacement or
 deletion. Fourteen regressions include bounded failing-before probes. Twenty

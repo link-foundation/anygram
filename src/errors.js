@@ -32,6 +32,14 @@ export class TelegramError extends Error {
     if (error instanceof TelegramError || error instanceof UnsupportedError) {
       return error;
     }
+    const response = botResponse(error);
+    if (response) {
+      return botApiError(response, {
+        method: error.method,
+        backend,
+        cause: error,
+      });
+    }
     const type = errorText(error);
     const details = error ?? {};
     const wait = /(?:FLOOD|SLOWMODE|FLOOD_PREMIUM)_WAIT_(\d+)/.exec(type);
@@ -61,4 +69,39 @@ function errorText(error) {
     error?.message ??
     String(error)
   );
+}
+
+function botResponse(error) {
+  const response = error?.response ?? error;
+  return response?.ok === false &&
+    Number.isInteger(response.error_code) &&
+    typeof response.description === 'string'
+    ? response
+    : undefined;
+}
+
+/** Shared Bot API error data, retaining aliases used by both bot frameworks. */
+export function botApiError(response, options = {}) {
+  const parameters = { ...response.parameters };
+  const error = new TelegramError(response.description, {
+    code: response.error_code,
+    type: 'BOT_API_ERROR',
+    backend: options.backend,
+    retryAfter: parameters.retry_after,
+    migrateTo: parameters.migrate_to_chat_id,
+    cause: options.cause,
+  });
+  return Object.assign(error, {
+    ok: false,
+    error_code: error.code,
+    description: error.message,
+    parameters,
+    method: options.method,
+    response: {
+      ok: false,
+      error_code: error.code,
+      description: error.message,
+      parameters,
+    },
+  });
 }

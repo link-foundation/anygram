@@ -67,3 +67,7 @@ the same normalization depth/vector guards to complete response values.
 Allow awaited nested bot updates without deadlocking the outer queue, deduplicate
 active ancestor IDs and bound nesting. Share active session transactions across
 nested contexts while preserving replacement, deletion and failure persistence.
+
+Preserve grammY chat/inline edit signatures and Telegraf's separate positional
+view over one transport. Retain structured Bot API failure data for application
+recovery, copying parameters and redacting native response descriptions.

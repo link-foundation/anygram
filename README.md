@@ -30,6 +30,13 @@ subset of those frameworks; they are not complete drop-in replacements.
 `webhookCallback(bot, { secretToken })` accepts a Web Request and returns a Web
 Response. Configure the same secret in Telegram's `setWebhook` request.
 
+`bot.api.editMessageText(chat, id, text, options, signal)` and
+`editMessageTextInline(inlineId, text, options, signal)` follow grammY's argument
+order. `bot.telegram.editMessageText(chat, id, inlineId, text, options)` follows
+Telegraf's. Context edits choose chat or inline fields directly. Bot API failures
+expose `error_code`, `description`, `parameters` and `response` alongside common
+`TelegramError` fields; sends are never retried automatically.
+
 Native HTTP requests validate deadlines before sending and cancel response-body
 reads when the deadline or caller's signal fires. Bot API JSON responses default
 to an 8 MiB limit (`maxResponseBytes` in the constructor); `downloadMedia` defaults

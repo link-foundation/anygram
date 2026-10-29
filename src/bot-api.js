@@ -1,4 +1,4 @@
-import { TelegramError } from './errors.js';
+import { TelegramError, botApiError } from './errors.js';
 import { methodProxy } from './requests.js';
 import { botTextParams } from './formatting.js';
 import {
@@ -152,17 +152,15 @@ export class BotApi {
       });
     }
     if (envelope.ok !== true) {
-      throw new TelegramError(
-        String(envelope.description ?? 'Bot API request failed').replaceAll(
-          this.#token,
-          '[redacted]'
-        ),
+      throw botApiError(
         {
-          code: envelope.error_code ?? response.status,
-          type: 'BOT_API_ERROR',
-          retryAfter: envelope.parameters?.retry_after,
-          migrateTo: envelope.parameters?.migrate_to_chat_id,
-        }
+          ...envelope,
+          error_code: envelope.error_code ?? response.status,
+          description: String(
+            envelope.description ?? 'Bot API request failed'
+          ).replaceAll(this.#token, '[redacted]'),
+        },
+        { method }
       );
     }
     if (!response.ok) {

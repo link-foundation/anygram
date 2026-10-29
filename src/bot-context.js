@@ -1,7 +1,7 @@
 import { methodProxy } from './requests.js';
 import { botTextParams } from './formatting.js';
 
-export function botApi(transport) {
+export function botApi(transport, style = 'grammy') {
   const invoke =
     transport.callApi?.bind(transport) ?? transport.callBotApi.bind(transport);
   const call = (method, params, options) =>
@@ -12,25 +12,25 @@ export function botApi(transport) {
     callApi: call,
     sendMessage: (chat_id, text, options = {}) =>
       call('sendMessage', { ...options, chat_id, text }),
-    editMessageText: (
-      chat_id,
-      message_id,
-      inline_message_id,
-      text,
-      options = {}
-    ) =>
-      call('editMessageText', {
-        ...options,
-        chat_id,
-        message_id,
-        inline_message_id,
-        text,
-      }),
     deleteMessage: (chat_id, message_id) =>
       call('deleteMessage', { chat_id, message_id }),
     answerCallbackQuery: (callback_query_id, options = {}) =>
       call('answerCallbackQuery', { ...options, callback_query_id }),
   };
+  const edit = (params, signal) =>
+    call('editMessageText', params, signal ? { signal } : undefined);
+  positional.editMessageText =
+    style === 'telegraf'
+      ? (chat_id, message_id, inline_message_id, text, options = {}) =>
+          edit({ ...options, chat_id, message_id, inline_message_id, text })
+      : (chat_id, message_id, text, options = {}, signal) =>
+          edit({ ...options, chat_id, message_id, text }, signal);
+  positional.editMessageTextInline = (
+    inline_message_id,
+    text,
+    options = {},
+    signal
+  ) => edit({ ...options, inline_message_id, text }, signal);
   for (const media of [
     'Photo',
     'Animation',
@@ -53,10 +53,12 @@ export function botApi(transport) {
 }
 
 export class Context {
-  constructor(update, api, me) {
+  constructor(update, api, me, telegram) {
     this.update = update;
     this.api = api;
-    this.telegram = api;
+    this.telegram =
+      telegram ??
+      botApi({ callApi: (...args) => api.callApi(...args) }, 'telegraf');
     this.me = me;
     this.state = {};
   }
@@ -110,14 +112,15 @@ export class Context {
     return this.api.sendMessage(this.chat.id, text, options);
   }
   editMessageText(text, options) {
-    return this.api.editMessageText(
-      this.chat?.id,
-      this.msg?.message_id,
-      this.callbackQuery?.inline_message_id,
+    return this.api.callApi('editMessageText', {
+      ...options,
+      chat_id: this.chat?.id,
+      message_id: this.msg?.message_id,
+      inline_message_id: this.callbackQuery?.inline_message_id,
       text,
-      options
-    );
+    });
   }
+
   answerCallbackQuery(options) {
     return this.api.answerCallbackQuery(
       this.callbackQuery.id,
@@ -131,8 +134,8 @@ export class Context {
 
 /** Preserve Telegraf's username alias without changing grammY's user alias. */
 export class TelegrafContext extends Context {
-  constructor(update, api, me) {
-    super(update, api, me);
+  constructor(update, api, me, telegram) {
+    super(update, api, me, telegram);
     Object.defineProperty(this, 'me', { value: me?.username, writable: false });
     Object.defineProperty(this, 'botInfo', { value: me });
   }

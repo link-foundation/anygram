@@ -171,6 +171,13 @@ Commit/push and verify CI. Execute the complete pinned terminal
 sources next, correcting the application text-handler order and synthetic
 command entities explicitly in the migration, then verify media/lifecycle flows.
 
+The [Bot API edit/error checkpoint](bot-api-compatibility.md) adds nine
+regressions after five initial tests and a direct-context test failed on incorrect grammY arguments/missing error data.
+All 588 tests pass per runtime with strict checks, 78 scanned sources and
+121 permitted package entries. Preserve the change and verify fresh CI. Continue the
+complete pinned terminal source scenarios next; retain explicit migration
+changes for application defects rather than claiming unchanged compatibility.
+
 Keep protocol completion (secret chats/call media/transports), complete backend
 return/event/style compatibility and actual downstream scenarios open in the
 ledger. Continue with transport resource/cancellation gaps and the shared bot
@@ -188,7 +195,7 @@ remaining requirements are genuinely implemented and verified.
 6. [x] Verify request-bound head d5f84c0 in run 40838745111.
 7. [x] Verify peer-resolution head edb0ee7 in run 40841294344 (08:19:21Z–08:33:58Z).
 8. [x] Verify facade-result head 937d596 in run 40842257601 (08:27:27Z–08:38:10Z).
-9. [ ] Verify fresh matrix CI for nested bot dispatch/session ownership.
+9. [x] Verify nested bot head df05dff in run 40843982335 (08:41:38Z–08:44:06Z).
 
 ## Historical CI investigations
 
