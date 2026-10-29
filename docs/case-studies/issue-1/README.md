@@ -1469,3 +1469,6 @@ schema. All other unfinished issue criteria remain open.
 All 507 tests pass on Node, Bun and Deno, alongside strict lint, formatting,
 declaration/example checks and the zero-clone production scan. Main remains an
 ancestor of this branch. Fresh CI is required for this constructor checkpoint.
+
+The [bounded local persistence checkpoint](storage-limits.md) adds seven
+regressions and brings local verification to 514 passing tests per runtime.

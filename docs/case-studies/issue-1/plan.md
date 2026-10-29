@@ -130,10 +130,11 @@ native TCP checks. All 491 tests pass on each runtime, together with strict
 checks and the zero-clone scan. Commit/push this checkpoint and verify fresh CI.
 Connection head 16fc829 passed all nine runtime/OS jobs and applicable gates in
 run 40833093614, created 07:04:30Z and completed 07:06:48Z on 2026-10-29.
-All 507 tests pass on each runtime with strict checks, including sixteen new
-constructor/environment regressions. Commit/push this checkpoint and verify its
-fresh CI, then continue with bounded session-file loading and native class-based
-API compatibility. Main remains an ancestor after fetching its latest head.
+Constructor/environment head 527b7cd passes 507 tests per runtime locally; run
+40834951184 remains queued. The bounded storage checkpoint adds seven regressions
+and passes all 514 tests per runtime plus strict checks; see [evidence](storage-limits.md).
+Commit/push it and verify fresh matrix CI. Continue native class-based API
+compatibility with failing-before tests. Main remains an ancestor.
 
 Keep protocol completion (secret chats/call media/transports), complete backend
 return/event/style compatibility and actual downstream scenarios open in the

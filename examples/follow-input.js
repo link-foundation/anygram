@@ -1,5 +1,5 @@
 import { Parser } from 'links-notation';
-import { open } from 'node:fs/promises';
+import { readTextFile } from '../src/storage.js';
 import { homedir } from 'node:os';
 import { join } from 'node:path';
 
@@ -102,29 +102,8 @@ async function readPipe(stdin, signal) {
   }
 }
 
-export async function readFollowText(path, signal) {
-  const file = await open(path, 'r');
-  try {
-    const bytes = Buffer.alloc(maximumBytes + 1);
-    let length = 0;
-    while (length < bytes.length) {
-      signal?.throwIfAborted();
-      const { bytesRead } = await file.read(
-        bytes,
-        length,
-        bytes.length - length
-      );
-      if (!bytesRead) {
-        break;
-      }
-      length += bytesRead;
-    }
-    checkBytes(length);
-    signal?.throwIfAborted();
-    return bytes.subarray(0, length).toString('utf8');
-  } finally {
-    await file.close();
-  }
+export function readFollowText(path, signal) {
+  return readTextFile(path, { maxBytes: maximumBytes, signal });
 }
 
 /** Explicit arguments, then nonempty stdin, then the existing follow cache. */

@@ -268,6 +268,12 @@ loads the configured session store, and saves after a successful login.
 Session strings contain authorization keys that grant account access. Keep them
 private. `FileSessionStore` writes atomically with restrictive permissions on
 systems supporting Unix file modes; it does not encrypt files at rest.
+Reads and writes default to a 16 MiB UTF-8 byte limit; pass `{ maxBytes }` as the
+second constructor argument to set a smaller limit. Oversized writes preserve
+the previous file. `store.load({ signal })` checks cancellation before opening
+and between bounded reads. Follow account session files use an 8 KiB limit.
+`readTextFile(path, { maxBytes, signal })` from `anygram/storage` provides the
+same bounded reader for other text files; it propagates missing-file errors.
 
 For QR login, pass `qrCode: async ({ url, expires }) => displayQr(url, expires)`
 to `client.start`. Anygram refreshes tokens, imports the login on the requested

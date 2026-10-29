@@ -105,7 +105,8 @@ export async function createFollowAccount({
   const store = storage(
     sessionStore ??
       new FileSessionStore(
-        sessionPath ?? join(homedir(), '.follow', 'telegram-session')
+        sessionPath ?? join(homedir(), '.follow', 'telegram-session'),
+        { maxBytes: 8192 }
       ),
     values.TELEGRAM_USER_SESSION
   );

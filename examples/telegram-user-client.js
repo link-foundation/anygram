@@ -24,7 +24,7 @@ function sessionStore(options, owner) {
   const store =
     options.sessionStore ??
     (options.sessionPath
-      ? new FileSessionStore(options.sessionPath)
+      ? new FileSessionStore(options.sessionPath, { maxBytes: 8192 })
       : options.envFile === false
         ? { load: () => '', save: () => {} }
         : new FollowEnvironmentSessionStore(options.envFile));

@@ -79,7 +79,7 @@ function updated(text, session) {
 /** Legacy follow persistence, sharing the atomic private-file writer. */
 export class FollowEnvironmentSessionStore {
   constructor(path = '.env') {
-    this.file = new FileSessionStore(path);
+    this.file = new FileSessionStore(path, { maxBytes: 256 * 1024 });
     this.queue = Promise.resolve();
   }
 
