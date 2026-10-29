@@ -9,7 +9,7 @@ SOCKS4/4a and SOCKS5 CONNECT with proxy-side DNS, IPv4/IPv6 and optional authent
 continuous AES-CTR obfuscation and MTProxy secret/DC routing, binary WebSocket
 transport with TLS validation, masked frames and bounded fragmented streams,
 layer-232 TL support,
-account/QR/2FA authentication, portable sessions and storage, DC migration,
+account/QR/email/2FA authentication, portable sessions and storage, DC migration,
 ordered update recovery, bounded watched-channel scheduling, media upload/albums
 and message-origin downloads, peer/contact helpers, bot middleware/events,
 polling ownership, formatted runtime templates and shared bot session middleware

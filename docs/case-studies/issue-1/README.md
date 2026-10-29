@@ -399,3 +399,18 @@ and TypeScript checks pass. Buffer head ee81109 passed every applicable CI job i
 Historical checkpoint counts above describe their respective commits. Fake TLS,
 browser/Worker APIs, secret chats, calls and complete backend/application parity
 remain open.
+
+## Email authentication checkpoint
+
+The phone-login helper now handles email codes and required email setup using
+the specified verification fields and returned code hashes. Google/Apple proofs
+require the corresponding server permission flag. Six regressions cover code
+and identity proofs, setup transitions, copied callback state, cancellation,
+malformed responses and finite challenges; real GramJS serialization verifies
+the sign-in wire bytes. A final-step success boundary has a failing-before test.
+
+All 166 tests pass on Node, Bun and Deno, with strict lint, formatting, duplication
+and declaration/example checks. SOCKS4 head abb5781 passed all applicable jobs in
+[run 40791196241](https://github.com/link-foundation/anygram/actions/runs/40791196241).
+Live email delivery, identity-provider tokens and account scenarios remain
+unverified; protocol and compatibility requirements stay open.

@@ -291,6 +291,18 @@ export declare class Session {
   toJSON(): string;
   static fromClient(client: import('./mtproto.js').Mtproto): Session;
 }
+export type EmailVerification =
+  | { _: 'emailVerificationCode'; code: string }
+  | { _: 'emailVerificationGoogle' | 'emailVerificationApple'; token: string };
+export interface LoginChallenge extends TlRequest {
+  type?: TlRequest;
+  phone_code_hash?: string;
+  email_pattern?: string;
+  length?: number;
+}
+export type LoginCodeInput =
+  | string
+  | ((challenge: LoginChallenge) => string | Promise<string>);
 export interface LoginOptions {
   signal?: AbortSignal;
   timeout?: number;
@@ -303,7 +315,15 @@ export interface LoginOptions {
   maxQrAttempts?: number;
   qrTimeout?: number;
   phoneNumber?: string | (() => string | Promise<string>);
-  phoneCode?: string | (() => string | Promise<string>);
+  phoneCode?: LoginCodeInput;
+  email?: LoginCodeInput;
+  emailCode?: LoginCodeInput;
+  emailVerification?:
+    | EmailVerification
+    | ((
+        challenge: LoginChallenge
+      ) => EmailVerification | Promise<EmailVerification>);
+  maxLoginSteps?: number;
   password?: string | (() => string | Promise<string>);
   botAuthToken?: string | (() => string | Promise<string>);
   firstName?: string | (() => string | Promise<string>);

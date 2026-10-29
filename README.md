@@ -147,6 +147,17 @@ data center, and requests `password` when Telegram requires 2FA. `signal`,
 `qrTimeout` (milliseconds, default five minutes), and `maxQrAttempts` bound the
 flow. Rendering the QR code is the application's responsibility.
 
+Phone login passes a copy of the sent-code challenge to `phoneCode(challenge)`.
+For login email challenges, provide `emailCode(challenge)`; `phoneCode` is its
+fallback. Email setup additionally asks `email(challenge)`, verifies it and uses
+the new code hash returned by Telegram. `emailVerification` accepts a code proof
+or a callback returning a Google/Apple ID token proof when Telegram allows that
+provider. The application obtains provider tokens. `maxLoginSteps` (default 10,
+maximum 1000) bounds successive setup challenges; `signal` cancels network steps.
+The [typed email login example](examples/typed-email-login.ts) shows private
+application prompts. Official-app-only payment and Firebase flows remain outside
+this high-level helper.
+
 ```js
 // After authorization. Use a separate file for update cursors, not the session.
 const updates = client.runUpdates({

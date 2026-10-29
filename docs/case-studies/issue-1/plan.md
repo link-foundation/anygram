@@ -43,6 +43,9 @@ examples/. No live credentials or sessions may be included in research data.
   after regressions derived from complete competitor discussions.
 - Bounded QR/DC login, handler failure propagation, pagination validation and
   actual GramJS factory/session interoperability were committed and verified.
+- Email login/setup preserves challenge hashes and uses email verification
+  fields. Allowed Google/Apple proofs, cancellation, copied callback data and a
+  finite challenge count have regressions and actual GramJS wire comparisons.
 - One clock now schedules at most ten explicitly watched channels and common
   idle recovery. It allocates no timer per channel membership.
 - Shared peer/contact/greeting/profile helpers and automatic message-origin file
@@ -76,11 +79,11 @@ examples/. No live credentials or sessions may be included in research data.
 - In-process polling ownership and explicit membership subscriptions are tested.
 - SOCKS4/4a CONNECT supports IPv4 and proxy DNS with bounded UTF-8 user IDs.
   Fragmented replies, rejection codes, deadlines and TLS WebSocket tunnels pass.
-- After SOCKS4 regressions, Node/Bun/Deno each pass 160 tests; lint, format, duplication and
+- After email regressions, Node/Bun/Deno each pass 166 tests; lint, format, duplication and
   four declaration entry points pass. Each later code change requires fresh checks.
 - Refreshed issue/sub-issue and all three PR feedback streams are empty. Main is
-  an ancestor of the branch. CI for ee81109 passed all nine runtime/OS jobs and
-  release gates in run 40790365948, including assembly-copy budgets and DC cleanup. Later heads
+  an ancestor of the branch. CI for abb5781 passed all nine runtime/OS jobs and
+  release gates in run 40791196241, including SOCKS4/4a tunnels. Later heads
   require fresh CI evidence.
 - Research includes 32 complete discussions, 26 inspected images, nineteen pinned
   test-path inventories and all 333 Telegram-related meta-sovereign JS files.

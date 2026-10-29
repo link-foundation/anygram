@@ -1,7 +1,10 @@
 import { passwordProof } from './password.js';
 import { TelegramError } from './errors.js';
-const input = async (value, name) => {
-  const result = typeof value === 'function' ? await value() : value;
+const input = async (value, name, context) => {
+  const result =
+    typeof value === 'function'
+      ? await value(globalThis.structuredClone(context))
+      : value;
   if (typeof result !== 'string' || !result) {
     throw new TypeError(`${name} is required`);
   }
@@ -114,28 +117,111 @@ export class Authentication {
     return result.user;
   }
   async phoneLogin(options) {
+    const { maxLoginSteps = 10 } = options;
+    if (
+      !Number.isSafeInteger(maxLoginSteps) ||
+      maxLoginSteps < 1 ||
+      maxLoginSteps > 1000
+    ) {
+      throw new RangeError('Invalid login challenge step limit');
+    }
     const phoneNumber = await input(options.phoneNumber, 'phoneNumber');
-    const code = await this.sendCode(
-      phoneNumber,
-      options.codeSettings,
-      options
-    );
-    if (code._ === 'auth.sentCodeSuccess') {
-      return code.authorization;
-    }
-    if (code._ !== 'auth.sentCode') {
-      throw new TelegramError('Telegram requires an additional login step', {
-        type: code._,
-      });
-    }
-    const result = await this.signIn(
-      {
+    let code = await this.sendCode(phoneNumber, options.codeSettings, options);
+    for (let step = 0; step <= maxLoginSteps; step++) {
+      if (code._ === 'auth.sentCodeSuccess') {
+        return code.authorization;
+      }
+      if (step === maxLoginSteps) {
+        break;
+      }
+      if (code._ !== 'auth.sentCode') {
+        throw new TelegramError('Telegram requires an additional login step', {
+          type: code._,
+        });
+      }
+      if (typeof code.phone_code_hash !== 'string' || !code.phone_code_hash) {
+        throw new TelegramError('Invalid login code hash');
+      }
+      if (code.type?._ === 'auth.sentCodeTypeSetUpEmailRequired') {
+        code = await this.setupEmail(phoneNumber, code, options);
+        continue;
+      }
+      const credentials =
+        code.type?._ === 'auth.sentCodeTypeEmailCode'
+          ? { emailVerification: await this.emailVerification(code, options) }
+          : { phoneCode: await input(options.phoneCode, 'phoneCode', code) };
+      const result = await this.signIn(
+        {
+          phoneNumber,
+          phoneCodeHash: code.phone_code_hash,
+          ...credentials,
+        },
+        options
+      );
+      return this.finishPhoneLogin(
+        result,
         phoneNumber,
-        phoneCodeHash: code.phone_code_hash,
-        phoneCode: await input(options.phoneCode, 'phoneCode'),
+        code.phone_code_hash,
+        options
+      );
+    }
+    throw new TelegramError('Login challenge step limit exceeded', {
+      type: 'LOGIN_STEP_LIMIT',
+    });
+  }
+
+  async emailVerification(challenge, options) {
+    let proof = options.emailVerification;
+    if (proof === undefined) {
+      proof = {
+        _: 'emailVerificationCode',
+        code: await input(
+          options.emailCode ?? options.phoneCode,
+          'emailCode',
+          challenge
+        ),
+      };
+    } else if (typeof proof === 'function') {
+      proof = await proof(globalThis.structuredClone(challenge));
+    }
+    return validateEmailProof(proof, challenge.type ?? challenge);
+  }
+
+  async setupEmail(phoneNumber, code, options) {
+    const purpose = {
+      _: 'emailVerifyPurposeLoginSetup',
+      phone_number: phoneNumber,
+      phone_code_hash: code.phone_code_hash,
+    };
+    let challenge = code;
+    if (options.emailVerification === undefined) {
+      challenge = await this.call(
+        'account.sendVerifyEmailCode',
+        {
+          purpose,
+          email: await input(options.email, 'email', code),
+        },
+        options
+      );
+      if (challenge._ !== 'account.sentEmailCode') {
+        throw new TelegramError('Invalid email verification response');
+      }
+    }
+    const result = await this.call(
+      'account.verifyEmail',
+      {
+        purpose,
+        verification: await this.emailVerification(challenge, options),
       },
       options
     );
+    if (result._ !== 'account.emailVerifiedLogin' || !result.sent_code) {
+      throw new TelegramError('Invalid email verification response');
+    }
+    return result.sent_code;
+  }
+
+  async finishPhoneLogin(result, phoneNumber, phoneCodeHash, options) {
     if (result._ !== 'auth.authorizationSignUpRequired') {
       return result;
     }
@@ -152,7 +238,7 @@ export class Authentication {
       'auth.signUp',
       {
         phone_number: phoneNumber,
-        phone_code_hash: code.phone_code_hash,
+        phone_code_hash: phoneCodeHash,
         first_name: await input(options.firstName, 'firstName'),
         last_name: options.lastName ?? '',
       },
@@ -235,4 +321,22 @@ export class Authentication {
     }
     throw new TelegramError('QR login attempt limit exceeded');
   }
+}
+
+function validateEmailProof(proof, type) {
+  const field = {
+    emailVerificationCode: 'code',
+    emailVerificationGoogle: 'token',
+    emailVerificationApple: 'token',
+  }[proof?._];
+  if (!field || typeof proof[field] !== 'string' || !proof[field]) {
+    throw new TypeError('Invalid email verification proof');
+  }
+  if (field === 'token') {
+    const provider = proof._ === 'emailVerificationGoogle' ? 'google' : 'apple';
+    if (!type[`${provider}_signin_allowed`]) {
+      throw new TypeError(`Email verification with ${provider} is not allowed`);
+    }
+  }
+  return { _: proof._, [field]: proof[field] };
 }

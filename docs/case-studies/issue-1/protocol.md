@@ -190,3 +190,23 @@ exposed Node domainToASCII truncating `bad/domain` to `bad`; both SOCKS versions
 now reject invalid input before conversion can silently change its meaning.
 All 160 tests pass on Node, Bun and Deno; strict lint, declaration and example
 checks pass. Fake TLS, browser/Worker APIs and full protocol parity remain open.
+
+## Email login verification
+
+The [official user authorization flow](https://core.telegram.org/api/auth#email-verification)
+was captured on 2026-10-29 in `data/telegram-user-auth.md`. The high-level
+phone login previously always asked for a phone code; five initial regressions
+failed on email challenges. Login now distinguishes email codes, email setup
+and allowed Google/Apple proofs. Setup uses the original hash for email
+verification, then consumes the returned sent-code constructor and its new
+hash. Callback data is copied to protect retained protocol state.
+
+Six regressions check zero-prefixed codes, provider permission flags, invalid
+proofs, cancellation before further calls, malformed replies and finite setup
+loops. Login requests for all three proof constructors match actual GramJS
+bytes. A further failing boundary case established that a successful final
+setup response must be accepted even at the configured step limit. All 166
+tests pass on Node, Bun and Deno; declarations and the typed email example
+compile. These deterministic tests do not establish live email delivery or
+provider-token issuance. Official-only Firebase/paid flows and passkey
+application restrictions remain outside this helper.
