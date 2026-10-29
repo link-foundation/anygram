@@ -80,6 +80,7 @@ async function saveAuthorized(client, store) {
       ? await backend.saveSession()
       : await backend.session?.save();
   await store.save(value);
+  return value;
 }
 
 /** Existing follow environment names, portable storage and lazy login callbacks. */
@@ -139,14 +140,27 @@ export async function createFollowAccount({
   return {
     client,
     scope,
-    run(task) {
+    saveSession(connected = client) {
+      return saveAuthorized(connected, store);
+    },
+    run(task, options = {}) {
       if (typeof task !== 'function') {
         throw new TypeError('Expected account work callback');
       }
+      const connection = {
+        ...scope,
+        ...options,
+        start: { ...scope.start, ...options.start },
+        signal:
+          scope.signal && options.signal
+            ? globalThis.AbortSignal.any([scope.signal, options.signal])
+            : (scope.signal ?? options.signal),
+      };
       return client.withConnection(async (connected) => {
         await saveAuthorized(connected, store);
+        connection.signal?.throwIfAborted();
         return await task(connected);
-      }, scope);
+      }, connection);
     },
   };
 }

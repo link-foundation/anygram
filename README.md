@@ -222,8 +222,29 @@ standalone `connect()`/`disconnect()` around its account helpers. It holds the
 same owned connection scope used by `withConnection()`. Always await
 `disconnect()` in `finally`; cancellation initiates cleanup and its failure
 remains observable there. Callback-owned work rejects manual disconnection.
-The bridge accepts a configured Anygram account; the original environment-based
-constructor and `.env` session-writing API still require migration.
+The bridge accepts a configured Anygram account. The
+[original-constructor migration](examples/telegram-user-client.js) instead accepts
+follow's `apiId`, `apiHash`, `phone`, `session` and environment configuration:
+
+```js
+import TelegramUserClient from './examples/telegram-user-client.js';
+const account = new TelegramUserClient();
+await account.withConnection(async (client) => {
+  console.log((await client.getMe()).firstName);
+});
+```
+
+It defaults to the native backend and builds a fresh account for each scope.
+It saves authorized sessions as GramJS-compatible strings in `.env` before work;
+explicit `saveSession()` updates the same store. Unrelated settings and comments
+are retained, multiline values are respected, and writes use the atomic private
+file writer. Configuration reads/writes are limited to 256 KiB. `envFile: false`
+disables default disk persistence; `sessionPath` or `sessionStore` selects another
+store. `backend: 'gramjs'` or `'teleproto'` also supplies the vendor's `Api`
+namespace to callbacks. Native callbacks can use tagged requests or an explicitly
+supplied `Api`; a native class namespace and full vendor client methods remain
+compatibility work. This constructor is separate from the CLI's portable-file
+persistence policy.
 
 `client.withConnection(async (connected) => { /* account work */ }, options)`
 opens one selected backend and awaits cleanup before returning. The callback

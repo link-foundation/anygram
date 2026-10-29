@@ -30,18 +30,22 @@ export class FollowClient {
         ([key]) => !['start', 'cleanupAttempts', 'cleanupDelay'].includes(key)
       )
     );
-    this.client = null;
+    this.connected = null;
     this.manual = null;
     this.owned = false;
   }
 
   active() {
-    if (!this.client) {
+    if (!this.connected) {
       throw new Error(
         'Client not connected. Use connect() or withConnection().'
       );
     }
-    return this.client;
+    return this.connected;
+  }
+
+  get client() {
+    return this.connected?.gramjs ?? null;
   }
 
   async withConnection(task) {
@@ -61,11 +65,11 @@ export class FollowClient {
     this.owned = true;
     try {
       return await this.account.withConnection(async (client) => {
-        this.client = client;
+        this.connected = client;
         try {
           return await task(client.gramjs, this.Api);
         } finally {
-          this.client = null;
+          this.connected = null;
         }
       }, this.scope);
     } finally {
@@ -159,7 +163,7 @@ export class FollowClient {
       throw new TypeError('Invalid invite hash');
     }
     return joined(
-      await this.client.invoke(
+      await this.active().invoke(
         'messages.importChatInvite',
         { hash },
         this.requestOptions
@@ -174,7 +178,7 @@ export class FollowClient {
       throw new TypeError('Expected a public username');
     }
     return gramView(
-      await this.client.invoke(
+      await this.active().invoke(
         'contacts.resolveUsername',
         { username: link.username },
         this.requestOptions

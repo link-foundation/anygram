@@ -1436,3 +1436,36 @@ controlled-account evidence and the broader issue requirements remain open.
 All 491 tests pass on Node, Bun and Deno. Strict lint, formatting, full type
 checking and the zero-clone scan of 73 production sources pass. Fresh CI is
 required for this standalone connection checkpoint.
+
+## Follow constructor and environment checkpoint
+
+An example named/default `TelegramUserClient` export preserves the synchronous
+constructor, explicit credentials/phone/session, lazy login, connection helpers
+and `saveSession()` names. It creates a fresh shared account per scope, preserving
+reusability after vendor destruction. Public credential changes apply on later
+opens; direct `client` access and callback arguments share the camelCase facade.
+Sessions are exported in the original GramJS-compatible format before readiness
+and work, and explicit saves update the same store. Errors remain visible.
+
+The legacy `.env` store reuses the existing atomic private-file writer. Six
+regressions cover absent files, bounded reads/writes, duplicate keys, unrelated
+comments/settings, three multiline quote styles, failure recovery and queued
+updates. The writer checks parsed non-session values before replacing the file.
+Nine constructor regressions cover explicit/environment precedence, fresh
+clients, prompts, session reuse, public property changes, parent cancellation,
+actual GramJS/teleproto schema/session exports and encrypted native TCP. A further
+failing-before regression prevents application work when cancellation arrives
+during session persistence. Synthetic parser probes are in
+`experiments/follow-env-values.mjs`.
+
+Connection head 16fc829 passed all nine runtime/OS jobs and applicable gates in
+[run 40833093614](https://github.com/link-foundation/anygram/actions/runs/40833093614),
+created 2026-10-29T07:04:30Z and completed 2026-10-29T07:06:48Z.
+Controlled-account evidence remains unavailable. Native class-based raw `Api`
+construction and the complete vendor client surface remain compatibility work;
+callbacks can currently use native tagged requests or an explicitly supplied
+schema. All other unfinished issue criteria remain open.
+
+All 507 tests pass on Node, Bun and Deno, alongside strict lint, formatting,
+declaration/example checks and the zero-clone production scan. Main remains an
+ancestor of this branch. Fresh CI is required for this constructor checkpoint.

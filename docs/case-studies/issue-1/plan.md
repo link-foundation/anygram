@@ -128,7 +128,12 @@ CLI head d4b241c passed all nine runtime/OS jobs and applicable gates in run
 Eleven standalone connection regressions now pass, including actual-client and
 native TCP checks. All 491 tests pass on each runtime, together with strict
 checks and the zero-clone scan. Commit/push this checkpoint and verify fresh CI.
-Then reproduce and implement the remaining constructor/session API.
+Connection head 16fc829 passed all nine runtime/OS jobs and applicable gates in
+run 40833093614, created 07:04:30Z and completed 07:06:48Z on 2026-10-29.
+All 507 tests pass on each runtime with strict checks, including sixteen new
+constructor/environment regressions. Commit/push this checkpoint and verify its
+fresh CI, then continue with bounded session-file loading and native class-based
+API compatibility. Main remains an ancestor after fetching its latest head.
 
 Keep protocol completion (secret chats/call media/transports), complete backend
 return/event/style compatibility and actual downstream scenarios open in the

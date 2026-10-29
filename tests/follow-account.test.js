@@ -290,3 +290,46 @@ for (const backend of ['gramjs', 'teleproto']) {
     assert.deepEqual(closed, ['disconnect', 'destroy']);
   });
 }
+
+it('withholds application work when cancellation arrives during authorized-session persistence', async () => {
+  const { createFollowAccount } = await account();
+  const parent = new globalThis.AbortController();
+  const child = new globalThis.AbortController();
+  const reason = new Error('cancel while saving account');
+  const events = [];
+  const configured = await createFollowAccount({
+    env: credentials,
+    envFile: false,
+    signal: parent.signal,
+    sessionStore: {
+      load: () => '',
+      save: () => {
+        events.push('save');
+        parent.abort(reason);
+      },
+    },
+    factory: async () =>
+      new Anygram({
+        adapters: [
+          createAdapter(
+            'native',
+            {
+              start: async () => events.push('start'),
+              saveSession: () => 'saved-session',
+              disconnect: async () => events.push('disconnect'),
+              destroy: async () => events.push('destroy'),
+            },
+            { kind: 'mtproto' }
+          ),
+        ],
+      }),
+  });
+  await assert.rejects(
+    configured.run(() => assert.fail('Cancelled account work ran'), {
+      signal: child.signal,
+      cleanupAttempts: 1,
+    }),
+    (error) => error === reason
+  );
+  assert.deepEqual(events, ['start', 'save', 'disconnect', 'destroy']);
+});
