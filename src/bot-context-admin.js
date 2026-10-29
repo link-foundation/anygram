@@ -3,6 +3,7 @@ import {
   contextMethod,
   contextAlias,
   contextOptions,
+  contextApiCall,
 } from './bot-context-scope.js';
 
 const chatMethods = [
@@ -90,7 +91,7 @@ function installChat(Type, style) {
           args[2]
         );
       }
-      return this.api[name](chat, ...args);
+      return contextApiCall(this, name, [chat], args);
     });
   }
 }
@@ -99,11 +100,11 @@ function installAuthors(Type) {
   for (const [name, method] of authorMethods) {
     contextMethod(Type, name, function (...args) {
       const label = name === 'setAuthorTag' ? method : name;
-      return this.api[method](
+      const prefix = [
         required(this.chatId, label),
         required(this.from, label).id,
-        ...args
-      );
+      ];
+      return contextApiCall(this, method, prefix, args);
     });
   }
   contextAlias(Type, 'kickAuthor', 'banAuthor');
@@ -125,7 +126,7 @@ function installForums(Type, style) {
       }
       const msg = required(this.msg, name);
       const thread = required(msg.message_thread_id, name);
-      return this.api[name](msg.chat.id, thread, ...args);
+      return contextApiCall(this, name, [msg.chat.id, thread], args);
     });
   }
 }

@@ -137,3 +137,9 @@ Bind pinned chat administration, author and forum context helpers through the
 shared positional APIs. Preserve business pin defaults, SDK-specific moderation
 arguments, topic sources, scope errors, dynamic aliases and cancellation, with
 checked declarations derived from the regenerated API argument tuples.
+
+Bind pinned user, query, business, managed-bot, payment, gift/story and
+configuration context helpers through the same operation boundary. Preserve file
+selection, identifier requirements, SDK error quirks and immutable arguments.
+Share exact public API argument widths across scoped contexts so overrides retain
+omitted optional slots, and compile declarations/examples for both SDK styles.

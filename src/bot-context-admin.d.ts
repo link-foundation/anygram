@@ -1,6 +1,7 @@
 import type { Parameters, RequestOptions } from './index.js';
 import type { GrammyPositionalArguments } from './bot-positional.js';
 import type { TelegrafPositionalArguments } from './telegraf-positional.js';
+import type { ContextOperation } from './bot-context-scope.js';
 
 type ChatMethods =
   | 'banChatMember'
@@ -52,12 +53,6 @@ type GrammyChatMethods =
   | 'getChatMemberCount'
   | 'verifyChat'
   | 'removeChatVerification';
-type WithoutChat<A extends unknown[]> = A extends [unknown, ...infer Rest]
-  ? Rest
-  : never;
-type Scoped<A extends unknown[]> = (
-  ...args: WithoutChat<A>
-) => Promise<unknown>;
 interface Authors {
   banAuthor: 'banChatMember';
   kickAuthor: 'banChatMember';
@@ -68,12 +63,18 @@ interface Authors {
   getAuthor: 'getChatMember';
 }
 export type GrammyContextAdministration = {
-  [K in ChatMethods | GrammyChatMethods]: Scoped<GrammyPositionalArguments<K>>;
+  [K in ChatMethods | GrammyChatMethods]: ContextOperation<
+    GrammyPositionalArguments<K>
+  >;
 } & {
-  [K in ForumMethods]: Scoped<WithoutChat<GrammyPositionalArguments<K>>>;
+  [K in ForumMethods]: ContextOperation<
+    GrammyPositionalArguments<K>,
+    [unknown, unknown]
+  >;
 } & {
-  [K in keyof Authors]: Scoped<
-    WithoutChat<GrammyPositionalArguments<Authors[K]>>
+  [K in keyof Authors]: ContextOperation<
+    GrammyPositionalArguments<Authors[K]>,
+    [unknown, unknown]
   >;
 } & {
   unpinChatMessage(
@@ -83,9 +84,12 @@ export type GrammyContextAdministration = {
   ): Promise<unknown>;
 };
 export type TelegrafContextAdministration = {
-  [K in ChatMethods]: Scoped<TelegrafPositionalArguments<K>>;
+  [K in ChatMethods]: ContextOperation<TelegrafPositionalArguments<K>>;
 } & {
-  [K in ForumMethods]: Scoped<WithoutChat<TelegrafPositionalArguments<K>>>;
+  [K in ForumMethods]: ContextOperation<
+    TelegrafPositionalArguments<K>,
+    [unknown, unknown]
+  >;
 } & {
   unpinChatMessage(
     messageId?: number,

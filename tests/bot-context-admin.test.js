@@ -246,3 +246,27 @@ it('preserves Telegraf assertion override order for chat and forum calls', async
   }
   assert.deepEqual(observations[1], observations[0]);
 });
+
+it('preserves grammY administration public API override argument shapes', async () => {
+  const observations = [];
+  for (const Constructor of [GrammyContext, Context]) {
+    const calls = [];
+    const api = new Proxy(
+      {},
+      {
+        get:
+          (_, name) =>
+          (...args) => {
+            calls.push({ name, args });
+            return Promise.resolve(true);
+          },
+      }
+    );
+    const ctx = new Constructor(adminUpdates.message, api, {});
+    for (const [method, args] of grammyAdminCases) {
+      await ctx[method](...args);
+    }
+    observations.push(calls);
+  }
+  assert.deepEqual(observations[1], observations[0]);
+});

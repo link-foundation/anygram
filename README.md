@@ -72,6 +72,12 @@ the current context. Each SDK retains its own author, topic, business and
 moderation argument rules. See the [administration comparisons](docs/case-studies/issue-1/bot-context-admin.md)
 and [typed example](examples/typed-bot-context-admin.ts).
 
+User, business, managed-bot, payment, query and configuration shortcuts also
+derive their identifiers from the context and retain each SDK's argument rules.
+File selection and public API overrides compare against the pinned SDKs. See the
+[service comparisons](docs/case-studies/issue-1/bot-context-services.md) and
+[typed example](examples/typed-bot-context-services.ts).
+
 Query shortcuts such as `bot.callbackQuery('refresh').use(handler)` return a
 scoped composer. The six query shortcuts accept strings, regular expressions or
 arrays and share asynchronous `filter(predicate)` registration. See the

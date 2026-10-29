@@ -1,4 +1,24 @@
 import { botRequestOptions } from './bot-operations.js';
+import { botMethodSignatures } from './bot-method-signatures.js';
+
+const apiWidths = new Map(
+  botMethodSignatures.map((signature) => {
+    const [name, ...fields] = signature.split(' ');
+    return [name.split('=')[0], fields.length + 1];
+  })
+);
+
+// Pinned contexts retain omitted optional arguments when calling public APIs.
+export function contextApiCall(ctx, method, prefix, args) {
+  const width = apiWidths.get(method);
+  if (width === undefined) {
+    throw new Error(`Unknown context API method: ${method}`);
+  }
+  return ctx.api[method](
+    ...prefix,
+    ...Array.from({ length: width - prefix.length }, (_, index) => args[index])
+  );
+}
 
 export function contextRequired(value, method, ctx) {
   if (value !== undefined) {

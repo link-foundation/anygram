@@ -5,6 +5,7 @@ import { telegrafBotMethods } from './telegraf-positional.js';
 import { installContextData } from './bot-context-data.js';
 import { installContextDelivery } from './bot-context-delivery.js';
 import { installContextAdministration } from './bot-context-admin.js';
+import { installContextServices } from './bot-context-services.js';
 import { contextRequired } from './bot-context-scope.js';
 import {
   botNoPayloadMethods,
@@ -170,6 +171,8 @@ installContextDelivery(Context);
 installContextDelivery(TelegrafContext, 'telegraf');
 installContextAdministration(Context);
 installContextAdministration(TelegrafContext, 'telegraf');
+installContextServices(Context);
+installContextServices(TelegrafContext, 'telegraf');
 
 export function compose(middleware) {
   return (ctx, last = () => Promise.resolve()) => {

@@ -816,4 +816,32 @@ Context chat administration work plan:
       Strict checks scan 97 production sources with zero clones, compile all
       examples and regenerate exact declarations. Package audit: 140 permitted
       entries. Main remains an ancestor; source and local diff were reviewed.
-- [ ] Inspect fresh CI and continue all other open acceptance criteria.
+- [x] Inspect fresh CI and continue all other open acceptance criteria.
+      Administration head f346e4a passed run 40884889305, created
+      2026-10-29T13:45:35Z and completed 2026-10-29T13:59:05Z.
+
+Context user, query, business and configuration work plan:
+
+- [x] Compare 51 grammY and 27 Telegraf helpers against actual pinned contexts;
+      reproduce all 78 behavior cases failing before implementation.
+- [x] Bind context scope through shared positional APIs; retain SDK-specific
+      required fields, error labels, options and selected backend ownership.
+- [x] Verify realistic event shapes, immutable inputs, file selection, controls,
+      zero identifiers, custom hooks and selected-backend HTTP requests.
+      The 96 focused service cases and 207 administration cases pass. Three
+      failing override comparisons led to shared explicit optional-argument
+      padding for grammY and removal of a phantom Telegraf menu argument.
+- [x] Add checked declarations/examples and an immutable before-loader; document
+      root causes, exact inventory, evidence and remaining issue criteria.
+      The fixed preceding three modules reproduce 95 failures and 208 passes in
+      the complete 303-case suite. Full declaration regeneration passes.
+- [x] Pass all local runtime, static, native, vendor, FIFO and package gates.
+      All 1,661 cases pass on Node, Bun and Deno; the 303 focused cases also
+      pass on Node 20. Native integration passes 26 checks, vendor wire passes
+      two cases and the bounded FIFO probe leaves no owned descriptor.
+      Strict gates scan 100 production sources with zero clones, compile all
+      declarations/examples and regenerate exactly. Packaging permits 143
+      entries; main remains an ancestor.
+- [ ] Finish review, commit/push and inspect fresh CI by exact SHA/time.
+- [ ] Continue every other independent requirement without presenting a helper
+      inventory or passing CI as complete ecosystem compatibility.

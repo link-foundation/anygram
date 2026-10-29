@@ -17,6 +17,10 @@ import type {
   GrammyContextAdministration,
   TelegrafContextAdministration,
 } from './bot-context-admin.js';
+import type {
+  GrammyContextServices,
+  TelegrafContextServices,
+} from './bot-context-services.js';
 export { Api } from './api.js';
 export type {
   TlObject,
@@ -751,7 +755,8 @@ export interface Context
   extends
     ContextUpdateAliases,
     GrammyContextDelivery,
-    GrammyContextAdministration {}
+    GrammyContextAdministration,
+    GrammyContextServices {}
 export declare class Context {
   constructor(
     update: BotUpdate,
@@ -811,13 +816,16 @@ export type CommonContext = Omit<
   | 'replyWithDice'
   | 'replyWithInvoice'
   | keyof GrammyContextAdministration
+  | keyof GrammyContextServices
 >;
 export interface TelegrafContext
   extends
     CommonContext,
     TelegrafContextDelivery,
     TelegrafContextAdministration,
-    Omit<GrammyContextAdministration, keyof TelegrafContextAdministration> {
+    TelegrafContextServices,
+    Omit<GrammyContextAdministration, keyof TelegrafContextAdministration>,
+    Omit<GrammyContextServices, keyof TelegrafContextServices> {
   assert(value: unknown, method: string): void;
   readonly me?: string;
   readonly updateType: string;

@@ -667,3 +667,16 @@ cases, 26 native checks, two vendor wire cases and the bounded FIFO probe.
 The scan covers 97 production sources with zero clones; packaging permits 140
 entries, with exact declaration regeneration.
 Full SDK models and all other open criteria remain unfinished.
+
+The [context services comparison](bot-context-services.md) advances
+R01/R05/R08/R13/R16/R17/R19 with 51 grammY and 27 Telegraf helper names.
+It covers user, query, business, managed-bot, file, story, payment, sticker and
+configuration scope. The complete 303-case service/administration suite
+reproduces 95 failures against three frozen preceding modules; all cases now
+pass, including public API override argument shapes. Cancellation, immutable
+inputs and eight selected-backend HTTP cases have direct comparisons.
+All 1,661 core cases pass on Node, Bun and Deno; the 303 focused Node 20 cases,
+26 native checks, two vendor wire cases and bounded FIFO probe pass. Strict
+gates report zero clones across 100 production sources, exact regeneration
+and 143 permitted package entries. Complete message helpers, filters/entities,
+SDK models and every other open acceptance criterion remain unfinished.

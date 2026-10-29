@@ -1,5 +1,9 @@
 # Unified Telegram client: investigation and implementation
 
+The [context service comparison](bot-context-services.md) verifies 51 grammY and
+27 Telegraf user, query, business, managed-bot, payment and configuration helpers.
+It also retains exact public API override arguments for administration calls.
+
 The [context administration comparison](bot-context-admin.md) verifies 55 grammY
 and 40 Telegraf chat, author and forum helpers against actual SDK contexts, with
 206 cases including selected-backend HTTP, errors and request controls.
