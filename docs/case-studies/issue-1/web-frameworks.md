@@ -138,5 +138,6 @@ and empty DENO_DIR pass all 71 cases without disabling type checking.
 
 The same run exposed a separate macOS Bun five-second timeout in the existing
 10 MiB encrypted upload test (failed-run log lines 2304–2305). The input and
-deadline remain unchanged; encryption allocation tracing is the next investigation.
+deadline remain unchanged; [allocation regressions](crypto-allocations.md)
+identify excessive temporary XOR buffers and verify the revised cipher loop.
 Fresh matrix CI is required for both corrections before this checkpoint is verified.

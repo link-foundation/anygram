@@ -227,3 +227,6 @@ shared webhook scopes, subclass behavior and existing model namespaces.
 Preserve Node JSON response authority on framework-enhanced webhook responses,
 including Express responses that also expose a send method. Verify installed
 Express/Koa/Fastify/Hono HTTP integration with isolated pinned dependencies.
+
+Reduce AES-IGE temporary buffer copies while retaining independent ciphertext
+comparisons, caller data and the existing encrypted large-file upload deadline.

@@ -58,17 +58,23 @@ export function aesIge(bytes, key, iv, decrypt = false) {
   );
   cipher.setAutoPadding(false);
   const output = Buffer.alloc(bytes.length);
+  const mixed = Buffer.alloc(16);
   let previousCipher = iv.subarray(0, 16);
   let previousPlain = iv.subarray(16);
   for (let offset = 0; offset < bytes.length; offset += 16) {
     const block = bytes.subarray(offset, offset + 16);
-    const transformed = xor(
-      cipher.update(xor(block, decrypt ? previousPlain : previousCipher)),
-      decrypt ? previousCipher : previousPlain
-    );
-    output.set(transformed, offset);
-    previousPlain = decrypt ? transformed : block;
-    previousCipher = decrypt ? block : transformed;
+    const before = decrypt ? previousPlain : previousCipher;
+    const after = decrypt ? previousCipher : previousPlain;
+    for (let index = 0; index < 16; index++) {
+      mixed[index] = block[index] ^ before[index];
+    }
+    const transformed = cipher.update(mixed);
+    for (let index = 0; index < 16; index++) {
+      output[offset + index] = transformed[index] ^ after[index];
+    }
+    const completed = output.subarray(offset, offset + 16);
+    previousPlain = decrypt ? completed : block;
+    previousCipher = decrypt ? block : completed;
   }
   cipher.final();
   return output;

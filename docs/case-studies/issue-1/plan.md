@@ -1262,3 +1262,36 @@ Installed web-framework integration work plan:
       diff and new files are reviewed; the 899-file PR inventory has no removals.
 - [ ] Commit/push the atomic checkpoint and verify fresh exact-head CI, including
       all nine new framework runtime/OS jobs. Keep wider criteria open.
+
+Encrypted-upload CI follow-up work plan:
+
+- [x] Preserve failed run 40954349985 and read both failed-step log chunks;
+      distinguish three missing Deno declaration failures from the macOS Bun
+      encrypted upload timeout. Pin isolated Node declarations and verify a
+      fresh Deno 2.9.8 cache without disabling checks.
+- [x] Reproduce excessive public Buffer copies before changing AES-IGE. Two
+      independent cipher regressions fail against the immutable preceding source.
+      Reuse a mixing buffer and write the second XOR directly into the output,
+      retaining caller data and the unchanged large-file test/deadline.
+- [x] Complete checkpoint runtime/static/native/package gates and review the
+      atomic cipher change independently of unfinished media tests. All 2,265
+      checkpoint tests pass on Node/Bun/Deno, with 27 native and eight wire
+      checks. Strict gates scan 168 sources with zero clones and packaging has
+      211 entries. Main is an ancestor and all feedback streams remain empty.
+- [ ] Push both corrections and verify fresh exact-head CI, including all nine
+      framework jobs and the previously failing macOS Bun core job.
+
+Account input-media conversion work plan:
+
+- [ ] Inventory actual GramJS/teleproto request autocasts and shared media helpers;
+      compare every supported media family and record schema-version differences.
+- [ ] Add minimal failing regressions for photo/document/chat-photo/media inputs,
+      including nested constructors, reusable files, empty values and invalid data.
+- [ ] Implement bounded schema-aware conversion without implicit network uploads,
+      preserving specified inputs, selected backends and request cancellation.
+- [ ] Verify actual-client argument bytes, selected adapters and encrypted native
+      TCP; retain immutable before/after runtime and declaration reproductions.
+- [ ] Generate checked public shortcut types and add reusable migration examples;
+      archive primary SDK evidence and exact remaining limitations.
+- [ ] Run all local runtime/static/package/integration gates, review and commit
+      the atomic change, then verify fresh exact-head CI. Continue wider criteria.
