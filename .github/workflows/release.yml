@@ -210,13 +210,15 @@ jobs:
       - name: Check TypeScript declarations and examples
         run: npm run typecheck
 
-      - name: Check actual bot SDK filter type compatibility
+      - name: Check actual bot SDK type compatibility
         run: |
           npm ci --prefix experiments/composer-types-runtime --ignore-scripts
           node node_modules/typescript/bin/tsc --project experiments/tsconfig.bot-filters.json
 
       - name: Check official Bot API fact extraction
-        run: python3 experiments/test-bot-model-facts.py
+        run: |
+          python3 experiments/test-bot-model-facts.py
+          python3 experiments/test-bot-method-facts.py
 
   # Test matrix: 3 runtimes (Node.js, Bun, Deno) x 3 OS (Ubuntu, macOS, Windows)
   # IMPORTANT: Tests must validate the ACTUAL merge result, not a stale merge preview.

@@ -773,3 +773,14 @@ retain their owned runtime contracts. All 2,007 core tests pass on Node, Bun and
 Deno. Strict gates scan 140 sources with zero clones; packaging permits 183
 entries. SDK-specific subtype names, per-method models, remaining framework
 integrations and every wider unmet acceptance criterion remain unfinished.
+
+The [method declaration comparison](bot-method-types.md) advances
+R01/R05/R08/R13/R16/R17/R19 with all 185 official request/result contracts and
+932 fields. Independently generated method shapes refine raw dispatch and the
+existing grammY/Telegraf positional inventories, retaining owned file, formatting,
+exact-ID and separate request-control extensions. The final three fixtures
+produce 38 diagnostics with frozen preceding declarations and compile against
+current declarations; equivalent portable fixtures compile against actual SDKs.
+Eight parser regressions include exact extraction from the primary archive.
+Complete refined method models, manual helper/context result declarations,
+framework integrations and every wider unmet acceptance criterion remain open.

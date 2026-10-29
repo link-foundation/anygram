@@ -1,5 +1,6 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { format } from 'prettier';
+import { grammyTypeTemplate } from './bot-positional-type-template.mjs';
 
 const root = new globalThis.URL('../', import.meta.url);
 const inventory = JSON.parse(
@@ -45,7 +46,8 @@ const manualTypes = new Set([
   ].map((media) => `send${media}`),
 ]);
 const runtime = [],
-  declarations = [];
+  declarations = [],
+  routes = [];
 for (const [name, entry] of Object.entries(inventory.methods)) {
   const value = inventory.methods[aliases[name] ?? name];
   const method = value.method ?? (name === 'sendPoll' ? name : undefined);
@@ -82,6 +84,9 @@ for (const [name, entry] of Object.entries(inventory.methods)) {
   );
   if (!manualTypes.has(name)) {
     declarations.push(`${name}: ${JSON.stringify(signature)};`);
+    if (method !== name) {
+      routes.push(`${name}: ${JSON.stringify(method)};`);
+    }
   }
   if (entry.args[0]?.startsWith('...') && !aliases[name]) {
     throw new Error('Unknown positional alias');
@@ -89,7 +94,7 @@ for (const [name, entry] of Object.entries(inventory.methods)) {
 }
 const files = {
   'src/bot-method-signatures.js': `// Public method/parameter facts from pinned grammY 1.46.0; no SDK implementation.\n// Regenerate: node experiments/generate-bot-methods.mjs\nexport const botMethodSignatures = Object.freeze([\n${runtime.join(',\n')}\n]);\n`,
-  'src/bot-positional.d.ts': `import type { Parameters, RequestOptions } from './index.js';\n\n// Public signature facts; executable translations share one owned implementation.\ninterface Signatures {\n${declarations.join('\n')}\n}\ntype RequiredArguments<S extends string> = S extends '' ? [] : S extends \x60\${infer First} \${infer Rest}\x60 ? [value: unknown, ...RequiredArguments<Rest>] : [value: unknown];\ntype Arguments<S extends string> = S extends '?' ? [other?: Parameters, signal?: RequestOptions | AbortSignal] : S extends \x60\${infer Fields} ?\x60 ? [...RequiredArguments<Fields>, other?: Parameters, signal?: RequestOptions | AbortSignal] : [...RequiredArguments<S>, options?: RequestOptions | AbortSignal];\nexport type GrammyPositionalArguments<K extends keyof Signatures> = Arguments<Signatures[K]>;\nexport type GrammyPositionalApi = { [M in keyof Signatures]: Signatures[M] extends '' | '?' ? (...args: Arguments<Signatures[M]>) => Promise<unknown> : ((...args: Arguments<Signatures[M]>) => Promise<unknown>) & ((params: Parameters, options?: RequestOptions | AbortSignal) => Promise<unknown>) };\n`,
+  'src/bot-positional.d.ts': grammyTypeTemplate(declarations, routes),
 };
 for (const [file, source] of Object.entries(files)) {
   const output = await format(source, {

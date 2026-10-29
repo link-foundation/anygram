@@ -18,14 +18,7 @@ export async function positionalBot(bot: Bot, signal: AbortSignal) {
     { caption: 'caption' },
     signal
   );
-  await bot.api.editEphemeralMessageText(
-    7,
-    8,
-    'ephemeral',
-    { rows: [] },
-    {},
-    signal
-  );
+  await bot.api.editEphemeralMessageText(7, 8, 9, { blocks: [] }, {}, signal);
   await bot.api.sendMediaGroup(
     7,
     [{ type: 'photo', media: new InputFile(new Uint8Array([1]), 'photo.png') }],

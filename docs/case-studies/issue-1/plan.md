@@ -998,3 +998,20 @@ Telegraf declaration work plan:
       clones; packaging permits 183 entries.
 - [ ] Inspect the complete change, commit/push and verify exact-head CI.
 - [ ] Continue all wider unmet acceptance criteria in the same draft PR.
+
+Bot API method declaration work plan:
+
+- [x] Add a failing checked request/result fixture before implementation.
+- [x] Extract and review every official method argument and return contract from
+      the archived primary document; retain source hashes and parser regressions.
+- [x] Generate owned raw-method declarations and refine positional methods using
+      existing public signature inventories, preserving request controls and
+      upload/formatted-text extensions.
+- [x] Compare portable positive/negative fixtures with actual SDK declarations.
+- [x] Run local gates and inspect the complete atomic change. All 2,007 core
+      tests pass per runtime; eight model and eight method parser regressions
+      pass. The gate scans 151 production sources with zero clones; packaging
+      permits 194 entries. Frozen fixtures reproduce 38 diagnostics. Main is an
+      ancestor, all feedback streams remain empty and GitHub diff limits are
+      handled with the paginated file inventory and local atomic diff.
+- [ ] Commit/push and verify exact-head CI; keep every wider criterion open.

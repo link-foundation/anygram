@@ -1,6 +1,11 @@
-import type { Parameters, RequestOptions } from './index.js';
-
-// Public signature facts; executable translations share one owned implementation.
+import type { RequestOptions } from './index.js';
+import type {
+  BotApiMethod,
+  BotApiParams,
+  BotApiResult,
+  BotArgument,
+  BotOther,
+} from './bot-api-types.js';
 interface Signatures {
   getUpdates: '?';
   setWebhook: 'url ?';
@@ -188,29 +193,71 @@ interface Signatures {
   getGameHighScores: 'chat_id message_id user_id';
   getGameHighScoresInline: 'inline_message_id user_id';
 }
-type RequiredArguments<S extends string> = S extends ''
+interface Routes {
+  editMessageLiveLocationInline: 'editMessageLiveLocation';
+  stopMessageLiveLocationInline: 'stopMessageLiveLocation';
+  kickChatMember: 'banChatMember';
+  getChatMembersCount: 'getChatMemberCount';
+  editMessageCaptionInline: 'editMessageCaption';
+  editMessageMediaInline: 'editMessageMedia';
+  editMessageReplyMarkupInline: 'editMessageReplyMarkup';
+  deleteMessageReactionUser: 'deleteMessageReaction';
+  deleteMessageReactionChat: 'deleteMessageReaction';
+  deleteAllMessageReactionsUser: 'deleteAllMessageReactions';
+  deleteAllMessageReactionsChat: 'deleteAllMessageReactions';
+  sendGiftToChannel: 'sendGift';
+  setGameScoreInline: 'setGameScore';
+  getGameHighScoresInline: 'getGameHighScores';
+}
+type Method<K extends keyof Signatures> = K extends keyof Routes
+  ? Routes[K]
+  : K & BotApiMethod;
+type Fields<S extends string> = S extends '' | '?'
+  ? never
+  : S extends `${infer First} ${infer Rest}`
+    ? First | Fields<Rest>
+    : S;
+type WireFields<S extends string> =
+  | Exclude<Fields<S>, 'text_or_rich_message'>
+  | (Fields<S> extends infer F
+      ? 'text_or_rich_message' extends F
+        ? 'text' | 'rich_message'
+        : never
+      : never);
+type RequiredArguments<M extends BotApiMethod, S extends string> = S extends ''
   ? []
   : S extends `${infer First} ${infer Rest}`
-    ? [value: unknown, ...RequiredArguments<Rest>]
-    : [value: unknown];
-type Arguments<S extends string> = S extends '?'
-  ? [other?: Parameters, signal?: RequestOptions | AbortSignal]
-  : S extends `${infer Fields} ?`
+    ? [value: BotArgument<M, First>, ...RequiredArguments<M, Rest>]
+    : [value: BotArgument<M, S>];
+type Arguments<M extends BotApiMethod, S extends string> = S extends '?'
+  ? [other?: BotOther<M, never>, signal?: RequestOptions | AbortSignal]
+  : S extends `${infer Required} ?`
     ? [
-        ...RequiredArguments<Fields>,
-        other?: Parameters,
+        ...RequiredArguments<M, Required>,
+        other?: BotOther<M, WireFields<Required>>,
         signal?: RequestOptions | AbortSignal,
       ]
-    : [...RequiredArguments<S>, options?: RequestOptions | AbortSignal];
+    : [...RequiredArguments<M, S>, options?: RequestOptions | AbortSignal];
 export type GrammyPositionalArguments<K extends keyof Signatures> = Arguments<
+  Method<K>,
   Signatures[K]
 >;
+export type GrammyPositionalResult<K extends keyof Signatures> =
+  K extends `${string}Inline`
+    ? Extract<BotApiResult<Method<K>>, true> extends never
+      ? BotApiResult<Method<K>>
+      : true
+    : BotApiResult<Method<K>>;
 export type GrammyPositionalApi = {
   [M in keyof Signatures]: Signatures[M] extends '' | '?'
-    ? (...args: Arguments<Signatures[M]>) => Promise<unknown>
-    : ((...args: Arguments<Signatures[M]>) => Promise<unknown>) &
+    ? (
+        ...args: GrammyPositionalArguments<M>
+      ) => Promise<GrammyPositionalResult<M>>
+    : ((
+        ...args: GrammyPositionalArguments<M>
+      ) => Promise<GrammyPositionalResult<M>>) &
         ((
-          params: Parameters,
+          params: BotApiParams<Method<M>>,
           options?: RequestOptions | AbortSignal
-        ) => Promise<unknown>);
+        ) => Promise<GrammyPositionalResult<M>>);
 };

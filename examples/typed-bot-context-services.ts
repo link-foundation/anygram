@@ -1,5 +1,6 @@
 import {
   Bot,
+  InputFile,
   Telegraf,
   type Context,
   type TelegrafContext,
@@ -32,8 +33,8 @@ async function telegrafServices(ctx: TelegrafContext) {
   await ctx.getUserChatBoosts(signal);
   await ctx.getStickerSet('stickers', signal);
   await ctx.uploadStickerFile(
-    'sticker:file',
-    { sticker_format: 'static' },
+    new InputFile(new Uint8Array([1]), 'sticker.webp'),
+    'static',
     signal
   );
   await ctx.setStickerSetThumb('stickers', 8, 'photo:file', signal);

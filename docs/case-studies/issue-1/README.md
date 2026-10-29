@@ -1,5 +1,10 @@
 # Unified Telegram client: investigation and implementation
 
+The [Bot API method comparison](bot-method-types.md) archives 185 official
+request/result contracts and 932 fields. Independent declarations refine raw
+and positional calls, with frozen before/after fixtures and strict comparisons
+against actual grammY and Telegraf. Complete refined SDK models remain open.
+
 The [Bot API model comparison](bot-model-types.md) archives 400 official model
 definitions and 1,888 field facts, with independently generated declarations,
 checked nested message/update examples and explicit SDK precision differences.

@@ -8,6 +8,17 @@ import type {
   EncryptedFileDownloadOptions,
   EncryptedFileInput,
 } from './mtproto.js';
+import type {
+  BotApiCall,
+  RawBotApi,
+  ExtensionMethods,
+  BotOther,
+} from './bot-api-types.js';
+export type {
+  BotApiMethod,
+  BotApiParams,
+  BotApiResult,
+} from './bot-api-types.js';
 import type { GrammyPositionalApi } from './bot-positional.js';
 import type { TelegrafPositionalApi } from './telegraf-positional.js';
 import type { ContextUpdateAliases } from './bot-context-data.js';
@@ -283,13 +294,8 @@ export declare class TelegramError extends Error {
     backend?: string
   ): TelegramError | UnsupportedError;
 }
-export type BotMethods = {
-  [method: string]: <T = unknown>(
-    params?: Parameters,
-    options?: RequestOptions
-  ) => Promise<T>;
-};
-export type RawMethods = { [namespace: string]: BotMethods };
+export type BotMethods = RawBotApi;
+export type RawMethods = { [namespace: string]: ExtensionMethods };
 /** Canonical TL objects with their peer-qualified top message. */
 export interface DialogEntry {
   dialog: TlRequest & { _: 'dialog' };
@@ -529,29 +535,29 @@ export type BotFileLink = (
   file: string | Parameters,
   options?: RequestOptions | AbortSignal
 ) => Promise<URL>;
+type BotSendMessageOptions = BotOther<'sendMessage', 'chat_id' | 'text'>;
 export declare class BotApi {
   constructor(options: BotApiOptions);
   api: BotMethods;
-  callApi<T = unknown>(
-    method: string,
-    params?: Parameters,
-    options?: RequestOptions
-  ): Promise<T>;
-  getMe(options?: RequestOptions): Promise<unknown>;
+  callApi: BotApiCall;
+  getMe(options?: RequestOptions): Promise<Telegram.User>;
   getFileLink: BotFileLink;
   sendMessage(
     chat: string | number | bigint,
     text: string | TextWithEntities,
-    options?: Parameters
-  ): Promise<unknown>;
-  editMessage(chat: unknown, options: Parameters): Promise<unknown>;
+    options?: BotSendMessageOptions
+  ): Promise<BotMessage>;
+  editMessage(chat: unknown, options: Parameters): Promise<BotMessage | true>;
   deleteMessages(
     chat: unknown,
     ids: number[],
     options?: RequestOptions
-  ): Promise<unknown>;
-  forwardMessages(chat: unknown, options: Parameters): Promise<unknown>;
-  sendFile(chat: unknown, options: Parameters): Promise<unknown>;
+  ): Promise<true>;
+  forwardMessages(
+    chat: unknown,
+    options: Parameters
+  ): Promise<Telegram.MessageId[]>;
+  sendFile(chat: unknown, options: Parameters): Promise<BotMessage>;
   downloadMedia(
     fileId: string,
     options?: RequestOptions & { maxBytes?: number }
@@ -702,45 +708,40 @@ export interface BotReactionUpdate extends BotChatUpdate {
 }
 export interface BotContextApi {
   getFileLink: BotFileLink;
-  raw: {
-    [method: string]: <T = unknown>(
-      params?: Parameters | AbortSignal,
-      options?: RequestOptions | AbortSignal
-    ) => Promise<T>;
-  };
-  callApi<T = unknown>(
-    method: string,
-    params?: Parameters,
+  raw: RawBotApi<RequestOptions | AbortSignal>;
+  callApi: BotApiCall<RequestOptions | AbortSignal>;
+  getMe(options?: RequestOptions | AbortSignal): Promise<Telegram.User>;
+  getWebhookInfo(
     options?: RequestOptions | AbortSignal
-  ): Promise<T>;
-  getMe(options?: RequestOptions | AbortSignal): Promise<Parameters>;
-  getWebhookInfo(options?: RequestOptions | AbortSignal): Promise<unknown>;
+  ): Promise<Telegram.WebhookInfo>;
   getForumTopicIconStickers(
     options?: RequestOptions | AbortSignal
-  ): Promise<unknown>;
-  getAvailableGifts(options?: RequestOptions | AbortSignal): Promise<unknown>;
-  logOut(options?: RequestOptions | AbortSignal): Promise<unknown>;
-  close(options?: RequestOptions | AbortSignal): Promise<unknown>;
-  getMyStarBalance(options?: RequestOptions | AbortSignal): Promise<unknown>;
-  removeMyProfilePhoto(
+  ): Promise<Telegram.Sticker[]>;
+  getAvailableGifts(
     options?: RequestOptions | AbortSignal
-  ): Promise<unknown>;
+  ): Promise<Telegram.Gifts>;
+  logOut(options?: RequestOptions | AbortSignal): Promise<true>;
+  close(options?: RequestOptions | AbortSignal): Promise<true>;
+  getMyStarBalance(
+    options?: RequestOptions | AbortSignal
+  ): Promise<Telegram.StarAmount>;
+  removeMyProfilePhoto(options?: RequestOptions | AbortSignal): Promise<true>;
   sendMessage(
-    chat: unknown,
+    chat: string | number | bigint,
     text: string | TextWithEntities,
-    options?: Parameters,
+    options?: BotSendMessageOptions,
     signal?: AbortSignal
   ): Promise<BotMessage>;
   deleteMessage(
-    chat: unknown,
+    chat: string | number | bigint,
     id: number,
     options?: RequestOptions | AbortSignal
-  ): Promise<unknown>;
+  ): Promise<true>;
   answerCallbackQuery(
     id: string,
-    options?: Parameters,
+    options?: BotOther<'answerCallbackQuery', 'callback_query_id'>,
     signal?: AbortSignal
-  ): Promise<unknown>;
+  ): Promise<true>;
   sendPhoto: BotMediaMethod;
   sendAnimation: BotMediaMethod;
   sendDocument: BotMediaMethod;
@@ -751,14 +752,14 @@ export interface BotContextApi {
   [key: string]: unknown;
 }
 export type BotMediaMethod = (
-  chat: unknown,
+  chat: string | number | bigint,
   file: unknown,
   options?: Parameters,
   signal?: AbortSignal
 ) => Promise<BotMessage>;
 export interface ContextApi extends BotContextApi, GrammyPositionalApi {
   editMessageText(
-    chat: unknown,
+    chat: string | number | bigint,
     id: number,
     text: string | TextWithEntities | Parameters,
     options?: Parameters,
@@ -774,7 +775,7 @@ export interface ContextApi extends BotContextApi, GrammyPositionalApi {
 export interface TelegrafApi extends BotContextApi, TelegrafPositionalApi {
   webhookReply: boolean;
   editMessageText(
-    chat: unknown,
+    chat: string | number | bigint | undefined,
     id: number | undefined,
     inlineId: string | undefined,
     text: string | TextWithEntities,

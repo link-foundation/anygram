@@ -4,15 +4,19 @@ function intersection(left, right) {
     [...left.fields].filter(([key, value]) => right.fields.get(key) === value)
   );
 }
-function largestOverlap(nodes) {
+function largestOverlap(nodes, singleFields) {
   let best = new Map();
   for (let first = 0; first < nodes.length; first += 1) {
     for (let second = first + 1; second < nodes.length; second += 1) {
-      if (Math.min(nodes[first].fields.size, nodes[second].fields.size) < 2) {
+      if (Math.min(nodes[first].fields.size, nodes[second].fields.size) < 1) {
         continue;
       }
       const common = intersection(nodes[first], nodes[second]);
-      if (common.size > best.size) {
+      const substantial =
+        common.size > 1 ||
+        (singleFields &&
+          [...common.values()].some((value) => value.length > 100));
+      if (substantial && common.size > best.size) {
         best = common;
       }
     }
@@ -38,7 +42,7 @@ function expand(node, nodes, active = new Set()) {
 const sorted = (map) =>
   JSON.stringify([...map].sort(([a], [b]) => a.localeCompare(b)));
 
-export function factorModelFields(models, property) {
+export function factorModelFields(models, property, singleFields = false) {
   const originals = new Map(
     models
       .filter((model) => model.fields.length)
@@ -54,8 +58,8 @@ export function factorModelFields(models, property) {
   }));
   const shared = [];
   for (;;) {
-    const fields = largestOverlap(nodes);
-    if (fields.size < 2) {
+    const fields = largestOverlap(nodes, singleFields);
+    if (!fields.size) {
       break;
     }
     const name = `Fields${shared.length}`;

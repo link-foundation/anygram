@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto';
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { format } from 'prettier';
 import { factorModelFields } from './bot-model-shapes.mjs';
+import { factType } from './bot-fact-types.mjs';
 
 const root = new globalThis.URL('../', import.meta.url);
 const archive = new globalThis.URL(
@@ -20,31 +21,8 @@ if (
   throw new Error('Unreviewed official Bot API model facts');
 }
 const names = new Set(facts.models.map((model) => model.name));
-const primitives = {
-  Integer: 'number',
-  Float: 'number',
-  String: 'string',
-  Boolean: 'boolean',
-  True: 'true',
-};
-function fieldType(type) {
-  if (type === 'Array of RichText') {
-    return "import('./index.js').RichTextArray";
-  }
-  if (type.startsWith('Array of ')) {
-    return `Array<${fieldType(type.substring(9))}>`;
-  }
-  if (type.includes(' or ')) {
-    return type.split(' or ').map(fieldType).join(' | ');
-  }
-  if (primitives[type]) {
-    return primitives[type];
-  }
-  if (!names.has(type)) {
-    throw new Error(`Unknown model type: ${type}`);
-  }
-  return `BotModels[${JSON.stringify(type)}]`;
-}
+const fieldType = (type) =>
+  factType(type, names, { richText: "import('./index.js').RichTextArray" });
 function property(field) {
   let type = field.values
     ? field.values.map((value) => JSON.stringify(value)).join(' | ')

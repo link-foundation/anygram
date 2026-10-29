@@ -181,3 +181,9 @@ Refine Telegraf raw-update checks, subtype/guard registrations, static factories
 and command/entity helpers while preserving fluent custom contexts. Share
 independently owned update refinements, retain SDK-specific getter order and
 compare a portable fixture against actual Telegraf with strict checking in CI.
+
+Generate independent request/result declarations for all 185 official Bot API
+methods. Refine raw dispatch and existing positional inventories, preserving
+owned file, formatting, exact-ID and request-control extensions. Check required
+fields, shared option shapes and result inference against frozen preceding
+declarations and portable actual-SDK fixtures, with primary-source parser gates.

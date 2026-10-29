@@ -37,6 +37,7 @@ export async function telegrafApiExamples(bot: Telegraf, signal: AbortSignal) {
   });
   await bot.telegram.sendInvoice(7, {
     title: 'Invoice',
+    description: 'Order payment',
     payload: 'order',
     currency: 'USD',
     prices: [],

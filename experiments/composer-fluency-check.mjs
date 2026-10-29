@@ -13,6 +13,14 @@ import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new globalThis.URL('../', import.meta.url));
 const modes = {
+  '--methods': [
+    [
+      'typed-bot-api-methods.ts',
+      'typed-bot-api-extensions.ts',
+      'typed-telegraf-api-methods.ts',
+    ],
+    '565d6fe616a23862ae742705d1169d4392b02029',
+  ],
   '--telegraf-filters': [
     'typed-telegraf-filters.ts',
     'bebfa138ce830b9d5453fd974e3a80849fd19120',
@@ -32,12 +40,20 @@ const modes = {
 };
 const mode =
   Object.keys(modes).find((key) => process.argv.includes(key)) ?? 'default';
-const [fixture, revision] = modes[mode];
+const [selected, revision] = modes[mode];
+const fixtures = Array.isArray(selected) ? selected : [selected];
 const frozen = new Set([
   'src/index.d.ts',
   'src/telegraf-composer.d.ts',
   ...(['--filters', '--telegraf-filters'].includes(mode)
     ? ['src/bot-context-checkers.d.ts']
+    : []),
+  ...(mode === '--methods'
+    ? [
+        'src/bot-positional.d.ts',
+        'src/telegraf-positional.d.ts',
+        'src/bot-context-scope.d.ts',
+      ]
     : []),
 ]);
 const before = process.argv.includes('--before');
@@ -67,10 +83,12 @@ async function declarations(relative) {
 try {
   await declarations('src');
   await mkdir(join(workspace, 'examples'));
-  await writeFile(
-    join(workspace, 'examples', fixture),
-    await readFile(join(root, 'examples', fixture))
-  );
+  for (const fixture of fixtures) {
+    await writeFile(
+      join(workspace, 'examples', fixture),
+      await readFile(join(root, 'examples', fixture))
+    );
+  }
   await writeFile(join(workspace, 'package.json'), '{"type":"module"}\n');
   await writeFile(
     join(workspace, 'tsconfig.json'),

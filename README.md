@@ -196,6 +196,12 @@ Telegraf-style registrations also narrow raw updates, message subtypes and
 predicate guards, including static factories and custom contexts. See the
 [checked Telegraf example](examples/typed-telegraf-filters.ts).
 
+Known Bot API methods infer their documented request and result models through
+raw calls and positional helpers. For example, `bot.api.getChat(1)` returns a
+`Telegram.ChatFullInfo`, and `bot.api.raw.getChat` requires `chat_id`. See the
+[checked requests](examples/typed-bot-api-methods.ts) and
+[method type comparisons](docs/case-studies/issue-1/bot-method-types.md).
+
 `Scenes.BaseScene`, `Scenes.WizardScene` and `Scenes.Stage` provide persisted
 conversation steps on that same middleware path. Install session middleware
 before a stage; the current scene, state, expiry and wizard cursor live in

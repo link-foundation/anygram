@@ -1,5 +1,9 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { format } from 'prettier';
+import {
+  telegrafSignature,
+  telegrafTypeTemplate,
+} from './telegraf-method-type-template.mjs';
 
 const root = new globalThis.URL('../', import.meta.url);
 const inventory = JSON.parse(
@@ -33,8 +37,19 @@ const manual = new Set([
     'Sticker',
   ].map((type) => `send${type}`),
 ]);
+const methods = new Map(
+  JSON.parse(
+    readFileSync(
+      new globalThis.URL(
+        'docs/case-studies/issue-1/data/bot-api/method-facts.json',
+        root
+      )
+    )
+  ).methods.map((method) => [method.name, method])
+);
 const runtime = [],
-  declarations = [];
+  declarations = [],
+  routes = [];
 for (const [name, item] of Object.entries(inventory.methods)) {
   const entry = inventory.methods[item.alias] ?? item;
   if (!entry.args || (!entry.fields && entry.helper !== 'fileLink')) {
@@ -44,15 +59,13 @@ for (const [name, item] of Object.entries(inventory.methods)) {
   if (manual.has(name)) {
     continue;
   }
-  const args = entry.args.map(
-    (arg) =>
-      `${arg.name}${Object.hasOwn(arg, 'default') || arg.name === 'extra' ? '?' : ''}: unknown`
-  );
-  declarations.push(`${name}: [${args.join(', ')}];`);
+  const signature = telegrafSignature(name, entry, methods);
+  declarations.push(signature.declaration);
+  routes.push(signature.result);
 }
 const files = {
   'src/telegraf-method-signatures.js': `// Public facts from pinned Telegraf 4.16.3; no SDK implementation.\n// Regenerate: node experiments/generate-telegraf-methods.mjs\nexport const telegrafMethodSignatures = Object.freeze([\n${runtime.join(',\n')}\n]);\n`,
-  'src/telegraf-positional.d.ts': `import type { RequestOptions } from './index.js';\n// Public argument facts share one callable declaration and request boundary.\ninterface Signatures {\n${declarations.join('\n')}\n}\nexport type TelegrafPositionalArguments<K extends keyof Signatures> = [...Signatures[K], request?: RequestOptions | AbortSignal];\nexport type TelegrafPositionalApi = {\n[M in keyof Signatures]: (...args: [...Signatures[M], request?: RequestOptions | AbortSignal]) => Promise<unknown>;\n};\n`,
+  'src/telegraf-positional.d.ts': telegrafTypeTemplate(declarations, routes),
 };
 for (const [file, source] of Object.entries(files)) {
   const output = await format(source, {

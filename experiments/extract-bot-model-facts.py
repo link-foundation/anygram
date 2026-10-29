@@ -8,8 +8,9 @@ from pathlib import Path
 
 
 class Models(HTMLParser):
-    def __init__(self):
+    def __init__(self, pattern=r"[A-Z][A-Za-z0-9]*"):
         super().__init__()
+        self.pattern = pattern
         self.sections = []
         self.section = None
         self.heading = None
@@ -53,7 +54,7 @@ class Models(HTMLParser):
     def handle_endtag(self, tag):
         if tag == "h4" and self.heading is not None:
             name = "".join(self.heading).strip()
-            if re.fullmatch(r"[A-Z][A-Za-z0-9]*", name):
+            if re.fullmatch(self.pattern, name):
                 self.section = {"name": name, "tables": [], "members": [], "intro": []}
                 self.sections.append(self.section)
             self.heading = None
