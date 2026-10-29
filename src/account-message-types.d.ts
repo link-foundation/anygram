@@ -35,6 +35,56 @@ export interface AccountMessageDeleteOptions extends RequestOptions {
   /** GramJS defaults to false; teleproto defaults to true. */
   revoke?: boolean;
 }
+export type AccountShareInput =
+  | { className: string }
+  | { _: string; [key: string]: unknown };
+export interface AccountButtonClickOptions extends RequestOptions {
+  sharePhone?: boolean | string | AccountShareInput;
+  shareGeo?: readonly [longitude: number, latitude: number] | AccountShareInput;
+  password?: string;
+}
+export interface AccountPollText extends GramStyleObject {
+  text: string;
+  entities: AccountTextEntity[];
+}
+export interface AccountPollAnswer extends GramStyleObject {
+  text: AccountPollText;
+  option: Uint8Array;
+}
+export interface AccountPoll extends GramStyleObject {
+  id: bigint;
+  hash?: bigint;
+  question: AccountPollText;
+  answers: AccountPollAnswer[];
+  closed?: boolean;
+  multipleChoice?: boolean;
+}
+export interface AccountMessagePoll extends GramStyleObject {
+  poll: AccountPoll;
+  results: GramStyleObject;
+}
+export interface AccountMessageClickOptions extends AccountButtonClickOptions {
+  i?: number | readonly number[];
+  j?: number;
+  text?: string | ((text: string | AccountPollText) => boolean);
+  filter?: (value: AccountMessageButton | AccountPollAnswer) => boolean;
+  data?: Uint8Array;
+}
+export type AccountButtonResult =
+  | AccountMessage
+  | GramStyleObject
+  | string
+  | null
+  | undefined;
+export interface AccountMessageButton {
+  readonly button: GramStyleObject;
+  readonly client: GramStyleClient;
+  readonly text: string;
+  readonly data?: Uint8Array;
+  readonly inlineQuery?: string;
+  readonly url?: string;
+  click(options?: AccountButtonClickOptions): Promise<AccountButtonResult>;
+}
 export interface AccountMessageFile {
   readonly media: GramStyleObject;
   /** Both pinned SDKs leave compact file IDs unsupported. */
@@ -89,10 +139,16 @@ export interface AccountMessage extends GramStyleObject {
   readonly game?: GramStyleObject;
   readonly geo?: GramStyleObject;
   readonly invoice?: GramStyleObject;
-  readonly poll?: GramStyleObject;
+  readonly poll?: AccountMessagePoll;
   readonly venue?: GramStyleObject;
   readonly dice?: GramStyleObject;
   readonly file?: AccountMessageFile;
+  readonly buttonCount: number;
+  readonly buttons?: AccountMessageButton[][];
+  getButtons(
+    options?: RequestOptions
+  ): Promise<AccountMessageButton[][] | undefined>;
+  click(options?: AccountMessageClickOptions): Promise<AccountButtonResult>;
   getInputChat(options?: RequestOptions): Promise<GramStyleObject | undefined>;
   getChat(options?: RequestOptions): Promise<GramStyleObject | undefined>;
   getInputSender(

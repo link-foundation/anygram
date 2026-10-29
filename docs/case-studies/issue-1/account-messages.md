@@ -80,8 +80,9 @@ The runtime loader freezes client.js, gram-style.js and operations.js at
 8a37c45d45edeea94a62ed0afbaa1f4677fea151; the declaration runner freezes the public
 index at the same revision. Tests and examples remain unchanged between runs.
 
-Full custom-model parity remains unfinished. Button models/click interactions,
-parseMode and rich text getter/setter behavior, forward/action-entity models,
+The [button and poll follow-up](account-buttons.md) implements bound button
+models and click interactions with separate regression evidence. Full custom-model
+parity remains unfinished. ParseMode and rich text getter/setter behavior, forward/action-entity models,
 sender refetch/input-from-message fallbacks, full send/edit file and album
 shortcuts, toId/self and via-bot metadata still require implementation and
 verification. The general facade sendMessage response contract is unchanged;

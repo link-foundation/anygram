@@ -2,6 +2,12 @@ import { AccountFile } from './account-file.js';
 import { responseMessage } from './account-response.js';
 import { randomId } from './random.js';
 import { canonicalValue } from './requests.js';
+import {
+  messageButtonCount,
+  messageButtons,
+  getMessageButtons,
+  clickMessage,
+} from './account-buttons.js';
 
 const contexts = new WeakMap();
 const states = new WeakMap();
@@ -96,6 +102,18 @@ async function fetchEntity(message, type, options) {
 }
 
 class AccountMessage {
+  get buttonCount() {
+    return messageButtonCount(this);
+  }
+  get buttons() {
+    return messageButtons(this, scope(this), states.get(this));
+  }
+  getButtons(options) {
+    return getMessageButtons(this, scope(this), states.get(this), options);
+  }
+  click(options) {
+    return clickMessage(this, scope(this), states.get(this), options);
+  }
   get client() {
     return scope(this).style;
   }

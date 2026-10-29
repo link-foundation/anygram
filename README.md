@@ -786,7 +786,13 @@ The GramJS message deletion default is `revoke: false`; teleproto uses `true`.
 Their separate contexts share the same canonical operation implementation.
 See [typed message examples](examples/typed-account-messages.ts) and the
 [message compatibility evidence](docs/case-studies/issue-1/account-messages.md).
-Button interactions, rich formatting/model parity, drafts, array totals,
+Messages expose `buttons`, `buttonCount`, `getButtons` and `click` for callback,
+game, URL, switch-inline and text buttons, plus explicit phone/location sharing.
+Poll selectors accept indices, text or predicates; multiple indices preserve the
+chosen option bytes. Password callbacks use the shared SRP implementation.
+See [typed button examples](examples/typed-account-buttons.ts) and
+[button comparisons and limits](docs/case-studies/issue-1/account-buttons.md).
+Rich formatting/model parity, drafts, array totals,
 legacy big-integer methods and `instanceof Api.*` behavior remain open.
 Direct `client.invoke` keeps raw backend results.
 

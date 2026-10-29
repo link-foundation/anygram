@@ -1341,3 +1341,28 @@ Client-bound account message work plan:
       The paginated PR inventory has 929 files with no removals; the complete
       atomic diff is reviewed locally because GitHub limits diffs to 300 files.
 - [ ] Commit/push and verify fresh exact-head CI. Continue wider model work.
+
+Account button and poll interaction work plan:
+
+- [x] Compare pinned SDK message/button models and official callback, vote and
+      start-bot requests, recording schema and SDK implementation differences.
+- [x] Reproduce missing buttons, count, async lookup, selectors and clicks before
+      implementing shared origin-bound models. Preserve immutable before runners.
+- [x] Implement callback/game/URL/switch-inline/text behavior and explicit phone
+      and location consent through existing selected-client operations. Reuse SRP
+      password proof; preserve cancellation and avoid replay of side effects.
+- [x] Verify poll index/text/filter selection, including actual SDK multi-index
+      defects, empty vote retraction and independent expected request bytes.
+- [x] Compare actual SDK calls, five selected routes and encrypted native TCP;
+      test detached markup/data, origin hashes, bounds and errors.
+- [x] Add checked public types/examples, primary-source facts and exact limits.
+- [x] Run local runtime/static/integration/package gates and review the atomic
+      change. All 2,585 core cases pass on Node/Bun/Deno; all 71 installed-framework
+      cases pass per runtime. Strict checks scan 174 sources with zero clones,
+      packaging has 217 permitted entries, and all 27 native terminal, eight
+      Node 20 wire, sixteen fact-parser and bounded FIFO checks pass. Both actual
+      SDK declarations compile. Main remains an ancestor and all feedback/sub-issue
+      streams remain empty; the complete issue prose is unchanged. The paginated
+      PR inventory has 943 files with no removals; GitHub's 300-file diff limit
+      requires the complete local atomic diff for review.
+- [ ] Commit/push and verify fresh exact-head CI. Continue remaining criteria.

@@ -238,3 +238,7 @@ layer-232 poll answer indices and preserved response answer media.
 Bind detached account messages to shared source-peer operations, retaining each
 style's deletion default, correlated reply/edit results, bounded reply lookup,
 media metadata and checked helper declarations without a vendor runtime.
+
+Bind account button rows and poll interactions to the same selected origin,
+including callback password proofs, explicit contact/location consent and exact
+poll option selection, with typed migration examples and actual SDK comparisons.

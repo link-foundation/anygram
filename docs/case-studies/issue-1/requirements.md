@@ -8,11 +8,21 @@ the complete original prose. New feedback must be incorporated here.
 The [client-bound account message checkpoint](account-messages.md) advances
 R01/R02/R05/R17/R19 with shared origin-bound helpers, distinct SDK deletion
 defaults, metadata getters, bounded reply lookup, selected routing and native
-encrypted TCP evidence. Full formatting, buttons, model and application parity
+encrypted TCP evidence. Full formatting, model and application parity
 remain open in that inventory and the work plan. The 101 focused cases pass;
 the immutable preceding implementation fails 94. All 2,509 core tests pass on
 Node/Bun/Deno, with strict checks, zero clones in 173 production sources, the
 216-entry package gate and all 71 installed-framework cases per runtime.
+
+The [account button and poll follow-up](account-buttons.md) advances the same
+criteria with shared bound rows and selectors, callback/game/URL/start-bot/text
+requests, explicit contact/location sharing and SRP password callbacks. All 76
+focused cases fail against frozen preceding source and pass with the new models;
+twelve frozen declaration diagnostics verify the checked migration example.
+Actual SDK request bytes, independent server SRP arithmetic, five selected
+adapters and encrypted native TCP verify the finite contracts. Both pinned SDKs'
+multi-index poll defect has an independently expected option-byte regression.
+Web-app/auth/payment workflows, full SDK models and all wider criteria remain open.
 
 The [AES-IGE allocation regression](crypto-allocations.md) advances R05/R08
 with an immutable failing-before reproduction, independent ciphertext checks
