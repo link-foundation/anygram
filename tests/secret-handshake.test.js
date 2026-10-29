@@ -51,6 +51,7 @@ async function peerFor(handshake) {
 }
 
 it('persists request and acceptance before RPCs and establishes equal keys through actual DH', async () => {
+  const startedAt = Math.floor(Date.now() / 1000);
   const { handshake: left } = await prepare();
   let request, acceptance, leftSaved, rightSaved;
   await left.submit(
@@ -99,6 +100,17 @@ it('persists request and acceptance before RPCs and establishes equal keys throu
   assert.equal(first.fingerprint, second.fingerprint);
   assert.equal(first.originator, true);
   assert.equal(second.originator, false);
+  for (const credentials of [first, second]) {
+    assert.ok(credentials.keyCreatedAt >= startedAt);
+    assert.ok(credentials.keyCreatedAt <= Math.floor(Date.now() / 1000));
+  }
+  assert.equal(first.keyCreatedAt, leftSaved.keyCreatedAt);
+  assert.equal(second.keyCreatedAt, rightSaved.keyCreatedAt);
+  assert.equal(
+    new protocol.SecretChatHandshake({ state: copy(leftSaved) }).credentials()
+      .keyCreatedAt,
+    first.keyCreatedAt
+  );
   assert.deepEqual(first.dh, { p: dhConfig().p, g: dhConfig().g });
   assert.deepEqual(second.dh, first.dh);
   first.dh.p.fill(0);
@@ -390,6 +402,8 @@ it('rejects malformed portable handshake state before exposing private material'
     { fingerprint: '1' },
     { dh: { p: '', g: 3 } },
     { dh: { p: state.dh.p, g: 2 } },
+    { keyCreatedAt: -1 },
+    { keyCreatedAt: 1 },
   ]) {
     assert.throws(
       () =>
@@ -406,6 +420,7 @@ it('rejects malformed portable handshake state before exposing private material'
     { remotePublic: '' },
     { user: state.user },
     { dh: { ...recipient.dh, g: 1 } },
+    { keyCreatedAt: '1' },
   ]) {
     assert.throws(
       () =>

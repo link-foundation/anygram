@@ -310,7 +310,8 @@ The default limits retain at most 1000 incoming gaps, 1000 outgoing frames and
 under pressure; unacknowledged frames cannot be silently evicted. Snapshots
 contain keys and plaintext and require protected storage. `destroy()` clears
 owned memory, while applications manage their stored and returned copies.
-Initial handshakes retain the original DH parameters in their credentials.
+Initial handshakes retain the original DH parameters and key creation time in
+their credentials. Opening a session later preserves the key's age.
 These enable compulsory PFS in the session: activity starts an exchange after
 more than 100 sent/received messages or seven days of a key used for encryption.
 `rotateKey(undefined, { save })` can also start an exchange explicitly. The

@@ -297,3 +297,12 @@ through the actual update manager and preserves qts/effect ordering.
 All 309 tests and strict checks pass locally on all three runtimes. The package
 dry run contains 66 permitted entries. Fresh CI is required after this commit;
 encrypted media and production-account interoperability remain open.
+
+Key age now begins when the initial handshake derives the key, rather than
+when the application eventually opens its active session. Two failing-before
+assertions verify credential timestamps and compulsory rotation after delayed
+session creation. Protected restart preserves that time; malformed timestamps
+reject. All 310 tests pass on each runtime with strict checks. Integrated PFS
+head e793a71 passed every gate and all nine runtime/OS jobs in run 40812109787,
+created 2026-10-29T03:26:04Z and completed 2026-10-29T03:28:50Z. Fresh CI is
+required for the age repair.

@@ -121,6 +121,23 @@ it('starts compulsory rotation by usage and key age and rolls back failed rotati
   await assert.rejects(manual.rotateKey(1n, { save }), /DH parameters/);
 });
 
+it('retains the original key creation time when opening a session long after its handshake', async () => {
+  const keyCreatedAt = 100;
+  const now = () => keyCreatedAt + 7 * 24 * 60 * 60;
+  const session = create(true, { keyCreatedAt, now });
+  assert.equal(session.state.rekey.createdAt, keyCreatedAt);
+  const restored = new api.SecretChatSession({
+    state: portable(session.exportState()),
+    now,
+  });
+  await restored.queue(message(1), { save });
+  assert.equal(restored.state.rekey.phase, 'requesting');
+  assert.equal(restored.state.rekey.createdAt, keyCreatedAt);
+  for (const value of [-1, 0.5, NaN, Infinity, null, '1']) {
+    assert.throws(() => create(true, { keyCreatedAt: value }));
+  }
+});
+
 it('authenticates a new-key packet before a missing commit while retaining the old key until the gap closes', async () => {
   const alice = create(true);
   let bob = create(false);

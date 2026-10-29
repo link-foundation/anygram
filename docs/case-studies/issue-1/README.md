@@ -965,3 +965,13 @@ Key-ring head 21f5873 passed all nine OS/runtime jobs and applicable gates in
 created 2026-10-29T03:01:06Z and completed 2026-10-29T03:02:36Z. This checkpoint
 needs fresh CI. Encrypted media, controlled production interoperability and
 the wider compatibility/call requirements remain unfinished.
+
+Delayed session creation exposed a further key-age bug: its constructor used
+the opening time instead of the original key's creation time, postponing the
+compulsory seven-day rotation. Handshake snapshots and credentials now preserve
+the derivation timestamp, and the active session carries it into the PFS policy.
+The regression uses a finite injected clock, restores JSON, and verifies
+immediate compulsory rotation when the old key is first used. Invalid timestamp
+state rejects. All 310 tests pass on Node, Bun and Deno with strict checks.
+Integrated PFS e793a71 passed all nine runtime/OS jobs and gates in
+[run 40812109787](https://github.com/link-foundation/anygram/actions/runs/40812109787).

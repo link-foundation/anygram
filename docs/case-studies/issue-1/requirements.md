@@ -73,3 +73,9 @@ scan 61 production files without clones; the package has 66 permitted entries.
 Encrypted media, controlled production interoperability and all other unmet
 criteria remain open. Key-ring head 21f5873 passed every applicable gate and
 all nine runtime/OS jobs in CI run 40809723730; this checkpoint needs fresh CI.
+
+Initial key creation timestamps now survive credentials, delayed active-session
+creation and protected restart. The failing-before regression brings each
+runtime to 310 passing tests with strict checks. Integrated PFS e793a71 passed
+all nine runtime/OS jobs and applicable gates in run 40812109787. Encrypted
+media and production interoperability remain open.

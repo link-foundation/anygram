@@ -12,7 +12,7 @@ const actions = new Set([
 
 /** Session-owned key policy; all effects run on a disposable transactional draft. */
 export class SecretSessionKeys {
-  constructor({ key, originator, state, dh, now, maxBytes }) {
+  constructor({ key, originator, state, dh, keyCreatedAt, now, maxBytes }) {
     this.originator = originator;
     try {
       if (state?.version === 2) {
@@ -42,7 +42,11 @@ export class SecretSessionKeys {
           }
         }
         if (dh) {
-          this.rekey = new SecretChatRekey({ ...dh, now });
+          this.rekey = new SecretChatRekey({
+            ...dh,
+            createdAt: keyCreatedAt,
+            now,
+          });
         }
       }
       this.validate();

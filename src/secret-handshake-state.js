@@ -6,6 +6,8 @@ import { secretLimit } from './secret-sequence-state.js';
 const codec = new TlCodec({ maxBytes: 1024, maxDepth: 8, maxVector: 100 });
 export const secretChatId = (value) =>
   secretLimit(value, 1, 0x7fffffff, 'chat ID');
+export const secretKeyTime = (value) =>
+  secretLimit(value, 0, Number.MAX_SAFE_INTEGER, 'key creation time');
 
 export function secretLong(value, name, positive = false) {
   if (
@@ -176,6 +178,13 @@ function restoreDh(data, state) {
 }
 
 function restoreMaterial(data, state) {
+  data.keyCreatedAt =
+    state.keyCreatedAt === undefined || state.keyCreatedAt === null
+      ? null
+      : secretKeyTime(state.keyCreatedAt);
+  if (state.key === null && data.keyCreatedAt !== null) {
+    throw new TypeError('Secret chat has a key creation time without a key');
+  }
   if (data.originator) {
     const user = secretRequestUser(secretDecodedUser(state.user), data.selfId);
     if (user.remoteId !== data.remoteId) {

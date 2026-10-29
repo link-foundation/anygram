@@ -1,13 +1,15 @@
 import { hash, validateDhParameters, validateDhPublic } from './crypto.js';
 import { SecretChatKeyExchange } from './secret-key-exchange.js';
-import { secretDecodedBytes, secretLong } from './secret-handshake-state.js';
+import {
+  secretDecodedBytes,
+  secretLong,
+  secretKeyTime as timestamp,
+} from './secret-handshake-state.js';
 import { secretLimit } from './secret-sequence-state.js';
 import { TelegramError } from './errors.js';
 import { randomId } from './random.js';
 
 const empty = () => ({ actions: [], installBeforeActions: false });
-const timestamp = (value) =>
-  secretLimit(value, 0, Number.MAX_SAFE_INTEGER, 'key creation time');
 const count = (value) => secretLimit(value, 0, 0x7fffffff, 'key usage count');
 const rejectOther = (id, pendingId) => ({
   ...empty(),
@@ -30,7 +32,13 @@ export class SecretChatRekey {
   #now;
   #destroyed = false;
 
-  constructor({ p, g, state, now = () => Math.floor(Date.now() / 1000) } = {}) {
+  constructor({
+    p,
+    g,
+    state,
+    createdAt,
+    now = () => Math.floor(Date.now() / 1000),
+  } = {}) {
     if (typeof now !== 'function') {
       throw new TypeError('Secret chat re-keying clock must be a function');
     }
@@ -41,7 +49,9 @@ export class SecretChatRekey {
     this.#g = state ? state.g : g;
     validateDhParameters(this.#p, this.#g);
     this.#p = Buffer.from(this.#p);
-    this.#createdAt = timestamp(state ? state.createdAt : now());
+    this.#createdAt = timestamp(
+      state ? state.createdAt : createdAt === undefined ? now() : createdAt
+    );
     if (state !== undefined) {
       try {
         this.#restore(state);

@@ -48,6 +48,7 @@ export class SecretChatHandshake {
       remotePublic: data.remotePublic?.toString('base64') ?? null,
       exchange: data.exchange?.exportState() ?? null,
       key: data.key?.toString('base64') ?? null,
+      keyCreatedAt: data.keyCreatedAt,
       fingerprint: data.fingerprint === null ? null : String(data.fingerprint),
       dh: data.dh ? { p: data.dh.p.toString('base64'), g: data.dh.g } : null,
     };
@@ -62,6 +63,9 @@ export class SecretChatHandshake {
       originator: this.#data.originator,
       key: Buffer.from(this.#data.key),
       fingerprint: this.#data.fingerprint,
+      ...(this.#data.keyCreatedAt === null
+        ? {}
+        : { keyCreatedAt: this.#data.keyCreatedAt }),
       ...(this.#data.dh
         ? { dh: { p: Uint8Array.from(this.#data.dh.p), g: this.#data.dh.g } }
         : {}),
@@ -177,6 +181,7 @@ export class SecretChatHandshake {
       const result = data.exchange.complete(remotePublic, fingerprint);
       data.exchange = null;
       data.key = result.key;
+      data.keyCreatedAt = Math.floor(Date.now() / 1000);
       data.fingerprint = result.fingerprint;
       data.remotePublic = remotePublic;
     } else if (
@@ -195,6 +200,7 @@ export class SecretChatHandshake {
     this.#data.exchange = null;
     this.#data.key?.fill(0);
     this.#data.key = null;
+    this.#data.keyCreatedAt = null;
     this.#data.fingerprint = null;
     this.#data.remotePublic = null;
     this.#data.phase = 'discarded';
@@ -240,6 +246,7 @@ function initialState(data, exchange, config) {
     remotePublic: null,
     exchange: null,
     key: null,
+    keyCreatedAt: null,
     fingerprint: null,
     dh: { p: Buffer.from(config.p).toString('base64'), g: config.g },
   };
@@ -306,6 +313,7 @@ export async function createSecretChatAcceptance(invoke, options = {}) {
     const result = exchange.complete(remotePublic);
     key = result.key;
     state.key = key.toString('base64');
+    state.keyCreatedAt = Math.floor(Date.now() / 1000);
     state.fingerprint = String(result.fingerprint);
     state.remotePublic = remotePublic.toString('base64');
     return { handshake: new SecretChatHandshake({ state }), config };

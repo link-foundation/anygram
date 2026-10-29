@@ -47,6 +47,7 @@ export interface SecretChatHandshakeState {
   key: string | null;
   fingerprint: string | null;
   dh?: { p: string; g: number } | null;
+  keyCreatedAt?: number | null;
 }
 export interface SecretChatHandshakeOptions extends RequestOptions {
   save: (state: SecretChatHandshakeState) => void | Promise<void>;
@@ -72,6 +73,8 @@ export declare class SecretChatHandshake {
     originator: boolean;
     key: Uint8Array;
     fingerprint: bigint;
+    /** Seconds since Unix epoch; older snapshots may lack this value. */
+    keyCreatedAt?: number;
     /** Original parameters retained for compulsory PFS; absent in older completed snapshots. */
     dh?: { p: Uint8Array; g: number };
   };
@@ -253,7 +256,7 @@ export interface SecretChatRekeyResult {
 export declare class SecretChatRekey {
   constructor(
     options: (
-      | { p: Uint8Array; g: number }
+      | { p: Uint8Array; g: number; createdAt?: number }
       | { state: SecretChatRekeyState }
     ) & { now?: () => number }
   );
@@ -406,6 +409,7 @@ export declare class SecretChatSession {
           layer?: number;
           remoteLayer?: number;
           dh?: { p: Uint8Array; g: number };
+          keyCreatedAt?: number;
           now?: () => number;
           maxPending?: number;
           maxHistory?: number;
