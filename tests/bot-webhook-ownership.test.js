@@ -56,7 +56,7 @@ it('retires unused response ownership when a handler completes', async () => {
 
 it('cleans processing ownership when ending an unused response throws', async () => {
   const failure = new Error('closed socket');
-  const bot = new Telegraf('123:webhook');
+  const bot = new Telegraf('123:webhook', { botInfo: { id: 123 } });
   const update = { update_id: 1 };
   await assert.rejects(
     bot.handleUpdate(update, {

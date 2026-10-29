@@ -848,3 +848,12 @@ examples compile against actual SDK declarations; the frozen runtime reproduces
 [Framework evidence and limits](bot-webhook-frameworks.md) distinguish these
 callback contracts from complete framework/server/cloud integration, which
 remains unfinished alongside every wider open criterion.
+
+R01/R05/R08/R13/R16/R17/R19 Telegraf lifecycle follow-up adds bounded callbacks,
+registration, SDK context construction and HTTP/TLS launch/stop. The immutable
+runner reproduces 54 failures among 55 final cases; frozen public declarations
+produce 16 diagnostics. Actual SDK comparisons and finite HTTP/TLS requests cover
+accepted bodies, filtering, reply policy and registration fields; failure, retry
+and cancellation cases verify listener cleanup.
+[Evidence and limits](telegraf-lifecycle.md) retain open nested transport options,
+installed-framework/cloud hosting, controlled delivery and all wider criteria.

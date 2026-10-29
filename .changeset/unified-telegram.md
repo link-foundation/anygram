@@ -212,3 +212,6 @@ policies, retain selected-client HTTP fallback and close retired response scopes
 
 Support all pinned grammY webhook adapter names and typed custom adapters with
 shared initialization, authorization, bounded bodies, deadlines and cleanup.
+
+Support Telegraf callback/registration and HTTP/TLS launch/stop contracts with
+bounded input and startup cleanup, SDK custom contexts and handler deadlines.

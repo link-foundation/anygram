@@ -123,6 +123,7 @@ for (const Constructor of [Bot, Telegraf]) {
     const calls = [];
     for (const inline of [false, true]) {
       const bot = new Constructor('context:test', {
+        botInfo: { id: 123, username: 'testbot' },
         fetch: async (url, { body }) => {
           calls.push(JSON.parse(body));
           return success();

@@ -6,6 +6,12 @@ const options = JSON.parse(
 );
 for (const [sourceName, targetName, sdk, namespace] of [
   [
+    'typed-telegraf-lifecycle.ts',
+    'typed-telegraf-lifecycle-fixture.ts',
+    'telegraf',
+    'telegraf/types',
+  ],
+  [
     'typed-grammy-frameworks.ts',
     'typed-grammy-frameworks-fixture.ts',
     'grammy',
@@ -88,6 +94,10 @@ for (const [sourceName, targetName, sdk, namespace] of [
     await readFile(new globalThis.URL(`examples/${sourceName}`, root), 'utf8')
   )
     .replaceAll("from '../src/index.js'", `from '${sdk}'`)
+    .replace(
+      "import { TelegrafContext as SDKContext } from 'telegraf';",
+      "import { Context as SDKContext } from 'telegraf';"
+    )
     .replace(
       "import type { TelegrafContext as Context } from 'telegraf';",
       "import type { Context } from 'telegraf';"

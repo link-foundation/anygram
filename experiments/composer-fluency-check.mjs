@@ -13,6 +13,10 @@ import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new globalThis.URL('../', import.meta.url));
 const modes = {
+  '--telegraf-lifecycle': [
+    ['typed-telegraf-lifecycle.ts'],
+    '197d5a1baedf3f10c24e6005a08fad79518e68ee',
+  ],
   '--frameworks': [
     ['typed-grammy-frameworks.ts', 'typed-webhook-defaults.ts'],
     'b73f33041ba5ac00895d4b808ecd48947c33de4f',

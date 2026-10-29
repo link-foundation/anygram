@@ -205,7 +205,10 @@ for (const backend of [
       });
       await bot.handleUpdate({ update_id: 1, business_message: message });
       for (const Constructor of [Bot, Telegraf]) {
-        const reactionBot = new Constructor(token, { api });
+        const reactionBot = new Constructor(token, {
+          api,
+          botInfo: { id: 123, username: 'bot' },
+        });
         reactionBot.on('message_reaction', async (ctx) => {
           assert.equal(ctx.msgId, 12);
           assert.equal(ctx.from.id, 9);

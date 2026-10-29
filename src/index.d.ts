@@ -1,3 +1,13 @@
+import type {
+  TelegrafOptions,
+  TelegrafLaunchOptions,
+  TelegrafWebhookOptions,
+  TelegrafCreateWebhookOptions,
+  TelegrafFilterOptions,
+  TelegrafWebhookCallback,
+  TelegrafWebhookRequest,
+} from './telegraf-server-types.js';
+export type * from './telegraf-server-types.js';
 import type { BotTextEditResult } from './bot-result-types.js';
 import type {
   FrameworkWebhookCallback,
@@ -934,6 +944,11 @@ export interface TelegrafContext
 export declare const TelegrafContext: {
   new (
     update: BotUpdate,
+    telegram: TelegrafApi,
+    me?: Parameters
+  ): TelegrafContext;
+  new (
+    update: BotUpdate,
     api: ContextApi,
     me?: Parameters,
     telegram?: TelegrafApi
@@ -1146,7 +1161,7 @@ export declare class Bot<
 }
 export interface Telegraf<C extends CommonContext = TelegrafContext>
   extends
-    Omit<Bot<C>, keyof Composer<C> | 'start' | 'catch'>,
+    Omit<Bot<C>, keyof Composer<C> | 'start' | 'catch' | 'launch' | 'stop'>,
     TelegrafRegistrations<C>,
     TelegrafQueryExtensions<C>,
     Pick<TelegrafComposer<C>, 'middleware'> {
@@ -1154,6 +1169,23 @@ export interface Telegraf<C extends CommonContext = TelegrafContext>
     ...middleware: import('./telegraf-composer.js').TelegrafMiddlewareLike<C>[]
   ): this;
   catch(handler: (error: unknown, ctx: C) => unknown | Promise<unknown>): this;
+  readonly context: Partial<C>;
+  webhookReply: boolean;
+  webhookFilter: (
+    this: TelegrafFilterOptions,
+    request: TelegrafWebhookRequest
+  ) => boolean;
+  webhookCallback(
+    path?: string,
+    options?: TelegrafWebhookOptions
+  ): TelegrafWebhookCallback;
+  createWebhook(
+    options: TelegrafCreateWebhookOptions
+  ): Promise<TelegrafWebhookCallback>;
+  secretPathComponent(): string;
+  launch(onLaunch?: () => void): Promise<void>;
+  launch(options: TelegrafLaunchOptions, onLaunch?: () => void): Promise<void>;
+  stop(reason?: string): void;
 }
 export declare const Telegraf: Omit<
   TelegrafComposerConstructor,
@@ -1161,7 +1193,7 @@ export declare const Telegraf: Omit<
 > & {
   new <C extends CommonContext = TelegrafContext>(
     token: string,
-    options?: BotOptions
+    options?: TelegrafOptions<C>
   ): Telegraf<C>;
 };
 export declare class TelegramBot {

@@ -1159,20 +1159,31 @@ Webhook framework adapter work plan:
       ancestor and all four feedback streams are empty. GitHub's 300-file diff
       limit is recorded; the 842-file paginated inventory has no deletions, and
       the complete atomic source diff and every new fixture/example were reviewed.
-- [ ] Commit/push the reviewed adapter change and verify exact-head CI before
-      wider unfinished work.
+- [x] Commit/push the reviewed adapter change and verify exact-head CI before
+      wider unfinished work. Head 197d5a1baedf3f10c24e6005a08fad79518e68ee
+      passed every applicable job in run 40938002358, created
+      2026-10-29T19:12:44Z after its 19:12:17Z commit.
 
 Telegraf construction and webhook/server lifecycle work plan:
 
-- [ ] Inventory the pinned public callback/filter/createWebhook/launch APIs and
+- [x] Inventory the pinned public callback/filter/createWebhook/launch APIs and
       construction options; compare observable behavior through actual SDKs.
-- [ ] First add minimal failing regressions for accepted body forms, filtering,
+- [x] First add minimal failing regressions for accepted body forms, filtering,
       initialization, URL/secret construction and API request normalization.
-- [ ] Implement shared bounded parsing and scoped dispatch, preserving custom
+- [x] Implement shared bounded parsing and scoped dispatch, preserving custom
       context/error behavior and the existing polling controls.
-- [ ] Exercise HTTP/TLS startup, fallback requests, shutdown, registration and
+- [x] Exercise HTTP/TLS startup, fallback requests, shutdown, registration and
       bind failures with real finite sockets; prevent leaked servers on failure.
-- [ ] Add checked public types and immutable reproductions, review the change,
-      run local gates, commit/push and verify exact-head CI.
+- [x] Add checked public types and immutable reproductions and review the change.
+      Frozen sources reproduce 54 failures among 55 final cases; frozen types
+      produce 18 diagnostics. The first full Deno run exposed delayed invalid-PEM
+      rejection, now reproduced in a bounded runtime probe and corrected before
+      Telegram registration. All fifteen server cases pass on Node and Deno.
+- [x] Run final local gates: all 2,198 tests pass on Node, Bun and Deno; 27
+      native and six Node 20 wire checks pass, alongside sixteen parser-fact
+      checks and the bounded blocked-file probe. Strict gates scan 165 sources
+      with zero clones; packaging permits 208 entries. Main is an ancestor,
+      feedback remains empty, and the paginated PR inventory has no deletions.
+- [ ] Commit/push and verify exact-head lifecycle CI.
 - [ ] Continue complete installed-framework/application/protocol coverage and
       every wider criterion still marked unfinished in the acceptance ledger.

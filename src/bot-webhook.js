@@ -14,7 +14,14 @@ const adapters = {
   ...fetchWebhookAdapters,
 };
 
-async function webhookDeadline(task, strategy, milliseconds, args, expire) {
+export async function webhookDeadline(
+  task,
+  strategy,
+  milliseconds,
+  args,
+  expire,
+  timeoutError = () => new Error(`Request timed out after ${milliseconds} ms`)
+) {
   if (milliseconds === Infinity) {
     return task;
   }
@@ -23,7 +30,7 @@ async function webhookDeadline(task, strategy, milliseconds, args, expire) {
     timer = globalThis.setTimeout(() => {
       expire();
       if (strategy === 'throw') {
-        reject(new Error(`Request timed out after ${milliseconds} ms`));
+        reject(timeoutError());
       } else {
         Promise.resolve()
           .then(() =>
@@ -40,7 +47,7 @@ async function webhookDeadline(task, strategy, milliseconds, args, expire) {
   }
 }
 
-function webhookOptions(options) {
+export function webhookOptions(options) {
   const {
     onTimeout = 'throw',
     timeoutMilliseconds = 10000,

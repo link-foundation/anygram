@@ -6,3 +6,14 @@ declare const response: ServerResponse;
 void new Telegraf('123:example').handleUpdate({ update_id: 1 }, response);
 declare const request: IncomingMessage;
 void webhookCallback(new Bot('123:example'), 'http')(request, response);
+
+const telegraf = new Telegraf('123:example');
+void telegraf.webhookCallback('/hook')(request, response);
+void telegraf.launch({
+  webhook: {
+    domain: 'example.org',
+    cb: (incoming: IncomingMessage, outgoing: ServerResponse) => {
+      outgoing.end(incoming.url);
+    },
+  },
+});

@@ -892,3 +892,9 @@ share initialization, secret checks, response deadlines and bounded update
 collection. Custom adapter argument and result types are retained.
 [Adapter examples and limits](docs/case-studies/issue-1/bot-webhook-frameworks.md)
 document framework response conventions and the existing Fetch API.
+
+Telegraf's `webhookCallback`, `createWebhook` and HTTP/TLS `launch` support
+filtering, registration and owned shutdown. Custom `contextType`, shared context
+fields and handler timeouts retain their SDK contracts.
+[Lifecycle examples and limits](docs/case-studies/issue-1/telegraf-lifecycle.md)
+cover bounded bodies and startup failure cleanup.

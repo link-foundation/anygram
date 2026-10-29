@@ -1,4 +1,5 @@
 import { BotApi } from './bot-api.js';
+import { launchTelegraf, stopTelegrafWebhook } from './telegraf-server.js';
 import { Context, TelegrafContext, botApi, matchText } from './bot-context.js';
 import { Composer } from './composer.js';
 import { installTelegrafComposer } from './telegraf-composer.js';
@@ -9,8 +10,18 @@ import { joinBytes } from './bytes.js';
 import { taskContext } from './task-context.js';
 import { callBotOperation } from './bot-operations.js';
 import { webhookReplyScope } from './bot-webhook-reply.js';
-import { frameworkWebhook } from './bot-webhook.js';
+import {
+  frameworkWebhook,
+  webhookDeadline,
+  webhookOptions,
+} from './bot-webhook.js';
 import { sameWebhookSecret, webhookMode } from './bot-webhook-common.js';
+import {
+  telegrafWebhook,
+  telegrafWebhookFilter,
+  telegrafSecretPath,
+  createTelegrafWebhook,
+} from './telegraf-webhook.js';
 
 /** Shared middleware runner usable with a native or adapted Bot API transport. */
 export class Bot extends Composer {
@@ -36,8 +47,16 @@ export class Bot extends Composer {
     return this;
   }
   async init() {
-    this.botInfo ??= await this.api.getMe();
-    return this.botInfo;
+    if (this.botInfo) {
+      return this.botInfo;
+    }
+    this.initialization ??= Promise.resolve().then(() => this.api.getMe());
+    try {
+      this.botInfo = await this.initialization;
+      return this.botInfo;
+    } finally {
+      this.initialization = undefined;
+    }
   }
   handleUpdate(update, response) {
     const context = this.dispatchContext.current();
@@ -83,17 +102,18 @@ export class Bot extends Composer {
       scope.close();
     }
   }
+  createContext(update, scope) {
+    return new this.Context(update, scope.api, this.botInfo, scope.telegram);
+  }
+  runMiddleware(ctx) {
+    return this.middleware()(ctx, () => Promise.resolve());
+  }
   async #dispatchUpdate(update, scope) {
-    const ctx = new this.Context(
-      update,
-      scope.api,
-      this.botInfo,
-      scope.telegram
-    );
+    const ctx = this.createContext(update, scope);
     let result;
     try {
       await this.emitUpdate?.(update);
-      await this.middleware()(ctx, () => Promise.resolve());
+      await this.runMiddleware(ctx);
     } catch (error) {
       if (!this.errorHandler) {
         throw error;
@@ -172,6 +192,54 @@ export class Bot extends Composer {
 export class Telegraf extends Bot {
   constructor(token, options = {}) {
     super(token, { ...options, Context: options.Context ?? TelegrafContext });
+    this.token = token;
+    this.webhookFilter = telegrafWebhookFilter;
+    this.context = {};
+    this.contextType = options.contextType;
+    this.handlerTimeout = webhookOptions({
+      timeoutMilliseconds: options.handlerTimeout ?? 90000,
+    }).timeoutMilliseconds;
+  }
+  createContext(update, scope) {
+    const ctx = this.contextType
+      ? new this.contextType(update, scope.telegram, this.botInfo)
+      : super.createContext(update, scope);
+    return Object.assign(ctx, this.context);
+  }
+  runMiddleware(ctx) {
+    return webhookDeadline(
+      Promise.resolve().then(() => super.runMiddleware(ctx)),
+      'throw',
+      this.handlerTimeout,
+      [],
+      () => {},
+      () =>
+        Object.assign(
+          new Error(
+            `Promise timed out after ${this.handlerTimeout} milliseconds`
+          ),
+          { name: 'TimeoutError' }
+        )
+    );
+  }
+  async handleUpdate(update, response) {
+    await this.init();
+    return super.handleUpdate(update, response);
+  }
+  get webhookReply() {
+    return this.telegram.webhookReply;
+  }
+  set webhookReply(value) {
+    this.telegram.webhookReply = value;
+  }
+  webhookCallback(path, options) {
+    return telegrafWebhook(this, path, options);
+  }
+  secretPathComponent() {
+    return telegrafSecretPath(this.token);
+  }
+  createWebhook(options) {
+    return createTelegrafWebhook(this, options);
   }
   catch(handler) {
     return super.catch(({ error, ctx }) => handler(error, ctx));
@@ -179,8 +247,17 @@ export class Telegraf extends Bot {
   start(...middleware) {
     return this.command('start', ...middleware);
   }
-  launch(options) {
-    return super.start(options);
+  launch(options, onLaunch) {
+    return launchTelegraf(this, options, onLaunch, (polling) =>
+      super.start(polling)
+    );
+  }
+  isRunning() {
+    return super.isRunning() || !!this.webhookServer?.listening;
+  }
+  stop() {
+    super.stop();
+    stopTelegrafWebhook(this);
   }
 }
 

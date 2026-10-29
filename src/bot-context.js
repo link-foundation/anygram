@@ -121,6 +121,11 @@ export class Context {
 /** Preserve Telegraf's username alias without changing grammY's user alias. */
 export class TelegrafContext extends Context {
   constructor(update, api, me, telegram) {
+    // SDK context constructors receive the Telegram view as their second argument.
+    if (telegram === undefined && typeof api?.webhookReply === 'boolean') {
+      telegram = api;
+      api = botApi(telegram);
+    }
     super(update, api, me, telegram);
     Object.defineProperty(this, 'botInfo', { value: me, writable: true });
     Object.defineProperty(this, 'me', { get: () => this.botInfo?.username });
