@@ -141,3 +141,7 @@ local tests and strict checks pass; fresh CI is required after committing it.
 6. [ ] Implement compulsory PFS rotation and simultaneous key-exchange rules.
 7. [ ] Integrate encrypted RPC ordering, durable effects/cursors and file media.
 8. [ ] Verify interoperable flows with controlled Telegram accounts.
+
+The subsequent TL ownership regression exposes Buffer.slice view aliasing.
+Copied byte/fixed-integer fields pass all 216 tests on each runtime and strict
+checks. Sequence head 236e916 passed all nine CI runtime/OS jobs in 40797579548.

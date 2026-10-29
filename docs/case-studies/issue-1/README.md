@@ -587,3 +587,17 @@ snapshots and atomically persist returned effects with state before network
 operations. This primitive does not yet integrate that transaction with RPCs;
 key negotiation, compulsory PFS, deleted-message replacement, encrypted media and
 controlled-account interoperability remain acceptance work.
+
+## Decoded byte ownership regression
+
+The TL reader used `.slice()` for byte fields. On a Node `Buffer`, that method
+returns a view, so changing one decoded field changed the source packet and
+other decoded messages. A failing-before regression covers short/long TL bytes,
+int128 and int256, both Buffer and Uint8Array inputs, and nonzero input offsets.
+These fields now copy into independent Uint8Arrays. Source reuse and decoded
+mutation cannot change each other. All 216 tests pass on Node, Bun and Deno,
+with strict lint, format and duplication checks.
+
+Sequence head 236e916 passed all nine runtime/OS jobs and applicable gates in
+[run 40797579548](https://github.com/link-foundation/anygram/actions/runs/40797579548).
+The byte ownership repair requires its own fresh CI evidence.

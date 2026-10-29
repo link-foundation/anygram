@@ -39,6 +39,34 @@ describe('independent TL codec', () => {
     }
   });
 
+  it('copies decoded byte fields from Buffer and Uint8Array input views', () => {
+    const codec = new TlCodec();
+    for (const [type, size] of [
+      ['bytes', 7],
+      ['bytes', 254],
+      ['int128', 16],
+      ['int256', 32],
+    ]) {
+      const expected = new Uint8Array(size).fill(37);
+      const encoded = codec.encode(expected, type);
+      for (const allocate of [
+        (size) => Buffer.alloc(size),
+        (size) => new Uint8Array(size),
+      ]) {
+        const storage = allocate(encoded.length + 32);
+        const input = storage.subarray(16, 16 + encoded.length);
+        input.set(encoded);
+        const first = codec.decode(input, type);
+        const second = codec.decode(input, type);
+        first.fill(9);
+        assert.deepEqual(Array.from(input), Array.from(encoded));
+        assert.deepEqual(Array.from(second), Array.from(expected));
+        storage.fill(0);
+        assert.deepEqual(Array.from(second), Array.from(expected));
+      }
+    }
+  });
+
   it('rejects missing fields, unsafe IDs and truncated data', () => {
     const codec = new TlCodec();
     assert.throws(

@@ -194,7 +194,7 @@ export class TlReader {
     } else if (length === 255) {
       throw new RangeError('Invalid TL byte-string header');
     }
-    const result = this.take(length).slice();
+    const result = Uint8Array.from(this.take(length));
     const padding = this.take((4 - ((length + prefix) % 4)) % 4);
     if (padding.some((byte) => byte !== 0)) {
       throw new RangeError('Invalid TL byte-string padding');
@@ -316,8 +316,8 @@ const readers = {
     new globalThis.TextDecoder('utf-8', { fatal: true }).decode(
       reader.byteString()
     ),
-  int128: (reader) => reader.take(16).slice(),
-  int256: (reader) => reader.take(32).slice(),
+  int128: (reader) => Uint8Array.from(reader.take(16)),
+  int256: (reader) => Uint8Array.from(reader.take(32)),
 };
 
 function checkType(type, definition) {
