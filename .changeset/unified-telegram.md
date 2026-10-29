@@ -187,3 +187,8 @@ methods. Refine raw dispatch and existing positional inventories, preserving
 owned file, formatting, exact-ID and request-control extensions. Check required
 fields, shared option shapes and result inference against frozen preceding
 declarations and portable actual-SDK fixtures, with primary-source parser gates.
+
+Retain official operation results through grammY and Telegraf context delivery,
+administration, services and message actions. Check portable inferred results and
+negative assignments against frozen declarations and actual pinned SDKs, with an
+explicit assertion for Telegraf's chat-boost result declaration discrepancy.

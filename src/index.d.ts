@@ -764,13 +764,13 @@ export interface ContextApi extends BotContextApi, GrammyPositionalApi {
     text: string | TextWithEntities | Parameters,
     options?: Parameters,
     signal?: AbortSignal
-  ): Promise<unknown>;
+  ): Promise<BotMessage | true>;
   editMessageTextInline(
     inlineId: string,
     text: string | TextWithEntities | Parameters,
     options?: Parameters,
     signal?: AbortSignal
-  ): Promise<unknown>;
+  ): Promise<true>;
 }
 export interface TelegrafApi extends BotContextApi, TelegrafPositionalApi {
   webhookReply: boolean;
@@ -781,7 +781,7 @@ export interface TelegrafApi extends BotContextApi, TelegrafPositionalApi {
     text: string | TextWithEntities,
     options?: Parameters,
     request?: RequestOptions | AbortSignal
-  ): Promise<unknown>;
+  ): Promise<BotMessage | true>;
 }
 export interface Context
   extends
@@ -824,15 +824,15 @@ export declare class Context {
     text: string | TextWithEntities | Parameters,
     options?: Parameters,
     signal?: AbortSignal
-  ): Promise<unknown>;
+  ): Promise<BotMessage | true>;
   answerCallbackQuery(
     options?: string | Parameters,
     signal?: AbortSignal
-  ): Promise<unknown>;
+  ): Promise<true>;
   deleteMessage(
     idOrOptions?: number | RequestOptions | AbortSignal,
     options?: RequestOptions | AbortSignal
-  ): Promise<unknown>;
+  ): Promise<true>;
   replyWithPhoto: ContextMediaMethod;
   replyWithAnimation: ContextMediaMethod;
   replyWithDocument: ContextMediaMethod;
@@ -845,7 +845,7 @@ export type ContextMediaMethod = (
   file: unknown,
   options?: Parameters,
   signal?: AbortSignal
-) => Promise<unknown>;
+) => Promise<BotMessage>;
 export type CommonContext = Omit<
   Context,
   | 'me'

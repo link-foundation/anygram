@@ -1,17 +1,21 @@
 import type { Parameters } from './index.js';
+import type { BotApiResult } from './bot-api-types.js';
 import type * as Scope from './bot-context-scope.js';
 
 type Request = Scope.ContextRequest;
 type Id = string | number | bigint;
-type Forward<A extends unknown[]> = (
+type Forward<A extends unknown[], R> = (
   destination: Id,
   ...args: [...A, other?: Parameters, request?: Request]
-) => Promise<unknown>;
+) => Promise<R>;
+interface ForwardArguments {
+  forwardMessage: [];
+  copyMessage: [];
+  forwardMessages: [messageIds: readonly number[]];
+  copyMessages: [messageIds: readonly number[]];
+}
 type Forwarding = {
-  forwardMessage: Forward<[]>;
-  copyMessage: Forward<[]>;
-  forwardMessages: Forward<[messageIds: readonly number[]]>;
-  copyMessages: Forward<[messageIds: readonly number[]]>;
+  [K in keyof ForwardArguments]: Forward<ForwardArguments[K], BotApiResult<K>>;
 };
 type MessageScoped =
   | 'editMessageCaption'
@@ -38,15 +42,12 @@ type Ephemeral =
   | 'editMessageChecklist';
 type Reaction = string | Parameters;
 export type GrammyContextMessageActions = Forwarding & {
-  [K in MessageScoped]: Scope.ContextOperation<
-    Scope.GrammyPositionalArguments<K>,
-    [unknown, unknown]
-  >;
+  [K in MessageScoped]: Scope.GrammyContextOperation<K, [unknown, unknown]>;
 } & {
-  [K in ChatScoped]: Scope.ContextOperation<Scope.GrammyPositionalArguments<K>>;
+  [K in ChatScoped]: Scope.GrammyContextOperation<K>;
 } & {
-  [K in Ephemeral]: Scope.ContextOperation<
-    Scope.GrammyPositionalArguments<K>,
+  [K in Ephemeral]: Scope.GrammyContextOperation<
+    K,
     [unknown, unknown, unknown]
   >;
 } & {
@@ -54,15 +55,12 @@ export type GrammyContextMessageActions = Forwarding & {
     reaction: Reaction | readonly Reaction[],
     other?: Parameters,
     request?: Request
-  ): Promise<unknown>;
-  deleteMessageReaction(
-    other?: Parameters,
-    request?: Request
-  ): Promise<unknown>;
+  ): Promise<true>;
+  deleteMessageReaction(other?: Parameters, request?: Request): Promise<true>;
   deleteAllMessageReactions(
     other?: Parameters,
     request?: Request
-  ): Promise<unknown>;
+  ): Promise<true>;
 };
 type TelegrafEdits =
   | 'editMessageCaption'
@@ -71,22 +69,18 @@ type TelegrafEdits =
   | 'editMessageLiveLocation'
   | 'stopMessageLiveLocation';
 export type TelegrafContextMessageActions = Forwarding & {
-  [K in TelegrafEdits]: Scope.ContextOperation<
-    Scope.TelegrafPositionalArguments<K>,
+  [K in TelegrafEdits]: Scope.TelegrafContextOperation<
+    K,
     [unknown, unknown, unknown]
   >;
 } & {
-  stopPoll: Scope.ContextOperation<
-    Scope.TelegrafPositionalArguments<'stopPoll'>
-  >;
-  deleteMessages: Scope.ContextOperation<
-    Scope.TelegrafPositionalArguments<'deleteMessages'>
-  >;
+  stopPoll: Scope.TelegrafContextOperation<'stopPoll'>;
+  deleteMessages: Scope.TelegrafContextOperation<'deleteMessages'>;
   react(
     reaction?: Reaction | readonly Reaction[],
     isBig?: boolean,
     request?: Request
-  ): Promise<unknown>;
+  ): Promise<true>;
   persistentChatAction(
     action: string,
     callback: () => unknown | Promise<unknown>,

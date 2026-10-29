@@ -1,8 +1,20 @@
 import type { Parameters, TextWithEntities } from './index.js';
+import type { BotApiMethod, BotApiResult } from './bot-api-types.js';
 
-type Delivery<A extends unknown[]> = (
+type DeliveryMethod<K extends string> = K extends
+  | 'Message'
+  | 'Markdown'
+  | 'MarkdownV2'
+  | 'HTML'
+  ? 'sendMessage'
+  : K extends 'Draft'
+    ? 'sendMessageDraft'
+    : K extends 'Quiz'
+      ? 'sendPoll'
+      : `send${K}` & BotApiMethod;
+type Delivery<A extends unknown[], K extends string> = (
   ...args: [...A, options?: Parameters, signal?: AbortSignal]
-) => Promise<unknown>;
+) => Promise<BotApiResult<DeliveryMethod<K>>>;
 interface SharedArguments {
   Message: [text: string | TextWithEntities];
   Photo: [photo: unknown];
@@ -49,14 +61,14 @@ type Reply<A> = {
   [K in keyof A as K extends 'Message'
     ? 'reply'
     : `replyWith${K & string}`]: A[K] extends unknown[]
-    ? Delivery<A[K]>
+    ? Delivery<A[K], K & string>
     : never;
 };
 type Declared =
   | 'reply'
   | `replyWith${'Photo' | 'Audio' | 'Document' | 'Video' | 'Animation' | 'Voice' | 'Sticker'}`;
 export type GrammyContextDelivery = Omit<Reply<GrammyArguments>, Declared> & {
-  sendPaidMedia: Delivery<GrammyArguments['PaidMedia']>;
+  sendPaidMedia: Delivery<GrammyArguments['PaidMedia'], 'PaidMedia'>;
 };
 export type TelegrafContextDelivery = Omit<
   Reply<TelegrafArguments>,
@@ -64,5 +76,5 @@ export type TelegrafContextDelivery = Omit<
 > & {
   [K in keyof TelegrafArguments as K extends 'Markdown' | 'MarkdownV2' | 'HTML'
     ? never
-    : `send${K & string}`]: Delivery<TelegrafArguments[K]>;
+    : `send${K & string}`]: Delivery<TelegrafArguments[K], K>;
 };

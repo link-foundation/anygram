@@ -18,6 +18,9 @@
     "typed-filter-sdk-fixture.ts",
     "typed-telegraf-sdk-fixture.ts",
     "typed-grammy-method-fixture.ts",
-    "typed-telegraf-method-fixture.ts"
+    "typed-telegraf-method-fixture.ts",
+    "typed-grammy-context-fixture.ts",
+    "typed-telegraf-context-fixture.ts",
+    "typed-context-result-differences.ts"
   ]
 }

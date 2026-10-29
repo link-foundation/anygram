@@ -13,6 +13,10 @@ import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new globalThis.URL('../', import.meta.url));
 const modes = {
+  '--context-results': [
+    ['typed-grammy-context-results.ts', 'typed-telegraf-context-results.ts'],
+    '2dbc782abe55d2251a323fbc7628c93491ae7200',
+  ],
   '--methods': [
     [
       'typed-bot-api-methods.ts',
@@ -53,6 +57,15 @@ const frozen = new Set([
         'src/bot-positional.d.ts',
         'src/telegraf-positional.d.ts',
         'src/bot-context-scope.d.ts',
+      ]
+    : []),
+  ...(mode === '--context-results'
+    ? [
+        'src/bot-context-scope.d.ts',
+        'src/bot-context-admin.d.ts',
+        'src/bot-context-services.d.ts',
+        'src/bot-context-message-actions.d.ts',
+        'src/bot-context-delivery.d.ts',
       ]
     : []),
 ]);

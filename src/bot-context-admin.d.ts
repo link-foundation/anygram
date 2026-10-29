@@ -1,7 +1,8 @@
 import type { Parameters, RequestOptions } from './index.js';
-import type { GrammyPositionalArguments } from './bot-positional.js';
-import type { TelegrafPositionalArguments } from './telegraf-positional.js';
-import type { ContextOperation } from './bot-context-scope.js';
+import type {
+  GrammyContextOperation,
+  TelegrafContextOperation,
+} from './bot-context-scope.js';
 
 type ChatMethods =
   | 'banChatMember'
@@ -63,36 +64,25 @@ interface Authors {
   getAuthor: 'getChatMember';
 }
 export type GrammyContextAdministration = {
-  [K in ChatMethods | GrammyChatMethods]: ContextOperation<
-    GrammyPositionalArguments<K>
-  >;
+  [K in ChatMethods | GrammyChatMethods]: GrammyContextOperation<K>;
 } & {
-  [K in ForumMethods]: ContextOperation<
-    GrammyPositionalArguments<K>,
-    [unknown, unknown]
-  >;
+  [K in ForumMethods]: GrammyContextOperation<K, [unknown, unknown]>;
 } & {
-  [K in keyof Authors]: ContextOperation<
-    GrammyPositionalArguments<Authors[K]>,
-    [unknown, unknown]
-  >;
+  [K in keyof Authors]: GrammyContextOperation<Authors[K], [unknown, unknown]>;
 } & {
   unpinChatMessage(
     messageId?: number,
     other?: Parameters,
     request?: RequestOptions | AbortSignal
-  ): Promise<unknown>;
+  ): Promise<true>;
 };
 export type TelegrafContextAdministration = {
-  [K in ChatMethods]: ContextOperation<TelegrafPositionalArguments<K>>;
+  [K in ChatMethods]: TelegrafContextOperation<K>;
 } & {
-  [K in ForumMethods]: ContextOperation<
-    TelegrafPositionalArguments<K>,
-    [unknown, unknown]
-  >;
+  [K in ForumMethods]: TelegrafContextOperation<K, [unknown, unknown]>;
 } & {
   unpinChatMessage(
     messageId?: number,
     request?: RequestOptions | AbortSignal
-  ): Promise<unknown>;
+  ): Promise<true>;
 };

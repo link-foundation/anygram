@@ -996,7 +996,9 @@ Telegraf declaration work plan:
       fixture and actual Telegraf comparison pass. All 2,007 core tests pass on
       Node, Bun and Deno. Strict checks scan 140 production sources with zero
       clones; packaging permits 183 entries.
-- [ ] Inspect the complete change, commit/push and verify exact-head CI.
+- [x] Inspect the complete change, commit/push and verify exact-head CI.
+      Head 565d6fe616a23862ae742705d1169d4392b02029 passed run 40914468285,
+      created 2026-10-29T16:44:05Z, including every applicable runtime and gate.
 - [ ] Continue all wider unmet acceptance criteria in the same draft PR.
 
 Bot API method declaration work plan:
@@ -1015,3 +1017,20 @@ Bot API method declaration work plan:
       ancestor, all feedback streams remain empty and GitHub diff limits are
       handled with the paginated file inventory and local atomic diff.
 - [ ] Commit/push and verify exact-head CI; keep every wider criterion open.
+
+Context result declaration work plan:
+
+- [x] Reproduce erased context results with portable checked examples before
+      implementation; retain an immutable preceding-declaration reproduction.
+- [x] Carry operation results through delivery, administration, services and
+      message actions while preserving existing arguments and runtime behavior.
+- [x] Compile equivalent positive/negative examples against actual pinned SDKs;
+      explicitly assert Telegraf's chat-boost declaration discrepancy and retain
+      the documented caption-result comparison limit.
+- [x] Complete local static/runtime/package gates and inspect the atomic diff.
+      All 2,007 core tests pass on each of Node, Bun and Deno; frozen fixtures
+      reproduce 49 diagnostics and both current and actual-SDK fixtures compile.
+      Strict checks scan 151 sources with zero clones; packaging permits 194
+      entries. Main is an ancestor and all four feedback streams remain empty.
+- [ ] Commit/push, update PR evidence and verify fresh CI by SHA and timestamp.
+- [ ] Continue every wider unmet criterion in the same draft PR.

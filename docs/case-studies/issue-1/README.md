@@ -1,5 +1,10 @@
 # Unified Telegram client: investigation and implementation
 
+The [context result comparison](bot-context-result-types.md) carries official
+operation results through scoped helpers without changing runtime calls. Two
+fixtures reproduce 49 diagnostics against preceding declarations and compile
+against current declarations and actual pinned SDKs, with explicit SDK differences.
+
 The [Bot API method comparison](bot-method-types.md) archives 185 official
 request/result contracts and 932 fields. Independent declarations refine raw
 and positional calls, with frozen before/after fixtures and strict comparisons

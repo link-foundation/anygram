@@ -17,11 +17,27 @@ for (const [sourceName, targetName, sdk, namespace] of [
     'telegraf',
     'telegraf/types',
   ],
+  [
+    'typed-grammy-context-results.ts',
+    'typed-grammy-context-fixture.ts',
+    'grammy',
+    '@grammyjs/types',
+  ],
+  [
+    'typed-telegraf-context-results.ts',
+    'typed-telegraf-context-fixture.ts',
+    'telegraf',
+    'telegraf/types',
+  ],
 ]) {
   const source = (
     await readFile(new globalThis.URL(`examples/${sourceName}`, root), 'utf8')
   )
     .replaceAll("from '../src/index.js'", `from '${sdk}'`)
+    .replace(
+      "import type { TelegrafContext as Context } from 'telegraf';",
+      "import type { Context } from 'telegraf';"
+    )
     .replace(
       `import type { Telegram } from '${sdk}';`,
       `import type * as Telegram from '${namespace}';`

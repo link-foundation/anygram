@@ -784,3 +784,13 @@ current declarations; equivalent portable fixtures compile against actual SDKs.
 Eight parser regressions include exact extraction from the primary archive.
 Complete refined method models, manual helper/context result declarations,
 framework integrations and every wider unmet acceptance criterion remain open.
+
+The [context result comparison](bot-context-result-types.md) advances
+R01/R05/R08/R13/R16/R17/R19 by retaining official operation results through
+delivery, administration, services and message actions. Two portable examples
+produce 49 diagnostics with frozen preceding declarations, then compile against
+current declarations and actual pinned SDKs. Explicit assertions preserve the
+official chat-boost object despite Telegraf's erroneous array declaration; caption
+comparisons retain their documented common-field limit. Complete SDK subtype
+names/refinements, manual media/edit arguments, framework integrations and all
+wider unmet acceptance criteria remain unfinished.

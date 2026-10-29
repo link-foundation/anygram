@@ -201,6 +201,10 @@ raw calls and positional helpers. For example, `bot.api.getChat(1)` returns a
 `Telegram.ChatFullInfo`, and `bot.api.raw.getChat` requires `chat_id`. See the
 [checked requests](examples/typed-bot-api-methods.ts) and
 [method type comparisons](docs/case-studies/issue-1/bot-method-types.md).
+Context helpers also retain these results: `ctx.getFile()` returns a typed file,
+copy helpers return message IDs, and acknowledgement helpers return true. See the
+[checked context results](examples/typed-grammy-context-results.ts) and
+[SDK comparison](docs/case-studies/issue-1/bot-context-result-types.md).
 
 `Scenes.BaseScene`, `Scenes.WizardScene` and `Scenes.Stage` provide persisted
 conversation steps on that same middleware path. Install session middleware

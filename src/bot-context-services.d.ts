@@ -1,7 +1,9 @@
 import type { Parameters, RequestOptions } from './index.js';
-import type { GrammyPositionalArguments as GrammyArgs } from './bot-positional.js';
-import type { TelegrafPositionalArguments as TelegrafArgs } from './telegraf-positional.js';
-import type { ContextOperation as Operation } from './bot-context-scope.js';
+import type {
+  GrammyContextOperation as GrammyOperation,
+  TelegrafContextOperation as TelegrafOperation,
+} from './bot-context-scope.js';
+import type { BotApiResult } from './bot-api-types.js';
 
 type Settings =
   | 'setChatMenuButton'
@@ -74,47 +76,40 @@ type TelegrafDirect =
   | 'setMyCommands';
 type Request = RequestOptions | AbortSignal;
 export type GrammyContextServices = {
-  [K in GrammyScoped]: Operation<GrammyArgs<K>>;
+  [K in GrammyScoped]: GrammyOperation<K>;
 } & {
-  [K in Settings]: Operation<GrammyArgs<K>, []>;
+  [K in Settings]: GrammyOperation<K, []>;
 } & {
-  replyWithGift: Operation<GrammyArgs<'sendGift'>>;
-  replyWithGiftToChannel: Operation<GrammyArgs<'sendGiftToChannel'>>;
-  replyWithChatJoinRequestWebApp: Operation<
-    GrammyArgs<'sendChatJoinRequestWebApp'>
-  >;
-  refundStarPayment: Operation<
-    GrammyArgs<'refundStarPayment'>,
-    [unknown, unknown]
-  >;
-  readBusinessMessage: Operation<
-    GrammyArgs<'readBusinessMessage'>,
+  replyWithGift: GrammyOperation<'sendGift'>;
+  replyWithGiftToChannel: GrammyOperation<'sendGiftToChannel'>;
+  replyWithChatJoinRequestWebApp: GrammyOperation<'sendChatJoinRequestWebApp'>;
+  refundStarPayment: GrammyOperation<'refundStarPayment', [unknown, unknown]>;
+  readBusinessMessage: GrammyOperation<
+    'readBusinessMessage',
     [unknown, unknown, unknown]
   >;
-  repostStory: Operation<
-    GrammyArgs<'repostStory'>,
-    [unknown, unknown, unknown]
-  >;
+  repostStory: GrammyOperation<'repostStory', [unknown, unknown, unknown]>;
   getUserChatBoosts(
     chatId?: string | number | bigint,
     request?: Request
-  ): Promise<unknown>;
+  ): Promise<BotApiResult<'getUserChatBoosts'>>;
   answerPreCheckoutQuery(
     ok: boolean,
     other?: Parameters | string,
     request?: Request
-  ): Promise<unknown>;
+  ): Promise<true>;
 };
 export type TelegrafContextServices = {
-  [K in TelegrafScoped]: Operation<TelegrafArgs<K>>;
+  [K in TelegrafScoped]: TelegrafOperation<K>;
 } & {
-  [K in TelegrafDirect]: Operation<TelegrafArgs<K>, []>;
+  [K in TelegrafDirect]: TelegrafOperation<K, []>;
 } & {
-  setStickerSetThumb: Operation<TelegrafArgs<'setStickerSetThumbnail'>, []>;
-  getUserChatBoosts(request?: Request): Promise<unknown>;
-  setChatMenuButton(
-    menuButton: Parameters,
+  setStickerSetThumb: TelegrafOperation<'setStickerSetThumbnail', []>;
+  getUserChatBoosts(
     request?: Request
-  ): Promise<unknown>;
-  getChatMenuButton(request?: Request): Promise<unknown>;
+  ): Promise<BotApiResult<'getUserChatBoosts'>>;
+  setChatMenuButton(menuButton: Parameters, request?: Request): Promise<true>;
+  getChatMenuButton(
+    request?: Request
+  ): Promise<BotApiResult<'getChatMenuButton'>>;
 };
