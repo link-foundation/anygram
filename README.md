@@ -310,8 +310,26 @@ The default limits retain at most 1000 incoming gaps, 1000 outgoing frames and
 under pressure; unacknowledged frames cannot be silently evicted. Snapshots
 contain keys and plaintext and require protected storage. `destroy()` clears
 owned memory, while applications manage their stored and returned copies.
-This is currently a single-key session: compulsory PFS rotation, encrypted
-file handling and controlled live-account interoperability remain unfinished.
+Initial handshakes retain the original DH parameters in their credentials.
+These enable compulsory PFS in the session: activity starts an exchange after
+more than 100 sent/received messages or seven days of a key used for encryption.
+`rotateKey(undefined, { save })` can also start an exchange explicitly. The
+session persists pending exponents, candidate keys, service actions and cached
+ciphertext together. Signed simultaneous exchanges and missing commits follow
+the same policy as ordered service messages. A new-key packet must authenticate
+and pass sequence checks before it proves a switch. The previous key is erased
+after that proof and closure of preceding incoming gaps. `visualization`
+returns copied original-key hashes, which remain stable through rotations.
+
+Exact old ciphertext remains available for retransmission after its key is
+erased. Each queued user message also retains a prepared self-deletion packet
+under its original key; deleting an unacknowledged message swaps that packet
+into the original sequence position and queues a separate current-key deletion.
+Both packets count toward the combined buffer budget. Version-1 snapshots remain
+readable, and all new snapshots use version 2. Earlier completed handshakes that
+lack original DH parameters remain single-key sessions; fresh manually supplied
+credentials must include `dh: { p, g }` to enable PFS. Encrypted file handling and
+controlled live-account interoperability remain unfinished.
 
 `SecretChatRekey` provides the separate ordered PFS action state machine using
 the original chat's DH parameters. `request()` starts one exchange;
@@ -325,9 +343,8 @@ requests, and accepted/committed local exchanges cannot be aborted locally.
 `record({ sent, received })` and `shouldRotate()` implement the usage and key-age
 thresholds. Protected snapshots retain pending exponents or candidate keys.
 Work on a restored draft and persist actions, sequence and key changes together;
-see `examples/typed-secret-rekey.ts`. The active session does not yet invoke
-this policy automatically or retain/erase previous keys across gaps. Full PFS
-integration remains open.
+see `examples/typed-secret-rekey.ts`. `SecretChatSession` integrates this policy
+automatically when its original DH parameters are available.
 
 `SecretChatKeyRing` owns the current key and at most one previous generation.
 Authentication of a candidate does not install it. After sequence validation,
@@ -337,7 +354,7 @@ preceding incoming gaps have closed. Downgrades across that boundary reject.
 Snapshots retain the original visualization hashes after old keys are erased.
 `decryptOutgoing()` returns `undefined` for ciphertext whose key is retired;
 applications may keep exact ciphertext for retransmission without keeping that
-key. These primitives still require transactional integration with the session.
+key. The active session integrates this policy with durable state and its outbox.
 
 ## Select existing clients
 

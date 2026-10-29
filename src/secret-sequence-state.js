@@ -16,6 +16,15 @@ export const isSecretResend = (frame) =>
   frame.message?._ === 'decryptedMessageService' &&
   frame.message.action?._ === 'decryptedMessageActionResend';
 
+export const secretDeletionMessage = (randomId, targetId = randomId) => ({
+  _: 'decryptedMessageService',
+  random_id: randomId,
+  action: {
+    _: 'decryptedMessageActionDeleteMessages',
+    random_ids: [targetId],
+  },
+});
+
 function cached(data, context) {
   if (
     typeof data !== 'string' ||

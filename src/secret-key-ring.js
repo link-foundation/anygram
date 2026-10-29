@@ -192,6 +192,7 @@ export class SecretChatKeyRing {
       highestPreviousSequence: this.#highestPrevious,
       confirmed: this.#confirmed,
       canRotate: !this.#previous,
+      retiredFingerprint: this.#retired,
     };
   }
 

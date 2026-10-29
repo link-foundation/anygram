@@ -387,7 +387,7 @@ it('rejects inconsistent or oversized portable session state before exposing que
   const state = saved(sender.exportState());
   const changes = [
     (s) => {
-      s.version = 2;
+      s.version = 3;
     },
     (s) => {
       s.phase = 'waiting';

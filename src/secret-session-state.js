@@ -1,18 +1,30 @@
-import { SecretChatCipher, decryptSecretVersions } from './secret-cipher.js';
+import { SecretSessionKeys } from './secret-session-keys.js';
+import {
+  restoreSecretOutbox,
+  secretPacketDigest,
+  secretDeletionFrame,
+} from './secret-session-outbox.js';
 import { SecretChatCodec } from './secret-codec.js';
 import { SecretChatSequence } from './secret-sequence.js';
 import { SecretChatLayers } from './secret-layers.js';
 import { secretLimit, secretCounter } from './secret-sequence-state.js';
-import {
-  secretChatId,
-  secretLong,
-  secretDecodedBytes,
-} from './secret-handshake-state.js';
+import { secretChatId, secretLong } from './secret-handshake-state.js';
 import { TelegramError } from './errors.js';
 import { randomId } from './random.js';
 
 const base64 = (bytes) => Buffer.from(bytes).toString('base64');
 const effects = () => ({ messages: [], aborted: false });
+
+function pendingPair(entry, pending, seen) {
+  if (
+    !Array.isArray(entry) ||
+    entry.length !== 2 ||
+    !pending.has(entry[0]) ||
+    seen.has(entry[0])
+  ) {
+    throw new TypeError('Invalid secret chat pending metadata pair');
+  }
+}
 
 export function secretSessionLimits(options) {
   return {
@@ -54,11 +66,13 @@ export class SecretSessionState {
     this.limits = limits;
     this.outbox = new Map();
     this.incomingVersions = new Map();
-    this.ciphers = [];
+    this.incomingKeys = new Map();
     const state = options.state;
     if (
-      state &&
-      (state.version !== 1 || !['active', 'aborted'].includes(state.phase))
+      state !== undefined &&
+      (!state ||
+        ![1, 2].includes(state.version) ||
+        !['active', 'aborted'].includes(state.phase))
     ) {
       throw new TypeError('Invalid secret chat session state');
     }
@@ -104,27 +118,19 @@ export class SecretSessionState {
       layer: 216,
       maxBytes: Math.min(this.limits.maxBufferedBytes, 16 * 1024 * 1024),
     });
-    if (state) {
-      this.key = secretDecodedBytes(state.key, 256, 256, 'session key');
-    } else {
-      if (!(options.key instanceof Uint8Array) || options.key.length !== 256) {
-        throw new RangeError('Secret chat key must contain 256 bytes');
-      }
-      this.key = Buffer.from(options.key);
-    }
-    for (const version of [1, 2]) {
-      this.ciphers[version] = new SecretChatCipher(this.key, {
-        originator: this.originator,
-        version,
-        maxBytes: this.codec.maxBytes,
-      });
-    }
+    this.keys = new SecretSessionKeys({
+      ...options,
+      state,
+      originator: this.originator,
+      maxBytes: this.codec.maxBytes,
+    });
     if (this.discardSubmitted) {
       throw new TypeError('Active secret chat cannot have a submitted discard');
     }
     if (state) {
-      this.restoreOutbox(state);
+      restoreSecretOutbox(this, state);
       this.restoreIncomingVersions(state);
+      this.restoreIncomingKeys(state);
     }
   }
 
@@ -140,6 +146,15 @@ export class SecretSessionState {
     ) {
       throw new TypeError('Aborted secret chat retains private state');
     }
+    if (
+      state.version === 2 &&
+      (state.keyState !== null ||
+        state.rekey !== null ||
+        !Array.isArray(state.incomingKeys) ||
+        state.incomingKeys.length)
+    ) {
+      throw new TypeError('Aborted secret chat retains key-transition state');
+    }
   }
 
   frameBytes(frame) {
@@ -151,66 +166,6 @@ export class SecretSessionState {
 
   history() {
     return this.sequence.retained();
-  }
-
-  restoreOutbox(state) {
-    const history = this.history();
-    if (
-      !Array.isArray(state.outbox) ||
-      state.outbox.length !== history.length
-    ) {
-      throw new RangeError('Invalid secret chat outbox coverage');
-    }
-    const readers = [];
-    try {
-      for (const version of [1, 2]) {
-        readers[version] = new SecretChatCipher(this.key, {
-          originator: !this.originator,
-          version,
-          maxBytes: this.codec.maxBytes,
-        });
-      }
-      let remaining =
-        this.limits.maxBufferedBytes - this.sequence.state.bufferedBytes;
-      for (const [index, entry] of state.outbox.entries()) {
-        const frame = history[index];
-        if (
-          entry.outSequence !== frame.out_seq_no ||
-          entry.version !== (frame.layer >= 73 ? 2 : 1) ||
-          typeof entry.submitted !== 'boolean'
-        ) {
-          throw new TypeError('Invalid secret chat outbox entry');
-        }
-        const data = secretDecodedBytes(
-          entry.data,
-          40,
-          Math.min(remaining, this.codec.maxBytes + 1052),
-          'outgoing packet'
-        );
-        this.outbox.set(entry.outSequence, {
-          version: entry.version,
-          submitted: entry.submitted,
-          data,
-        });
-        remaining -= data.length;
-        const body = readers[entry.version].decrypt(data);
-        let expected;
-        try {
-          expected = this.frameBytes(frame);
-          if (Buffer.compare(body, expected) !== 0) {
-            throw new Error('Secret chat outbox plaintext mismatch');
-          }
-        } finally {
-          body.fill(0);
-          expected?.fill(0);
-        }
-      }
-    } finally {
-      for (const reader of readers) {
-        reader?.destroy();
-      }
-    }
-    this.checkBounds();
   }
 
   restoreIncomingVersions(state) {
@@ -228,13 +183,8 @@ export class SecretSessionState {
       state: state.layers,
     });
     for (const entry of state.incomingVersions) {
-      if (
-        !Array.isArray(entry) ||
-        entry.length !== 2 ||
-        !pending.has(entry[0]) ||
-        this.incomingVersions.has(entry[0]) ||
-        ![1, 2].includes(entry[1])
-      ) {
+      pendingPair(entry, pending, this.incomingVersions);
+      if (![1, 2].includes(entry[1])) {
         throw new TypeError('Invalid secret chat pending envelope version');
       }
       policy.observe(pending.get(entry[0]), entry[1], { ordered: false });
@@ -248,6 +198,63 @@ export class SecretSessionState {
     }
   }
 
+  restoreIncomingKeys(state) {
+    const pending = new Map(
+      this.sequence.pendingFrames().map((frame) => [frame.out_seq_no, frame])
+    );
+    const entries =
+      state.version === 1
+        ? [...pending.keys()].map((wire) => [
+            wire,
+            String(this.keys.ring.state.currentFingerprint),
+          ])
+        : state.incomingKeys;
+    if (!Array.isArray(entries) || entries.length !== pending.size) {
+      throw new RangeError('Invalid secret chat pending key coverage');
+    }
+    if (state.version === 1 && this.sequence.state.incoming > 0) {
+      this.keys.ring.observe(
+        this.keys.ring.state.currentFingerprint,
+        this.sequence.state.incoming - 1
+      );
+    }
+    const before = this.keys.ring.exportState();
+    for (const entry of entries) {
+      pendingPair(entry, pending, this.incomingKeys);
+      const fingerprint = secretLong(entry[1], 'pending fingerprint');
+      this.keys.ring.observe(
+        fingerprint,
+        secretCounter(entry[0], this.originator ? 0 : 1)
+      );
+      this.incomingKeys.set(entry[0], fingerprint);
+    }
+    if (
+      state.version === 2 &&
+      JSON.stringify(before) !== JSON.stringify(this.keys.ring.exportState())
+    ) {
+      throw new TypeError('Inconsistent secret chat pending key policy');
+    }
+    this.validateKeyObservations(pending);
+  }
+
+  validateKeyObservations(pending) {
+    const maximum = Math.max(
+      this.sequence.state.incoming - 1,
+      ...[...pending.keys()].map((wire) =>
+        secretCounter(wire, this.originator ? 0 : 1)
+      )
+    );
+    const keys = this.keys.ring.state;
+    if (
+      keys.highestCurrentSequence > maximum ||
+      keys.highestPreviousSequence > maximum
+    ) {
+      throw new RangeError(
+        'Secret chat key observation exceeds accepted sequence'
+      );
+    }
+  }
+
   assertActive() {
     if (this.phase !== 'active') {
       throw new TelegramError('Secret chat session is aborted', {
@@ -258,8 +265,8 @@ export class SecretSessionState {
 
   bufferedBytes() {
     let bytes = this.sequence.state.bufferedBytes;
-    for (const { data } of this.outbox.values()) {
-      bytes += data.length;
+    for (const { data, replacement } of this.outbox.values()) {
+      bytes += data.length + (replacement?.data.length ?? 0);
     }
     return bytes;
   }
@@ -275,6 +282,7 @@ export class SecretSessionState {
     for (const [wire, packet] of this.outbox) {
       if (!retained.has(wire)) {
         packet.data.fill(0);
+        packet.replacement?.data.fill(0);
         this.outbox.delete(wire);
       }
     }
@@ -291,16 +299,56 @@ export class SecretSessionState {
     this.checkBounds();
   }
 
-  encrypt(frame, version) {
+  encryptedPacket(frame, version) {
     const body = this.frameBytes(frame);
     let data;
+    let digest;
     try {
-      data = this.ciphers[version].encrypt(body);
+      data = this.keys.ring.encrypt(body, version);
+      digest = secretPacketDigest(body, data);
     } finally {
       body.fill(0);
     }
-    this.outbox.get(frame.out_seq_no)?.data.fill(0);
-    this.outbox.set(frame.out_seq_no, { version, submitted: false, data });
+    return { data, digest };
+  }
+
+  encrypt(frame, version) {
+    const packet = this.encryptedPacket(frame, version);
+    try {
+      packet.replacement =
+        this.keys.rekey && frame.message._ === 'decryptedMessage'
+          ? this.encryptedPacket(secretDeletionFrame(frame), version)
+          : null;
+    } catch (error) {
+      packet.data.fill(0);
+      throw error;
+    }
+    const previous = this.outbox.get(frame.out_seq_no);
+    previous?.data.fill(0);
+    previous?.replacement?.data.fill(0);
+    this.outbox.set(frame.out_seq_no, {
+      version,
+      submitted: false,
+      ...packet,
+    });
+    this.synchronize();
+  }
+
+  replaceDeleted(frame, version) {
+    const packet = this.outbox.get(frame.out_seq_no);
+    if (!packet.replacement) {
+      this.encrypt(frame, version);
+      return;
+    }
+    // Preparing this ciphertext before key erasure preserves the original
+    // sequence and key boundary without retaining previous keys.
+    packet.data.fill(0);
+    this.outbox.set(frame.out_seq_no, {
+      version,
+      submitted: false,
+      ...packet.replacement,
+      replacement: null,
+    });
     this.synchronize();
   }
 
@@ -316,6 +364,7 @@ export class SecretSessionState {
     this.sequence.upgradeLayer(this.layers.outgoing.layer);
     const frame = this.sequence.create(message);
     this.encrypt(frame, this.layers.outgoing.version);
+    this.keys.recordSent();
     return frame;
   }
 
@@ -333,17 +382,33 @@ export class SecretSessionState {
     return frame;
   }
 
-  decrypt(data) {
-    return decryptSecretVersions(this.ciphers, data);
+  queueAction(action) {
+    this.notify();
+    return this.queue({
+      _: 'decryptedMessageService',
+      random_id: randomId(),
+      action,
+    });
+  }
+
+  rotateIfNeeded() {
+    this.keys.maybeRotate((action) => this.queueAction(action));
+  }
+
+  rotateKey(exchangeId) {
+    this.assertActive();
+    this.keys.rotate(exchangeId, (action) => this.queueAction(action));
   }
 
   receive(data) {
     this.assertActive();
-    const { body, version } = this.decrypt(data);
+    const { body, version, fingerprint, candidate } = this.keys.decrypt(data);
     try {
       return this.receiveFrame(
         this.codec.decode(body, 'DecryptedMessageLayer'),
-        version
+        version,
+        fingerprint,
+        candidate
       );
     } catch (cause) {
       throw new TelegramError('Invalid authenticated secret chat message', {
@@ -355,18 +420,22 @@ export class SecretSessionState {
     }
   }
 
-  receiveFrame(frame, version) {
+  receiveFrame(frame, version, fingerprint, candidate) {
     const output = this.sequence.receive(frame);
     if (output.duplicate || output.ignored) {
       return output;
     }
     this.layers.observe(frame, version, { ordered: false });
     this.incomingVersions.set(frame.out_seq_no, version);
+    this.incomingKeys.set(frame.out_seq_no, fingerprint);
+    const queue = (action) => this.queueAction(action);
+    this.keys.observe(frame, fingerprint, candidate, queue);
     for (const ordered of output.messages) {
       this.layers.observe(
         ordered,
         this.incomingVersions.get(ordered.out_seq_no)
       );
+      this.keys.ordered(ordered, queue);
     }
     for (const wire of this.incomingVersions.keys()) {
       if (
@@ -374,8 +443,10 @@ export class SecretSessionState {
         this.sequence.state.incoming
       ) {
         this.incomingVersions.delete(wire);
+        this.incomingKeys.delete(wire);
       }
     }
+    this.keys.ring.retire(this.sequence.state.incoming);
     this.sequence.upgradeLayer(this.layers.outgoing.layer);
     for (const retransmit of output.retransmit) {
       const packet = this.outbox.get(retransmit.out_seq_no);
@@ -392,6 +463,7 @@ export class SecretSessionState {
         action: output.resend,
       });
     }
+    this.rotateIfNeeded();
     this.synchronize();
     return output;
   }
@@ -422,12 +494,14 @@ export class SecretSessionState {
 
   exportState() {
     return {
-      version: 1,
+      version: 2,
       phase: this.phase,
       originator: this.originator,
       peer: { ...this.peer, access_hash: String(this.peer.access_hash) },
       discardSubmitted: this.discardSubmitted,
-      key: this.phase === 'active' ? base64(this.key) : null,
+      ...(this.phase === 'active'
+        ? this.keys.exportState()
+        : { key: null, keyState: null, rekey: null }),
       layers: this.phase === 'active' ? this.layers.exportState() : null,
       sequence: this.phase === 'active' ? this.sequence.exportState() : null,
       outbox: [...this.outbox].map(([outSequence, packet]) => ({
@@ -435,8 +509,19 @@ export class SecretSessionState {
         version: packet.version,
         submitted: packet.submitted,
         data: base64(packet.data),
+        digest: packet.digest,
+        replacement: packet.replacement
+          ? {
+              data: base64(packet.replacement.data),
+              digest: packet.replacement.digest,
+            }
+          : null,
       })),
       incomingVersions: [...this.incomingVersions].map((entry) => [...entry]),
+      incomingKeys: [...this.incomingKeys].map(([wire, fingerprint]) => [
+        wire,
+        String(fingerprint),
+      ]),
     };
   }
 
@@ -447,15 +532,14 @@ export class SecretSessionState {
   }
 
   destroy() {
-    this.key?.fill(0);
+    this.keys?.destroy();
     this.sequence?.destroy();
-    for (const cipher of this.ciphers) {
-      cipher?.destroy();
-    }
     for (const packet of this.outbox.values()) {
       packet.data.fill(0);
+      packet.replacement?.data.fill(0);
     }
     this.outbox.clear();
     this.incomingVersions.clear();
+    this.incomingKeys.clear();
   }
 }

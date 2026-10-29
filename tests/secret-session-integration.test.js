@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { SecretChatSession } from '../src/mtproto.js';
 import { UpdateManager } from '../src/updates.js';
 import { secretRpcPeer } from '../experiments/secret-rpc-peer.mjs';
+import { telegramDhPrime as p } from '../experiments/secret-dh-fixtures.mjs';
 
 it('persists bilateral native TCP secret messages before saving qts and acknowledging the queue', async () => {
   const sides = [];
@@ -10,7 +11,12 @@ it('persists bilateral native TCP secret messages before saving qts and acknowle
   const chat = { _: 'inputEncryptedChat', chat_id: 123, access_hash: 456n };
   const createSide = async (originator) => {
     const side = {
-      session: new SecretChatSession({ key, originator, peer: chat }),
+      session: new SecretChatSession({
+        key,
+        originator,
+        peer: chat,
+        dh: { p, g: 3 },
+      }),
       received: [],
       acknowledged: [],
       qts: 0,
@@ -93,6 +99,34 @@ it('persists bilateral native TCP secret messages before saving qts and acknowle
     assert.equal(alice.session.exportState().sequence.acknowledged, 2);
     assert.equal(alice.session.exportState().layers.remoteLayer, 144);
     assert.equal(bob.session.exportState().sequence.layer, 144);
+    await alice.session.rotateKey(10n, {
+      save: (state) => {
+        alice.durable = JSON.parse(JSON.stringify(state));
+      },
+    });
+    for (const [sender, receiver] of [
+      [alice, bob],
+      [bob, alice],
+      [alice, bob],
+      [bob, alice],
+    ]) {
+      await sender.session.flush(sender.rpc.client, {
+        save: (state) => {
+          sender.durable = JSON.parse(JSON.stringify(state));
+        },
+      });
+      await receiver.rpc.client.pollUpdates();
+      await receiver.rpc.client.drainUpdates();
+    }
+    assert.equal(
+      alice.session.exportState().key,
+      bob.session.exportState().key
+    );
+    for (const side of sides) {
+      assert.equal(side.session.state.rekey.phase, 'idle');
+      assert.equal(side.session.state.keys.previousFingerprint, null);
+      assert.deepEqual(side.acknowledged, [1, 2, 3, 4]);
+    }
   } finally {
     for (const side of sides) {
       await side.rpc?.close();

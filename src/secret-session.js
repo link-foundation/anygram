@@ -5,7 +5,7 @@ import {
 import { throwFailures } from './errors.js';
 import { secretLimit } from './secret-sequence-state.js';
 
-/** Active single-key chat state with transactional effects and a durable outbox. */
+/** Active chat state with transactional key transitions and a durable outbox. */
 export class SecretChatSession {
   #data;
   #limits;
@@ -13,10 +13,21 @@ export class SecretChatSession {
   #destroyed = false;
   #lastReceipt;
   #lastClient;
+  #now;
 
   constructor(options = {}) {
+    if (options.now !== undefined && typeof options.now !== 'function') {
+      throw new TypeError('Secret chat session clock must be a function');
+    }
     this.#limits = secretSessionLimits(options);
+    this.#now = options.now;
     this.#data = new SecretSessionState(options, this.#limits);
+  }
+
+  get visualization() {
+    this.#assertAlive();
+    this.#data.assertActive();
+    return this.#data.keys.ring.visualization;
   }
 
   get state() {
@@ -29,6 +40,11 @@ export class SecretChatSession {
       layers:
         this.#data.phase === 'active' ? this.#data.layers.exportState() : null,
       discardSubmitted: this.#data.discardSubmitted,
+      keys: this.#data.phase === 'active' ? this.#data.keys.ring.state : null,
+      rekey:
+        this.#data.phase === 'active'
+          ? (this.#data.keys.rekey?.state ?? null)
+          : null,
     };
   }
 
@@ -59,7 +75,7 @@ export class SecretChatSession {
 
   #copy() {
     return new SecretSessionState(
-      { state: this.#data.exportState() },
+      { state: this.#data.exportState(), now: this.#now },
       this.#limits
     );
   }
@@ -99,14 +115,28 @@ export class SecretChatSession {
           bytes.fill(0);
         }
         draft.notify();
-        return draft.queue(copy);
+        const frame = draft.queue(copy);
+        draft.rotateIfNeeded();
+        return frame;
       })
     );
   }
 
   notify(options) {
     return this.#exclusive(options, (save) =>
-      this.#transaction(save, options?.signal, (draft) => draft.notify())
+      this.#transaction(save, options?.signal, (draft) => {
+        const frame = draft.notify();
+        draft.rotateIfNeeded();
+        return frame;
+      })
+    );
+  }
+
+  rotateKey(exchangeId, options) {
+    return this.#exclusive(options, (save) =>
+      this.#transaction(save, options?.signal, (draft) =>
+        draft.rotateKey(exchangeId)
+      )
     );
   }
 
@@ -116,7 +146,9 @@ export class SecretChatSession {
         draft.assertActive();
         draft.layers.upgradeLayer(layer);
         draft.sequence.upgradeLayer(draft.layers.outgoing.layer);
-        return draft.notify();
+        const frame = draft.notify();
+        draft.rotateIfNeeded();
+        return frame;
       })
     );
   }
@@ -130,8 +162,10 @@ export class SecretChatSession {
           outSequence,
           deletionId
         );
-        draft.encrypt(output.replacement, version);
+        draft.replaceDeleted(output.replacement, version);
         draft.encrypt(output.deletion, draft.layers.outgoing.version);
+        draft.keys.recordSent();
+        draft.rotateIfNeeded();
         return output;
       })
     );

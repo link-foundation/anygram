@@ -1,4 +1,4 @@
-import { hash } from './crypto.js';
+import { hash, validateDhParameters, validateDhPublic } from './crypto.js';
 import { TlCodec } from './tl.js';
 import { SecretChatKeyExchange } from './secret-key-exchange.js';
 import { secretLimit } from './secret-sequence-state.js';
@@ -138,9 +138,11 @@ export function restoreSecretHandshake(state) {
     key: null,
     fingerprint: null,
     exchange: null,
+    dh: null,
   };
   try {
     restoreMaterial(data, state);
+    restoreDh(data, state);
     validatePhase(data);
     if (data.selfId === data.remoteId) {
       throw new RangeError('Secret chat participants must be different');
@@ -151,6 +153,26 @@ export function restoreSecretHandshake(state) {
     data.exchange?.destroy();
     throw error;
   }
+}
+
+function restoreDh(data, state) {
+  const config = state.dh ?? state.exchange;
+  if (!config) {
+    return;
+  }
+  const p = secretDecodedBytes(config.p, 256, 256, 'original DH prime');
+  const prime = validateDhParameters(p, config.g);
+  validateDhPublic(prime, data.publicValue);
+  if (data.remotePublic) {
+    validateDhPublic(prime, data.remotePublic);
+  }
+  if (
+    state.exchange &&
+    (state.exchange.p !== config.p || state.exchange.g !== config.g)
+  ) {
+    throw new TypeError('Secret chat original DH parameters mismatch');
+  }
+  data.dh = { p, g: config.g };
 }
 
 function restoreMaterial(data, state) {

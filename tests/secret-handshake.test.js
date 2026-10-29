@@ -99,6 +99,10 @@ it('persists request and acceptance before RPCs and establishes equal keys throu
   assert.equal(first.fingerprint, second.fingerprint);
   assert.equal(first.originator, true);
   assert.equal(second.originator, false);
+  assert.deepEqual(first.dh, { p: dhConfig().p, g: dhConfig().g });
+  assert.deepEqual(second.dh, first.dh);
+  first.dh.p.fill(0);
+  assert.notDeepEqual(left.credentials().dh.p, first.dh.p);
   first.key.fill(0);
   assert.notDeepEqual(left.credentials().key, first.key);
   left.destroy();
@@ -384,6 +388,8 @@ it('rejects malformed portable handshake state before exposing private material'
     { user: '!!!!' },
     { key: Buffer.alloc(256).toString('base64') },
     { fingerprint: '1' },
+    { dh: { p: '', g: 3 } },
+    { dh: { p: state.dh.p, g: 2 } },
   ]) {
     assert.throws(
       () =>
@@ -399,6 +405,7 @@ it('rejects malformed portable handshake state before exposing private material'
     { accessHash: null },
     { remotePublic: '' },
     { user: state.user },
+    { dh: { ...recipient.dh, g: 1 } },
   ]) {
     assert.throws(
       () =>

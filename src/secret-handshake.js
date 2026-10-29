@@ -49,6 +49,7 @@ export class SecretChatHandshake {
       exchange: data.exchange?.exportState() ?? null,
       key: data.key?.toString('base64') ?? null,
       fingerprint: data.fingerprint === null ? null : String(data.fingerprint),
+      dh: data.dh ? { p: data.dh.p.toString('base64'), g: data.dh.g } : null,
     };
   }
 
@@ -61,6 +62,9 @@ export class SecretChatHandshake {
       originator: this.#data.originator,
       key: Buffer.from(this.#data.key),
       fingerprint: this.#data.fingerprint,
+      ...(this.#data.dh
+        ? { dh: { p: Uint8Array.from(this.#data.dh.p), g: this.#data.dh.g } }
+        : {}),
     };
   }
 
@@ -222,7 +226,7 @@ async function rejectHandshake(invoke, chatId, options, error, save) {
   throwFailures(failures, 'Secret chat handshake and discard failed');
 }
 
-function initialState(data, exchange) {
+function initialState(data, exchange, config) {
   return {
     version: 1,
     phase: data.originator ? 'requesting' : 'accepting',
@@ -237,6 +241,7 @@ function initialState(data, exchange) {
     exchange: null,
     key: null,
     fingerprint: null,
+    dh: { p: Buffer.from(config.p).toString('base64'), g: config.g },
   };
 }
 
@@ -257,7 +262,7 @@ export async function createSecretChatRequest(invoke, options = {}) {
     options
   );
   try {
-    const state = initialState(data, exchange);
+    const state = initialState(data, exchange, config);
     state.exchange = exchange.exportState();
     return { handshake: new SecretChatHandshake({ state }), config };
   } finally {
@@ -297,7 +302,7 @@ export async function createSecretChatAcceptance(invoke, options = {}) {
   );
   let key;
   try {
-    const state = initialState(data, exchange);
+    const state = initialState(data, exchange, config);
     const result = exchange.complete(remotePublic);
     key = result.key;
     state.key = key.toString('base64');

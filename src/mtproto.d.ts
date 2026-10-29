@@ -46,6 +46,7 @@ export interface SecretChatHandshakeState {
   exchange: SecretChatKeyExchangeState | null;
   key: string | null;
   fingerprint: string | null;
+  dh?: { p: string; g: number } | null;
 }
 export interface SecretChatHandshakeOptions extends RequestOptions {
   save: (state: SecretChatHandshakeState) => void | Promise<void>;
@@ -71,6 +72,8 @@ export declare class SecretChatHandshake {
     originator: boolean;
     key: Uint8Array;
     fingerprint: bigint;
+    /** Original parameters retained for compulsory PFS; absent in older completed snapshots. */
+    dh?: { p: Uint8Array; g: number };
   };
   submit(
     invoke: SecretChatInvoke,
@@ -199,6 +202,7 @@ export declare class SecretChatKeyRing {
     highestPreviousSequence: number;
     confirmed: boolean;
     canRotate: boolean;
+    retiredFingerprint: bigint | null;
   };
   /** Original SHA-1 prefix (16 bytes) followed by SHA-256 prefix (20 bytes). */
   readonly visualization: Uint8Array;
@@ -340,8 +344,7 @@ export declare class SecretChatSequence {
   exportState(): SecretChatSequenceState;
   destroy(): void;
 }
-export interface SecretChatSessionState {
-  version: 1;
+interface SecretChatSessionStateBase {
   phase: 'active' | 'aborted';
   originator: boolean;
   peer: { _: 'inputEncryptedChat'; chat_id: number; access_hash: string };
@@ -357,6 +360,23 @@ export interface SecretChatSessionState {
   }[];
   incomingVersions: [number, 1 | 2][];
 }
+/** Earlier snapshots remain readable; new snapshots always use version 2. */
+export interface SecretChatSessionStateV1 extends SecretChatSessionStateBase {
+  version: 1;
+}
+export interface SecretChatSessionStateV2 extends SecretChatSessionStateBase {
+  version: 2;
+  keyState: Omit<SecretChatKeyRingState, 'key'> | null;
+  rekey: SecretChatRekeyState | null;
+  incomingKeys: [number, string][];
+  outbox: (SecretChatSessionStateBase['outbox'][number] & {
+    digest: string;
+    replacement: { data: string; digest: string } | null;
+  })[];
+}
+export type SecretChatSessionState =
+  | SecretChatSessionStateV1
+  | SecretChatSessionStateV2;
 export interface SecretChatSessionEffects {
   messages: SecretChatLayer[];
   aborted: boolean;
@@ -364,7 +384,7 @@ export interface SecretChatSessionEffects {
 export interface SecretChatSessionSaveOptions {
   /** Commit messages and private state in one transaction before returning. */
   save: (
-    state: SecretChatSessionState,
+    state: SecretChatSessionStateV2,
     effects: SecretChatSessionEffects
   ) => void | Promise<void>;
   signal?: AbortSignal;
@@ -375,7 +395,7 @@ export interface SecretChatPending {
   version: 1 | 2;
   request: TlRequest & { random_id: bigint; data: Uint8Array; peer: TlRequest };
 }
-/** Single-key active session. Compulsory PFS and encrypted media remain separate. */
+/** Durable active session; original DH parameters enable automatic compulsory PFS. */
 export declare class SecretChatSession {
   constructor(
     options:
@@ -385,12 +405,15 @@ export declare class SecretChatSession {
           peer: TlRequest;
           layer?: number;
           remoteLayer?: number;
+          dh?: { p: Uint8Array; g: number };
+          now?: () => number;
           maxPending?: number;
           maxHistory?: number;
           maxBufferedBytes?: number;
         }
       | {
           state: SecretChatSessionState;
+          now?: () => number;
           maxPending?: number;
           maxHistory?: number;
           maxBufferedBytes?: number;
@@ -402,7 +425,10 @@ export declare class SecretChatSession {
     sequence: SecretChatSequence['state'] | null;
     layers: SecretChatLayersState | null;
     discardSubmitted: boolean;
+    keys: SecretChatKeyRing['state'] | null;
+    rekey: SecretChatRekey['state'] | null;
   };
+  readonly visualization: Uint8Array;
   queue(
     message: TlRequest,
     options: SecretChatSessionSaveOptions
@@ -410,6 +436,10 @@ export declare class SecretChatSession {
   notify(
     options: SecretChatSessionSaveOptions
   ): Promise<SecretChatLayer | undefined>;
+  rotateKey(
+    exchangeId: bigint | undefined,
+    options: SecretChatSessionSaveOptions
+  ): Promise<void>;
   upgradeLayer(
     layer: number,
     options: SecretChatSessionSaveOptions
@@ -428,7 +458,7 @@ export declare class SecretChatSession {
     options: SecretChatSessionSaveOptions
   ): Promise<MtprotoReceipt[]>;
   pending(): SecretChatPending[];
-  exportState(): SecretChatSessionState;
+  exportState(): SecretChatSessionStateV2;
   destroy(): void;
 }
 

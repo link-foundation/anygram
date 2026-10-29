@@ -926,3 +926,42 @@ session still requires automatic, durable integration of these primitives.
 
 PFS action head 0692634 passed every runtime/OS job and applicable gate in
 [run 40808138340](https://github.com/link-foundation/anygram/actions/runs/40808138340).
+
+## Durable automatic PFS
+
+The active session now invokes the PFS action and key-retention policies within
+its existing save-before-effects transaction. Original handshake credentials
+carry the public DH configuration, and version-2 snapshots retain pending
+exponents, candidates, incoming key mappings and original visualization hashes.
+Accepted sequence frames establish proof; duplicates do not advance usage.
+The initiator's commit remains under the old key, and the recipient's noop uses
+the new key. Losing a commit does not prevent authenticated candidate proof,
+but incoming gaps keep the old key available until ordered processing catches up.
+
+Twelve regressions cover automatic usage/age rotation, failed saves at every
+exchange phase, signed simultaneous requests, missing commits, repeated
+rotations, corrupted state, version-1 migration and key downgrade aborts. Two
+failing-before restore tests exposed impossible future key observations and
+loss of legacy accepted sequence boundaries. Another preserved legacy test
+requires authentication when its older snapshot has no ciphertext digest.
+
+Deletion after key erasure required a separate protocol fix. A missing old-key
+message can precede an old-key commit while a later new-key message already
+proved the rotation. Re-encrypting its replacement with the current key then
+violates the established sequence boundary. Each queued user message now
+prepares an encrypted self-deletion with its original headers and key. Deletion
+swaps that ciphertext into the cache and queues the separate current-key
+service required by the sequence specification. Both ciphertexts share the
+bounded byte budget; old keys still get erased. A failing-before bilateral
+regression restores the erased-key snapshot before deleting the missing message.
+
+The native encrypted TCP integration completes the exchange through real TL
+RPCs and the update manager, saving session/effects before each qts cursor and
+queue acknowledgement. All 309 tests pass on Node, Bun and Deno. Strict lint,
+formatting and complete declaration/example checking pass, as does the
+zero-clone scan of 61 production files. The package has 66 permitted entries.
+Key-ring head 21f5873 passed all nine OS/runtime jobs and applicable gates in
+[run 40809723730](https://github.com/link-foundation/anygram/actions/runs/40809723730),
+created 2026-10-29T03:01:06Z and completed 2026-10-29T03:02:36Z. This checkpoint
+needs fresh CI. Encrypted media, controlled production interoperability and
+the wider compatibility/call requirements remain unfinished.

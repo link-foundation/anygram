@@ -7,6 +7,7 @@ import {
   secretLimit as limit,
   secretCounter,
   isSecretResend as isResend,
+  secretDeletionMessage,
   restoreSecretSequence,
 } from './secret-sequence-state.js';
 
@@ -192,23 +193,17 @@ export class SecretChatSequence {
     if (BigInt(deletionId) === original.message.random_id) {
       throw new RangeError('Deletion service needs a distinct random ID');
     }
-    const service = (id) => ({
-      _: 'decryptedMessageService',
-      random_id: id,
-      action: {
-        _: 'decryptedMessageActionDeleteMessages',
-        random_ids: [original.message.random_id],
-      },
-    });
     const originalCodec = new SecretChatCodec({
       layer: original.layer,
       maxBytes: this.#codec.maxBytes,
     });
     const replacement = originalCodec.encode({
       ...original,
-      message: service(original.message.random_id),
+      message: secretDeletionMessage(original.message.random_id),
     });
-    const deletion = this.#encodeNext(service(deletionId));
+    const deletion = this.#encodeNext(
+      secretDeletionMessage(deletionId, original.message.random_id)
+    );
     const additional = replacement.length + deletion.length - cached.length;
     this.#reserve(additional);
     this.#history.set(index, replacement);

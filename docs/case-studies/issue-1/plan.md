@@ -108,16 +108,16 @@ examples/. No live credentials or sessions may be included in research data.
 
 ## Next steps
 
-Current protocol work: integrate the tested PFS action state machine and key
-ring into the durable session, persist pending key fingerprints with sequence
-gaps, preserve exact cached ciphertext after key erasure, and pass the original
-DH parameters from initial handshakes. Reproduce automatic rotation, collisions,
-lost commits and transactional restart failures before implementing each path.
+Current protocol work: finish encrypted file handling and controlled-peer
+interoperability. The PFS action state machine and key ring are now integrated
+with the durable session, pending key fingerprints, sequence gaps and exact
+cached ciphertext after erasure. Original handshakes provide the DH parameters.
+Reproduce remaining file/media and key-age edge cases before implementation.
 
-The key-ring checkpoint passes all 297 tests on Node, Bun and Deno, strict
-lint/format/types and a zero-clone scan of 59 production files. PFS action
-head 0692634 passed all nine runtime/OS jobs and gates in run 40808138340,
-created 2026-10-29T02:44:27Z and completed 2026-10-29T02:46:14Z.
+The integrated checkpoint passes all 309 tests on Node, Bun and Deno, strict
+lint/format/types and a zero-clone scan of 61 production files. Key-ring
+head 21f5873 passed all nine runtime/OS jobs and gates in run 40809723730,
+created 2026-10-29T03:01:06Z and completed 2026-10-29T03:02:36Z.
 
 Keep protocol completion (secret chats/call media/transports), complete backend
 return/event/style compatibility and actual downstream scenarios open in the
@@ -157,8 +157,8 @@ local tests and strict checks pass; fresh CI is required after committing it.
 3. [x] Export/validate copied snapshots and recover unsent frames/gap requests.
 4. [x] Replace deleted unacknowledged frames with protocol deletion services.
 5. [x] Prepare initial request/accept RPCs with recoverable DH/key state and binding checks.
-6. [ ] Integrate layer/cipher/sequence policy and the complete initial peer flow.
-7. [ ] Implement compulsory PFS rotation and simultaneous key-exchange rules.
+6. [x] Integrate layer/cipher/sequence policy and the initial peer flow through native test peers.
+7. [x] Implement compulsory PFS rotation and simultaneous key-exchange rules.
 8. [ ] Integrate encrypted RPC ordering, durable effects/cursors and file media.
 9. [ ] Verify interoperable flows with controlled Telegram accounts.
 
@@ -277,3 +277,23 @@ The PFS action checkpoint passes all 290 tests on Node, Bun and Deno and all
 strict checks. The clone detector scans 58 production files with zero clones;
 the package dry run has 63 permitted entries. Its typed draft-planning example
 compiles. Fresh CI is required after committing the checkpoint.
+
+Automatic PFS now passes twelve additional regressions, including interrupted
+durable transitions, out-of-order candidate proof, simultaneous requests,
+snapshot migration, bounded restored key observations, stable visualization,
+corruption rejection and exact retransmission after key erasure. An older
+single-key snapshot initially bypassed authentication for unknown fingerprints;
+the failing test now requires authentication for that snapshot format.
+
+A cross-rotation deletion test initially aborted with SECRET_CHAT_KEY_DOWNGRADE:
+encrypting an old replacement under the current key moved the peer's switch
+boundary before an old-key commit. Preparing the self-deletion ciphertext at
+message creation preserves its original key without retaining that key after
+erasure. The regression also restores JSON state before deletion and verifies
+the exact prepared packet; corruption and combined byte limits have coverage.
+The native encrypted TCP integration now completes a bilateral PFS exchange
+through the actual update manager and preserves qts/effect ordering.
+
+All 309 tests and strict checks pass locally on all three runtimes. The package
+dry run contains 66 permitted entries. Fresh CI is required after this commit;
+encrypted media and production-account interoperability remain open.
