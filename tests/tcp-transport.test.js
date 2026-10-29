@@ -41,7 +41,7 @@ it('cancels TCP reads, bounds queues, closes deterministically and rejects pre-c
   const transport = new protocol.TcpTransport({
     host: '127.0.0.1',
     port: server.port,
-    timeout: 30,
+    timeout: 1000,
   });
   try {
     const abort = new globalThis.AbortController();
@@ -52,7 +52,7 @@ it('cancels TCP reads, bounds queues, closes deterministically and rejects pre-c
     );
     assert.equal(accepted, 0);
     await transport.send(Buffer.alloc(4));
-    await assert.rejects(transport.receive(), /timeout/i);
+    await assert.rejects(transport.receive({ timeout: 30 }), /timeout/i);
     const pending = transport.receive({ timeout: 5000 });
     transport.close();
     await assert.rejects(pending, /closed/i);

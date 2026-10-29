@@ -723,3 +723,12 @@ type checking. The clone detector scans 52 production files with no clones;
 the package has 57 permitted entries. Legacy-envelope head c465b65 passed
 every applicable job in
 [run 40800440156](https://github.com/link-foundation/anygram/actions/runs/40800440156).
+
+The policy's CI run
+[40801264105](https://github.com/link-foundation/anygram/actions/runs/40801264105)
+passed eight runtime/OS jobs and applicable gates, while Node on macOS reported
+`TCP request timeout` in a successful socket send in the existing cancellation
+test. Failed-job log lines 1028–1045 point to test line 54. Its 30 ms transport
+default also constrained connection setup; the intended assertion tests an idle
+read. The test now applies that deadline to the read alone, while connection
+setup retains the normal test budget. Production behavior is unchanged.

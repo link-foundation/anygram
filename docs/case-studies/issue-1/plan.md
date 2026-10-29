@@ -117,6 +117,14 @@ remaining requirements are genuinely implemented and verified.
 
 ## Current CI investigation
 
+The layer-policy run 40801264105 passed eight runtime/OS jobs and all applicable
+gates, but Node on macOS failed the existing TCP cancellation test. Preserved
+logs show `TCP request timeout` at failed-job lines 1028–1045, originating in the
+successful `send()` at test line 54. The test's 30 ms default unintentionally
+bounded connection establishment as well as the intentionally idle read. Keep
+the normal connection deadline and apply 30 ms only to that read. Verify the
+focused TCP suite and fresh matrix CI; no production timeout is changed.
+
 1. [x] List recent runs with timestamps and verify b11141b's SHA.
 2. [x] Download run 40795826588 and all three failed Windows job logs.
 3. [x] Identify the source-hash failure and reproduce the exact CRLF hash locally.
