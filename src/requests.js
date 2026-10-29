@@ -206,7 +206,7 @@ function integerWidth(type) {
 export function methodProxy(invoke, path = []) {
   return new Proxy(() => {}, {
     get(target, key) {
-      if (key === 'then' || typeof key === 'symbol') {
+      if (key === 'then' || key === 'toJSON' || typeof key === 'symbol') {
         return undefined;
       }
       return methodProxy(invoke, [...path, key]);

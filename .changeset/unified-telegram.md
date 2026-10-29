@@ -114,3 +114,6 @@ regenerated method facts and declarations against actual SDK comparisons.
 Share all six query registration shortcuts and asynchronous scoped filters,
 preserving actual grammY string/regular-expression match values, trigger-array
 snapshots and query context aliases across selected bot transports.
+
+Prevent JSON serialization from issuing synthetic toJSON requests through raw
+account or bot method proxies, while preserving explicit RPC invocation.
