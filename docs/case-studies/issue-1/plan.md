@@ -1340,7 +1340,9 @@ Client-bound account message work plan:
       ancestor; refreshed issue, sub-issue and all feedback streams are unchanged.
       The paginated PR inventory has 929 files with no removals; the complete
       atomic diff is reviewed locally because GitHub limits diffs to 300 files.
-- [ ] Commit/push and verify fresh exact-head CI. Continue wider model work.
+- [x] Commit/push and verify fresh exact-head CI. Message head 5c4de84 passes
+      every applicable job in run 40965710992, created 2026-10-29T22:25:07Z
+      after its 22:24:45Z commit. Continue wider model work.
 
 Account button and poll interaction work plan:
 
@@ -1365,4 +1367,30 @@ Account button and poll interaction work plan:
       streams remain empty; the complete issue prose is unchanged. The paginated
       PR inventory has 943 files with no removals; GitHub's 300-file diff limit
       requires the complete local atomic diff for review.
-- [ ] Commit/push and verify fresh exact-head CI. Continue remaining criteria.
+- [x] Commit and push button head 1d5a564 after all local gates pass.
+- [ ] Verify fresh exact-head CI. Run 40967861174, created
+      2026-10-29T22:42:13Z after the 22:41:58Z commit, remains queued.
+      Continue remaining criteria while GitHub schedules the run.
+
+Account peer metadata and sender recovery work plan:
+
+- [x] Compare pinned SDK forward, via-bot, action-entity, destination and sender
+      models; preserve exact source hashes and official input-peer contracts.
+- [x] Add failing regressions before implementation for missing public metadata,
+      bounded sender reloads and incomplete entity refresh; retain before runners.
+- [x] Share cached peer/input lookup and forward metadata without vendor runtime
+      dependencies, preserving detached data and private client ownership.
+- [x] Implement bounded sender recovery and complete minimal chat/sender entities,
+      preserving origin access hashes, typed failures and cancellation.
+- [x] Verify actual SDK models, selected adapters, native encrypted TCP and finite
+      missing/invalid cases; add checked public migration examples and fact data.
+- [x] Complete local runtime/static/framework/native/package checks and review.
+      All 2,716 core tests pass on Node/Bun/Deno, with 71 framework cases per
+      runtime, 27 native terminal cases, eight Node 20 wire cases, sixteen parser
+      checks and the bounded FIFO experiment. Strict checks scan 176 production
+      sources with zero clones; packaging contains 219 permitted entries. Both
+      actual SDK declaration fixtures compile. Refreshed issue, sub-issue and all
+      feedback streams remain unchanged. Main remains an ancestor. The paginated
+      PR inventory contains 954 files with no removals; the complete atomic diff
+      is reviewed locally because GitHub's diff API caps the response at 300 files.
+- [ ] Commit/push and verify fresh exact-head CI. Continue wider open criteria.

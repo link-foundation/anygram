@@ -3,6 +3,12 @@ import { responseMessage } from './account-response.js';
 import { randomId } from './random.js';
 import { canonicalValue } from './requests.js';
 import {
+  AccountPeerView,
+  bindAccountPeers,
+  cachedPeer,
+  accountForward,
+} from './account-peers.js';
+import {
   messageButtonCount,
   messageButtons,
   getMessageButtons,
@@ -31,20 +37,14 @@ export function bindAccountMessage(value, context, origin) {
         ? origin
         : undefined,
   });
+  bindAccountPeers(value, context, {
+    chatPeer: () => value.peerId,
+    senderPeer: () => senderPeer(value),
+    inputChat: states.get(value).inputChat,
+    origin: states.get(value).inputChat,
+    id: value.id,
+  });
   return value;
-}
-
-function markedId(peer) {
-  const type = tag(peer)?.slice(4).toLowerCase();
-  const id = peer?.[`${type}Id`];
-  if (id === undefined) {
-    return undefined;
-  }
-  return type === 'channel'
-    ? BigInt(`-100${id}`)
-    : type === 'chat'
-      ? -BigInt(id)
-      : BigInt(id);
 }
 
 function senderPeer(message) {
@@ -56,30 +56,6 @@ function senderPeer(message) {
   );
 }
 
-function entity(message, peer) {
-  const type = tag(peer)?.slice(4).toLowerCase();
-  const value = scope(message).operations.peers.get(
-    `${type}:${peer?.[`${type}Id`]}`
-  );
-  return value && scope(message).viewEntity(value);
-}
-
-function input(message, peer) {
-  if (!peer) {
-    return undefined;
-  }
-  try {
-    return scope(message).wrap(
-      scope(message).operations.resolveObjectPeer(peer)
-    );
-  } catch (error) {
-    if (error?.type !== 'PEER_NOT_FOUND') {
-      throw error;
-    }
-    return undefined;
-  }
-}
-
 async function target(message, options) {
   const peer = await message.getInputChat(options);
   if (!peer) {
@@ -88,20 +64,7 @@ async function target(message, options) {
   return peer;
 }
 
-async function fetchEntity(message, type, options) {
-  options?.signal?.throwIfAborted();
-  if (message[type]) {
-    return message[type];
-  }
-  const method = type === 'chat' ? 'getInputChat' : 'getInputSender';
-  const peer = await message[method](options);
-  const context = scope(message);
-  return (
-    peer && context.wrap(await context.operations.getEntity(peer, options))
-  );
-}
-
-class AccountMessage {
+class AccountMessage extends AccountPeerView {
   get buttonCount() {
     return messageButtonCount(this);
   }
@@ -114,42 +77,69 @@ class AccountMessage {
   click(options) {
     return clickMessage(this, scope(this), states.get(this), options);
   }
-  get client() {
-    return scope(this).style;
-  }
-  get chatId() {
-    return markedId(this.peerId);
-  }
-  get senderId() {
-    return markedId(senderPeer(this));
-  }
-  get chat() {
-    return entity(this, this.peerId);
-  }
-  get sender() {
-    return entity(this, senderPeer(this));
-  }
-  get inputChat() {
-    return states.get(this).inputChat ?? input(this, this.peerId);
-  }
-  get inputSender() {
-    return input(this, senderPeer(this));
-  }
-  get isPrivate() {
-    return this.peerId ? tag(this.peerId) === 'peerUser' : undefined;
-  }
-  get isChannel() {
-    return tag(this.peerId) === 'peerChannel';
-  }
-  get isGroup() {
-    if (!this.isChannel) {
-      return tag(this.peerId) === 'peerChat';
+  get forward() {
+    if (!this.fwdFrom) {
+      return undefined;
     }
-    let broadcast = this.post;
-    if (!broadcast && this.chat) {
-      broadcast = Boolean(this.chat.broadcast);
+    return (states.get(this).forward ??= accountForward(
+      this.fwdFrom,
+      scope(this),
+      this
+    ));
+  }
+  get viaBot() {
+    return cachedPeer(scope(this), { _: 'peerUser', userId: this.viaBotId });
+  }
+  get viaInputBot() {
+    if (!this.viaBot) {
+      return undefined;
     }
-    return broadcast === undefined ? undefined : !broadcast;
+    try {
+      return scope(this).wrap(
+        scope(this).operations.resolveObjectPeer(this.viaBot)
+      );
+    } catch (error) {
+      if (error?.type !== 'PEER_NOT_FOUND') {
+        throw error;
+      }
+      return undefined;
+    }
+  }
+  get actionEntities() {
+    const action = this.action;
+    let type = 'peerUser';
+    let ids;
+    switch (tag(action)) {
+      case 'messageActionChatCreate':
+      case 'messageActionChatAddUser':
+        ids = action.users;
+        break;
+      case 'messageActionChatDeleteUser':
+        ids = [action.userId];
+        break;
+      case 'messageActionChatJoinedByLink':
+        ids = [action.inviterId];
+        break;
+      case 'messageActionChannelMigrateFrom':
+        type = 'peerChat';
+        ids = [action.chatId];
+        break;
+      default:
+        return undefined;
+    }
+    const key = `${type.slice(4).toLowerCase()}Id`;
+    return ids.map((id) => cachedPeer(scope(this), { _: type, [key]: id }));
+  }
+  get toId() {
+    if (this.out || !this.isPrivate) {
+      return this.peerId;
+    }
+    for (const entity of scope(this).operations.peers.values()) {
+      if (entity._ === 'user' && entity.self) {
+        return scope(this).wrap({ _: 'peerUser', user_id: entity.id });
+      }
+    }
+    return undefined;
   }
   get isReply() {
     return Boolean(this.replyTo);
@@ -169,33 +159,6 @@ class AccountMessage {
   }
   set text(value) {
     this.rawText = value;
-  }
-
-  async getInputChat(options) {
-    options?.signal?.throwIfAborted();
-    if (this.inputChat || !this.peerId) {
-      return this.inputChat;
-    }
-    for await (const dialog of scope(this).operations.iterDialogs({
-      ...options,
-      limit: 100,
-      maxPages: 1,
-    })) {
-      if (markedId(scope(this).wrap(dialog.dialog.peer)) === this.chatId) {
-        return scope(this).wrap(dialog.inputPeer);
-      }
-    }
-    return undefined;
-  }
-  getChat(options) {
-    return fetchEntity(this, 'chat', options);
-  }
-  getInputSender(options) {
-    options?.signal?.throwIfAborted();
-    return Promise.resolve(this.inputSender);
-  }
-  getSender(options) {
-    return fetchEntity(this, 'sender', options);
   }
 
   async getReplyMessage(options = {}) {

@@ -242,3 +242,8 @@ media metadata and checked helper declarations without a vendor runtime.
 Bind account button rows and poll interactions to the same selected origin,
 including callback password proofs, explicit contact/location consent and exact
 poll option selection, with typed migration examples and actual SDK comparisons.
+
+Share bound forward, via-bot, service-action and identified destination metadata.
+Recover missing senders with one bounded reload, merge reduced peers according
+to official field rules and retain bounded message-context inputs for min peers.
+Preserve each source hash through selected adapters and encrypted native TCP.

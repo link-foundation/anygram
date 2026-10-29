@@ -24,6 +24,14 @@ adapters and encrypted native TCP verify the finite contracts. Both pinned SDKs'
 multi-index poll defect has an independently expected option-byte regression.
 Web-app/auth/payment workflows, full SDK models and all wider criteria remain open.
 
+The [account peer metadata follow-up](account-peers.md) advances these criteria
+with shared forward/action/via-bot/destination views, bounded sender recovery,
+official reduced-entity merging and message-context inputs. The 131 focused
+cases include 124 frozen-source failures, SDK constructor bytes, all five selected
+routes and independent encrypted TCP. Eight frozen declaration diagnostics verify
+the migration example. Persistent peer storage, bot zero-hash exceptions,
+userFull invalidation, production scenarios and full SDK parity remain open.
+
 The [AES-IGE allocation regression](crypto-allocations.md) advances R05/R08
 with an immutable failing-before reproduction, independent ciphertext checks
 and a bounded public-buffer measurement. It retains the 10 MiB upload workload

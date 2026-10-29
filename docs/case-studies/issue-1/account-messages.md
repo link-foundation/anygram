@@ -81,11 +81,12 @@ The runtime loader freezes client.js, gram-style.js and operations.js at
 index at the same revision. Tests and examples remain unchanged between runs.
 
 The [button and poll follow-up](account-buttons.md) implements bound button
-models and click interactions with separate regression evidence. Full custom-model
-parity remains unfinished. ParseMode and rich text getter/setter behavior, forward/action-entity models,
-sender refetch/input-from-message fallbacks, full send/edit file and album
-shortcuts, toId/self and via-bot metadata still require implementation and
-verification. The general facade sendMessage response contract is unchanged;
+models and click interactions with separate regression evidence. The
+[peer metadata follow-up](account-peers.md) adds forward/action entities,
+bounded sender recovery, min constructors, identified destinations and via-bot
+metadata. Full custom-model parity remains unfinished. ParseMode and rich text
+getter/setter behavior and full send/edit file and album shortcuts still require
+implementation and verification. The general facade sendMessage response contract is unchanged;
 full cross-library result models and production Telegram account scenarios
 remain open. This checkpoint advances R01/R02/R05/R17/R19 and does not satisfy
 the wider issue by itself.

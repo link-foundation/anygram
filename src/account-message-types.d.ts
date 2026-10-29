@@ -100,18 +100,7 @@ export interface AccountMessageFile {
   readonly stickerSet?: GramStyleObject;
   readonly size?: number | bigint;
 }
-/** A detached account response with methods bound to its owning style and route. */
-export interface AccountMessage extends GramStyleObject {
-  _: 'message' | 'messageService';
-  id: number;
-  date: number;
-  message?: string;
-  peerId: GramStyleObject;
-  fromId?: GramStyleObject;
-  out?: boolean;
-  post?: boolean;
-  replyTo?: GramStyleObject & { replyToMsgId?: number };
-  entities?: AccountTextEntity[];
+interface AccountPeerView {
   readonly client: GramStyleClient;
   readonly chatId?: bigint;
   readonly senderId?: bigint;
@@ -122,8 +111,41 @@ export interface AccountMessage extends GramStyleObject {
   readonly isPrivate?: boolean;
   readonly isChannel: boolean;
   readonly isGroup?: boolean;
+  getInputChat(options?: RequestOptions): Promise<GramStyleObject | undefined>;
+  getChat(options?: RequestOptions): Promise<GramStyleObject | undefined>;
+  getInputSender(
+    options?: RequestOptions
+  ): Promise<GramStyleObject | undefined>;
+  getSender(options?: RequestOptions): Promise<GramStyleObject | undefined>;
+}
+export interface AccountForward extends AccountPeerView {
+  readonly originalFwd: GramStyleObject & {
+    fromId?: GramStyleObject;
+    fromName?: string;
+    date: number;
+  };
+}
+/** A detached account response with methods bound to its owning style and route. */
+export interface AccountMessage extends GramStyleObject, AccountPeerView {
+  _: 'message' | 'messageService';
+  id: number;
+  date: number;
+  message?: string;
+  peerId: GramStyleObject;
+  fromId?: GramStyleObject;
+  out?: boolean;
+  post?: boolean;
+  replyTo?: GramStyleObject & { replyToMsgId?: number };
+  entities?: AccountTextEntity[];
   readonly isReply: boolean;
   readonly replyToMsgId?: number;
+  fwdFrom?: AccountForward['originalFwd'];
+  viaBotId?: bigint;
+  readonly forward?: AccountForward;
+  readonly viaBot?: GramStyleObject;
+  readonly viaInputBot?: GramStyleObject;
+  readonly actionEntities?: (GramStyleObject | undefined)[];
+  readonly toId?: GramStyleObject;
   rawText: string;
   text: string;
   readonly photo?: GramStyleObject;
@@ -149,12 +171,6 @@ export interface AccountMessage extends GramStyleObject {
     options?: RequestOptions
   ): Promise<AccountMessageButton[][] | undefined>;
   click(options?: AccountMessageClickOptions): Promise<AccountButtonResult>;
-  getInputChat(options?: RequestOptions): Promise<GramStyleObject | undefined>;
-  getChat(options?: RequestOptions): Promise<GramStyleObject | undefined>;
-  getInputSender(
-    options?: RequestOptions
-  ): Promise<GramStyleObject | undefined>;
-  getSender(options?: RequestOptions): Promise<GramStyleObject | undefined>;
   getReplyMessage(
     options?: RequestOptions
   ): Promise<AccountMessage | undefined>;

@@ -1,5 +1,9 @@
 # Unified Telegram client: investigation and implementation
 
+The [account peer comparison](account-peers.md) verifies shared forward metadata,
+bounded sender recovery, reduced-entity cache rules and message-context inputs
+against pinned SDKs and official contracts, including native encrypted TCP.
+
 The [installed framework comparison](web-frameworks.md) exercises actual
 Express/Koa/Fastify/Hono HTTP servers, reproduces and fixes enhanced Node response
 selection, and preserves checked migration bridges and SDK-specific differences.

@@ -19,9 +19,11 @@ function convert(value, context, origin) {
     ]),
     ...(value._ ? [['className', gramClassName(value._)]] : []),
   ]);
-  return context && ['message', 'messageService'].includes(value._)
-    ? bindAccountMessage(result, context, origin && convert(origin))
-    : result;
+  if (context && ['message', 'messageService'].includes(value._)) {
+    context.operations.rememberMessage(value, origin);
+    return bindAccountMessage(result, context, origin && convert(origin));
+  }
+  return result;
 }
 
 export function gramView(value) {

@@ -13,6 +13,10 @@ import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new globalThis.URL('../', import.meta.url));
 const modes = {
+  '--account-peers': [
+    ['typed-account-peers.ts'],
+    '1d5a564b133afa3e33ac22200f3caa29a219fa0a',
+  ],
   '--account-buttons': [
     ['typed-account-buttons.ts'],
     '5c4de84dd8440c39e36e8954d5ab0630a9360148',
@@ -99,7 +103,9 @@ const mode =
 const [selected, revision] = modes[mode];
 const fixtures = Array.isArray(selected) ? selected : [selected];
 const frozen = new Set([
-  ...(mode === '--account-buttons' ? ['src/account-message-types.d.ts'] : []),
+  ...(['--account-buttons', '--account-peers'].includes(mode)
+    ? ['src/account-message-types.d.ts']
+    : []),
   ...(mode === '--media' ? ['src/api-classes.d.ts'] : []),
   ...(mode === '--telegraf-agents'
     ? ['src/telegraf-server-types.d.ts', 'src/bot-input-types.d.ts']

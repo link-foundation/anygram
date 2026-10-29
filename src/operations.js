@@ -6,9 +6,45 @@ import { mtprotoTextParams } from './formatting.js';
 import { iterateDialogs } from './dialogs.js';
 import { parseTelegramLink } from './chat-links.js';
 import { notificationOptions, notificationPeer } from './notifications.js';
+import {
+  hasMinAccessHash,
+  rememberPeer,
+  messagePeers,
+  resultMessages,
+  peerFamily,
+  inputEntity,
+} from './peer-cache.js';
 // Normalize raw client objects without changing exact IDs or byte buffers.
 export function normalize(value) {
   return canonicalValue(value);
+}
+
+function messageOrigin(operations, message, origin) {
+  if (
+    !Number.isSafeInteger(message.id) ||
+    message.id < 1 ||
+    message.id > 0x7fffffff
+  ) {
+    return undefined;
+  }
+  const type = message.peer_id?._?.slice(4).toLowerCase();
+  if (!type) {
+    return undefined;
+  }
+  if (
+    peerFamily(origin) === type &&
+    origin[`${type}_id`] === message.peer_id[`${type}_id`]
+  ) {
+    return origin;
+  }
+  try {
+    return operations.resolveObjectPeer(message.peer_id);
+  } catch (error) {
+    if (error?.type !== 'PEER_NOT_FOUND') {
+      throw error;
+    }
+    return undefined;
+  }
 }
 
 export async function* iterateHistory(
@@ -68,6 +104,7 @@ export class RpcOperations extends MediaOperations {
     this.invoke = invoke;
     this.maxPeers = maxPeers;
     this.peers = new Map();
+    this.peerContexts = new Map();
   }
 
   async rpc(method, params = {}, options) {
@@ -92,18 +129,10 @@ export class RpcOperations extends MediaOperations {
         ? [result.chat]
         : [...(result.users ?? []), ...(result.chats ?? [])];
     for (const entity of entities) {
-      const type = entity?._?.replace(/Forbidden$/, '');
-      if (!['user', 'chat', 'channel'].includes(type)) {
-        continue;
-      }
-      const key = `${type}:${entity.id}`;
-      this.peers.set(key, entity);
-      if (entity.username) {
-        this.peers.set(`@${entity.username.toLowerCase()}`, entity);
-      }
-      while (this.peers.size > this.maxPeers) {
-        this.peers.delete(this.peers.keys().next().value);
-      }
+      rememberPeer(this.peers, entity, this.maxPeers);
+    }
+    for (const message of resultMessages(result)) {
+      this.rememberMessage(message);
     }
   }
 
@@ -117,7 +146,8 @@ export class RpcOperations extends MediaOperations {
     }
     if (
       ['user', 'channel'].includes(type) &&
-      entity.access_hash !== undefined
+      entity.access_hash !== undefined &&
+      !hasMinAccessHash(entity)
     ) {
       return {
         _: `inputPeer${type[0].toUpperCase()}${type.slice(1)}`,
@@ -139,17 +169,59 @@ export class RpcOperations extends MediaOperations {
     if (peer._ === 'inputUserSelf') {
       return { _: 'inputPeerSelf' };
     }
-    if (['inputUser', 'inputChannel'].includes(peer._)) {
+    if (
+      [
+        'inputUser',
+        'inputChannel',
+        'inputUserFromMessage',
+        'inputChannelFromMessage',
+      ].includes(peer._)
+    ) {
       return { ...peer, _: peer._.replace('input', 'inputPeer') };
     }
     if (peer._?.startsWith('peer')) {
       const type = peer._.slice(4).toLowerCase();
       const id = peer[`${type}_id`];
-      return this.inputPeer(
+      return this.contextualInputPeer(
         type === 'chat' ? { _: 'chat', id } : this.peers.get(`${type}:${id}`)
       );
     }
-    return this.inputPeer(peer);
+    return this.contextualInputPeer(peer);
+  }
+
+  contextualInputPeer(entity) {
+    try {
+      return this.inputPeer(entity);
+    } catch (error) {
+      const context =
+        entity?.min && this.peerContexts.get(`${entity._}:${entity.id}`);
+      if (error?.type !== 'PEER_NOT_FOUND' || !context) {
+        throw error;
+      }
+      return context;
+    }
+  }
+
+  rememberMessage(message, origin) {
+    origin = messageOrigin(this, message, origin);
+    if (!origin) {
+      return;
+    }
+    for (const peer of messagePeers(message)) {
+      const family = peer?._?.slice(4).toLowerCase();
+      if (!['user', 'channel'].includes(family)) {
+        continue;
+      }
+      this.peerContexts.set(`${family}:${peer[`${family}_id`]}`, {
+        _: `inputPeer${family === 'user' ? 'User' : 'Channel'}FromMessage`,
+        peer: origin,
+        msg_id: message.id,
+        [`${family}_id`]: peer[`${family}_id`],
+      });
+    }
+    while (this.peerContexts.size > this.maxPeers) {
+      this.peerContexts.delete(this.peerContexts.keys().next().value);
+    }
   }
 
   async resolvePeer(peer, options) {
@@ -175,7 +247,7 @@ export class RpcOperations extends MediaOperations {
     const actual = type === 'channel' ? BigInt(text.slice(4)) : id;
     const cached = this.peers.get(`${type}:${actual}`);
     if (cached) {
-      return this.inputPeer(cached);
+      return this.contextualInputPeer(cached);
     }
     throw new TelegramError(
       'Unknown peer ID; load dialogs or provide an InputPeer with an access hash',
@@ -204,7 +276,7 @@ export class RpcOperations extends MediaOperations {
   async resolveUsername(username, options) {
     username = username.toLowerCase();
     const cached = this.peers.get(`@${username}`);
-    if (cached) {
+    if (cached && !hasMinAccessHash(cached)) {
       return this.inputPeer(cached);
     }
     return this.resolvedPeer(
@@ -236,14 +308,14 @@ export class RpcOperations extends MediaOperations {
     if (resolved._ === 'inputPeerSelf') {
       return this.getMe(options);
     }
-    const type = resolved._.replace('inputPeer', '').toLowerCase();
+    const type = peerFamily(resolved);
     const id = resolved[`${type}_id`];
     const cached = this.peers.get(`${type}:${id}`);
-    if (cached) {
+    if (cached && !cached.min) {
       return cached;
     }
     const request = {
-      user: ['users.getUsers', { id: [{ ...resolved, _: 'inputUser' }] }],
+      user: ['users.getUsers', { id: [inputEntity(resolved)] }],
       chat: ['messages.getChats', { id: [id] }],
       channel: [
         'channels.getChannels',
@@ -339,7 +411,7 @@ export class RpcOperations extends MediaOperations {
         return { _: 'inputMessageID', id };
       });
       const result =
-        input._ === 'inputPeerChannel'
+        peerFamily(input) === 'channel'
           ? await this.rpc(
               'channels.getMessages',
               { channel: this.channel(input), id },
@@ -394,19 +466,15 @@ export class RpcOperations extends MediaOperations {
   }
 
   channel(peer) {
-    if (peer._ !== 'inputPeerChannel') {
+    if (peerFamily(peer) !== 'channel') {
       throw new TypeError('This operation requires a channel or supergroup');
     }
-    return {
-      _: 'inputChannel',
-      channel_id: peer.channel_id,
-      access_hash: peer.access_hash,
-    };
+    return inputEntity(peer);
   }
 
   async deleteMessages(peer, ids, options = {}) {
     const input = await this.resolvePeer(peer, options);
-    return input._ === 'inputPeerChannel'
+    return peerFamily(input) === 'channel'
       ? this.rpc(
           'channels.deleteMessages',
           { channel: this.channel(input), id: [].concat(ids) },
@@ -459,7 +527,7 @@ export class RpcOperations extends MediaOperations {
 
   async markAsRead(peer, id, options) {
     const input = await this.resolvePeer(peer, options);
-    if (input._ === 'inputPeerChannel') {
+    if (peerFamily(input) === 'channel') {
       return this.rpc(
         'channels.readHistory',
         { channel: this.channel(input), max_id: id },
