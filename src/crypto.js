@@ -91,6 +91,44 @@ export function deriveAes(authKey, messageKey, x) {
   };
 }
 
+function messageKeyFor(authKey, plain, x) {
+  return hash('sha256', authKey.subarray(88 + x, 120 + x), plain).subarray(
+    8,
+    24
+  );
+}
+
+export function encryptAuthenticated(authKey, authId, plain, x) {
+  const messageKey = messageKeyFor(authKey, plain, x);
+  const { key, iv } = deriveAes(authKey, messageKey, x);
+  return Buffer.concat([authId, messageKey, aesIge(plain, key, iv)]);
+}
+
+export function decryptAuthenticated(
+  authKey,
+  authId,
+  packet,
+  x,
+  label,
+  minimum = 40
+) {
+  if (
+    !(packet instanceof Uint8Array) ||
+    packet.length < minimum ||
+    (packet.length - 24) % 16 ||
+    !equal(packet.subarray(0, 8), authId)
+  ) {
+    throw new Error(`Invalid ${label} packet`);
+  }
+  const messageKey = packet.subarray(8, 24);
+  const { key, iv } = deriveAes(authKey, messageKey, x);
+  const plain = aesIge(packet.subarray(24), key, iv, true);
+  if (!equal(messageKey, messageKeyFor(authKey, plain, x))) {
+    throw new Error(`Invalid ${label} packet`);
+  }
+  return plain;
+}
+
 export function validateDh(primeBytes, generator, publicBytes) {
   const prime = integer(primeBytes);
   const g = BigInt(generator);
@@ -154,39 +192,18 @@ export class MtprotoCipher {
     plain.set(body, 32);
     plain.set(randomBytes(paddingLength), 32 + body.length);
     const x = server ? 8 : 0;
-    const messageKey = hash(
-      'sha256',
-      this.authKey.subarray(88 + x, 120 + x),
-      plain
-    ).subarray(8, 24);
-    const { key, iv } = deriveAes(this.authKey, messageKey, x);
-    return Buffer.concat([this.authId, messageKey, aesIge(plain, key, iv)]);
+    return encryptAuthenticated(this.authKey, this.authId, plain, x);
   }
 
   decrypt(packet, { server = true } = {}) {
-    packet = Buffer.from(packet);
-    if (
-      packet.length < 72 ||
-      (packet.length - 24) % 16 ||
-      !equal(packet.subarray(0, 8), this.authId)
-    ) {
-      throw new Error('Invalid MTProto packet');
-    }
-    const messageKey = packet.subarray(8, 24);
-    const x = server ? 8 : 0;
-    const { key, iv } = deriveAes(this.authKey, messageKey, x);
-    const plain = aesIge(packet.subarray(24), key, iv, true);
-    if (
-      !equal(
-        messageKey,
-        hash('sha256', this.authKey.subarray(88 + x, 120 + x), plain).subarray(
-          8,
-          24
-        )
-      )
-    ) {
-      throw new Error('Invalid MTProto packet');
-    }
+    const plain = decryptAuthenticated(
+      this.authKey,
+      this.authId,
+      packet,
+      server ? 8 : 0,
+      'MTProto',
+      72
+    );
     const length = plain.readInt32LE(28);
     const padding = plain.length - length - 32;
     const messageId = plain.readBigInt64LE(16);

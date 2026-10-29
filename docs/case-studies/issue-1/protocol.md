@@ -210,3 +210,22 @@ tests pass on Node, Bun and Deno; declarations and the typed email example
 compile. These deterministic tests do not establish live email delivery or
 provider-token issuance. Official-only Firebase/paid flows and passkey
 application restrictions remain outside this helper.
+
+## Secret-chat envelope verification
+
+`SecretChatCipher` implements the separate MTProto 2.0 secret-chat envelope
+described by [Telegram](https://core.telegram.org/api/end-to-end). It requires an
+explicit originator role, bounds raw TL bodies and validates fingerprint,
+SHA-256 message key, AES-IGE plaintext length and 12–1024 byte padding. Encryption
+and authentication share primitives with the cloud cipher, while retaining the
+different plaintext headers and direction rules. Key bytes are copied privately;
+`destroy()` clears that owned buffer and disables use.
+
+Six regressions compare independently calculated wire bytes through real GramJS
+AES-IGE, including both directions, valid padding boundaries, authenticated
+invalid layouts, corruption/truncation, byte limits and destruction. All 186
+Node/Bun/Deno tests and strict checks pass locally. The captured primary schema,
+encryption, sequence-number and PFS documents have hashes/source URLs in
+`data/secret-sources.json`. The cipher alone does not establish secret-chat
+interoperability: negotiation, sequence/gap handling, re-keying and live
+controlled-account verification remain open.

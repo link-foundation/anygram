@@ -7,6 +7,16 @@ import type {
   UpdateState,
 } from './index.js';
 import type { TlCodec } from './tl.js';
+/** MTProto 2.0 envelopes only; callers manage chat keys, layers and sequence state. */
+export declare class SecretChatCipher {
+  constructor(
+    key: Uint8Array,
+    options: { originator: boolean; maxBytes?: number }
+  );
+  encrypt(body: Uint8Array): Uint8Array;
+  decrypt(packet: Uint8Array): Uint8Array;
+  destroy(): void;
+}
 export interface Transport {
   request(packet: Uint8Array, options?: RequestOptions): Promise<Uint8Array>;
   send?(packet: Uint8Array, options?: RequestOptions): Promise<void>;

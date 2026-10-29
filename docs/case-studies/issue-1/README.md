@@ -486,3 +486,32 @@ checks. The locked checker repair at e87752c passed all nine OS/runtime jobs and
 applicable gates in
 [run 40793885312](https://github.com/link-foundation/anygram/actions/runs/40793885312).
 This run predates the lifecycle and channel-timeout changes.
+
+## Secret-chat envelope checkpoint
+
+Telegram's [end-to-end specification](https://core.telegram.org/api/end-to-end)
+defines a different encrypted envelope from the cloud MTProto header. The
+native `SecretChatCipher` implements that MTProto 2.0 byte envelope with explicit
+originator direction, a copied 256-byte key, SHA-1 key fingerprint, authenticated
+SHA-256 message key, AES-IGE and validated length/padding. Input limits are
+checked before large cryptographic allocations. Destroying the cipher clears
+its owned key bytes and makes subsequent operations fail.
+
+Six tests failed before the primitive existed. They compare both directions to
+independently derived keys and the actual GramJS AES-IGE implementation; crafted
+authenticated packets cover minimum/maximum padding, invalid lengths, excess
+padding, direction mismatch, corruption, truncation and byte limits. Caller key
+mutation and repeated destruction are covered. Cloud and secret envelopes share
+their key derivation/authentication primitives rather than duplicating them.
+
+All 186 tests pass on Node, Bun and Deno. Strict lint, format, declaration/example
+and duplication checks pass; the detector scans 46 production JS/TS files with
+zero clones. The primary schema, encryption, sequence and forward-secrecy
+documents are archived with capture timestamps and hashes in
+`data/secret-sources.json`. The existing lifecycle and channel-timeout heads
+passed all nine runtime/OS jobs in
+[run 40794048905](https://github.com/link-foundation/anygram/actions/runs/40794048905)
+and [run 40794298276](https://github.com/link-foundation/anygram/actions/runs/40794298276).
+Fresh CI is required for this envelope change. This is a byte primitive:
+complete secret-chat negotiation, sequencing, persistence, forward secrecy and
+live peer verification remain acceptance work.

@@ -21,3 +21,5 @@ buffers to bound assembly copies for fragmented TCP/WebSocket streams. Preserve
 exact IDs and expose typed failures without retrying ambiguous side effects.
 Drain accepted updates and persisted cursors before stopping recovery, preserve
 independent failures, and bound pending session notifications and handler errors.
+Add bounded MTProto 2.0 secret-chat envelope encryption/decryption with explicit
+originator direction, integrity/padding checks and owned-key destruction.
