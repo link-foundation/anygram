@@ -217,6 +217,14 @@ verification requirements, flood stops and exhausted cleanup yield failure statu
 Group listings retain raw `id` values and include an exact `markedId` usable by
 the leave command, including private channels without usernames.
 
+The [follow application bridge](examples/follow-client.js) also supports
+standalone `connect()`/`disconnect()` around its account helpers. It holds the
+same owned connection scope used by `withConnection()`. Always await
+`disconnect()` in `finally`; cancellation initiates cleanup and its failure
+remains observable there. Callback-owned work rejects manual disconnection.
+The bridge accepts a configured Anygram account; the original environment-based
+constructor and `.env` session-writing API still require migration.
+
 `client.withConnection(async (connected) => { /* account work */ }, options)`
 opens one selected backend and awaits cleanup before returning. The callback
 receives a client pinned to that backend. Supplying `start: { ...loginOptions }`

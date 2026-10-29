@@ -120,11 +120,15 @@ with zero clones across 73 production sources and a 78-entry package dry run.
 Pinned follow classes execute through the bridge, and a migrated command now
 covers input/cache, login prompts, portable session persistence and option aliases.
 Actual GramJS/teleproto construction/session exports and native TCP cover these
-paths. Legacy standalone constructor/connection/session compatibility and
+paths. Legacy standalone constructor/session compatibility and
 controlled-account evidence remain open. Bridge head c55c44a passed all nine
 runtime/OS jobs and applicable gates in run 40829426170.
-Commit/push this step and verify exact CI SHA and timestamps, then write failing
-tests for the remaining standalone connection surface before implementing it.
+CLI head d4b241c passed all nine runtime/OS jobs and applicable gates in run
+40832057991, created 06:54:26Z and completed 06:56:31Z on 2026-10-29.
+Eleven standalone connection regressions now pass, including actual-client and
+native TCP checks. All 491 tests pass on each runtime, together with strict
+checks and the zero-clone scan. Commit/push this checkpoint and verify fresh CI.
+Then reproduce and implement the remaining constructor/session API.
 
 Keep protocol completion (secret chats/call media/transports), complete backend
 return/event/style compatibility and actual downstream scenarios open in the

@@ -1,6 +1,7 @@
 import { parseTelegramLink } from '../src/index.js';
 import { gramView } from '../src/gram-style.js';
 import { normalize } from '../src/operations.js';
+import { holdFollowConnection } from './follow-connection.js';
 
 const joined = (result) => {
   const value = gramView(result);
@@ -30,30 +31,83 @@ export class FollowClient {
       )
     );
     this.client = null;
+    this.manual = null;
+    this.owned = false;
   }
 
   active() {
     if (!this.client) {
-      throw new Error('Client not connected. Use withConnection().');
+      throw new Error(
+        'Client not connected. Use connect() or withConnection().'
+      );
     }
     return this.client;
   }
 
   async withConnection(task) {
+    if (this.manual) {
+      throw new Error('Follow connection is already owned');
+    }
+    return await this.#run(task);
+  }
+
+  async #run(task) {
     if (typeof task !== 'function') {
       throw new TypeError('Expected a connection callback');
     }
-    if (this.client) {
+    if (this.owned) {
       throw new Error('Follow connection is already owned');
     }
-    return await this.account.withConnection(async (client) => {
-      this.client = client;
-      try {
-        return await task(client.gramjs, this.Api);
-      } finally {
-        this.client = null;
+    this.owned = true;
+    try {
+      return await this.account.withConnection(async (client) => {
+        this.client = client;
+        try {
+          return await task(client.gramjs, this.Api);
+        } finally {
+          this.client = null;
+        }
+      }, this.scope);
+    } finally {
+      this.owned = false;
+    }
+  }
+
+  async connect() {
+    if (this.manual || this.owned) {
+      throw new Error('Follow connection is already owned');
+    }
+    const connection = holdFollowConnection(
+      (task) => this.#run(task),
+      this.scope.signal
+    );
+    this.manual = connection;
+    try {
+      return await connection.ready;
+    } catch (error) {
+      if (this.manual === connection) {
+        this.manual = null;
       }
-    }, this.scope);
+      throw error;
+    }
+  }
+
+  async disconnect() {
+    const connection = this.manual;
+    if (!connection) {
+      if (this.owned) {
+        throw new Error('Connection cleanup belongs to the active callback');
+      }
+      return;
+    }
+    connection.release();
+    try {
+      await connection.closed;
+    } finally {
+      if (this.manual === connection) {
+        this.manual = null;
+      }
+    }
   }
 
   getMe() {

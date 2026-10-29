@@ -436,3 +436,25 @@ Fresh CI is required for this command checkpoint. Legacy standalone connection/
 constructor/session compatibility, controlled-account login and actual Telegram
 application behavior remain open. This local command does not establish complete
 downstream or backend parity, and all other unmet issue criteria remain unfinished.
+
+## Follow standalone connection checkpoint
+
+The bridge now implements `connect()` and `disconnect()` by holding the existing
+callback-owned scope. Eleven regressions cover connection readiness, overlapping
+owners, disconnect during startup, pre-cancellation, cancellation while held,
+partial-login failures and exhausted cleanup. Background failures are handled
+immediately and retained for `disconnect()`; releasing ownership waits for both
+cleanup stages. Calling manual disconnect from callback-owned work rejects
+instead of deadlocking. Helpers become unavailable before cleanup finishes.
+Actual GramJS/teleproto clients serialize account requests through this path;
+an encrypted native TCP peer verifies requests and transport closure.
+
+The CLI head d4b241c passed all nine runtime/OS jobs and applicable gates in
+[run 40832057991](https://github.com/link-foundation/anygram/actions/runs/40832057991),
+created 2026-10-29T06:54:26Z and completed 2026-10-29T06:56:31Z.
+The original environment-based constructor and `.env` session-writing API,
+controlled-account evidence and the broader issue requirements remain open.
+
+All 491 tests pass on Node, Bun and Deno. Strict lint, formatting, full type
+checking and the zero-clone scan of 73 production sources pass. Fresh CI is
+required for this standalone connection checkpoint.
