@@ -108,16 +108,17 @@ examples/. No live credentials or sessions may be included in research data.
 
 ## Next steps
 
-Current downstream work: preserve the verified invite/notification and bounded
-follow workflow checkpoint, then complete its connection cleanup and wrapper/CLI
-migration. Use the immutable follow source and related cleanup review as the
-contract; reproduce failure handling before implementing it. Never overwrite a
-primary application failure with a cleanup failure. Controlled-account validation
-remains blocked without credentials; independent implementation work continues.
+Current downstream work: preserve the verified connection ownership checkpoint,
+then complete follow's wrapper/CLI migration. The unified scope now retains all
+cleanup causes and the original work failure, including partial setup and
+cancellation. Use the immutable follow source as the migration contract; write
+reproducing tests before implementing missing behavior. Controlled-account
+validation remains blocked without credentials; independent work continues.
 
-The workflow checkpoint passes 407 tests on each runtime and strict checks, with
-zero clones across 71 production sources and a 76-entry package dry run. All nine
-runtime/OS jobs and applicable gates passed for chat-link head b3a8f18 in run 40822942152. Commit/push the next step and verify its exact CI SHA and timestamps.
+The connection checkpoint passes 425 tests on each runtime and strict checks,
+with zero clones across 72 production sources and a 77-entry package dry run.
+All nine runtime/OS jobs and applicable gates passed for follow head 5baa0c3 in
+run 40824428315. Commit/push the new step and verify exact CI SHA and timestamps.
 
 Keep protocol completion (secret chats/call media/transports), complete backend
 return/event/style compatibility and actual downstream scenarios open in the
@@ -464,8 +465,11 @@ Downstream account workflow audit:
   approval/verification, settings, history, leave and rate-limit outcomes.
   Nineteen regressions include batch/settings ownership failures, actual clients
   and encrypted TCP; all 407 tests and strict checks pass on each runtime.
-- Next: connection cleanup that preserves original errors, followed by the
-  downstream wrapper/CLI migration and controlled-account evidence.
+- Added an owned connection scope with bounded disconnect/destroy retries,
+  original-error preservation, cancellation and shared backend ownership.
+  Eighteen regressions include actual GramJS/teleproto destruction and native
+  TCP closure. All 425 tests and strict checks pass on each runtime.
+- Next: downstream wrapper/CLI migration and controlled-account evidence.
 - Continue all other unmet protocol/runtime/compatibility/downstream criteria.
   Controlled accounts and official-app-only passkeys remain externally blocked;
   independent implementation work remains available. Keep PR #2 draft/unmerged.

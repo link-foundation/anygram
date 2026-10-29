@@ -1259,3 +1259,35 @@ required for this workflow checkpoint. Follow's full wrapper/CLI migration,
 connection cleanup and controlled-account evidence remain open, together with
 all other unmet criteria. The latest issue/sub-issue inventory and all three
 PR feedback streams are empty. Main remains an ancestor of the branch.
+
+Connection ownership checkpoint: `Anygram.withConnection` pins the callback to
+one selected backend, runs connection/login and application work once, and awaits
+`disconnect` followed by `destroy` when supported. Each cleanup stage has at most
+three attempts; its delay is validated and bounded. Cancellation stops setup or
+the application's operations without skipping cleanup. Overlapping scopes for
+the same raw backend reject before resource creation. A backend with no cleanup
+capability is rejected before connecting.
+
+Exhausted cleanup stages raise an AggregateError containing every failed attempt
+with the original cause. When application work also failed, that exact failure
+is retained first and as the aggregate cause, rather than being overwritten by a
+finally block. Successful cleanup retries preserve the callback result. A failed
+destruction stage remains explicit even when disconnect succeeded. Destruction
+may permanently close a backend; later independent scopes need a fresh client.
+The policy addresses the retry/all-causes requirement in the immutable
+[follow cleanup review](https://github.com/konard/follow/pull/9#issuecomment-3465820163).
+
+Eighteen regressions cover failing-before missing scopes and dropped login
+request options, partial setup, result/error ownership, cancellation, stage bounds,
+asynchronous completion, diagnostics and concurrent ownership. Actual GramJS and
+teleproto clients execute their real destruction methods; an encrypted native
+TCP test verifies the socket is closed before returning its RPC result. The typed
+account scope checks callback inference, login options and dialog iteration.
+All 425 tests pass on Node, Bun and Deno, with strict lint, formatting, full types,
+zero clones across 72 production sources and 77 permitted package entries.
+
+Follow-workflow head 5baa0c3 passed all nine runtime/OS jobs and applicable gates
+in [run 40824428315](https://github.com/link-foundation/anygram/actions/runs/40824428315),
+created 2026-10-29T05:37:03Z and completed 2026-10-29T05:39:34Z. Fresh CI is
+required for this connection checkpoint. Full downstream wrapper/CLI migration,
+controlled-account scenarios and every other unmet requirement remain open.

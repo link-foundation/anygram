@@ -187,6 +187,21 @@ by default; `continueOnFloodWait` processes later links without replaying or
 waiting on the failed operation. Capacity errors always stop. The application
 owns durable progress, deliberate retries and user interaction for verification.
 
+`client.withConnection(async (connected) => { /* account work */ }, options)`
+opens one selected backend and awaits cleanup before returning. The callback
+receives a client pinned to that backend. Supplying `start: { ...loginOptions }`
+uses `start` instead of `connect`; `signal` cancels setup and is available to pass
+to operations. Cleanup ignores cancellation, attempts `disconnect` and then
+`destroy` when supported, and retries each failed stage up to `cleanupAttempts`
+(1–3, default 3), with `cleanupDelay` milliseconds between attempts (0–1000,
+default 100). Login and application work run once. An exhausted stage raises an
+`AggregateError` retaining every failed attempt, plus the original application
+error when present. Overlapping scopes on the same backend reject before opening
+another connection. Destruction may permanently close the underlying client;
+create another client for a later independent scope. The
+[typed account scope](examples/typed-account-scope.ts) demonstrates login,
+dialog iteration and inferred callback results.
+
 `Session` can import Anygram, GramJS/teleproto, and Telethon string sessions.
 Use `session.save('gramjs')` to export an authorized portable session for
 GramJS/teleproto. The optional client factory uses in-memory string sessions,

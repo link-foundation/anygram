@@ -2,6 +2,7 @@ import { TelegramError, UnsupportedError } from './errors.js';
 import { methodProxy, requestOf } from './requests.js';
 import { iterateHistory } from './operations.js';
 import { botTextParams } from './formatting.js';
+import { withConnection } from './lifecycle.js';
 
 export class Anygram {
   constructor({ adapters = [], backend, debug } = {}) {
@@ -33,6 +34,10 @@ export class Anygram {
 
   withBackend(backend) {
     return new Anygram({ adapters: this.adapters, backend, debug: this.debug });
+  }
+
+  withConnection(task, options) {
+    return withConnection(this, task, options);
   }
 
   backend(name = this.selected ?? this.adapters[0]?.name) {

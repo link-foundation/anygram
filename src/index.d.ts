@@ -210,6 +210,11 @@ export interface NotificationOptions extends RequestOptions {
   storiesHideSender?: boolean;
   storiesSound?: TlRequest;
 }
+export interface ConnectionScopeOptions extends RequestOptions {
+  start?: Parameters;
+  cleanupAttempts?: 1 | 2 | 3;
+  cleanupDelay?: number;
+}
 export declare class Anygram {
   constructor(options?: ClientOptions);
   adapters: Adapter[];
@@ -225,6 +230,10 @@ export declare class Anygram {
   mtcute: { call: Anygram['invoke']; sendText: Anygram['sendMessage'] };
   mtproto: { call: Anygram['invoke'] };
   withBackend(backend: string): Anygram;
+  withConnection<T>(
+    task: (client: Anygram) => T | PromiseLike<T>,
+    options?: ConnectionScopeOptions
+  ): Promise<T>;
   backend<T extends object = object>(name?: string): T;
   capabilities(): { name: string; protocol: string }[];
   invoke<T = unknown>(
