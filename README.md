@@ -835,7 +835,10 @@ Shared account views support `instanceof Api.*` guards and schema serialization
 without changing their enumerable fields or bound helpers. See [the checked example](examples/typed-account-class-identity.ts)
 and [class-identity comparisons and limits](docs/case-studies/issue-1/account-class-identity.md).
 Complete upload signatures, old-schema bridges, rich formatting/model parity,
-drafts, array totals and legacy big-integer methods remain open.
+drafts and legacy big-integer methods remain open.
+Account message/dialog arrays retain `.total`, and zero-limit collections return
+only a server count through one bounded request. See [the checked example](examples/typed-account-collections.ts)
+and [collection comparisons and limits](docs/case-studies/issue-1/account-collections.md).
 Direct `client.invoke` keeps raw backend results.
 
 The [follow migration bridge](examples/follow-client.js) adapts a configured

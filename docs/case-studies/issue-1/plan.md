@@ -1686,5 +1686,35 @@ Account class identity follow-up:
       diffs above 300 files, so review uses the complete local atomic change.
       A bare Node discovery command also collected five archived research
       scripts and failed; the corrected repository npm test command passes.
-- [ ] Commit/push and verify exact-head CI. Continue historical schema
-      negotiation, account models and every wider unfinished criterion.
+- [x] Commit/push class-identity head 721e68851301efad2da6d8ea2cddc55e81d8c91b.
+      Exact-head run 40995489858, created 2026-10-30T03:06:30Z, passes.
+      Historical schema negotiation, account models and wider criteria remain open.
+
+Recovery and account collection metadata plan (2026-10-30):
+
+- [x] Read issue #1, all issue/PR conversation, inline and review endpoints and
+      the empty required-sub-issue endpoint. New feedback requests continued
+      implementation after a model-capacity interruption.
+- [x] Verify prepared branch and clean tree; fetch main. Latest class-identity
+      head 721e68851301efad2da6d8ea2cddc55e81d8c91b passes exact-head run
+      40995489858, created 2026-10-30T03:06:30Z.
+- [x] Reproduce missing message/dialog totals with actual pinned SDK collection
+      calls before changing production code. Keep canonical array shapes intact.
+- [x] Retain server counts through shared page operations and detached account
+      collections, including zero-limit count requests and explicit-ID totals.
+- [x] Verify concurrency, cancellation, malformed counts, selected adapters,
+      independent encrypted TCP and checked public declarations.
+- [x] Run focused and all local tests, static/generation checks and review the
+      atomic diff. All 4,482 core cases pass on Node/Bun/Deno; all 65 collection
+      cases also pass on Node 20. Frozen sources fail 64 with one canonical guard;
+      preceding declarations yield three diagnostics. Strict checks and actual SDK
+      compilation pass, with 197 production sources and zero clones. All 71
+      framework cases pass on Node 20/26, Bun and Deno; 27 native terminal, eight
+      Node 20 wire, sixteen parser and bounded FIFO checks pass. Packaging has
+      242 permitted files. Deno auto-install changed npm dependency links; restoring
+      the npm lock graph resolves the unrelated Prettier disagreement. The first
+      framework Bun attempt raced that restoration; rerunning passes all 71.
+- [ ] Commit/push only the prepared branch, update PR evidence and verify
+      exact-head CI before continuing implementation.
+- [ ] Continue every wider open acceptance criterion. Controlled production
+      accounts remain unavailable; local evidence does not complete that work.

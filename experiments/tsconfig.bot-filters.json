@@ -15,6 +15,7 @@
   },
   "include": [
     "typed-account-class-sdk-fixture.ts",
+    "typed-account-collections-sdk-fixture.ts",
     "typed-account-media-options-sdk-fixture.ts",
     "typed-account-default-sdk-fixture.ts",
     "typed-account-media-sdk-fixture.ts",

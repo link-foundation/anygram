@@ -1,0 +1,68 @@
+{
+  "retrievedAt": "2026-10-30",
+  "precedingRevision": "721e68851301efad2da6d8ea2cddc55e81d8c91b",
+  "versions": {
+    "gramjs": "2.26.22",
+    "teleproto": "1.232.0"
+  },
+  "sources": [
+    {
+      "path": "node_modules/telegram/Helpers.js",
+      "sha256": "5a233988fecd09bf5a1b477ec833ee1f68209e7743ecea1f7e97096bf5da5b04"
+    },
+    {
+      "path": "node_modules/telegram/requestIter.js",
+      "sha256": "766b9d11edd2b5847654bbb59044d891ed0f1289541d6184d76290deae716842"
+    },
+    {
+      "path": "node_modules/telegram/client/messages.js",
+      "sha256": "0f1f8a2761d493065ea0f3c7dff27c32033045ad2a38b75c9e1ad5e2ea26ed14"
+    },
+    {
+      "path": "node_modules/telegram/client/dialogs.js",
+      "sha256": "29a28be17c468ae748e4aed1473815261752654ebfca3aa165008746591207fc"
+    },
+    {
+      "path": "node_modules/teleproto/Helpers.js",
+      "sha256": "3b55f5dedac12b266987c73d329d79ec16eb09de8eeff9b1437ad4ea2ae5e8ab"
+    },
+    {
+      "path": "node_modules/teleproto/requestIter.js",
+      "sha256": "937006aaa24e78d7b6fae9f6cfbec1facf1f3c6eadfe9d7e38c4cee51a085c9f"
+    },
+    {
+      "path": "node_modules/teleproto/client/methods/messages.js",
+      "sha256": "191d1f978bcab6d9558af76c7536223a2eafb30ef0dbe3c1b2f46ddc78fc126e"
+    },
+    {
+      "path": "node_modules/teleproto/client/methods/dialogs.js",
+      "sha256": "d6dd029e729c6662343cfc9c9088da7d82f8e2fa974bc83c2bf0f931197e1831"
+    },
+    {
+      "path": "docs/case-studies/issue-1/data/account-collections/messages.messagesSlice.md",
+      "sha256": "33b68d2eabfca55cbfbc55ea5275261d2703384ce80b2df20adb853ea64c35ca"
+    },
+    {
+      "path": "docs/case-studies/issue-1/data/account-collections/messages.dialogsSlice.md",
+      "sha256": "db272efdefe9d1ed7b56da192d37eefb3ed95c0e6094f6172ea5000f03e95e15"
+    },
+    {
+      "path": "docs/case-studies/issue-1/data/account-collections/messages.channelMessages.md",
+      "sha256": "46010eeee59b9f2f84abb8d18218914f64a2cfb91b57f3f9a8e05380a7948989"
+    }
+  ],
+  "references": [
+    "https://gram.js.org/beta/classes/TelegramClient.html",
+    "https://gram.js.org/beta/classes/helpers.TotalList.html",
+    "https://core.telegram.org/constructor/messages.messagesSlice",
+    "https://core.telegram.org/constructor/messages.dialogsSlice",
+    "https://core.telegram.org/constructor/messages.channelMessages"
+  ],
+  "observedContracts": [
+    "SDK collections expose enumerable writable total metadata",
+    "ID collection total is requested ID count",
+    "Slice totals use the server count; full vectors use length",
+    "GramJS limit zero loads a finite page while teleproto returns only the count",
+    "Both SDK type declarations permit undefined totals"
+  ]
+}

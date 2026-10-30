@@ -118,26 +118,43 @@ function dialogEntries(result, operations) {
   return entries;
 }
 
+async function dialogPage(operations, cursor, requested, options, onPage) {
+  options.signal?.throwIfAborted();
+  const result = await operations.rpc(
+    'messages.getDialogs',
+    { ...cursor, limit: requested, hash: 0n },
+    options
+  );
+  options.signal?.throwIfAborted();
+  const entries = dialogEntries(result, operations);
+  onPage?.(result);
+  return { result, entries };
+}
+
 /** Shared raw-TL pagination. The page budget also bounds retained peer keys. */
-export async function* iterateDialogs(operations, input = {}) {
+export async function* iterateDialogs(operations, input = {}, onPage) {
   const { limit, pageSize, maxPages, options, cursor } = dialogOptions(input);
   const seen = new Set();
   let remaining = limit;
   let lastCursor;
-  for (let page = 0; remaining > 0; page++) {
-    options.signal?.throwIfAborted();
+  const countOnly = limit === 0 && Boolean(onPage);
+  for (let page = 0; remaining > 0 || (page === 0 && countOnly); page++) {
     if (page === maxPages) {
       throw new TelegramError('Dialog pagination request limit reached', {
         type: 'DIALOG_PAGE_LIMIT',
       });
     }
-    const requested = Math.min(pageSize, remaining);
-    const result = await operations.rpc(
-      'messages.getDialogs',
-      { ...cursor, limit: requested, hash: 0n },
-      options
+    const requested = countOnly ? 1 : Math.min(pageSize, remaining);
+    const { result, entries } = await dialogPage(
+      operations,
+      cursor,
+      requested,
+      options,
+      onPage
     );
-    const entries = dialogEntries(result, operations);
+    if (countOnly) {
+      return;
+    }
     for (const entry of entries) {
       options.signal?.throwIfAborted();
       const key = peerKey(entry.dialog.peer);

@@ -397,6 +397,11 @@ export class RpcOperations extends MediaOperations {
   }
 
   async getMessages(peer, options = {}) {
+    const result = await this.getMessagePage(peer, options);
+    return result.messages ?? [];
+  }
+
+  async getMessagePage(peer, options = {}) {
     const input = await this.resolvePeer(peer, options);
     const params = objectRequest(requestOf('messages.getHistory', options));
     if (options.ids) {
@@ -428,7 +433,7 @@ export class RpcOperations extends MediaOperations {
               options
             )
           : await this.rpc('messages.getMessages', { id }, options);
-      return result.messages;
+      return result;
     }
     const result = await this.rpc(
       'messages.getHistory',
@@ -445,7 +450,7 @@ export class RpcOperations extends MediaOperations {
       },
       options
     );
-    return result.messages ?? [];
+    return result;
   }
 
   async getRichMessage(peer, message, options = {}) {
@@ -488,8 +493,8 @@ export class RpcOperations extends MediaOperations {
     );
   }
 
-  iterDialogs(options) {
-    return iterateDialogs(this, options);
+  iterDialogs(options, onPage) {
+    return iterateDialogs(this, options, onPage);
   }
 
   async editMessage(peer, { id, text, message = text, ...options }) {

@@ -11,7 +11,9 @@ now survive backend scopes and bound operations; canonical methods remain plain.
 photo/MIME inference, thumbnails, attributes and current flags. Complete upload
 signatures and old-schema bridges remain open. [Account class guards](account-class-identity.md)
 now preserve native `Api` identity, complete serialized bytes and bound helpers
-across selected routes. The
+across selected routes. [Account collection counts](account-collections.md)
+now survive partial pages and detached views, including bounded count-only
+requests and explicit-ID snapshots. The
 [escaped-output investigation](markup-allocations.md) records the CI resource
 regressions and allocation guards without increasing deadlines.
 

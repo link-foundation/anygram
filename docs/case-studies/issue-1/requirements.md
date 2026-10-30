@@ -439,6 +439,16 @@ created 2026-10-29T05:37:03Z and completed 2026-10-29T05:39:34Z. Fresh CI is
 required for this connection checkpoint. Full downstream wrapper/CLI migration,
 controlled-account scenarios and every other unmet requirement remain open.
 
+## Account collection metadata checkpoint
+
+The [collection comparison](account-collections.md) advances R01/R02/R05/R08/R17/R19
+with message/dialog totals, bounded count-only requests, explicit-ID snapshots
+and detached metadata. All 65 focused cases pass on Node/Bun/Deno; frozen preceding
+sources fail 64 with one canonical-shape guard retained. Actual SDK collectors,
+ten selected routes and eight independent encrypted TCP RPCs verify these finite
+contracts. Complete history styles, other collections, drafts, legacy integers,
+old-schema bridges and every wider unfinished criterion remain open.
+
 ## Fixed-width request migration checkpoint
 
 Actual GramJS/teleproto objects exposed two independent request-path gaps:

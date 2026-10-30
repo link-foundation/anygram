@@ -4,6 +4,7 @@ import { bindAccountMessage } from './account-message.js';
 import { accountMessageId } from './account-message-id.js';
 import { accountTextSettings, clientParseMode } from './account-text.js';
 import { bindApiView } from './api.js';
+import { accountCollection, collectionCount } from './account-collections.js';
 
 function convert(value, context, origin) {
   if (value instanceof Uint8Array) {
@@ -151,10 +152,30 @@ export function createGramStyle(client, kind = 'gramjs') {
       return wrap(await operations.getInputEntity(peer, options));
     },
     async getMessages(peer, options) {
+      options = { ...options };
+      if (Array.isArray(options.ids)) {
+        options.ids = options.ids.slice();
+      }
+      options.signal?.throwIfAborted();
+      if (Array.isArray(options.ids) && options.ids.length === 0) {
+        return accountCollection([], 0);
+      }
+      const countOnly = options.limit === 0 && !options.ids;
       const input = await operations.resolvePeer(peer, options);
-      return wrap(await operations.getMessages(input, options), input).map(
-        (message) => (message._ === 'messageEmpty' ? undefined : message)
+      const result = await operations.getMessagePage(
+        input,
+        countOnly ? { ...options, limit: 1 } : options
       );
+      options.signal?.throwIfAborted();
+      const total = options.ids
+        ? [].concat(options.ids).length
+        : collectionCount(result, 'messages');
+      const messages = countOnly
+        ? []
+        : wrap(result.messages ?? [], input).map((message) =>
+            message._ === 'messageEmpty' ? undefined : message
+          );
+      return accountCollection(messages, total);
     },
     async getRichMessage(peer, message, options) {
       options?.signal?.throwIfAborted();
@@ -181,10 +202,13 @@ export function createGramStyle(client, kind = 'gramjs') {
     },
     async getDialogs(options) {
       const dialogs = [];
-      for await (const dialog of style.iterDialogs(options)) {
-        dialogs.push(dialog);
+      let total = 0;
+      for await (const entry of operations.iterDialogs(options, (result) => {
+        total = collectionCount(result, 'dialogs');
+      })) {
+        dialogs.push(dialogView(entry, wrap));
       }
-      return dialogs;
+      return accountCollection(dialogs, total);
     },
   };
   context.style = style;

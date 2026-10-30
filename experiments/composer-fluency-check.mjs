@@ -13,6 +13,10 @@ import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new globalThis.URL('../', import.meta.url));
 const modes = {
+  '--account-collections': [
+    ['typed-account-collections.ts'],
+    '721e68851301efad2da6d8ea2cddc55e81d8c91b',
+  ],
   '--account-media': [
     ['typed-account-media.ts'],
     '78df293f58eb148780f74570cee57bdebc23bfca',

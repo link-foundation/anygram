@@ -382,6 +382,10 @@ export interface GramStyleObject extends Parameters {
   _: string;
   className: string;
 }
+/** Detached account results with the server count, independent of array length. */
+export interface AccountCollection<T> extends Array<T> {
+  total: number;
+}
 export interface GramStyleDialog {
   dialog: GramStyleObject;
   entity: GramStyleObject;
@@ -419,12 +423,14 @@ export interface GramStyleClient
   getMessages(
     peer: unknown,
     options?: Parameters
-  ): Promise<(AccountMessage | undefined)[]>;
+  ): Promise<AccountCollection<AccountMessage | undefined>>;
   iterMessages(
     peer: unknown,
     options?: Parameters
   ): AsyncIterable<AccountMessage>;
-  getDialogs(options?: DialogOptions): Promise<GramStyleDialog[]>;
+  getDialogs(
+    options?: DialogOptions
+  ): Promise<AccountCollection<GramStyleDialog>>;
   iterDialogs(options?: DialogOptions): AsyncIterable<GramStyleDialog>;
 }
 export type TelegramChatLink =
