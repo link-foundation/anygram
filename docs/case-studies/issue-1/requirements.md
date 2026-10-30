@@ -112,6 +112,16 @@ source closure and independent cleanup errors have finite regressions. Complete
 upload signatures, historical schema bridges, refined models and all wider open
 criteria remain unfinished.
 
+The [account class identity follow-up](account-class-identity.md) preserves native
+`Api` guards on plain and bound account views, including nested media and peer
+objects. All 22 finite cases pass; frozen preceding source fails 21 and retains
+one existing guard. Every 2,627 finite non-Bool schema view retains complete
+serialization, and actual SDK comparisons cover 1,931 compatible GramJS and
+2,623 compatible teleproto definitions. Ten selected routes, two independent
+encrypted TCP cases and checked SDK migration fixtures verify local contracts.
+Historical schema bridges, refined result types and all wider criteria remain
+unfinished.
+
 The [escaped-output allocation investigation](markup-allocations.md) reproduces
 two failures from HTML-head CI with allocation regressions and capped-heap probes.
 Shared preflight guards reject expansion before allocating escaped output.

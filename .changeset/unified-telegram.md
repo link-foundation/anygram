@@ -293,3 +293,8 @@ current media flags and detached references through sends, albums and bound
 replies/edits. Add finite concurrent upload batches, fractional SDK progress,
 random-access/CustomFile inputs and cancellation during pending reads. Retain
 ordered encrypted-file state, independent part buffers and cleanup failures.
+
+Preserve native Api class guards and schema methods on shared account views
+without changing enumerable fields, existing prototypes or origin-bound helpers.
+Rebuild owned views with selected SDK runtime classes before invocation, retaining
+canonical raw identity and native subclass semantics.

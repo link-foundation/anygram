@@ -3,6 +3,7 @@ import { camel, gramClassName } from './requests.js';
 import { bindAccountMessage } from './account-message.js';
 import { accountMessageId } from './account-message-id.js';
 import { accountTextSettings, clientParseMode } from './account-text.js';
+import { bindApiView } from './api.js';
 
 function convert(value, context, origin) {
   if (value instanceof Uint8Array) {
@@ -14,13 +15,15 @@ function convert(value, context, origin) {
   if (!value || typeof value !== 'object') {
     return value;
   }
-  const result = Object.fromEntries([
-    ...Object.entries(value).map(([key, entry]) => [
-      camel(key),
-      convert(entry, context, origin),
-    ]),
-    ...(value._ ? [['className', gramClassName(value._)]] : []),
-  ]);
+  const result = bindApiView(
+    Object.fromEntries([
+      ...Object.entries(value).map(([key, entry]) => [
+        camel(key),
+        convert(entry, context, origin),
+      ]),
+      ...(value._ ? [['className', gramClassName(value._)]] : []),
+    ])
+  );
   if (context && ['message', 'messageService'].includes(value._)) {
     context.operations.rememberMessage(value, origin);
     return bindAccountMessage(result, context, origin && convert(origin));

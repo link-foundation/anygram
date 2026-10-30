@@ -1,0 +1,65 @@
+{
+  "recordedAt": "2026-10-30T02:59:41.486Z",
+  "installed": [
+    {
+      "package": "telegram",
+      "version": "2.26.22",
+      "publishedSource": "https://registry.npmjs.org/telegram/-/telegram-2.26.22.tgz",
+      "files": [
+        {
+          "path": "tl/api.js",
+          "sha256": "08fa5238ab58e2c8f918e0bc49fb348824d573b311c06c85c33cd8da5f4b6f0e"
+        },
+        {
+          "path": "tl/custom/message.js",
+          "sha256": "4bd6d58c73ec23aab1f0150ff1310099287d5154f48ad83adf7f023af04681d3"
+        }
+      ]
+    },
+    {
+      "package": "teleproto",
+      "version": "1.232.0",
+      "publishedSource": "https://registry.npmjs.org/teleproto/-/teleproto-1.232.0.tgz",
+      "files": [
+        {
+          "path": "tl/runtime/defineClass.js",
+          "sha256": "291ad16d92892f20b900ecaffd6cb2f3b33766c4b7402bf2ad7215378d3781a2"
+        },
+        {
+          "path": "tl/runtime/bases.js",
+          "sha256": "c4c3e5e5d36fa6ceff08d65b77e37958ea4ec66fd4c15f530b083035707de41d"
+        },
+        {
+          "path": "tl/custom/message.js",
+          "sha256": "c661cb0e5709a313237d5a1b5699109b0cf2038209fb350cdde9d7d892103437"
+        }
+      ]
+    }
+  ],
+  "primarySources": [
+    "https://tc39.es/ecma262/multipage/fundamental-objects.html#sec-function.prototype-%symbol.hasinstance%"
+  ],
+  "contract": {
+    "identity": "Private class identity for owned account views without changing plain/bound prototypes, enumerable fields or canonical raw results.",
+    "methods": "Schema metadata, getBytes, resolve and existing view-shaped toJSON are nonenumerable; shared selected SDK conversion reconstructs actual vendor runtime instances.",
+    "scope": "All 2627 finite non-Bool schema classes; Bool constructors retain boolean normalization. Existing native instance/subclass semantics remain intact."
+  },
+  "regression": {
+    "beforeCommit": "801192fb3cea2fe4eca9c80c97ea12af9ecd6621",
+    "tests": [
+      "tests/account-class-identity.test.js"
+    ],
+    "finiteSchemaViews": 2627,
+    "gramjsCompatibleCorpus": 1931,
+    "teleprotoCompatibleCorpus": 2623,
+    "selectedRoutes": 10,
+    "encryptedTcpCases": 2,
+    "frozenCommand": "node --loader ./experiments/account-class-identity-before-loader.mjs --test tests/account-class-identity.test.js",
+    "finiteProbe": "node --max-old-space-size=64 --stack-size=512 experiments/account-class-identity-budget.mjs"
+  },
+  "remaining": [
+    "Historical SDK schema bridging and session layer negotiation",
+    "Refined account result types, drafts, array totals and legacy integer methods",
+    "Controlled-account validation and every wider unfinished criterion"
+  ]
+}

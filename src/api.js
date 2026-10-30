@@ -6,6 +6,41 @@ import { randomId } from './random.js';
 import { resolveTlRequest } from './tl-resolution.js';
 
 const codec = new TlCodec();
+const viewClasses = new Map();
+const viewIdentity = new WeakMap();
+
+function viewJSON() {
+  return Object.fromEntries(Object.entries(this));
+}
+
+/** Keep account view prototypes and enumerable data while exposing class guards. */
+export function bindApiView(value) {
+  const Constructor = viewClasses.get(value.className);
+  if (!Constructor) {
+    return value;
+  }
+  const hidden = {
+    classType: Constructor.classType,
+    CONSTRUCTOR_ID: Constructor.CONSTRUCTOR_ID,
+    SUBCLASS_OF_ID: Constructor.SUBCLASS_OF_ID,
+    originalArgs: Object.fromEntries(Object.entries(value)),
+    getBytes: Constructor.prototype.getBytes,
+    resolve: Constructor.prototype.resolve,
+    toJSON: viewJSON,
+  };
+  Object.defineProperties(
+    value,
+    Object.fromEntries(
+      Object.entries(hidden).map(([key, entry]) => [
+        key,
+        { value: entry, writable: true, configurable: true },
+      ])
+    )
+  );
+  nativeTlObjects.add(value);
+  viewIdentity.set(value, Constructor);
+  return value;
+}
 
 function defaultRandomId(type, args) {
   if (type === 'int') {
@@ -35,6 +70,13 @@ function createClass(definition) {
   };
   const fields = definition.params.filter((field) => field.type !== '#');
   class SchemaObject {
+    static [Symbol.hasInstance](value) {
+      return (
+        Function.prototype[Symbol.hasInstance].call(this, value) ||
+        viewIdentity.get(value) === this
+      );
+    }
+
     constructor(args = {}) {
       if (!args || typeof args !== 'object' || Array.isArray(args)) {
         throw new TypeError('Expected TL class arguments as an object');
@@ -73,6 +115,7 @@ function createClass(definition) {
     }
   }
   Object.assign(SchemaObject, metadata);
+  viewClasses.set(className, SchemaObject);
   return SchemaObject;
 }
 

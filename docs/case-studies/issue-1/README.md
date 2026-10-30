@@ -9,7 +9,9 @@ edits now share that conversion. [SDK default Markdown and explicit disable](acc
 now survive backend scopes and bound operations; canonical methods remain plain.
 [Media metadata and bounded upload options](account-media-options.md) now share
 photo/MIME inference, thumbnails, attributes and current flags. Complete upload
-signatures and old-schema bridges remain open. The
+signatures and old-schema bridges remain open. [Account class guards](account-class-identity.md)
+now preserve native `Api` identity, complete serialized bytes and bound helpers
+across selected routes. The
 [escaped-output investigation](markup-allocations.md) records the CI resource
 regressions and allocation guards without increasing deadlines.
 

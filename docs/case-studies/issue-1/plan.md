@@ -1655,5 +1655,36 @@ Account media option follow-up:
       Bun exposed an unsupported test registration signature; using the shared
       two-argument harness restores all cases. Actual SDK types require legacy
       big-integer cover IDs; the portable fixture now constructs them exactly.
-- [ ] Commit/push media options, update PR #2 and verify exact-head CI. Continue
-      historical schema bridges, account models and all wider open criteria.
+- [x] Commit/push media options head 801192fb3cea2fe4eca9c80c97ea12af9ecd6621.
+      Run 40994010627, created 2026-10-30T02:50:32Z after its commit at
+      02:49:30Z, passes all 23 applicable jobs. Continue every wider criterion.
+
+Account class identity follow-up:
+
+- [x] Reproduce failed native Api class guards on shared account views before
+      implementation, comparing actual SDK classes and independent wire data.
+- [x] Share privately branded class identity and complete class methods without
+      changing enumerable return data, plain prototypes or canonical responses.
+- [x] Verify all finite schema classes, nested messages/media, bound operations,
+      selected routes, exact IDs, serialization and checked migration examples.
+      All 22 cases pass on Node 20/26, Bun and Deno; frozen preceding source
+      fails 21 with one existing guard. All 2,627 finite schema views retain
+      guards, bytes and enumerable fields. The independent SDK corpus compares
+      1,931 compatible GramJS and 2,623 compatible teleproto definitions. Ten
+      selected routes and two encrypted TCP cases preserve origin-bound helpers.
+      Both checked examples compile against owned and actual SDK declarations.
+      The 10,000-view probe passes under a 64 MiB heap and 512 KiB stack;
+      observed RSS is 109,884 KiB, with a repeated run at 109,692 KiB.
+- [x] Run local gates and review the atomic change. All 4,417 core cases pass
+      on Node/Bun/Deno. Strict lint, formatting, declarations, exact generation
+      and actual SDK compilation pass; 196 production sources retain zero
+      clones. All 71 framework cases pass on Node 20/26, Bun and Deno, plus
+      27 terminal, eight Node 20 wire, sixteen parser and bounded FIFO checks.
+      Packaging retains 241 permitted files. Main remains an ancestor, issue
+      prose is unchanged and all five feedback/sub-issue streams remain empty.
+      The current 1,073-file PR inventory has no removals; GitHub rejects full
+      diffs above 300 files, so review uses the complete local atomic change.
+      A bare Node discovery command also collected five archived research
+      scripts and failed; the corrected repository npm test command passes.
+- [ ] Commit/push and verify exact-head CI. Continue historical schema
+      negotiation, account models and every wider unfinished criterion.

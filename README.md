@@ -831,8 +831,11 @@ false disables, and explicit global disable survives backend scopes. See
 File preparation shares photo/MIME inference, explicit attributes, thumbnails,
 media flags and bounded concurrent uploads. See [the checked example](examples/typed-account-media-options.ts)
 and [SDK comparisons and limits](docs/case-studies/issue-1/account-media-options.md).
-Complete upload signatures, old-schema bridges, rich formatting/model parity, drafts, array totals,
-legacy big-integer methods and `instanceof Api.*` behavior remain open.
+Shared account views support `instanceof Api.*` guards and schema serialization
+without changing their enumerable fields or bound helpers. See [the checked example](examples/typed-account-class-identity.ts)
+and [class-identity comparisons and limits](docs/case-studies/issue-1/account-class-identity.md).
+Complete upload signatures, old-schema bridges, rich formatting/model parity,
+drafts, array totals and legacy big-integer methods remain open.
 Direct `client.invoke` keeps raw backend results.
 
 The [follow migration bridge](examples/follow-client.js) adapts a configured
