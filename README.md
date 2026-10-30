@@ -807,7 +807,11 @@ as plain text, Markdown or HTML. Messages expose `richText`, `richMarkdown`,
 `richHtml` and origin-bound `fetchRichMessage`; canonical clients and both styles
 share `getRichMessage`. See [typed rich-message examples](examples/typed-rich-messages.ts)
 and [rich-message comparisons and limits](docs/case-studies/issue-1/rich-messages.md).
-Ordinary markup parse modes, complete rich formatting/model parity, drafts, array totals,
+Custom account parser callbacks support `setParseMode`, per-call `parseMode`,
+and message `text` parsing/unparsing. Explicit entities and `FormattedText`
+override parsing; `false` disables it. See [the checked example](examples/typed-account-parse-mode.ts)
+and [callback comparisons and limits](docs/case-studies/issue-1/account-parse-mode.md).
+Built-in ordinary markup modes, complete rich formatting/model parity, drafts, array totals,
 legacy big-integer methods and `instanceof Api.*` behavior remain open.
 Direct `client.invoke` keeps raw backend results.
 

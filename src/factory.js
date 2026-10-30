@@ -138,5 +138,10 @@ export async function createClient(options = {}) {
   if (!available.length) {
     throw new UnsupportedError('No enabled Telegram backends');
   }
-  return new Anygram({ adapters: available, backend, debug });
+  return new Anygram({
+    adapters: available,
+    backend,
+    debug,
+    parseMode: options.parseMode,
+  });
 }

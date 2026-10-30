@@ -8,6 +8,7 @@ import { parseTelegramLink } from './chat-links.js';
 import { notificationOptions, notificationPeer } from './notifications.js';
 import { reactionOf, reactionList } from './account-reactions.js';
 import { accountMessageId, samePeerId } from './account-message-id.js';
+import { accountTextParams, accountTextOptions } from './account-text.js';
 import {
   hasMinAccessHash,
   rememberPeer,
@@ -369,7 +370,12 @@ export class RpcOperations extends MediaOperations {
   }
 
   async sendMessage(peer, text, options = {}) {
-    const params = objectRequest(requestOf('messages.sendMessage', options));
+    const content = await accountTextParams(text, options, (user) =>
+      this.resolvePeer(user, options)
+    );
+    const params = objectRequest(
+      requestOf('messages.sendMessage', accountTextOptions(options))
+    );
     if (params.reply_to && typeof params.reply_to !== 'object') {
       params.reply_to = {
         _: 'inputReplyToMessage',
@@ -380,8 +386,10 @@ export class RpcOperations extends MediaOperations {
       'messages.sendMessage',
       {
         ...params,
+        ...content,
         peer: await this.resolvePeer(peer, options),
-        message: text ?? (params.rich_message ? '' : text),
+        message:
+          content.message ?? (params.rich_message ? '' : content.message),
         random_id: params.random_id ?? randomId(),
       },
       options
@@ -485,9 +493,17 @@ export class RpcOperations extends MediaOperations {
   }
 
   async editMessage(peer, { id, text, message = text, ...options }) {
+    const content = await accountTextParams(message, options, (user) =>
+      this.resolvePeer(user, options)
+    );
     return this.rpc(
       'messages.editMessage',
-      { ...options, peer: await this.resolvePeer(peer, options), id, message },
+      {
+        ...accountTextOptions(options),
+        ...content,
+        peer: await this.resolvePeer(peer, options),
+        id,
+      },
       options
     );
   }

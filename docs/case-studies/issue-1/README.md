@@ -1,5 +1,9 @@
 # Unified Telegram client: investigation and implementation
 
+The [account parser callback comparison](account-parse-mode.md) covers shared
+settings, bounded parsing, detached text views and exact mention inputs against
+actual SDK helpers and encrypted TCP. Built-in markup modes remain open.
+
 The [account reaction/copy comparison](account-reactions.md) verifies bound
 reaction selection, paginated users and author-free forwarding against the pinned
 teleproto helper, including complete request bytes and encrypted native TCP.

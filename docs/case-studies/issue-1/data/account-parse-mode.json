@@ -1,0 +1,150 @@
+{
+  "recordedAt": "2026-10-30T00:08:57.172Z",
+  "installed": [
+    {
+      "package": "telegram",
+      "version": "2.26.22",
+      "publishedSource": "https://registry.npmjs.org/telegram/-/telegram-2.26.22.tgz",
+      "files": [
+        {
+          "path": "extensions/markdown.js",
+          "sha256": "4ea46765e983ccbcfd1579be5505f8dfebf67b9ef30b133a68ceafe8d69913cf"
+        },
+        {
+          "path": "extensions/markdown.d.ts",
+          "sha256": "88a92e02aa303a089490dea6bd52fbe66f04136d7584839b24f039545b884b95"
+        },
+        {
+          "path": "extensions/html.js",
+          "sha256": "d3c45378481efe74aac562c778275c6cc6f6b5379ea60bb91721af90114be7f0"
+        },
+        {
+          "path": "extensions/html.d.ts",
+          "sha256": "7ca48ed273146e7d57eae1235c6c4b7622d58432730ffaa20c655e7223236512"
+        },
+        {
+          "path": "extensions/markdownv2.js",
+          "sha256": "c8405774dc012f073650d8863519d73f033751c563bb74e8748e2ad30bc92a05"
+        },
+        {
+          "path": "extensions/markdownv2.d.ts",
+          "sha256": "6081a9362a64ee2632cdcbcc930af98374de9e58130d8f236a28a45adab5dcb3"
+        },
+        {
+          "path": "tl/custom/message.js",
+          "sha256": "4bd6d58c73ec23aab1f0150ff1310099287d5154f48ad83adf7f023af04681d3"
+        },
+        {
+          "path": "tl/custom/message.d.ts",
+          "sha256": "f96b3881b085b5cbeadb65aa3355163aa3ac60adedf211556ba847e2b1f00ee2"
+        },
+        {
+          "path": "client/messageParse.js",
+          "sha256": "ed57cc79bda7096a3e7ef1b92b2363e43e98303ac05c3e8798fc2b3c1b2ba0ae"
+        },
+        {
+          "path": "client/messages.js",
+          "sha256": "0f1f8a2761d493065ea0f3c7dff27c32033045ad2a38b75c9e1ad5e2ea26ed14"
+        },
+        {
+          "path": "tl/patched/index.js",
+          "sha256": "18b1a21ee3c3ee4541af6677724a9818267703ea37c4b81adaa3be1eded31846"
+        }
+      ]
+    },
+    {
+      "package": "teleproto",
+      "version": "1.232.0",
+      "publishedSource": "https://registry.npmjs.org/teleproto/-/teleproto-1.232.0.tgz",
+      "files": [
+        {
+          "path": "extensions/markdown.js",
+          "sha256": "c9d6d0b00997948dc32dc8d230ec95c3c9952509ca3fa1daaa8fafa4c20b478a"
+        },
+        {
+          "path": "extensions/markdown.d.ts",
+          "sha256": "926061108553395b323e71dd7aa383df8bce044867536240e4fba030d3c78f54"
+        },
+        {
+          "path": "extensions/html.js",
+          "sha256": "ae0290667c08fa60edfe229c15d0feb48919326f7d702b7dc9a9f8f1f55d05c2"
+        },
+        {
+          "path": "extensions/html.d.ts",
+          "sha256": "5851f6c4b496cd9515b9836b5471136085e5e35bc4ecb2f12c22f00d5a44dd5e"
+        },
+        {
+          "path": "extensions/markdownv2.js",
+          "sha256": "03356fdf37d143ea58aa3ba73d0d618272a47023c73c22d6462dd29577d8377e"
+        },
+        {
+          "path": "extensions/markdownv2.d.ts",
+          "sha256": "00bb5a2588796864fbbb8a6ea44c9d1f44d062e5c4c215e680193a9b3cc956bf"
+        },
+        {
+          "path": "tl/custom/message.js",
+          "sha256": "c661cb0e5709a313237d5a1b5699109b0cf2038209fb350cdde9d7d892103437"
+        },
+        {
+          "path": "tl/custom/message.d.ts",
+          "sha256": "0a6a1de2fe0836e626d58441edf55c0b48b520a18e1e8d379e8e59b49bbb42a3"
+        },
+        {
+          "path": "client/methods/messageParse.js",
+          "sha256": "93f1614ce89f70f8218cbd6b11d3053bef73808f39acdd246d723f8f5ea0f33b"
+        },
+        {
+          "path": "client/methods/messages.js",
+          "sha256": "191d1f978bcab6d9558af76c7536223a2eafb30ef0dbe3c1b2f46ddc78fc126e"
+        }
+      ]
+    }
+  ],
+  "primarySources": [
+    {
+      "url": "https://core.telegram.org/api/entities",
+      "sha256": "9ff2bbbeec3168dc7c66ef288923bdc7f3b61c7174ee03e6676337b8363bca32"
+    },
+    {
+      "url": "https://core.telegram.org/bots/api#formatting-options",
+      "sha256": "9110a41e5173a849088e032854227419af3468932f06a4174f44a481733ef308"
+    }
+  ],
+  "contract": {
+    "offsetUnits": "UTF-16 code units",
+    "default": "Plain text until configured; SDK built-in string modes remain a separate open criterion.",
+    "callbacks": "Synchronous parse(text) -> [text, entities], unparse(text, detached camelCase entities) -> text; receiver retained.",
+    "precedence": "Explicit formattingEntities/entities (including []) or FormattedText override parsing; false disables it.",
+    "limits": {
+      "textCodeUnits": 4194304,
+      "parserEntities": 1000,
+      "canonicalDepth": 64,
+      "canonicalVector": 100000
+    },
+    "mentions": "Resolve exact bigint user IDs, @names and +phones through the selected peer resolver; preserve self/from-message inputs and original hashes."
+  },
+  "differences": [
+    "Pinned GramJS uses older send/edit constructor IDs. Compare complete SDK-serialized requests and current-codec fields after the four-byte method ID independently.",
+    "Pinned GramJS patch copies text/rawText getters without their setters. Test the actual custom-message setter separately and retain working owned setters.",
+    "Owned text getters recompute from current data/settings; SDK getters cache _text.",
+    "Owned parser mentions preserve exact decimal IDs; SDK TextUrl mention parsing converts to Number.",
+    "Owned mention resolution preserves typed failures without dropping links or replaying a send; SDK _replaceWithMention catches failures.",
+    "Custom unparsers receive owned detached entities. Vendor parsers that require nominal instanceof checks (notably GramJS HTML unparse) require an adapted callback; owned built-in modes remain open."
+  ],
+  "regression": {
+    "files": [
+      "tests/account-parse-mode.test.js",
+      "tests/account-parse-mode-rpc.test.js"
+    ],
+    "beforeCommit": "2e0eecc164df94c0af5a2c0109fba83e927916fb",
+    "frozenSourceRunner": "experiments/account-parse-mode-before-loader.mjs",
+    "frozenDeclarationRunner": "node experiments/composer-fluency-check.mjs --account-parse-mode --before",
+    "sdkFixture": "experiments/typed-account-parse-mode-sdk-fixture.ts"
+  },
+  "remaining": [
+    "Independent HTML/Markdown/MarkdownV2 string modes and their complete parse/unparse union",
+    "SDK default Markdown selection",
+    "Send/edit file and album parser integration",
+    "Full model/declaration compatibility and controlled-account application verification"
+  ]
+}

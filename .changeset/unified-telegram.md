@@ -256,3 +256,12 @@ Share account reaction conversion, paginated reaction-user lookup and bound
 author-free copies through canonical operations. Preserve exact custom emoji
 IDs, selected peers, correlated delivery, cancellation and typed errors; convert
 scheduled forwarding Dates to Telegram timestamp seconds.
+
+Add schema-backed rich-message factories, bounded text/block renderers and
+origin-bound full-content fetches. Preserve exact media references, correlate
+fetched message IDs and peers, and retain cancellation and selected failures.
+
+Share bounded custom account parser callbacks and settings across canonical
+send/edit operations, both account facades and bound text views/replies/edits.
+Preserve explicit formatting, exact mention inputs, original peer hashes and
+selected failures; keep callback state outside TL requests and Bot API defaults.

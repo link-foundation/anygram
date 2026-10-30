@@ -4,9 +4,13 @@ import { iterateHistory } from './operations.js';
 import { botTextParams } from './formatting.js';
 import { withConnection } from './lifecycle.js';
 import { createGramStyle } from './gram-style.js';
+import { accountParseMode } from './account-text.js';
+
+const parseModes = new WeakMap();
 
 export class Anygram {
-  constructor({ adapters = [], backend, debug } = {}) {
+  constructor({ adapters = [], backend, debug, parseMode } = {}) {
+    this.setParseMode(parseMode);
     this.adapters = [...adapters];
     this.debug = debug;
     const names = this.adapters.map((adapter) => adapter.name);
@@ -30,7 +34,22 @@ export class Anygram {
   }
 
   withBackend(backend) {
-    return new Anygram({ adapters: this.adapters, backend, debug: this.debug });
+    return new Anygram({
+      adapters: this.adapters,
+      backend,
+      debug: this.debug,
+      parseMode: this.parseMode,
+    });
+  }
+
+  get parseMode() {
+    return parseModes.get(this);
+  }
+  set parseMode(mode) {
+    parseModes.set(this, accountParseMode(mode));
+  }
+  setParseMode(mode) {
+    this.parseMode = mode;
   }
 
   withConnection(task, options) {
@@ -103,7 +122,18 @@ export class Anygram {
   }
 
   execute(operation, ...args) {
-    return this.route(operation, (adapter) => adapter.execute(operation, args));
+    return this.route(operation, (adapter) => {
+      const index = { sendMessage: 2, editMessage: 1 }[operation];
+      if (
+        adapter.protocol === 'mtproto' &&
+        index !== undefined &&
+        args[index]?.parseMode === undefined &&
+        this.parseMode
+      ) {
+        args[index] = { ...args[index], parseMode: this.parseMode };
+      }
+      return adapter.execute(operation, args);
+    });
   }
 
   sendMessage(peer, text, options = {}) {

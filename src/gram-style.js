@@ -89,14 +89,37 @@ export function createGramStyle(client, kind = 'gramjs') {
     },
   };
   const wrap = context.wrap;
+  async function sendMessage(peer, options) {
+    const parseMode =
+      options.parseMode === undefined ? client.parseMode : options.parseMode;
+    const formatted =
+      parseMode !== undefined ||
+      options.formattingEntities !== undefined ||
+      options.entities !== undefined;
+    const settings =
+      parseMode === undefined ? options : { ...options, parseMode };
+    return wrap(
+      await client.route('sendMessage', (adapter) =>
+        formatted && adapter.supports('invoke')
+          ? operations.sendMessage(peer, options.message, settings)
+          : adapter.execute('sendMessage', [peer, options.message, settings])
+      )
+    );
+  }
   const style = {
+    get parseMode() {
+      return client.parseMode;
+    },
+    set parseMode(mode) {
+      client.setParseMode(mode);
+    },
+    setParseMode: (mode) => client.setParseMode(mode),
     invoke: async (...args) => wrap(await client.invoke(...args)),
     sendReaction: async (...args) =>
       wrap(await operations.sendReaction(...args)),
     getReactionUsers: async (...args) =>
       wrap(await operations.getReactionUsers(...args)),
-    sendMessage: async (peer, options) =>
-      wrap(await client.sendMessage(peer, options.message, options)),
+    sendMessage,
     async getMe(options) {
       return wrap(await operations.getMe(options));
     },

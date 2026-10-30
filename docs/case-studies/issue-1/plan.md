@@ -1451,5 +1451,37 @@ Rich-message factory, renderer and full-content fetch work plan:
       sixteen parser checks and the bounded FIFO probe pass. Main is an ancestor;
       issue prose is unchanged, and feedback/sub-issue streams remain empty.
       Review the complete atomic diff; GitHub rejects the >300-file full diff.
-- [ ] Commit and push the rich-message checkpoint, then verify exact-head CI.
-      Continue markup formatting, bound plain edits and wider unfinished criteria.
+- [x] Commit and push rich head 2e0eecc164df94c0af5a2c0109fba83e927916fb.
+      Run 40975815357, created 2026-10-29T23:50:28Z after its commit, passes
+      all 23 applicable jobs. Continue markup formatting and wider criteria.
+
+Account parse-mode work plan:
+
+- [x] Reproduce missing custom parse/unparse settings on canonical clients,
+      account styles and bound messages before implementation. Compare actual
+      pinned SDK parsers and preserve explicit formatting-entity precedence.
+- [x] Share bounded parsing before normalization, preserve parser receiver state,
+      detached entities, cancellation and selected transport failures.
+- [x] Carry settings through factories/backend scopes; expose checked declarations
+      and portable examples. Test origin-bound replies/edits and native TCP.
+      The 72 focused cases pass; frozen source fails 66, and preceding
+      declarations produce nine diagnostics. Three direct helper guards use
+      current helper code, and Bot API separation already passes before the
+      implementation. The two high-level-only sends also pass before; those six
+      are not missing-API reproductions. Review retains plain operation options.
+- [ ] Implement independent built-in HTML, Markdown and MarkdownV2 parsing and
+      unparsing with official UTF-16/entity evidence and actual SDK comparisons.
+- [x] Verify callback gates and review the complete atomic diff. All 3,700 core
+      tests pass on Node/Bun/Deno; strict checks scan 184 production sources with
+      zero clones. Actual SDK declarations, 71 framework cases per runtime and
+      Node 20, 27 native terminal, eight Node 20 wire, sixteen fact-parser checks
+      and the bounded FIFO probe pass. Packaging has 227 permitted entries.
+      Main remains an ancestor; issue prose and empty feedback are unchanged.
+      The paginated PR inventory has 992 files with no removals; GitHub's diff
+      endpoint rejects more than 300 files, so review uses the local atomic diff.
+- [ ] Commit/push callback work and verify fresh exact-head CI; continue built-in
+      modes, current-schema compatibility and all wider unfinished criteria.
+
+Tracing confirmed bound edits correctly accept `text`, matching both SDKs;
+`message` is the reserved ID argument and is intentionally replaced. No plain
+edit fix is needed for that apparent issue.

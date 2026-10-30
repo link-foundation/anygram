@@ -3,6 +3,7 @@ import { responseMessage } from './account-response.js';
 import { randomId } from './random.js';
 import { canonicalValue } from './requests.js';
 import * as Rich from './rich-messages.js';
+import { readAccountText, writeAccountText } from './account-text.js';
 import {
   AccountPeerView,
   bindAccountPeers,
@@ -156,10 +157,17 @@ class AccountMessage extends AccountPeerView {
     this.entities = [];
   }
   get text() {
-    return this.rawText;
+    return writeAccountText(
+      this.rawText,
+      scope(this).wrap(canonicalValue(this.entities ?? [])),
+      scope(this).client.parseMode
+    );
   }
   set text(value) {
-    this.rawText = value;
+    const parsed = readAccountText(value, scope(this).client.parseMode);
+    const entities = scope(this).wrap(parsed.entities);
+    this.message = parsed.message;
+    this.entities = entities;
   }
 
   get richText() {
@@ -230,6 +238,7 @@ class AccountMessage extends AccountPeerView {
     const nonce = params.randomId ?? params.random_id ?? randomId();
     const options = {
       ...params,
+      parseMode: params.parseMode ?? scope(this).client.parseMode,
       randomId: nonce,
       noWebpage:
         params.linkPreview === undefined
@@ -272,10 +281,11 @@ class AccountMessage extends AccountPeerView {
     const peer = await target(this, params);
     const result = await scope(this).operations.editMessage(peer, {
       ...options,
+      parseMode: params.parseMode ?? scope(this).client.parseMode,
       id: this.id,
       noWebpage: !(linkPreview ?? Boolean(this.webPreview)),
       replyMarkup: buttons ?? this.replyMarkup,
-      entities: formattingEntities,
+      entities: formattingEntities ?? options.entities,
       scheduleDate: schedule,
     });
     return responseMessage(scope(this), result, { peer, id: this.id });

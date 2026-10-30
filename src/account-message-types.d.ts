@@ -84,6 +84,13 @@ export type AccountTextEntityInput = { offset: number; length: number } & (
   | { className: string }
   | { _: string; [key: string]: unknown }
 );
+/** Synchronous parser callbacks use Telegram UTF-16 code-unit offsets. */
+export interface AccountParseMode {
+  parse(text: string): [string, AccountTextEntityInput[]];
+  /** SDK callbacks can declare their own nominal entity classes. */
+  unparse(text: string, entities: any[]): string;
+}
+export type AccountParseModeInput = AccountParseMode | false | null | undefined;
 export interface AccountMessageOptions extends Parameters, RequestOptions {
   message?: string | FormattedText;
   replyTo?: number;
@@ -91,11 +98,15 @@ export interface AccountMessageOptions extends Parameters, RequestOptions {
   linkPreview?: boolean;
   randomId?: bigint;
   formattingEntities?: readonly AccountTextEntityInput[];
+  entities?: readonly AccountTextEntityInput[];
+  parseMode?: AccountParseModeInput;
 }
 export interface AccountMessageEditOptions extends Parameters, RequestOptions {
   text?: string | FormattedText;
   linkPreview?: boolean;
   formattingEntities?: readonly AccountTextEntityInput[];
+  entities?: readonly AccountTextEntityInput[];
+  parseMode?: AccountParseModeInput;
 }
 export interface AccountMessagePinOptions extends RequestOptions {
   notify?: boolean;

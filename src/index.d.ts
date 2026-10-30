@@ -17,6 +17,9 @@ import type {
   AccountReactionCanonicalList,
   AccountRichMethods,
   AccountRichCanonicalMessage,
+  AccountParseMode,
+  AccountParseModeInput,
+  AccountMessageOptions,
 } from './account-message-types.js';
 export type * from './account-message-types.js';
 import type {
@@ -279,6 +282,7 @@ export interface Adapter {
 export interface ClientOptions {
   adapters?: Adapter[];
   backend?: string;
+  parseMode?: AccountParseModeInput;
   debug?: (event: {
     event: string;
     backend: string;
@@ -392,7 +396,10 @@ export interface GramStyleClient
     AccountReactionMethods<GramStyleObject, AccountReactionList>,
     AccountRichMethods<AccountMessage> {
   invoke: Anygram['invoke'];
-  sendMessage(peer: unknown, options: Parameters): Promise<unknown>;
+  get parseMode(): AccountParseMode | undefined;
+  set parseMode(mode: AccountParseModeInput);
+  setParseMode(mode: AccountParseModeInput): void;
+  sendMessage(peer: unknown, options: AccountMessageOptions): Promise<unknown>;
   getMe(options?: RequestOptions): Promise<GramStyleObject>;
   getEntity(peer: unknown, options?: RequestOptions): Promise<GramStyleObject>;
   getInputEntity(
@@ -454,6 +461,9 @@ export declare class Anygram {
   teleproto: Anygram['gramjs'];
   mtcute: { call: Anygram['invoke']; sendText: Anygram['sendMessage'] };
   mtproto: { call: Anygram['invoke'] };
+  get parseMode(): AccountParseMode | undefined;
+  set parseMode(mode: AccountParseModeInput);
+  setParseMode(mode: AccountParseModeInput): void;
   withBackend(backend: string): Anygram;
   withConnection<T>(
     task: (client: Anygram) => T | PromiseLike<T>,

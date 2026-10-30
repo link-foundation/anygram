@@ -44,9 +44,16 @@ const canonicalOperations = new Set([
 ]);
 
 function hasFormattedEntities(operation, args) {
+  const options =
+    operation === 'sendMessage'
+      ? args[2]
+      : operation === 'editMessage'
+        ? args[1]
+        : undefined;
   return (
-    operation === 'sendMessage' &&
-    args[2]?.entities?.some((entity) => entity.type)
+    options?.parseMode !== undefined ||
+    (operation === 'sendMessage' &&
+      args[2]?.entities?.some((entity) => entity.type))
   );
 }
 
