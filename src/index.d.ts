@@ -23,8 +23,11 @@ import type {
   AccountMessageEditOptions,
   AccountMediaMethods,
   AccountUploadOptions,
+  AccountUploadFileOptions,
+  AccountUploadedFile,
 } from './account-message-types.js';
 export type * from './account-message-types.js';
+export { CustomFile } from './account-upload.js';
 export { HTMLParser } from './account-html.js';
 export {
   MarkdownParser,
@@ -409,6 +412,7 @@ export interface GramStyleClient
   get parseMode(): AccountParseMode | undefined;
   set parseMode(mode: AccountParseModeInput);
   setParseMode(mode: AccountParseModeInput): void;
+  uploadFile(options: AccountUploadFileOptions): Promise<AccountUploadedFile>;
   sendMessage(peer: unknown, options: AccountMessageOptions): Promise<unknown>;
   getMe(options?: RequestOptions): Promise<GramStyleObject>;
   getEntity(peer: unknown, options?: RequestOptions): Promise<GramStyleObject>;
@@ -521,6 +525,7 @@ export declare class Anygram {
     options?: Parameters
   ): Promise<Uint8Array>;
   getParticipants(peer: unknown, options?: Parameters): Promise<unknown>;
+  uploadFile(options: AccountUploadFileOptions): Promise<TlRequest>;
   uploadFile(file: unknown, options?: AccountUploadOptions): Promise<TlRequest>;
   uploadEncryptedFile(
     file: EncryptedFileInput,

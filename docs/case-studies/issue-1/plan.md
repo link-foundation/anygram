@@ -1686,5 +1686,34 @@ Account class identity follow-up:
       diffs above 300 files, so review uses the complete local atomic change.
       A bare Node discovery command also collected five archived research
       scripts and failed; the corrected repository npm test command passes.
-- [ ] Commit/push and verify exact-head CI. Continue historical schema
-      negotiation, account models and every wider unfinished criterion.
+- [x] Commit/push class identity head 721e68851301efad2da6d8ea2cddc55e81d8c91b.
+      Run 40995489858, created 2026-10-30T03:06:30Z after its 03:06:03Z
+      commit, passes all 23 applicable jobs on attempt two. The first attempt
+      failed npm ci with ECONNRESET before tests (preserved job-log lines
+      157–166); rerunning the failed job required no code change. Continue
+      historical schemas, account models and every wider unfinished criterion.
+
+Account upload signature follow-up:
+
+- [x] Trace both actual SDK direct upload signatures, progress, file/buffer size
+      hints and path readers; preserve source hashes and observed differences.
+- [x] Reproduce missing facade upload calls and size validation before changing
+      production sources. Include actual CustomFile inputs and typed fixtures.
+- [x] Share direct upload normalization, fractional progress, bounded source
+      preparation and cleanup across canonical calls and both account facades.
+- [x] Verify actual SDK bytes/progress, selected routes, independent encrypted
+      TCP, finite large paths and cancellation with cleanup evidence.
+      All 212 affected cases pass. The 59 focused cases reproduce 53 failures
+      against frozen preceding source, retaining six guards; frozen declarations
+      produce three diagnostics. The blocked direct path reproduces the ignored
+      deadline before the fix; both direct/InputFile FIFO probes now cancel
+      before release and retain no descriptor. A sparse 48 MiB file uploads in
+      96 parts under a 64 MiB heap/512 KiB stack, observed RSS 132,868 KiB.
+      The finite probe also reproduced an empty supplier filename; fallback to
+      the resolved path name now has a minimal regression. The frozen-type
+      harness initially assumed TypeScript's older error exit code; it now
+      accepts the native compiler's status and checks actual diagnostics. A
+      formatter moved a negative directive away from its property; the checked
+      example now keeps that assertion beside the erroneous callback.
+- [ ] Run local gates, review, commit/push and verify exact-head CI. Continue
+      historical schemas, refined account results and every wider criterion.

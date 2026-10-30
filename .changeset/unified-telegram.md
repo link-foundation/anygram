@@ -298,3 +298,8 @@ Preserve native Api class guards and schema methods on shared account views
 without changing enumerable fields, existing prototypes or origin-bound helpers.
 Rebuild owned views with selected SDK runtime classes before invocation, retaining
 canonical raw identity and native subclass semantics.
+
+Accept direct SDK upload records on both account facades, with fractional
+progress, owned CustomFile metadata and native InputFile views. Validate exact
+size hints, bound fallback buffering, retain lazy InputFile paths/Blobs and
+honor acquisition/read deadlines with late-owned-resource cleanup.

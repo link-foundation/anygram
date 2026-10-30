@@ -42,6 +42,7 @@ export { TelegramError, UnsupportedError } from './errors.js';
 export { BotApi } from './bot-api.js';
 export { Telegram } from './telegraf-api.js';
 export { InputFile } from './input-file.js';
+export { CustomFile } from './account-upload.js';
 export { createClient } from './factory.js';
 export { Session } from './session.js';
 export { Bot, Telegraf, TelegramBot, webhookCallback } from './bot.js';

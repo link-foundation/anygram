@@ -1,0 +1,66 @@
+{
+  "recordedAt": "2026-10-30T03:23:51.788Z",
+  "installed": [
+    {
+      "package": "telegram",
+      "version": "2.26.22",
+      "publishedSource": "https://registry.npmjs.org/telegram/-/telegram-2.26.22.tgz",
+      "files": [
+        {
+          "path": "client/uploads.js",
+          "sha256": "893ad2b6babf2c18f185c5ccbfa7bfcc10b366f1b6484c34d21d9a775b00d4dc"
+        },
+        {
+          "path": "client/uploads.d.ts",
+          "sha256": "5d8eaf893678143b71d6901631fde9c7e4eefb69e522da18bbc0f4b462cc492f"
+        }
+      ]
+    },
+    {
+      "package": "teleproto",
+      "version": "1.232.0",
+      "publishedSource": "https://registry.npmjs.org/teleproto/-/teleproto-1.232.0.tgz",
+      "files": [
+        {
+          "path": "client/methods/uploads.js",
+          "sha256": "63f53f2742ed6eccbded897c04eeea68460f53a413e22d858cc7ca277e95d9ff"
+        },
+        {
+          "path": "client/methods/uploads.d.ts",
+          "sha256": "35ef670b169ae301df6b5aa1d08b50696b444ec97723cd18f38e4dd67b9ce441"
+        }
+      ]
+    }
+  ],
+  "primarySources": [
+    "https://core.telegram.org/api/files",
+    "https://core.telegram.org/constructor/inputFile",
+    "https://core.telegram.org/constructor/inputFileBig"
+  ],
+  "contract": {
+    "progress": "SDK wrapper onProgress reports fractions; canonical two-argument upload retains byte progress.",
+    "fileSize": "An optional exact size; nonnegative safe integers only.",
+    "maxBufferSize": "Fallback buffering limit; paths, sliced Blobs, resident bytes and random-access inputs do not need whole-input buffering.",
+    "limits": "Existing default 64 MiB byte limit, one to sixteen workers, at most 512 KiB parts."
+  },
+  "regression": {
+    "beforeCommit": "721e68851301efad2da6d8ea2cddc55e81d8c91b",
+    "tests": [
+      "tests/account-upload-signature.test.js"
+    ],
+    "selectedRoutes": 10,
+    "encryptedTcpCases": 2,
+    "sparseFileBytes": 50331648,
+    "focusedCases": 59,
+    "frozenFailures": 53,
+    "frozenGuards": 6,
+    "precedingDeclarationDiagnostics": 3,
+    "affectedCases": 212,
+    "observedSparseFileMaxRSSKiB": 132868
+  },
+  "remaining": [
+    "Historical SDK schema bridging and session layer negotiation",
+    "Refined account result types, drafts, array totals and legacy integer methods",
+    "Controlled-account validation and every wider unfinished criterion"
+  ]
+}

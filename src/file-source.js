@@ -1,7 +1,12 @@
 import { createHash } from 'node:crypto';
 import { randomId } from './random.js';
 import { TelegramError, throwFailures } from './errors.js';
-import { InputFile, readInputFile } from './input-file.js';
+import {
+  InputFile,
+  readInputFile,
+  resolveInputFileSource,
+  suppliedSource,
+} from './input-file.js';
 import { localFileSource } from './local-file-source.js';
 import { createRequestScope, validateByteLimit } from './http.js';
 import { abortable } from './cancellation.js';
@@ -51,6 +56,14 @@ function ownedByteLimit({
 
 export function validateUploadOptions(options) {
   const limit = ownedByteLimit(options);
+  for (const key of ['fileSize', 'maxBufferSize']) {
+    if (
+      options[key] !== undefined &&
+      (!Number.isSafeInteger(options[key]) || options[key] < 0)
+    ) {
+      throw new RangeError(`Upload ${key} must be a nonnegative safe integer`);
+    }
+  }
   const workers = options.workers ?? 1;
   if (!Number.isInteger(workers) || workers < 1 || workers > 16) {
     throw new RangeError('Upload workers must be an integer from 1 to 16');
@@ -71,8 +84,15 @@ function uploadCancelled({ signal, progressCallback }) {
   }
 }
 
-export function validateUploadSource(file) {
-  if (
+function knownSize(file) {
+  if (file instanceof Uint8Array) {
+    return file.byteLength;
+  }
+  return file?.size ?? file?.data?.byteLength ?? file?.buffer?.byteLength;
+}
+
+function supportedSource(file) {
+  return (
     file instanceof InputFile ||
     file instanceof Uint8Array ||
     file instanceof globalThis.Blob ||
@@ -81,7 +101,19 @@ export function validateUploadSource(file) {
     file?.buffer instanceof Uint8Array ||
     typeof file?.path === 'string' ||
     (typeof file?.read === 'function' && Number.isSafeInteger(file.size))
-  ) {
+  );
+}
+
+export function validateUploadSource(file, options = {}) {
+  if (supportedSource(file)) {
+    const size = knownSize(file);
+    if (
+      options.fileSize !== undefined &&
+      size !== undefined &&
+      options.fileSize !== size
+    ) {
+      throw new RangeError('Upload fileSize does not match its file size');
+    }
     return;
   }
   throw new TypeError(
@@ -124,13 +156,7 @@ async function sizedSource(file, source) {
 
 export async function sourceOf(file, options = {}) {
   if (file instanceof InputFile) {
-    const bytes = await readInputFile(file, {
-      maxBytes: ownedByteLimit(options),
-      signal: options.signal,
-      fetch: options.fetch,
-    });
-    const source = await sourceOf(bytes);
-    return { ...source, name: file.filename ?? source.name };
+    return inputSource(file, options);
   }
   if (file?.data instanceof Uint8Array) {
     const result = await sourceOf(file.data);
@@ -139,7 +165,7 @@ export async function sourceOf(file, options = {}) {
   if (file instanceof Uint8Array) {
     return {
       size: file.length,
-      name: 'file',
+      name: file.name ?? 'file',
       read: (offset, length) => file.subarray(offset, offset + length),
     };
   }
@@ -157,12 +183,37 @@ export async function sourceOf(file, options = {}) {
   return recordSource(file);
 }
 
+async function inputSource(file, options) {
+  let resolved = await resolveInputFileSource(file, options.signal);
+  if (resolved instanceof globalThis.URL && resolved.protocol === 'file:') {
+    const { fileURLToPath } = await import('node:url');
+    resolved = fileURLToPath(resolved);
+  }
+  let source;
+  if (supportedSource(resolved)) {
+    source = await sourceOf(resolved, options);
+  } else {
+    const limit = ownedByteLimit(options);
+    const bytes = await readInputFile(new InputFile(resolved), {
+      maxBytes: Math.min(
+        limit,
+        options.maxBufferSize ?? limit,
+        options.fileSize ?? limit
+      ),
+      signal: options.signal,
+      fetch: options.fetch,
+    });
+    source = await sourceOf(bytes);
+  }
+  return { ...source, name: file.filename || source.name };
+}
+
 /** Own preparation, RPC and progress deadlines for explicit shared inputs. */
 export async function withFileSource(file, options, upload) {
   validateUploadOptions(options);
   validateUploadSource(file);
   const scope =
-    file instanceof InputFile
+    file instanceof InputFile || options.timeout !== undefined
       ? createRequestScope(
           { signal: options.signal, timeout: options.timeout ?? 30000 },
           new TelegramError('Upload timed out', { type: 'NETWORK_ERROR' })
@@ -173,7 +224,11 @@ export async function withFileSource(file, options, upload) {
   let result;
   const failures = [];
   try {
-    source = await sourceOf(file, settings);
+    source = await suppliedSource(
+      () => sourceOf(file, settings),
+      settings.signal,
+      (opened) => opened.close?.()
+    );
     result = await upload(source, settings);
   } catch (error) {
     failures.push(error);
@@ -260,6 +315,9 @@ export async function uploadSource(
   transform = (bytes) => bytes
 ) {
   const limit = validateUploadOptions(options);
+  if (options.fileSize !== undefined && options.fileSize !== source.size) {
+    throw new RangeError('Upload fileSize does not match its file size');
+  }
   if (source.size > limit) {
     throw new RangeError('Upload exceeds configured byte limit');
   }

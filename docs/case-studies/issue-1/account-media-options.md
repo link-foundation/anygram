@@ -94,7 +94,8 @@ accidental voice-audio attribute. MIME and photo defaults now follow the shared
 high-level contract; unnamed image bytes require `asImage: true` or a filename.
 
 Current flags on historical SDK schemas still require the older-schema bridge;
-the five-route comparison covers fields supported by those SDK versions. Complete
-SDK upload signatures, buffer-size/file-size hints, refined account models,
+the five-route comparison covers fields supported by those SDK versions. Direct
+SDK upload signatures and buffer-size/file-size hints are covered by the
+[direct-upload follow-up](account-upload-signature.md). Refined account models,
 controlled-account delivery and every wider unfinished acceptance criterion remain
 open. This work does not complete issue #1.

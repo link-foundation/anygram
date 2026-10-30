@@ -5,6 +5,7 @@ import { PART_SIZE, withFileSource, uploadSource } from './file-source.js';
 import { accountTextOptions, accountSendOptions } from './account-text.js';
 import { fileCaption, albumCaptions } from './media-text.js';
 import { mediaSettings, reusableMediaFlags } from './media-options.js';
+import { uploadArguments } from './account-upload.js';
 import {
   uploadEncryptedFile,
   downloadEncryptedFile,
@@ -96,7 +97,8 @@ export class MediaOperations {
   }
 
   uploadFile(file, options = {}) {
-    return withFileSource(file, options, (source, settings) =>
+    const input = uploadArguments(file, options);
+    return withFileSource(input.file, input.options, (source, settings) =>
       uploadSource(this.rpc.bind(this), source, settings)
     );
   }
@@ -136,6 +138,7 @@ export class MediaOperations {
           ...options,
           workers: 1,
           filename: undefined,
+          fileSize: undefined,
           onProgress: undefined,
           progressCallback: undefined,
         });

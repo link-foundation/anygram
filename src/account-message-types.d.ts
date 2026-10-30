@@ -7,6 +7,7 @@ import type {
   TlRequest,
 } from './index.js';
 import type { LegacyInteger, LongValue } from './api-classes.js';
+import type { Api } from './api.js';
 
 export type AccountReactionInput =
   | string
@@ -104,17 +105,31 @@ export interface AccountUploadProgress {
   (fraction: number): unknown;
   isCanceled?: boolean;
 }
-export interface AccountUploadOptions extends Parameters, RequestOptions {
+export interface AccountUploadSettings extends Parameters, RequestOptions {
   filename?: string;
   partSize?: number;
   maxParts?: number;
   maxBytes?: number;
+  /** Exact expected size, validated before upload requests. */
+  fileSize?: number;
+  /** Whole-input buffering limit for sources without random-access reads. */
+  maxBufferSize?: number;
   /** One to sixteen simultaneous parts; one by default. */
   workers?: number;
-  onProgress?: (uploaded: number, total: number) => unknown;
   /** SDK fractional progress, including the initial zero. */
   progressCallback?: AccountUploadProgress;
 }
+export interface AccountUploadOptions extends AccountUploadSettings {
+  onProgress?: (uploaded: number, total: number) => unknown;
+}
+export interface AccountUploadFileOptions extends AccountUploadSettings {
+  file: unknown;
+  /** SDK-style direct uploads report fractions from zero to one. */
+  onProgress?: AccountUploadProgress;
+}
+export type AccountUploadedFile =
+  | InstanceType<typeof Api.InputFile>
+  | InstanceType<typeof Api.InputFileBig>;
 export interface AccountMediaOptions extends AccountUploadOptions {
   /** JPEG/PNG sources are photos by default; other sources are documents. */
   forceDocument?: boolean;

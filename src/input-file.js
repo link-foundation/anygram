@@ -38,7 +38,7 @@ function discardSource(source) {
   return source?.destroy?.() ?? source?.cancel?.() ?? source?.return?.();
 }
 
-function suppliedSource(factory, signal, discard = discardSource) {
+export function suppliedSource(factory, signal, discard = discardSource) {
   const pending = Promise.resolve(factory());
   pending
     .then((source) => {
@@ -50,7 +50,7 @@ function suppliedSource(factory, signal, discard = discardSource) {
   return abortable(pending, signal);
 }
 
-async function resolveSource(input, signal) {
+export async function resolveInputFileSource(input, signal) {
   for (let depth = 0; depth < 16; depth++) {
     signal?.throwIfAborted();
     if (input instanceof InputFile) {
@@ -192,7 +192,7 @@ export async function readInputFile(
   } = {}
 ) {
   validateByteLimit(maxBytes);
-  const source = await resolveSource(input, signal);
+  const source = await resolveInputFileSource(input, signal);
   signal?.throwIfAborted();
   if (source instanceof Uint8Array) {
     checkSize(source.byteLength, maxBytes);

@@ -171,7 +171,7 @@ function uploadedMedia(file, options) {
   if (schemaDefinition(file?._)?.type === 'InputFile') {
     checkedMetadata(file);
   } else {
-    validateUploadSource(file);
+    validateUploadSource(file, options);
   }
   const facts = fileMetadata(file, options);
   const image = options.asImage ?? (facts.image && !options.forceDocument);

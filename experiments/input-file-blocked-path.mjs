@@ -7,6 +7,7 @@ import { join } from 'node:path';
 import { performance } from 'node:perf_hooks';
 import { setTimeout as delay } from 'node:timers/promises';
 import { BotApi } from '../src/bot-api.js';
+import { Anygram, createAdapter, InputFile } from '../src/index.js';
 
 if (process.platform !== 'linux') {
   throw new Error('This bounded filesystem probe requires Linux FIFO/procfs');
@@ -37,16 +38,32 @@ const released = delay(250).then(async () => {
   throw new Error('Bounded FIFO writer could not pair the pending file open');
 });
 try {
-  const api = new BotApi({
-    token: 'blocked:fixture',
-    timeout: 10,
-    fetch: () => assert.fail('Cancelled preparation reached fetch'),
-  });
+  const mode = process.argv[2] ?? 'bot';
+  assert(['bot', 'account', 'account-input'].includes(mode));
+  const upload =
+    mode === 'bot'
+      ? () =>
+          new BotApi({
+            token: 'blocked:fixture',
+            timeout: 10,
+            fetch: () => assert.fail('Cancelled preparation reached fetch'),
+          }).callApi('sendDocument', { document: { source: path } })
+      : () =>
+          new Anygram({
+            adapters: [
+              createAdapter(
+                'native',
+                {
+                  call: () => assert.fail('Cancelled preparation reached RPC'),
+                },
+                { kind: 'mtproto' }
+              ),
+            ],
+          }).uploadFile(mode === 'account-input' ? new InputFile(path) : path, {
+            timeout: 10,
+          });
   const started = performance.now();
-  await assert.rejects(
-    api.callApi('sendDocument', { document: { source: path } }),
-    /timed out/
-  );
+  await assert.rejects(upload(), /timed out/);
   const elapsed = performance.now() - started;
   const cancelledBeforeRelease = !releaseStarted;
   await released;
@@ -66,7 +83,7 @@ try {
     `Upload cancellation waited ${elapsed.toFixed(1)}ms for filesystem open`
   );
   console.log(
-    `Cancelled blocked filesystem open in ${elapsed.toFixed(1)}ms; no owned descriptor remains`
+    `${mode}: cancelled blocked filesystem open in ${elapsed.toFixed(1)}ms; no owned descriptor remains`
   );
 } finally {
   try {

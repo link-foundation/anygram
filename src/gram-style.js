@@ -116,6 +116,15 @@ export function createGramStyle(client, kind = 'gramjs') {
     },
     setParseMode: (mode) => client.setParseMode(mode),
     invoke: async (...args) => wrap(await client.invoke(...args)),
+    async uploadFile(options) {
+      return wrap(
+        await client.route('uploadFile', (adapter) =>
+          adapter.supports('invoke')
+            ? operations.uploadFile(options)
+            : adapter.execute('uploadFile', [options])
+        )
+      );
+    },
     sendReaction: async (...args) =>
       wrap(await operations.sendReaction(...args)),
     getReactionUsers: async (...args) =>

@@ -141,9 +141,9 @@ Account `uploadFile`, `sendFile`, albums and encrypted uploads also accept owned
 `InputFile` sources through raw-capable backends, including GramJS/teleproto
 serializers and mtcute. Their preparation defaults to 64 MiB, further bounded by
 `partSize * maxParts`; use upload options `{ maxBytes, partSize, maxParts, signal,
-fetch }`. This buffer limit applies to explicit owned inputs; existing direct
-bytes, Blobs and local paths retain their random-access upload behavior. Owned
-uploads share a 30-second default deadline across preparation, RPC and progress;
+fetch }`. This byte limit applies to every source. Paths, byte buffers and
+Blobs use random-access reads, including inside owned InputFiles. Owned
+InputFile uploads share a 30-second default deadline across preparation, RPC and progress;
 `timeout` overrides it. See
 [account upload evidence](docs/case-studies/issue-1/account-file-inputs.md).
 
@@ -834,7 +834,13 @@ and [SDK comparisons and limits](docs/case-studies/issue-1/account-media-options
 Shared account views support `instanceof Api.*` guards and schema serialization
 without changing their enumerable fields or bound helpers. See [the checked example](examples/typed-account-class-identity.ts)
 and [class-identity comparisons and limits](docs/case-studies/issue-1/account-class-identity.md).
-Complete upload signatures, old-schema bridges, rich formatting/model parity,
+Both account facades accept direct SDK `uploadFile({ file, workers, onProgress })`
+calls with fractional progress and native InputFile results. The root `CustomFile`
+export provides owned file metadata; actual SDK CustomFile inputs remain accepted.
+Exact `fileSize` hints and fallback `maxBufferSize` bounds share source validation
+and cleanup. See [the checked example](examples/typed-account-upload.ts) and
+[upload comparisons and limits](docs/case-studies/issue-1/account-upload-signature.md).
+Old-schema bridges, rich formatting/model parity,
 drafts, array totals and legacy big-integer methods remain open.
 Direct `client.invoke` keeps raw backend results.
 

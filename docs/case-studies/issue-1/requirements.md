@@ -108,8 +108,8 @@ seven guards, including two direct new-helper registry checks. Thirty-two actual
 SDK file-helper byte comparisons, 1,173 extension comparisons per SDK, two actual
 thumbnail uploads, ten selected-route cases and two independent encrypted TCP
 cases verify local contracts. Pending reads/submissions, callback cancellation,
-source closure and independent cleanup errors have finite regressions. Complete
-upload signatures, historical schema bridges, refined models and all wider open
+source closure and independent cleanup errors have finite regressions. Direct
+upload signatures are covered below; historical schema bridges, refined models and all wider open
 criteria remain unfinished.
 
 The [account class identity follow-up](account-class-identity.md) preserves native
@@ -121,6 +121,15 @@ serialization, and actual SDK comparisons cover 1,931 compatible GramJS and
 encrypted TCP cases and checked SDK migration fixtures verify local contracts.
 Historical schema bridges, refined result types and all wider criteria remain
 unfinished.
+
+The [direct-upload follow-up](account-upload-signature.md) adds SDK wrapper
+signatures on both account facades, fractional progress, owned file metadata,
+exact size hints and bounded fallback buffering. Lazy paths, sliced Blobs and
+resident buffers retain random-access behavior. The 59 focused cases reproduce
+53 failures with six existing guards; preceding declarations produce three
+diagnostics. Actual SDK bytes/progress, ten selected routes, two encrypted TCP
+cases and finite path/cancellation probes verify local contracts. Historical
+schema bridges, refined account results and all wider criteria remain open.
 
 The [escaped-output allocation investigation](markup-allocations.md) reproduces
 two failures from HTML-head CI with allocation regressions and capped-heap probes.
