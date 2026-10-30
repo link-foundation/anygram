@@ -828,7 +828,10 @@ canonical calls remain plain until configured. Per-call null/undefined inherit,
 false disables, and explicit global disable survives backend scopes. See
 [the checked example](examples/typed-account-defaults.ts) and
 [default-setting comparisons](docs/case-studies/issue-1/account-parser-defaults.md).
-Complete media options, rich formatting/model parity, drafts, array totals,
+File preparation shares photo/MIME inference, explicit attributes, thumbnails,
+media flags and bounded concurrent uploads. See [the checked example](examples/typed-account-media-options.ts)
+and [SDK comparisons and limits](docs/case-studies/issue-1/account-media-options.md).
+Complete upload signatures, old-schema bridges, rich formatting/model parity, drafts, array totals,
 legacy big-integer methods and `instanceof Api.*` behavior remain open.
 Direct `client.invoke` keeps raw backend results.
 

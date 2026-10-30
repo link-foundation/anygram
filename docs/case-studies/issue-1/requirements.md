@@ -97,8 +97,20 @@ corpus reproduces 96 failures against frozen preceding source; fifty existing
 guards remain. Twenty-four actual SDK request-byte comparisons, two actual SDK
 model comparisons, all five selected routes and four encrypted native TCP cases
 verify finite contracts. Exact mention IDs, cancellation and literal keyboard
-labels have regression coverage. Complete media options, old-schema bridges,
+labels have regression coverage. The media follow-up below advances shared options; old-schema bridges,
 controlled-account behavior and wider feature-union criteria remain unfinished.
+
+The [media metadata and upload follow-up](account-media-options.md) shares photo
+and registered MIME inference, explicit attributes, thumbnails, current media
+flags and finite upload workers through canonical operations and both facades.
+All 153 finite cases pass on Node; frozen preceding source fails 146 and retains
+seven guards, including two direct new-helper registry checks. Thirty-two actual
+SDK file-helper byte comparisons, 1,173 extension comparisons per SDK, two actual
+thumbnail uploads, ten selected-route cases and two independent encrypted TCP
+cases verify local contracts. Pending reads/submissions, callback cancellation,
+source closure and independent cleanup errors have finite regressions. Complete
+upload signatures, historical schema bridges, refined models and all wider open
+criteria remain unfinished.
 
 The [escaped-output allocation investigation](markup-allocations.md) reproduces
 two failures from HTML-head CI with allocation regressions and capped-heap probes.
@@ -999,6 +1011,7 @@ The frozen preceding resolver fails 129 cases; the checked shortcut example
 produces five preceding declaration diagnostics. Layer-232 quiz indices and
 response answer media retain the official schema despite two pinned teleproto
 helper differences. See [media conversion evidence](media-casts.md) and its
-hashed primary inventory. Broad helper options/MIME inference, account custom
+hashed primary inventory. The media follow-up above adds helper metadata/MIME
+inference; complete upload signatures, historical schema bridges, account custom
 models, live production interoperability and all other open acceptance criteria
 remain unfinished.

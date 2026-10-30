@@ -22,6 +22,7 @@ import type {
   AccountMessageOptions,
   AccountMessageEditOptions,
   AccountMediaMethods,
+  AccountUploadOptions,
 } from './account-message-types.js';
 export type * from './account-message-types.js';
 export { HTMLParser } from './account-html.js';
@@ -520,7 +521,7 @@ export declare class Anygram {
     options?: Parameters
   ): Promise<Uint8Array>;
   getParticipants(peer: unknown, options?: Parameters): Promise<unknown>;
-  uploadFile(file: unknown, options?: Parameters): Promise<TlRequest>;
+  uploadFile(file: unknown, options?: AccountUploadOptions): Promise<TlRequest>;
   uploadEncryptedFile(
     file: EncryptedFileInput,
     options?: EncryptedFileUploadOptions

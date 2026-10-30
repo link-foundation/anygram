@@ -14,6 +14,7 @@
     }
   },
   "include": [
+    "typed-account-media-options-sdk-fixture.ts",
     "typed-account-default-sdk-fixture.ts",
     "typed-account-media-sdk-fixture.ts",
     "typed-account-parse-mode-sdk-fixture.ts",

@@ -1620,20 +1620,40 @@ SDK default formatting follow-up:
       The pre-commit zero-warning rule caught album settings complexity; a
       private helper extraction passes all 318 affected cases on Node/Bun/Deno
       and repeated static checks with an explicit zero-warning lint gate.
-- [ ] Commit/push defaults, update PR #2 and verify exact-head CI. Continue
-      media options and every wider unfinished requirement.
+- [x] Commit/push default-formatting head 5ad1af7756479e63ab6162bacb9ee6de45d1e0ad.
+      Run 40990797269, created 2026-10-30T02:17:15Z after its commit, passes
+      all 23 applicable jobs. Continue every wider unfinished requirement.
 
 Account media option follow-up:
 
-- [ ] Trace both SDK upload helpers and official media constructors. Reuse the
+- [x] Trace both SDK upload helpers and official media constructors. Reuse the
       existing shared extension/attribute logic rather than duplicate inference.
-- [ ] Reproduce dropped media flags, image inference, thumbnails, explicit
+- [x] Reproduce dropped media flags, image inference, thumbnails, explicit
       attributes and upload controls before changing production code.
-- [ ] Share normalized metadata and option validation across canonical sends,
+- [x] Share normalized metadata and option validation across canonical sends,
       account facades, albums, replies and replacement edits. Preserve literal
       captions and explicit document/image choices; validate before consumption.
-- [ ] Compare real SDK helper requests and independent encrypted native TCP,
+- [x] Compare real SDK helper requests and independent encrypted native TCP,
       including every selected route, exact references and failed submissions.
-- [ ] Verify public declarations and examples, bounded sources and cancellation,
-      full runtime/static/integration gates and fresh exact-head CI. Continue
-      older-schema bridges, models and every wider unfinished requirement.
+      The final 153 cases reproduce 146 frozen-source failures with seven
+      existing/direct-helper guards. Thirty-two actual SDK helper byte cases,
+      all 1,173 extension facts per SDK, two thumbnail uploads, ten selected
+      routes and two encrypted TCP cases pass. Review adds failing regressions
+      for pending reads, cleanup aggregation and reused source read buffers;
+      finite batches now detach each part. The 64 MiB heap/512 KiB stack probe
+      reads seventeen half-MiB parts with sixteen workers at 113,912 KiB RSS.
+- [x] Verify public declarations/examples, bounded sources and cancellation,
+      and all local gates. All 4,395 core cases pass on Node/Bun/Deno; the 153
+      focused cases also pass on Node 20. Strict checks and actual SDK fixture
+      compilation pass, scanning 196 production sources with zero clones. All
+      71 framework cases pass on Node 20/26, Bun and Deno, plus 27 terminal,
+      eight Node 20 wire, sixteen parser and bounded FIFO checks. Packaging
+      has 241 permitted files. Main remains an ancestor; complete issue prose
+      is unchanged and all five feedback/sub-issue streams remain empty. The
+      1,059-file PR inventory has no removals; GitHub rejects the full diff
+      above 300 files, so the complete atomic change is reviewed locally.
+      Bun exposed an unsupported test registration signature; using the shared
+      two-argument harness restores all cases. Actual SDK types require legacy
+      big-integer cover IDs; the portable fixture now constructs them exactly.
+- [ ] Commit/push media options, update PR #2 and verify exact-head CI. Continue
+      historical schema bridges, account models and all wider open criteria.

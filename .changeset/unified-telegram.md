@@ -287,3 +287,9 @@ Use legacy Markdown defaults on both account facades and bound messages while
 retaining canonical plain calls. Preserve explicit global disable and parser
 identity across backend scopes, inherit empty per-call and album modes, and
 keep keyboard labels literal even with configured custom parsers.
+
+Share account photo/MIME inference, explicit document attributes, thumbnails,
+current media flags and detached references through sends, albums and bound
+replies/edits. Add finite concurrent upload batches, fractional SDK progress,
+random-access/CustomFile inputs and cancellation during pending reads. Retain
+ordered encrypted-file state, independent part buffers and cleanup failures.

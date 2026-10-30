@@ -100,7 +100,42 @@ export type AccountParseModeInput =
   | false
   | null
   | undefined;
-export interface AccountMessageOptions extends Parameters, RequestOptions {
+export interface AccountUploadProgress {
+  (fraction: number): unknown;
+  isCanceled?: boolean;
+}
+export interface AccountUploadOptions extends Parameters, RequestOptions {
+  filename?: string;
+  partSize?: number;
+  maxParts?: number;
+  maxBytes?: number;
+  /** One to sixteen simultaneous parts; one by default. */
+  workers?: number;
+  onProgress?: (uploaded: number, total: number) => unknown;
+  /** SDK fractional progress, including the initial zero. */
+  progressCallback?: AccountUploadProgress;
+}
+export interface AccountMediaOptions extends AccountUploadOptions {
+  /** JPEG/PNG sources are photos by default; other sources are documents. */
+  forceDocument?: boolean;
+  asImage?: boolean;
+  mimeType?: string;
+  attributes?: readonly AccountShareInput[];
+  thumb?: unknown;
+  voiceNote?: boolean;
+  videoNote?: boolean;
+  supportsStreaming?: boolean;
+  spoiler?: boolean;
+  ttlSeconds?: number;
+  nosoundVideo?: boolean;
+  forceFile?: boolean;
+  videoCover?: AccountShareInput;
+  videoTimestamp?: number;
+  stickers?: readonly AccountShareInput[];
+  livePhoto?: boolean;
+  video?: AccountShareInput;
+}
+export interface AccountMessageOptions extends AccountMediaOptions {
   message?: string | FormattedText;
   file?: unknown;
   replyTo?: number;
@@ -111,7 +146,7 @@ export interface AccountMessageOptions extends Parameters, RequestOptions {
   entities?: readonly AccountTextEntityInput[];
   parseMode?: AccountParseModeInput;
 }
-export interface AccountMessageEditOptions extends Parameters, RequestOptions {
+export interface AccountMessageEditOptions extends AccountMediaOptions {
   text?: string | FormattedText;
   file?: unknown;
   linkPreview?: boolean;

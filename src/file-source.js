@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 import { randomId } from './random.js';
-import { TelegramError } from './errors.js';
+import { TelegramError, throwFailures } from './errors.js';
 import { InputFile, readInputFile } from './input-file.js';
 import { localFileSource } from './local-file-source.js';
 import { createRequestScope, validateByteLimit } from './http.js';
@@ -49,6 +49,79 @@ function ownedByteLimit({
   return Math.min(maxBytes, partSize * maxParts);
 }
 
+export function validateUploadOptions(options) {
+  const limit = ownedByteLimit(options);
+  const workers = options.workers ?? 1;
+  if (!Number.isInteger(workers) || workers < 1 || workers > 16) {
+    throw new RangeError('Upload workers must be an integer from 1 to 16');
+  }
+  for (const key of ['onProgress', 'progressCallback']) {
+    if (options[key] !== undefined && typeof options[key] !== 'function') {
+      throw new TypeError(`Upload ${key} must be a function`);
+    }
+  }
+  uploadCancelled(options);
+  return limit;
+}
+
+function uploadCancelled({ signal, progressCallback }) {
+  signal?.throwIfAborted();
+  if (progressCallback?.isCanceled) {
+    throw new TelegramError('USER_CANCELED', { type: 'USER_CANCELED' });
+  }
+}
+
+export function validateUploadSource(file) {
+  if (
+    file instanceof InputFile ||
+    file instanceof Uint8Array ||
+    file instanceof globalThis.Blob ||
+    typeof file === 'string' ||
+    file?.data instanceof Uint8Array ||
+    file?.buffer instanceof Uint8Array ||
+    typeof file?.path === 'string' ||
+    (typeof file?.read === 'function' && Number.isSafeInteger(file.size))
+  ) {
+    return;
+  }
+  throw new TypeError(
+    'Media upload requires bytes, a Blob, a local path or an InputFile'
+  );
+}
+
+async function recordSource(file) {
+  let source;
+  if (file?.buffer instanceof Uint8Array) {
+    source = await sourceOf(file.buffer);
+  } else if (typeof file?.path === 'string' && file.path) {
+    source = await localFileSource(file.path);
+  } else if (
+    typeof file?.read === 'function' &&
+    Number.isSafeInteger(file.size)
+  ) {
+    return {
+      size: file.size,
+      name: file.name ?? 'file',
+      read: file.read.bind(file),
+      close: file.close?.bind(file),
+    };
+  }
+  if (source) {
+    return sizedSource(file, source);
+  }
+  throw new TypeError(
+    'Media upload requires bytes, a Blob, a local path or an InputFile'
+  );
+}
+
+async function sizedSource(file, source) {
+  if (file.size !== undefined && file.size !== source.size) {
+    await source.close?.();
+    throw new RangeError('Media file size does not match its source');
+  }
+  return { ...source, name: file.name ?? source.name };
+}
+
 export async function sourceOf(file, options = {}) {
   if (file instanceof InputFile) {
     const bytes = await readInputFile(file, {
@@ -81,14 +154,13 @@ export async function sourceOf(file, options = {}) {
   if (typeof file === 'string') {
     return localFileSource(file);
   }
-  throw new TypeError(
-    'Upload requires bytes, a Blob, a local path or an InputFile'
-  );
+  return recordSource(file);
 }
 
 /** Own preparation, RPC and progress deadlines for explicit shared inputs. */
 export async function withFileSource(file, options, upload) {
-  options.signal?.throwIfAborted();
+  validateUploadOptions(options);
+  validateUploadSource(file);
   const scope =
     file instanceof InputFile
       ? createRequestScope(
@@ -98,59 +170,108 @@ export async function withFileSource(file, options, upload) {
       : undefined;
   const settings = scope ? { ...options, signal: scope.signal } : options;
   let source;
+  let result;
+  const failures = [];
   try {
     source = await sourceOf(file, settings);
-    return await upload(source, settings);
+    result = await upload(source, settings);
+  } catch (error) {
+    failures.push(error);
   } finally {
     scope?.dispose();
-    await source?.close?.();
+    try {
+      await source?.close?.();
+    } catch (error) {
+      failures.push(error);
+    }
+  }
+  throwFailures(failures, 'Upload and source cleanup failed');
+  return result;
+}
+
+async function uploadBatch(invoke, source, state, options, transform) {
+  const payloads = [];
+  const end = Math.min(state.part + (options.workers ?? 1), state.parts);
+  for (; state.part < end; state.part++) {
+    uploadCancelled(options);
+    const offset = state.part * state.partSize;
+    const length = Math.min(state.partSize, source.size - offset);
+    const plain = await abortable(source.read(offset, length), options.signal);
+    uploadCancelled(options);
+    if (!(plain instanceof Uint8Array) || plain.length !== length) {
+      throw new TelegramError(
+        'Upload source returned an invalid or truncated part'
+      );
+    }
+    // A random-access source may reuse its read buffer for the next part.
+    const bytes = new Uint8Array(transform(plain));
+    if (!state.big) {
+      state.checksum.update(bytes);
+    }
+    payloads.push({
+      file_id: state.id,
+      file_part: state.part,
+      ...(state.big ? { file_total_parts: state.parts } : {}),
+      bytes,
+    });
+  }
+  const results = await Promise.allSettled(
+    payloads.map(async (params) => {
+      uploadCancelled(options);
+      return await abortable(
+        invoke(
+          state.big ? 'upload.saveBigFilePart' : 'upload.saveFilePart',
+          params,
+          options
+        ),
+        options.signal
+      );
+    })
+  );
+  for (const result of results) {
+    if (result.status === 'rejected') {
+      throw result.reason;
+    }
+    if (result.value !== true) {
+      throw new TelegramError('Telegram did not save file part');
+    }
+    uploadCancelled(options);
+    state.saved++;
+    await abortable(
+      options.onProgress?.(
+        Math.min(state.saved * state.partSize, source.size),
+        source.size
+      ),
+      options.signal
+    );
+    await abortable(
+      options.progressCallback?.(state.saved / state.parts),
+      options.signal
+    );
+    uploadCancelled(options);
   }
 }
 
-/** Sequential bounded upload, shared by cloud and independently encrypted files. */
+/** Finite batches bound memory to at most sixteen 512 KiB parts. */
 export async function uploadSource(
   invoke,
   source,
-  { partSize = PART_SIZE, maxParts = 4000, filename, onProgress, ...options },
+  options,
   transform = (bytes) => bytes
 ) {
-  validatePartSize(partSize);
+  const limit = validateUploadOptions(options);
+  if (source.size > limit) {
+    throw new RangeError('Upload exceeds configured byte limit');
+  }
+  const { partSize = PART_SIZE, maxParts = 4000, filename } = options;
   const parts = uploadParts(source.size, partSize, maxParts);
   const id = randomId();
   const big = source.size > 10 * 1024 * 1024;
   const checksum = createHash('md5');
-  for (let part = 0; part < parts; part++) {
-    options.signal?.throwIfAborted();
-    const offset = part * partSize;
-    const plain = await source.read(
-      offset,
-      Math.min(partSize, source.size - offset)
-    );
-    options.signal?.throwIfAborted();
-    const bytes = transform(plain);
-    const saved = await abortable(
-      invoke(
-        big ? 'upload.saveBigFilePart' : 'upload.saveFilePart',
-        {
-          file_id: id,
-          file_part: part,
-          ...(big ? { file_total_parts: parts } : {}),
-          bytes,
-        },
-        options
-      ),
-      options.signal
-    );
-    if (saved !== true) {
-      throw new TelegramError('Telegram did not save file part');
-    }
-    if (!big) {
-      checksum.update(bytes);
-    }
-    await abortable(
-      onProgress?.(Math.min(offset + partSize, source.size), source.size),
-      options.signal
-    );
+  const state = { part: 0, saved: 0, parts, partSize, id, big, checksum };
+  await abortable(options.progressCallback?.(0), options.signal);
+  while (state.part < parts) {
+    await uploadBatch(invoke, source, state, options, transform);
   }
   return {
     _: big ? 'inputFileBig' : 'inputFile',

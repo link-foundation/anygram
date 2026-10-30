@@ -1,0 +1,118 @@
+{
+  "recordedAt": "2026-10-30T02:42:44.363Z",
+  "installed": [
+    {
+      "package": "telegram",
+      "version": "2.26.22",
+      "publishedSource": "https://registry.npmjs.org/telegram/-/telegram-2.26.22.tgz",
+      "files": [
+        {
+          "path": "Utils.js",
+          "sha256": "f00944abcb3a057c27275b0b2fc8d36b713fa8c0c0a29c5deff51e7639ff82ed"
+        },
+        {
+          "path": "client/uploads.js",
+          "sha256": "893ad2b6babf2c18f185c5ccbfa7bfcc10b366f1b6484c34d21d9a775b00d4dc"
+        }
+      ]
+    },
+    {
+      "package": "teleproto",
+      "version": "1.232.0",
+      "publishedSource": "https://registry.npmjs.org/teleproto/-/teleproto-1.232.0.tgz",
+      "files": [
+        {
+          "path": "Utils.js",
+          "sha256": "6b75edfd6029e9e3cc2cc070751293ab5da6600001beed6b9664769e98bdced8"
+        },
+        {
+          "path": "client/methods/uploads.js",
+          "sha256": "63f53f2742ed6eccbded897c04eeea68460f53a413e22d858cc7ca277e95d9ff"
+        },
+        {
+          "path": "client/files/FileUploader.js",
+          "sha256": "386600e6a9100bd7b4ad7a3917ccf1c6ba5ca44b67ab6f712a581a750e8a1e0a"
+        },
+        {
+          "path": "client/files/PartsManager.js",
+          "sha256": "0012f5399580021c74926fbc93ae240cb7f416e96b7fc57fdb765db3033caee5"
+        }
+      ]
+    },
+    {
+      "package": "mime",
+      "version": "3.0.0",
+      "publishedSource": "https://registry.npmjs.org/mime/-/mime-3.0.0.tgz",
+      "files": [
+        {
+          "path": "Mime.js",
+          "sha256": "9482411a27e56e69e9ff5ae077b25f64c38768ae268ac07ab74a9896b582b6a9"
+        },
+        {
+          "path": "types/standard.js",
+          "sha256": "70aaa6f9c1b7caf38db2eff138406911368729b8dfb478fe70078e46ec1824bc"
+        },
+        {
+          "path": "types/other.js",
+          "sha256": "ee0e65cdfde6e492be9c52e35bffcbe0e0fd9a5be1a18fbaa7cbbc7b9b406934"
+        }
+      ]
+    }
+  ],
+  "primarySources": [
+    {
+      "url": "https://core.telegram.org/constructor/inputMediaUploadedDocument",
+      "sha256": "39f923e4072bf6eb7d7a85e8d222dcd577e7083e0cb2e56deca3896fac45a26c"
+    },
+    {
+      "url": "https://core.telegram.org/constructor/inputMediaUploadedPhoto",
+      "sha256": "005bf91858d9d4113a72de1bf48c97ea15afb64aae3535b020f04c192b234af4"
+    },
+    {
+      "url": "https://core.telegram.org/constructor/inputMediaDocument",
+      "sha256": "f31e5de1e5b111e69a737d4b2bee2064f257ebcc7ffb33404ab4ecc090429166"
+    },
+    {
+      "url": "https://core.telegram.org/constructor/inputMediaPhoto",
+      "sha256": "7f4d350ec8268e2e13c9fe6aeb625fc7e848f69ff1455fe512910e4841ce2589"
+    }
+  ],
+  "contract": {
+    "inference": "High-level file sends/edits infer JPEG/PNG photos, registered MIME and filename/audio/video attributes. Explicit forceDocument/asImage/MIME/attributes retain caller control. Raw TL InputFile shortcuts remain documents.",
+    "metadata": "Both SDK styles and canonical operations share flags, exact detached references, thumbnail preparation and all-item preflight. Album uploadMedia retains reusable flags and live-photo video references.",
+    "uploads": "One to sixteen finite concurrent parts, ordered checksum/encryption preparation, fractional SDK progress beside canonical byte progress, cancellation and shared cleanup failure retention.",
+    "bounds": "At most ten album items, 1000 supplied attributes/stickers, 256 KiB per supplied metadata value, 64 MiB default upload limit and sixteen half-MiB in-flight parts."
+  },
+  "regression": {
+    "beforeCommit": "5ad1af7756479e63ab6162bacb9ee6de45d1e0ad",
+    "tests": [
+      "tests/account-media-options.test.js",
+      "tests/account-media-options-rpc.test.js",
+      "tests/account-upload-controls.test.js"
+    ],
+    "initialCases": 101,
+    "initialFailures": 97,
+    "finalCases": 153,
+    "frozenFailures": 146,
+    "retainedGuards": 7,
+    "actualFileHelperMediaComparisons": 32,
+    "exhaustiveExtensionFactsPerSdk": 1173,
+    "actualThumbnailComparisons": 2,
+    "selectedRouteCases": 10,
+    "encryptedTcpCases": 2,
+    "frozenCommand": "node --loader ./experiments/account-media-options-before-loader.mjs --test tests/account-media-options*.test.js tests/account-upload-controls.test.js",
+    "finiteProbe": "node --max-old-space-size=64 --stack-size=512 experiments/account-upload-budget.mjs"
+  },
+  "differences": [
+    "Owned uploads preserve real MD5 checksums; the pinned GramJS helper returns an empty checksum. Thumbnail comparison first asserts that difference and then normalizes only the checksum.",
+    "Owned video notes use round-video attributes without the pinned SDK helper accidental voice-audio attribute. Explicit supplied attributes still override inferred attributes.",
+    "Owned URL filename inference excludes query/fragment components; pinned helpers inspect unparsed strings.",
+    "Owned upload workers are finite (1..16) and honor progress callbacks asynchronously. Default upload size remains bounded; explicit metadata controls actual duration/dimensions because pinned helpers do not parse binary metadata.",
+    "Current flags on historical SDK schemas still depend on the older-schema bridge; common supported metadata is verified on all five selected adapters."
+  ],
+  "remaining": [
+    "Older-schema bridging and complete account models",
+    "Controlled-account delivery and downstream use cases",
+    "Every wider unfinished issue criterion"
+  ]
+}

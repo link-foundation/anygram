@@ -7,7 +7,9 @@ actual SDK helpers and encrypted TCP. Independent [HTML](account-html.md) and
 Explicit [file/album captions](account-media-formatting.md) and replacement-media
 edits now share that conversion. [SDK default Markdown and explicit disable](account-parser-defaults.md)
 now survive backend scopes and bound operations; canonical methods remain plain.
-Complete media options remain open. The
+[Media metadata and bounded upload options](account-media-options.md) now share
+photo/MIME inference, thumbnails, attributes and current flags. Complete upload
+signatures and old-schema bridges remain open. The
 [escaped-output investigation](markup-allocations.md) records the CI resource
 regressions and allocation guards without increasing deadlines.
 

@@ -1,4 +1,5 @@
 import { requestLimits, schemaDefinition } from './requests.js';
+import { documentMetadata } from './file-metadata.js';
 
 const object = (_, fields = {}) => ({ _, ...fields });
 const union = (value) => schemaDefinition(value?._)?.type;
@@ -238,59 +239,8 @@ function correctAnswers(poll, results) {
 }
 
 function uploadedDocument(file) {
-  const name = file.name || 'unnamed';
-  const extension = name.split('.').at(-1).toLowerCase();
-  const mime = Object.hasOwn(fileTypes, extension)
-    ? fileTypes[extension]
-    : 'application/octet-stream';
-  const attributes = [
-    object('documentAttributeFilename', {
-      file_name: name.split(/[\\/]/).at(-1),
-    }),
-  ];
-  if (mime.startsWith('audio/')) {
-    attributes.push(object('documentAttributeAudio', { duration: 0 }));
-  }
-  if (mime.startsWith('video/')) {
-    attributes.push(
-      object('documentAttributeVideo', { duration: 0, w: 1, h: 1 })
-    );
-  }
   return object('inputMediaUploadedDocument', {
     file,
-    mime_type: mime,
-    attributes,
+    ...documentMetadata(file),
   });
 }
-
-// Common registered media types; an explicit InputMedia retains caller metadata.
-const fileTypes = {
-  txt: 'text/plain',
-  csv: 'text/csv',
-  html: 'text/html',
-  css: 'text/css',
-  json: 'application/json',
-  pdf: 'application/pdf',
-  zip: 'application/zip',
-  png: 'image/png',
-  jpg: 'image/jpeg',
-  jpeg: 'image/jpeg',
-  gif: 'image/gif',
-  webp: 'image/webp',
-  svg: 'image/svg+xml',
-  avif: 'image/avif',
-  mp3: 'audio/mpeg',
-  wav: 'audio/wav',
-  ogg: 'audio/ogg',
-  oga: 'audio/ogg',
-  opus: 'audio/ogg',
-  flac: 'audio/flac',
-  aac: 'audio/aac',
-  m4a: 'audio/mp4',
-  mp4: 'video/mp4',
-  m4v: 'video/x-m4v',
-  mov: 'video/quicktime',
-  webm: 'video/webm',
-  mkv: 'video/x-matroska',
-  avi: 'video/x-msvideo',
-};

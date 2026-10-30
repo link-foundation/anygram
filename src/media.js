@@ -4,8 +4,7 @@ import { joinBytes } from './bytes.js';
 import { PART_SIZE, withFileSource, uploadSource } from './file-source.js';
 import { accountTextOptions, accountSendOptions } from './account-text.js';
 import { fileCaption, albumCaptions } from './media-text.js';
-import { canonicalValue, schemaDefinition } from './requests.js';
-import { castInputMedia } from './tl-media.js';
+import { mediaSettings, reusableMediaFlags } from './media-options.js';
 import {
   uploadEncryptedFile,
   downloadEncryptedFile,
@@ -40,19 +39,6 @@ function advertisedSize(file, size) {
   return size === undefined && file._ === 'document' && file.size !== undefined
     ? Number(file.size)
     : size;
-}
-
-function mediaValue(file) {
-  const definition = schemaDefinition(file?._ ?? file?.className);
-  if (definition && definition.type !== 'InputFile') {
-    return {
-      media: castInputMedia(
-        canonicalValue(file, { copyBytes: true }),
-        'InputMedia'
-      ),
-    };
-  }
-  return { file: definition ? canonicalValue(file) : file };
 }
 
 function locationOf(media) {
@@ -127,42 +113,32 @@ export class MediaOperations {
     return iterDownloadEncryptedFile(this.rpc.bind(this), file, options);
   }
 
-  async prepareMedia({
-    file,
-    forceDocument = true,
-    mimeType = 'application/octet-stream',
-    attributes,
-    ...options
-  }) {
-    const known = mediaValue(file);
-    if (known.media) {
-      return known.media;
+  async prepareMedia(options) {
+    const { file, media, thumb, ...settings } = mediaSettings(options);
+    settings.signal?.throwIfAborted();
+    if (!media._.startsWith('inputMediaUploaded')) {
+      return media;
     }
-    file = known.file;
-    let media;
-    if (typeof file === 'string' && /^https?:\/\//.test(file)) {
-      media = {
-        _: forceDocument
-          ? 'inputMediaDocumentExternal'
-          : 'inputMediaPhotoExternal',
-        url: file,
-      };
-    } else {
-      const input = ['inputFile', 'inputFileBig'].includes(file?._)
-        ? file
-        : await this.uploadFile(file, options);
-      media = forceDocument
-        ? {
-            _: 'inputMediaUploadedDocument',
-            file: input,
-            mime_type: mimeType,
-            attributes: attributes ?? [
-              { _: 'documentAttributeFilename', file_name: input.name },
-            ],
-          }
-        : { _: 'inputMediaUploadedPhoto', file: input };
+    media.file = ['inputFile', 'inputFileBig'].includes(file?._)
+      ? file
+      : await this.uploadFile(file, settings);
+    if (thumb !== undefined && media._ === 'inputMediaUploadedDocument') {
+      media.thumb = await this.prepareThumbnail(thumb, settings);
     }
     return media;
+  }
+
+  prepareThumbnail(file, options) {
+    const { file: handle } = mediaSettings({ file });
+    return ['inputFile', 'inputFileBig'].includes(handle?._)
+      ? handle
+      : this.uploadFile(file, {
+          ...options,
+          workers: 1,
+          filename: undefined,
+          onProgress: undefined,
+          progressCallback: undefined,
+        });
   }
 
   async sendFile(peer, { file, caption = '', ...options }) {
@@ -206,6 +182,7 @@ export class MediaOperations {
     const type = value._ === 'photo' ? 'Photo' : 'Document';
     return {
       _: `inputMedia${type}`,
+      ...reusableMediaFlags(media),
       id: {
         _: `input${type}`,
         id: value.id,
@@ -222,6 +199,9 @@ export class MediaOperations {
     const captions = await albumCaptions(files, caption, options, (user) =>
       this.resolvePeer(user, options)
     );
+    for (const { settings } of captions) {
+      mediaSettings(settings);
+    }
     const input = await this.resolvePeer(peer, options);
     const multi_media = [];
     for (const { settings, content, randomId: itemRandomId } of captions) {
