@@ -102,6 +102,8 @@ account paths. The same follow-up adds current `tg-time` HTML dates; the legacy
 `tg-date` spelling remains supported. [Output preflight](markup-allocations.md)
 rejects oversized escaping before allocating the expanded string.
 
-SDK default Markdown selection, file/album parse
-integration, complete SDK model/declaration parity, current-schema bridging,
+Explicit [file/album captions and replacement-media edits](account-media-formatting.md)
+now share HTML conversion and validation before consuming upload sources.
+SDK default Markdown selection, complete media options,
+complete SDK model/declaration parity, current-schema bridging,
 controlled account scenarios and wider acceptance criteria remain unfinished.

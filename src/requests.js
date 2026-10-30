@@ -168,10 +168,17 @@ export function objectRequest(request, limits) {
   };
 }
 
+function requestBytes(value, limits) {
+  return limits?.copyBytes ? Uint8Array.from(value) : value;
+}
+
 /** Canonicalize complete values so root vectors share the same traversal limits. */
 export function canonicalValue(value, limits, name) {
   const convert = valueMapper((value, next, name) => {
-    if (!value || typeof value !== 'object' || value instanceof Uint8Array) {
+    if (value instanceof Uint8Array) {
+      return requestBytes(value, limits);
+    }
+    if (!value || typeof value !== 'object') {
       return value;
     }
     if (typeof value.toJSNumber === 'function' || value.__isLong__) {

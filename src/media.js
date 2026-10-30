@@ -2,6 +2,10 @@ import { TelegramError, UnsupportedError } from './errors.js';
 import { randomId } from './random.js';
 import { joinBytes } from './bytes.js';
 import { PART_SIZE, withFileSource, uploadSource } from './file-source.js';
+import { accountTextOptions, accountSendOptions } from './account-text.js';
+import { fileCaption, albumCaptions } from './media-text.js';
+import { canonicalValue, schemaDefinition } from './requests.js';
+import { castInputMedia } from './tl-media.js';
 import {
   uploadEncryptedFile,
   downloadEncryptedFile,
@@ -36,6 +40,19 @@ function advertisedSize(file, size) {
   return size === undefined && file._ === 'document' && file.size !== undefined
     ? Number(file.size)
     : size;
+}
+
+function mediaValue(file) {
+  const definition = schemaDefinition(file?._ ?? file?.className);
+  if (definition && definition.type !== 'InputFile') {
+    return {
+      media: castInputMedia(
+        canonicalValue(file, { copyBytes: true }),
+        'InputMedia'
+      ),
+    };
+  }
+  return { file: definition ? canonicalValue(file) : file };
 }
 
 function locationOf(media) {
@@ -117,9 +134,11 @@ export class MediaOperations {
     attributes,
     ...options
   }) {
-    if (['inputMediaPhoto', 'inputMediaDocument'].includes(file?._)) {
-      return file;
+    const known = mediaValue(file);
+    if (known.media) {
+      return known.media;
     }
+    file = known.file;
     let media;
     if (typeof file === 'string' && /^https?:\/\//.test(file)) {
       media = {
@@ -150,14 +169,21 @@ export class MediaOperations {
     if (Array.isArray(file)) {
       return this.sendAlbum(peer, file, { ...options, caption });
     }
-    const media = await this.prepareMedia({ file, ...options });
+    const content = await fileCaption(caption, options, (user) =>
+      this.resolvePeer(user, options)
+    );
+    const input = await this.resolvePeer(peer, options);
+    const media = await this.prepareMedia({
+      file,
+      ...accountTextOptions(options),
+    });
     return this.rpc(
       'messages.sendMedia',
       {
-        ...options,
-        peer: await this.resolvePeer(peer),
+        ...accountSendOptions(options, 'messages.sendMedia'),
+        ...content,
+        peer: input,
         media,
-        message: caption,
         random_id: options.randomId ?? randomId(),
       },
       options
@@ -193,11 +219,13 @@ export class MediaOperations {
     if (!Array.isArray(files) || files.length < 2 || files.length > 10) {
       throw new RangeError('An album requires 2 to 10 items');
     }
-    const input = await this.resolvePeer(peer);
+    const captions = await albumCaptions(files, caption, options, (user) =>
+      this.resolvePeer(user, options)
+    );
+    const input = await this.resolvePeer(peer, options);
     const multi_media = [];
-    for (const [index, file] of files.entries()) {
-      const entry = file?.file !== undefined ? file : { file };
-      const settings = { ...options, ...entry };
+    for (const { settings, content, randomId: itemRandomId } of captions) {
+      options.signal?.throwIfAborted();
       const media = await this.reusableMedia(
         input,
         await this.prepareMedia(settings),
@@ -206,20 +234,17 @@ export class MediaOperations {
       multi_media.push({
         _: 'inputSingleMedia',
         media,
-        message:
-          entry.caption ??
-          (Array.isArray(caption)
-            ? (caption[index] ?? '')
-            : index === 0
-              ? caption
-              : ''),
-        entities: entry.entities,
-        random_id: entry.randomId ?? randomId(),
+        ...content,
+        random_id: itemRandomId ?? randomId(),
       });
     }
     return this.rpc(
       'messages.sendMultiMedia',
-      { ...options, peer: input, multi_media },
+      {
+        ...accountSendOptions(options, 'messages.sendMultiMedia'),
+        peer: input,
+        multi_media,
+      },
       options
     );
   }

@@ -13,6 +13,10 @@ import { fileURLToPath } from 'node:url';
 
 const root = fileURLToPath(new globalThis.URL('../', import.meta.url));
 const modes = {
+  '--account-media': [
+    ['typed-account-media.ts'],
+    '78df293f58eb148780f74570cee57bdebc23bfca',
+  ],
   '--account-markdown': [
     ['typed-account-markdown.ts'],
     'f315c14e5e14256b8823537af2e163dfa5296c1c',
@@ -131,6 +135,7 @@ const frozen = new Set([
     '--account-parse-mode',
     '--account-html',
     '--account-markdown',
+    '--account-media',
   ].includes(mode)
     ? ['src/account-message-types.d.ts']
     : []),

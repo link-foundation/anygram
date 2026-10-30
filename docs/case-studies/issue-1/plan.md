@@ -1540,8 +1540,9 @@ Independent Markdown follow-up plan:
       and all five feedback/sub-issue endpoints remain empty. GitHub rejects the
       full PR diff above 300 files; the complete 1,019-file inventory has no
       removals, and the local atomic changes are reviewed directly.
-- [ ] Commit/push and verify exact-head Markdown CI while continuing wider open
-      criteria, starting with account file/album formatting and SDK defaults.
+- [x] Commit/push Markdown head 78df293f58eb148780f74570cee57bdebc23bfca.
+      Run 40985103031, created 2026-10-30T01:19:00Z after its 01:18:28Z
+      commit, passes all 23 applicable jobs. Continue wider open criteria.
 
 Escaped-output CI investigation:
 
@@ -1561,5 +1562,44 @@ Escaped-output CI investigation:
 - [x] Add five failing-before quote-order cases found during review. Full-span
       bold/italic/spoiler/link styles now remain inside the quote, even when
       caller entity order is reversed. Focused Markdown/allocation tests: 130 pass.
-- [ ] Verify local gates, commit/push the fix and verify a fresh exact-head CI
-      run, preserving any new failures before further implementation.
+- [x] Verify local gates, commit/push the fix and verify fresh exact-head CI.
+      Markdown run 40985103031 passes all 23 applicable jobs, including both
+      previously failing macOS Intel/Bun allocation cases.
+
+Account file/album formatting follow-up:
+
+- [x] Trace the actual SDK single-file/album caption and explicit-entity rules,
+      selected adapter dispatch and shared upload ordering. Preserve differences.
+- [x] Add failing tests before implementation for settings, explicit formatting,
+      every caption position, exact mentions, cancellation and error ordering.
+- [x] Share bounded caption parsing with send/edit before any upload side effect;
+      expose file/album helpers through both account facades and checked types.
+- [x] Compare actual SDK request bytes, all selected routes and independent
+      encrypted TCP. Verify ownership and no fallback after selected failures.
+- [x] Run all local gates and review the complete atomic diff. All 4,096 core
+      tests pass on Node/Bun/Deno; 172 focused cases also pass on Node 20.
+      Frozen source fails 154 and retains 18 passing guards; frozen types yield
+      ten diagnostics. All 15 SDK request-byte, 78 media-cast and three encrypted
+      TCP comparisons pass. The finite caption probe passes under a 192 MiB heap
+      and 512 KiB stack. Strict checks scan 194 production sources with zero
+      clones; actual SDK declarations compile. All 71 framework cases pass on
+      Node 20/26, Bun and Deno; 27 terminal, eight Node 20 wire, sixteen parser
+      checks and the bounded FIFO probe pass. Packaging has 238 permitted files.
+      Main remains an ancestor and refreshed feedback/sub-issue streams are
+      empty. The 1,040-file PR inventory has no removals. GitHub rejects the full
+      diff above 300 files; review uses the local atomic changes.
+- [ ] Commit/push media formatting and verify exact-head CI while continuing
+      SDK defaults and all wider unfinished criteria.
+
+SDK default formatting follow-up:
+
+- [ ] Trace actual SDK constructor, setter, per-call inheritance and bound-view
+      defaults, retaining the canonical plain-text contract and Bot API scope.
+- [ ] Reproduce missing default Markdown, explicit disable persistence and scoped
+      settings before implementation; compare actual SDK calls and message views.
+- [ ] Share configuration state and operation settings across both facades,
+      bound messages and backend scopes without vendor helper defaults leaking.
+- [ ] Verify selected routes, exact IDs, cancellation and encrypted TCP; document
+      intentional differences and remaining feature-union requirements.
+- [ ] Run required local/runtime/integration gates, review, commit/push, update
+      PR #2 and verify exact-head CI. Continue every wider open requirement.

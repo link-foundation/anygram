@@ -102,6 +102,7 @@ export type AccountParseModeInput =
   | undefined;
 export interface AccountMessageOptions extends Parameters, RequestOptions {
   message?: string | FormattedText;
+  file?: unknown;
   replyTo?: number;
   silent?: boolean;
   linkPreview?: boolean;
@@ -112,10 +113,32 @@ export interface AccountMessageOptions extends Parameters, RequestOptions {
 }
 export interface AccountMessageEditOptions extends Parameters, RequestOptions {
   text?: string | FormattedText;
+  file?: unknown;
   linkPreview?: boolean;
   formattingEntities?: readonly AccountTextEntityInput[];
   entities?: readonly AccountTextEntityInput[];
   parseMode?: AccountParseModeInput;
+}
+export type AccountCaption = string | FormattedText;
+/** Scalar captions belong to the first album item; arrays follow item order. */
+export interface AccountAlbumOptions extends AccountMessageOptions {
+  caption?: AccountCaption | readonly AccountCaption[];
+}
+export interface AccountFileOptions extends AccountAlbumOptions {
+  file: unknown;
+}
+/** Per-item formatting overrides album settings; FormattedText owns its entities. */
+export interface AccountAlbumEntry extends AccountMessageOptions {
+  file: unknown;
+  caption?: AccountCaption;
+}
+export interface AccountMediaMethods {
+  sendFile(peer: unknown, options: AccountFileOptions): Promise<unknown>;
+  sendAlbum(
+    peer: unknown,
+    files: readonly unknown[],
+    options?: AccountAlbumOptions
+  ): Promise<unknown>;
 }
 export interface AccountMessagePinOptions extends RequestOptions {
   notify?: boolean;

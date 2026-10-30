@@ -43,13 +43,35 @@ const canonicalOperations = new Set([
   'getNotifySettings',
 ]);
 
+function formattedCaption(value) {
+  return (
+    typeof value?.text === 'string' ||
+    (Array.isArray(value) &&
+      (value.length > 10 ||
+        value.some((entry) => typeof entry?.text === 'string')))
+  );
+}
+
+function mediaFormatting(value) {
+  return (
+    value?.parseMode !== undefined ||
+    value?.formattingEntities !== undefined ||
+    value?.entities !== undefined ||
+    formattedCaption(value?.caption)
+  );
+}
+
 function hasFormattedEntities(operation, args) {
-  const options =
-    operation === 'sendMessage'
-      ? args[2]
-      : operation === 'editMessage'
-        ? args[1]
-        : undefined;
+  if (operation === 'sendFile' || operation === 'sendAlbum') {
+    const settings = operation === 'sendFile' ? args[1] : args[2];
+    const files = operation === 'sendFile' ? args[1]?.file : args[1];
+    return (
+      mediaFormatting(settings) ||
+      (Array.isArray(files) &&
+        (files.length > 10 || files.some(mediaFormatting)))
+    );
+  }
+  const options = args[{ sendMessage: 2, editMessage: 1 }[operation]];
   return (
     options?.parseMode !== undefined ||
     (operation === 'sendMessage' &&

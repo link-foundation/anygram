@@ -276,3 +276,9 @@ exact links/dates, complete-line quotes, checked extension imports and escaped
 output. Keep quote prefixes outside equal-span formatting independent of entity
 order. Preflight escaped output allocation across account and rich markup before
 constructing oversized strings, preserving existing limits and test deadlines.
+
+Share explicit parser settings and bounded caption validation across single-file
+sends, albums, message-file replies and replacement-media edits. Expose both
+account media facades with checked caption/entity types, preserve per-item
+formatting and random IDs, and reuse shared SDK media casts with detached byte
+references. Resolve captions and destinations before consuming upload sources.

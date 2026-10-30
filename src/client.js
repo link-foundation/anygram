@@ -123,7 +123,12 @@ export class Anygram {
 
   execute(operation, ...args) {
     return this.route(operation, (adapter) => {
-      const index = { sendMessage: 2, editMessage: 1 }[operation];
+      const index = {
+        sendMessage: 2,
+        editMessage: 1,
+        sendFile: 1,
+        sendAlbum: 2,
+      }[operation];
       if (
         adapter.protocol === 'mtproto' &&
         index !== undefined &&

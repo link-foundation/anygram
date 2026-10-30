@@ -69,6 +69,9 @@ implementation. Full Telegram formatting parity remains open.
 The [facts inventory](data/account-markdown.json) preserves pinned SDK files,
 source hashes, primary references, limits and reproduction commands. The scanner
 does not execute SDK parser code or a browser HTML converter. SDK default
-Markdown selection, file/album parsing, complete model/declaration compatibility,
+Markdown selection, complete media options, complete model/declaration compatibility,
 older-schema bridges, controlled-account scenarios and wider issue criteria
 remain unfinished.
+
+Explicit [file/album captions and replacement-media edits](account-media-formatting.md)
+now share the parser with validation before consuming upload sources.

@@ -76,7 +76,18 @@ families, protected code, nested formatting, exact links/dates and quote renderi
 All 128 finite cases pass; frozen preceding source fails all 128. Real SDK request
 bytes, five selected routes, encrypted native TCP and checked extension imports
 verify these contracts. Five additional quote regressions fail before the local
-ordering correction. SDK default parsing and file/album formatting remain open.
+ordering correction. SDK default parsing remains open; explicit media formatting
+is covered by the follow-up below.
+
+The [account media formatting follow-up](account-media-formatting.md) shares
+explicit captions across file sends, albums, message-file sends and replacement
+edits. The 172-case corpus reproduces 154 frozen-source failures; ten preceding
+declaration diagnostics verify missing checked types and facade helpers. Fifteen
+actual SDK request-byte comparisons, 78 reusable-media comparisons, five selected
+routes and three independent encrypted TCP cases verify these finite contracts.
+Validation precedes upload consumption, including later invalid captions and
+exact mention failures. Complete media options, SDK defaults, schema bridges and
+wider production criteria remain unfinished.
 
 The [escaped-output allocation investigation](markup-allocations.md) reproduces
 two failures from HTML-head CI with allocation regressions and capped-heap probes.

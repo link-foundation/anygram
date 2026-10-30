@@ -1,4 +1,4 @@
-import { canonicalValue } from './requests.js';
+import { canonicalValue, objectRequest, requestOf } from './requests.js';
 import { HTMLParser } from './account-html.js';
 import { MarkdownParser, MarkdownV2Parser } from './account-markdown.js';
 import {
@@ -57,6 +57,18 @@ export function accountTextOptions(options) {
       ([key]) => !['parseMode', 'formattingEntities'].includes(key)
     )
   );
+}
+
+/** Message and media sends share SDK reply aliases and checked TL normalization. */
+export function accountSendOptions(options, method = 'messages.sendMessage') {
+  const params = objectRequest(requestOf(method, accountTextOptions(options)));
+  if (params.reply_to !== undefined && typeof params.reply_to !== 'object') {
+    params.reply_to = {
+      _: 'inputReplyToMessage',
+      reply_to_msg_id: params.reply_to,
+    };
+  }
+  return params;
 }
 
 const mentionUsers = {

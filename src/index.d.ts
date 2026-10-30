@@ -20,6 +20,8 @@ import type {
   AccountParseMode,
   AccountParseModeInput,
   AccountMessageOptions,
+  AccountMessageEditOptions,
+  AccountMediaMethods,
 } from './account-message-types.js';
 export type * from './account-message-types.js';
 export { HTMLParser } from './account-html.js';
@@ -400,7 +402,8 @@ export interface GramStyleDialog {
 export interface GramStyleClient
   extends
     AccountReactionMethods<GramStyleObject, AccountReactionList>,
-    AccountRichMethods<AccountMessage> {
+    AccountRichMethods<AccountMessage>,
+    AccountMediaMethods {
   invoke: Anygram['invoke'];
   get parseMode(): AccountParseMode | undefined;
   set parseMode(mode: AccountParseModeInput);
@@ -455,7 +458,8 @@ export interface ConnectionScopeOptions extends RequestOptions {
 export interface Anygram
   extends
     AccountReactionMethods<TlRequest, AccountReactionCanonicalList>,
-    AccountRichMethods<AccountRichCanonicalMessage> {}
+    AccountRichMethods<AccountRichCanonicalMessage>,
+    AccountMediaMethods {}
 export declare class Anygram {
   constructor(options?: ClientOptions);
   adapters: Adapter[];
@@ -516,12 +520,6 @@ export declare class Anygram {
     options?: Parameters
   ): Promise<Uint8Array>;
   getParticipants(peer: unknown, options?: Parameters): Promise<unknown>;
-  sendFile(peer: unknown, options: Parameters): Promise<unknown>;
-  sendAlbum(
-    peer: unknown,
-    files: unknown[],
-    options?: Parameters
-  ): Promise<unknown>;
   uploadFile(file: unknown, options?: Parameters): Promise<TlRequest>;
   uploadEncryptedFile(
     file: EncryptedFileInput,
@@ -537,7 +535,10 @@ export declare class Anygram {
   ): Promise<Uint8Array>;
   iterDownload(media: unknown, options?: Parameters): AsyncIterable<Uint8Array>;
   downloadMedia(media: unknown, options?: Parameters): Promise<unknown>;
-  editMessage(peer: unknown, options: Parameters): Promise<unknown>;
+  editMessage(
+    peer: unknown,
+    options: AccountMessageEditOptions & { id: number }
+  ): Promise<unknown>;
   deleteMessages(
     peer: unknown,
     ids: number[],

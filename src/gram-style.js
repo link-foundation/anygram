@@ -89,15 +89,17 @@ export function createGramStyle(client, kind = 'gramjs') {
     },
   };
   const wrap = context.wrap;
-  async function sendMessage(peer, options) {
+  function textSettings(options = {}) {
     const parseMode =
       options.parseMode === undefined ? client.parseMode : options.parseMode;
+    return parseMode === undefined ? options : { ...options, parseMode };
+  }
+  async function sendMessage(peer, options) {
+    const settings = textSettings(options);
     const formatted =
-      parseMode !== undefined ||
+      settings.parseMode !== undefined ||
       options.formattingEntities !== undefined ||
       options.entities !== undefined;
-    const settings =
-      parseMode === undefined ? options : { ...options, parseMode };
     return wrap(
       await client.route('sendMessage', (adapter) =>
         formatted && adapter.supports('invoke')
@@ -120,6 +122,26 @@ export function createGramStyle(client, kind = 'gramjs') {
     getReactionUsers: async (...args) =>
       wrap(await operations.getReactionUsers(...args)),
     sendMessage,
+    async sendFile(peer, options) {
+      const settings = textSettings(options);
+      return wrap(
+        await client.route('sendFile', (adapter) =>
+          adapter.supports('invoke')
+            ? operations.sendFile(peer, settings)
+            : adapter.execute('sendFile', [peer, settings])
+        )
+      );
+    },
+    async sendAlbum(peer, files, options) {
+      const settings = textSettings(options);
+      return wrap(
+        await client.route('sendAlbum', (adapter) =>
+          adapter.supports('invoke')
+            ? operations.sendAlbum(peer, files, settings)
+            : adapter.execute('sendAlbum', [peer, files, settings])
+        )
+      );
+    },
     async getMe(options) {
       return wrap(await operations.getMe(options));
     },

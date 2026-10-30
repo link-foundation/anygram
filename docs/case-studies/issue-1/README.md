@@ -4,7 +4,9 @@ The [account parser callback comparison](account-parse-mode.md) covers shared
 settings, bounded parsing, detached text views and exact mention inputs against
 actual SDK helpers and encrypted TCP. Independent [HTML](account-html.md) and
 [Markdown/MarkdownV2](account-markdown.md) modes now share those paths.
-SDK default selection and file/album parsing remain open. The
+Explicit [file/album captions](account-media-formatting.md) and replacement-media
+edits now share that conversion. SDK defaults and complete media options remain
+open. The
 [escaped-output investigation](markup-allocations.md) records the CI resource
 regressions and allocation guards without increasing deadlines.
 

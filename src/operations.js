@@ -8,7 +8,12 @@ import { parseTelegramLink } from './chat-links.js';
 import { notificationOptions, notificationPeer } from './notifications.js';
 import { reactionOf, reactionList } from './account-reactions.js';
 import { accountMessageId, samePeerId } from './account-message-id.js';
-import { accountTextParams, accountTextOptions } from './account-text.js';
+import {
+  accountTextParams,
+  accountTextOptions,
+  accountSendOptions,
+} from './account-text.js';
+import { fileCaption } from './media-text.js';
 import {
   hasMinAccessHash,
   rememberPeer,
@@ -370,18 +375,13 @@ export class RpcOperations extends MediaOperations {
   }
 
   async sendMessage(peer, text, options = {}) {
+    if (options.file !== undefined) {
+      return this.sendFile(peer, { ...options, caption: text });
+    }
     const content = await accountTextParams(text, options, (user) =>
       this.resolvePeer(user, options)
     );
-    const params = objectRequest(
-      requestOf('messages.sendMessage', accountTextOptions(options))
-    );
-    if (params.reply_to && typeof params.reply_to !== 'object') {
-      params.reply_to = {
-        _: 'inputReplyToMessage',
-        reply_to_msg_id: params.reply_to,
-      };
-    }
+    const params = accountSendOptions(options);
     return this.rpc(
       'messages.sendMessage',
       {
@@ -493,15 +493,22 @@ export class RpcOperations extends MediaOperations {
   }
 
   async editMessage(peer, { id, text, message = text, ...options }) {
-    const content = await accountTextParams(message, options, (user) =>
+    const format = options.file === undefined ? accountTextParams : fileCaption;
+    const content = await format(message, options, (user) =>
       this.resolvePeer(user, options)
     );
+    const input = await this.resolvePeer(peer, options);
+    const media =
+      options.file === undefined
+        ? undefined
+        : await this.prepareMedia(accountTextOptions(options));
     return this.rpc(
       'messages.editMessage',
       {
         ...accountTextOptions(options),
         ...content,
-        peer: await this.resolvePeer(peer, options),
+        ...(media === undefined ? {} : { media }),
+        peer: input,
         id,
       },
       options

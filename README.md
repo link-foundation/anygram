@@ -819,7 +819,11 @@ Built-in `md`/`markdown` and `md2`/`markdownv2` selection share independent
 `MarkdownParser`/`MarkdownV2Parser` conversion, protected code, exact links,
 quotes and context-specific escaping. See [the checked example](examples/typed-account-markdown.ts)
 and [Markdown comparisons and limits](docs/case-studies/issue-1/account-markdown.md).
-SDK default Markdown selection, file/album parsing, complete rich formatting/model parity, drafts, array totals,
+File/album captions and replacement-media edits share these explicit modes,
+checked entities and validation before uploads. Both account facades expose
+`sendFile`/`sendAlbum`; see [the checked example](examples/typed-account-media.ts)
+and [caption comparisons and limits](docs/case-studies/issue-1/account-media-formatting.md).
+SDK default Markdown selection, complete media options, rich formatting/model parity, drafts, array totals,
 legacy big-integer methods and `instanceof Api.*` behavior remain open.
 Direct `client.invoke` keeps raw backend results.
 
