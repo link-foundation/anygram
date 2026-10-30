@@ -90,7 +90,12 @@ export interface AccountParseMode {
   /** SDK callbacks can declare their own nominal entity classes. */
   unparse(text: string, entities: any[]): string;
 }
-export type AccountParseModeInput = AccountParseMode | false | null | undefined;
+export type AccountParseModeInput =
+  | AccountParseMode
+  | 'html'
+  | false
+  | null
+  | undefined;
 export interface AccountMessageOptions extends Parameters, RequestOptions {
   message?: string | FormattedText;
   replyTo?: number;

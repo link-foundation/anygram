@@ -1479,9 +1479,52 @@ Account parse-mode work plan:
       Main remains an ancestor; issue prose and empty feedback are unchanged.
       The paginated PR inventory has 992 files with no removals; GitHub's diff
       endpoint rejects more than 300 files, so review uses the local atomic diff.
-- [ ] Commit/push callback work and verify fresh exact-head CI; continue built-in
-      modes, current-schema compatibility and all wider unfinished criteria.
+- [x] Commit/push callback head 2c40acd5ade91284195e2363c41d28f22e96de6d.
+      Run 40979630676, created 2026-10-30T00:25:48Z after its commit, passes
+      every applicable job. Continue built-in modes and all wider criteria.
 
 Tracing confirmed bound edits correctly accept `text`, matching both SDKs;
 `message` is the reserved ID argument and is intentionally replaced. No plain
 edit fix is needed for that apparent issue.
+
+Independent HTML work plan:
+
+- [x] Compare both pinned SDK HTML sources, official Telegram entity rules and
+      standard character references. Reproduce missing builtin conversion before
+      implementation; preserve source hashes and actual SDK differences.
+- [x] Share bounded entity/text validation with callback modes and add independent
+      HTML scanning, exact IDs, character decoding and escaped balanced output.
+- [x] Exercise canonical/style sends, bound text/reply/edit paths, actual SDK bytes,
+      all five selected routes and independent encrypted native TCP.
+- [x] Add regressions before fixing malformed literal tags and attribute reference
+      handling. Cover all 2,231 references, SDK constructors, clipping, nesting,
+      finite token/output limits, cancellation and typed lookup failures.
+- [x] Verify frozen runtime/declaration cases and bounded heap/stack experiments;
+      add checked examples and research evidence with explicit remaining criteria.
+      All 94 focused cases pass on Node 20/26, Bun and Deno; frozen source fails
+      91 and frozen declarations produce five diagnostics. The finite probe passes
+      under a 192 MiB heap and 512 KiB stack; all 2,231 references match the
+      primary table and actual GramJS tokenizer.
+- [x] Run all local runtime/static/integration/package gates, refresh complete
+      issue/PR feedback and main ancestry, and review the complete atomic diff.
+      All 3,794 core cases pass on Node, Bun and Deno. Strict static/generation
+      checks pass with 187 production sources and zero clones. All 71 framework
+      cases pass on Node 20/26, Bun and Deno; 27 terminal, eight Node 20 wire,
+      16 fact-parser and bounded FIFO checks pass. Packaging has 231 permitted
+      entries. Main remains an ancestor and all issue/PR feedback remains empty.
+- [ ] Commit/push and verify exact-head HTML CI; continue Markdown/MarkdownV2,
+      file/album formatting, current-schema bridges and wider unfinished criteria.
+
+Independent Markdown follow-up plan:
+
+- [ ] Reproduce missing Markdown/MarkdownV2 exports and checked mode aliases
+      before implementation, using finite cases and actual pinned SDK oracles.
+- [ ] Implement an independent bounded scanner with protected code/fences,
+      nested emphasis, links, exact IDs, quotes, escapes and current date syntax.
+      Preserve legacy SDK delimiter conventions and document corrected defects.
+- [ ] Share entity validation and bounded rendering, with context-specific
+      escaping, balanced output, checked declarations and SDK-style imports.
+- [ ] Verify real SDK request bytes, selected routes, bound views/helpers and
+      encrypted native TCP. Keep frozen regression and bounded resource probes.
+- [ ] Run local checks and all runtime/integration tests, review the atomic diff,
+      commit/push and verify exact-head CI while continuing wider open criteria.

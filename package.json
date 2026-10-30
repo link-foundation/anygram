@@ -21,6 +21,14 @@
     "./storage": {
       "types": "./src/storage.d.ts",
       "import": "./src/storage.js"
+    },
+    "./extensions/html.js": {
+      "types": "./src/account-html.d.ts",
+      "import": "./src/account-html.js"
+    },
+    "./extensions/html": {
+      "types": "./src/account-html.d.ts",
+      "import": "./src/account-html.js"
     }
   },
   "scripts": {

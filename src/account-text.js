@@ -1,8 +1,14 @@
-import { canonicalValue, schemaDefinition } from './requests.js';
-
-const maxText = 4 * 1024 * 1024;
+import { canonicalValue } from './requests.js';
+import { HTMLParser } from './account-html.js';
+import {
+  markupText as textSize,
+  markupEntities as checkedEntities,
+} from './account-markup.js';
 
 export function accountParseMode(mode) {
+  if (mode === 'html') {
+    return HTMLParser;
+  }
   if (mode === undefined || mode === null || mode === false) {
     return undefined;
   }
@@ -15,39 +21,6 @@ export function accountParseMode(mode) {
     );
   }
   return mode;
-}
-
-function textSize(text) {
-  if (typeof text !== 'string') {
-    throw new TypeError('Account parser text must be a string');
-  }
-  if (text.length > maxText) {
-    throw new RangeError('Account parser text limit exceeded');
-  }
-  return text;
-}
-
-function checkedEntities(text, entities) {
-  if (!Array.isArray(entities)) {
-    throw new TypeError('Account parser entities must be an array');
-  }
-  if (entities.length > 1000) {
-    throw new RangeError('Account parser entity limit exceeded');
-  }
-  const result = canonicalValue(entities);
-  for (const entity of result) {
-    if (
-      schemaDefinition(entity?._)?.type !== 'MessageEntity' ||
-      !Number.isSafeInteger(entity.offset) ||
-      !Number.isSafeInteger(entity.length) ||
-      entity.offset < 0 ||
-      entity.length < 0 ||
-      entity.offset + entity.length > text.length
-    ) {
-      throw new RangeError('Account parser entity exceeds text bounds');
-    }
-  }
-  return result;
 }
 
 /** Custom parsers run before TL normalization can discard their methods. */

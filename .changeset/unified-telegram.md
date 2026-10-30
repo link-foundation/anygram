@@ -265,3 +265,8 @@ Share bounded custom account parser callbacks and settings across canonical
 send/edit operations, both account facades and bound text views/replies/edits.
 Preserve explicit formatting, exact mention inputs, original peer hashes and
 selected failures; keep callback state outside TL requests and Bot API defaults.
+
+Add independent HTML parsing and escaped HTML output for account messages,
+including standard character references, exact mention/emoji IDs, date flags,
+balanced nesting and bounded input, output and entity counts. Share the `html`
+setting across canonical clients, account facades and bound message views.

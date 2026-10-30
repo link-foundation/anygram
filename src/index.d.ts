@@ -22,6 +22,7 @@ import type {
   AccountMessageOptions,
 } from './account-message-types.js';
 export type * from './account-message-types.js';
+export { HTMLParser } from './account-html.js';
 import type {
   FrameworkWebhookCallback,
   WebhookAdapter,
