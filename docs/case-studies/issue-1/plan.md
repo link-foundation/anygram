@@ -1588,18 +1588,52 @@ Account file/album formatting follow-up:
       Main remains an ancestor and refreshed feedback/sub-issue streams are
       empty. The 1,040-file PR inventory has no removals. GitHub rejects the full
       diff above 300 files; review uses the local atomic changes.
-- [ ] Commit/push media formatting and verify exact-head CI while continuing
-      SDK defaults and all wider unfinished criteria.
+- [x] Commit/push media head 86d7685503f19e647bd13e9a880f99b1d0e39c88.
+      Run 40988212318, created 2026-10-30T01:50:38Z after its commit, passes
+      all 23 applicable jobs. Continue defaults and every wider open criterion.
 
 SDK default formatting follow-up:
 
-- [ ] Trace actual SDK constructor, setter, per-call inheritance and bound-view
+- [x] Trace actual SDK constructor, setter, per-call inheritance and bound-view
       defaults, retaining the canonical plain-text contract and Bot API scope.
-- [ ] Reproduce missing default Markdown, explicit disable persistence and scoped
+- [x] Reproduce missing default Markdown, explicit disable persistence and scoped
       settings before implementation; compare actual SDK calls and message views.
-- [ ] Share configuration state and operation settings across both facades,
+- [x] Share configuration state and operation settings across both facades,
       bound messages and backend scopes without vendor helper defaults leaking.
-- [ ] Verify selected routes, exact IDs, cancellation and encrypted TCP; document
+- [x] Verify selected routes, exact IDs, cancellation and encrypted TCP; document
       intentional differences and remaining feature-union requirements.
-- [ ] Run required local/runtime/integration gates, review, commit/push, update
-      PR #2 and verify exact-head CI. Continue every wider open requirement.
+      All 146 focused cases pass; frozen preceding source fails 96 and retains
+      fifty existing guards. Twenty-four actual SDK request-byte comparisons,
+      two actual model comparisons and four encrypted native TCP cases pass.
+      Default settings, explicit disable, factory state, exact mentions,
+      selected errors and cancellation before consumption have regression checks.
+- [x] Run required local/runtime/integration gates and review the atomic diff.
+      All 4,242 core cases pass on Node/Bun/Deno; the 146 focused cases also
+      pass on Node 20. Strict lint, formatting, declarations, exact generation
+      and actual SDK compilation pass, with 194 production sources and zero
+      clones. All 71 installed-framework cases pass on Node 20/26, Bun and Deno;
+      27 terminal, eight Node 20 wire, sixteen parser and the bounded FIFO
+      checks pass. Packaging retains 238 permitted files. Main is an ancestor;
+      issue prose and all five empty feedback/sub-issue streams are unchanged.
+      The 1,051-file PR inventory has no removals; GitHub rejects full diffs
+      above 300 files, so the complete atomic source diff is reviewed locally.
+      The pre-commit zero-warning rule caught album settings complexity; a
+      private helper extraction passes all 318 affected cases on Node/Bun/Deno
+      and repeated static checks with an explicit zero-warning lint gate.
+- [ ] Commit/push defaults, update PR #2 and verify exact-head CI. Continue
+      media options and every wider unfinished requirement.
+
+Account media option follow-up:
+
+- [ ] Trace both SDK upload helpers and official media constructors. Reuse the
+      existing shared extension/attribute logic rather than duplicate inference.
+- [ ] Reproduce dropped media flags, image inference, thumbnails, explicit
+      attributes and upload controls before changing production code.
+- [ ] Share normalized metadata and option validation across canonical sends,
+      account facades, albums, replies and replacement edits. Preserve literal
+      captions and explicit document/image choices; validate before consumption.
+- [ ] Compare real SDK helper requests and independent encrypted native TCP,
+      including every selected route, exact references and failed submissions.
+- [ ] Verify public declarations and examples, bounded sources and cancellation,
+      full runtime/static/integration gates and fresh exact-head CI. Continue
+      older-schema bridges, models and every wider unfinished requirement.

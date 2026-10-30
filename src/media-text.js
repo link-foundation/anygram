@@ -43,6 +43,26 @@ export function fileCaption(caption, options, resolve) {
   );
 }
 
+function captionSettings(entry, index, options) {
+  const inherited =
+    index === 0
+      ? options
+      : {
+          ...options,
+          formattingEntities: undefined,
+          entities: undefined,
+        };
+  const settings = {
+    ...inherited,
+    ...entry,
+    parseMode: entry.parseMode ?? inherited.parseMode,
+  };
+  if (entry.entities !== undefined && entry.formattingEntities === undefined) {
+    settings.formattingEntities = undefined;
+  }
+  return settings;
+}
+
 export async function albumCaptions(files, caption, options, resolve) {
   if (Array.isArray(caption) && caption.length > 10) {
     throw new RangeError('An album accepts at most 10 captions');
@@ -51,21 +71,7 @@ export async function albumCaptions(files, caption, options, resolve) {
   for (const [index, file] of files.entries()) {
     options.signal?.throwIfAborted();
     const entry = file?.file !== undefined ? file : { file };
-    const inherited =
-      index === 0
-        ? options
-        : {
-            ...options,
-            formattingEntities: undefined,
-            entities: undefined,
-          };
-    const settings = { ...inherited, ...entry };
-    if (
-      entry.entities !== undefined &&
-      entry.formattingEntities === undefined
-    ) {
-      settings.formattingEntities = undefined;
-    }
+    const settings = captionSettings(entry, index, options);
     const text =
       entry.caption ??
       (Array.isArray(caption)

@@ -2,6 +2,7 @@ import { RpcOperations, iterateHistory, normalize } from './operations.js';
 import { camel, gramClassName } from './requests.js';
 import { bindAccountMessage } from './account-message.js';
 import { accountMessageId } from './account-message-id.js';
+import { accountTextSettings, clientParseMode } from './account-text.js';
 
 function convert(value, context, origin) {
   if (value instanceof Uint8Array) {
@@ -89,13 +90,8 @@ export function createGramStyle(client, kind = 'gramjs') {
     },
   };
   const wrap = context.wrap;
-  function textSettings(options = {}) {
-    const parseMode =
-      options.parseMode === undefined ? client.parseMode : options.parseMode;
-    return parseMode === undefined ? options : { ...options, parseMode };
-  }
   async function sendMessage(peer, options) {
-    const settings = textSettings(options);
+    const settings = accountTextSettings(client, options, true);
     const formatted =
       settings.parseMode !== undefined ||
       options.formattingEntities !== undefined ||
@@ -110,7 +106,7 @@ export function createGramStyle(client, kind = 'gramjs') {
   }
   const style = {
     get parseMode() {
-      return client.parseMode;
+      return clientParseMode(client, true);
     },
     set parseMode(mode) {
       client.setParseMode(mode);
@@ -123,7 +119,7 @@ export function createGramStyle(client, kind = 'gramjs') {
       wrap(await operations.getReactionUsers(...args)),
     sendMessage,
     async sendFile(peer, options) {
-      const settings = textSettings(options);
+      const settings = accountTextSettings(client, options, true);
       return wrap(
         await client.route('sendFile', (adapter) =>
           adapter.supports('invoke')
@@ -133,7 +129,7 @@ export function createGramStyle(client, kind = 'gramjs') {
       );
     },
     async sendAlbum(peer, files, options) {
-      const settings = textSettings(options);
+      const settings = accountTextSettings(client, options, true);
       return wrap(
         await client.route('sendAlbum', (adapter) =>
           adapter.supports('invoke')

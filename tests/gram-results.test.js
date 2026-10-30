@@ -2,7 +2,7 @@ import { it } from 'test-anywhere';
 import assert from 'node:assert/strict';
 import { Api as GramApi } from 'telegram/tl/index.js';
 import { Api as TeleApi } from 'teleproto/tl/index.js';
-import { Api, Anygram, createAdapter } from '../src/index.js';
+import { Api, Anygram, createAdapter, MarkdownParser } from '../src/index.js';
 import { secretRpcPeer } from '../experiments/secret-rpc-peer.mjs';
 
 function user() {
@@ -152,7 +152,8 @@ it('converts sendMessage results and retains the selected shared operation optio
   assert.equal(result.seqStart, 1);
   assert.equal(result.updates[0].ptsCount, 1);
   assert.equal(result.updates[0].message.peerId.userId, 9n);
-  assert.deepEqual(calls, [['me', options]]);
+  assert.deepEqual(calls, [['me', { ...options, parseMode: MarkdownParser }]]);
+  assert.deepEqual(options, { message: 'hi', silent: true });
   assert.equal(raw.updates[0].className, undefined);
 });
 

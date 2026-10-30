@@ -3,7 +3,11 @@ import { responseMessage } from './account-response.js';
 import { randomId } from './random.js';
 import { canonicalValue } from './requests.js';
 import * as Rich from './rich-messages.js';
-import { readAccountText, writeAccountText } from './account-text.js';
+import {
+  readAccountText,
+  writeAccountText,
+  accountTextSettings,
+} from './account-text.js';
 import {
   AccountPeerView,
   bindAccountPeers,
@@ -160,11 +164,11 @@ class AccountMessage extends AccountPeerView {
     return writeAccountText(
       this.rawText,
       scope(this).wrap(canonicalValue(this.entities ?? [])),
-      scope(this).client.parseMode
+      scope(this).style.parseMode
     );
   }
   set text(value) {
-    const parsed = readAccountText(value, scope(this).client.parseMode);
+    const parsed = readAccountText(value, scope(this).style.parseMode);
     const entities = scope(this).wrap(parsed.entities);
     this.message = parsed.message;
     this.entities = entities;
@@ -238,7 +242,8 @@ class AccountMessage extends AccountPeerView {
     const nonce = params.randomId ?? params.random_id ?? randomId();
     const options = {
       ...params,
-      parseMode: params.parseMode ?? scope(this).client.parseMode,
+      parseMode: accountTextSettings(scope(this).client, params, true)
+        .parseMode,
       randomId: nonce,
       noWebpage:
         params.linkPreview === undefined
@@ -281,7 +286,8 @@ class AccountMessage extends AccountPeerView {
     const peer = await target(this, params);
     const result = await scope(this).operations.editMessage(peer, {
       ...options,
-      parseMode: params.parseMode ?? scope(this).client.parseMode,
+      parseMode: accountTextSettings(scope(this).client, params, true)
+        .parseMode,
       id: this.id,
       noWebpage: !(linkPreview ?? Boolean(this.webPreview)),
       replyMarkup: buttons ?? this.replyMarkup,

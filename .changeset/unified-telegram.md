@@ -282,3 +282,8 @@ sends, albums, message-file replies and replacement-media edits. Expose both
 account media facades with checked caption/entity types, preserve per-item
 formatting and random IDs, and reuse shared SDK media casts with detached byte
 references. Resolve captions and destinations before consuming upload sources.
+
+Use legacy Markdown defaults on both account facades and bound messages while
+retaining canonical plain calls. Preserve explicit global disable and parser
+identity across backend scopes, inherit empty per-call and album modes, and
+keep keyboard labels literal even with configured custom parsers.

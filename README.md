@@ -823,7 +823,12 @@ File/album captions and replacement-media edits share these explicit modes,
 checked entities and validation before uploads. Both account facades expose
 `sendFile`/`sendAlbum`; see [the checked example](examples/typed-account-media.ts)
 and [caption comparisons and limits](docs/case-studies/issue-1/account-media-formatting.md).
-SDK default Markdown selection, complete media options, rich formatting/model parity, drafts, array totals,
+Both account facades and bound messages use legacy Markdown by default;
+canonical calls remain plain until configured. Per-call null/undefined inherit,
+false disables, and explicit global disable survives backend scopes. See
+[the checked example](examples/typed-account-defaults.ts) and
+[default-setting comparisons](docs/case-studies/issue-1/account-parser-defaults.md).
+Complete media options, rich formatting/model parity, drafts, array totals,
 legacy big-integer methods and `instanceof Api.*` behavior remain open.
 Direct `client.invoke` keeps raw backend results.
 

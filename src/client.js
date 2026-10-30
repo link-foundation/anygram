@@ -4,13 +4,18 @@ import { iterateHistory } from './operations.js';
 import { botTextParams } from './formatting.js';
 import { withConnection } from './lifecycle.js';
 import { createGramStyle } from './gram-style.js';
-import { accountParseMode } from './account-text.js';
-
-const parseModes = new WeakMap();
+import {
+  clientParseMode,
+  setClientParseMode,
+  copyClientParseMode,
+  accountTextSettings,
+} from './account-text.js';
 
 export class Anygram {
   constructor({ adapters = [], backend, debug, parseMode } = {}) {
-    this.setParseMode(parseMode);
+    if (parseMode !== undefined) {
+      this.setParseMode(parseMode);
+    }
     this.adapters = [...adapters];
     this.debug = debug;
     const names = this.adapters.map((adapter) => adapter.name);
@@ -34,19 +39,21 @@ export class Anygram {
   }
 
   withBackend(backend) {
-    return new Anygram({
-      adapters: this.adapters,
-      backend,
-      debug: this.debug,
-      parseMode: this.parseMode,
-    });
+    return copyClientParseMode(
+      this,
+      new Anygram({
+        adapters: this.adapters,
+        backend,
+        debug: this.debug,
+      })
+    );
   }
 
   get parseMode() {
-    return parseModes.get(this);
+    return clientParseMode(this);
   }
   set parseMode(mode) {
-    parseModes.set(this, accountParseMode(mode));
+    setClientParseMode(this, mode);
   }
   setParseMode(mode) {
     this.parseMode = mode;
@@ -129,13 +136,14 @@ export class Anygram {
         sendFile: 1,
         sendAlbum: 2,
       }[operation];
-      if (
-        adapter.protocol === 'mtproto' &&
-        index !== undefined &&
-        args[index]?.parseMode === undefined &&
-        this.parseMode
-      ) {
-        args[index] = { ...args[index], parseMode: this.parseMode };
+      if (adapter.protocol === 'mtproto' && index !== undefined) {
+        args[index] = accountTextSettings(this, args[index]);
+        if (
+          [undefined, null].includes(args[index].parseMode) &&
+          ['gramjs', 'teleproto'].includes(adapter.kind)
+        ) {
+          args[index] = { ...args[index], parseMode: false };
+        }
       }
       return adapter.execute(operation, args);
     });

@@ -6,6 +6,8 @@ import {
   markupEntities as checkedEntities,
 } from './account-markup.js';
 
+const parseModes = new WeakMap();
+
 export function accountParseMode(mode) {
   if (mode === 'md' || mode === 'markdown') {
     return MarkdownParser;
@@ -28,6 +30,33 @@ export function accountParseMode(mode) {
     );
   }
   return mode;
+}
+
+/** An unconfigured facade uses the SDK default; an explicit disable stays off. */
+export function clientParseMode(client, styled = false) {
+  return parseModes.has(client)
+    ? parseModes.get(client)
+    : styled
+      ? MarkdownParser
+      : undefined;
+}
+
+export function setClientParseMode(client, mode) {
+  parseModes.set(client, accountParseMode(mode));
+}
+
+export function copyClientParseMode(source, target) {
+  if (parseModes.has(source)) {
+    parseModes.set(target, parseModes.get(source));
+  }
+  return target;
+}
+
+export function accountTextSettings(client, options = {}, styled = false) {
+  const mode = options.parseMode ?? clientParseMode(client, styled);
+  return mode !== undefined || parseModes.has(client)
+    ? { ...options, parseMode: mode ?? false }
+    : options;
 }
 
 /** Custom parsers run before TL normalization can discard their methods. */

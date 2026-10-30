@@ -99,7 +99,7 @@ for (const [style, Vendor] of [
     assert.equal(calls[0][0], 'messages.sendMessage');
     assert.equal(calls[0][1].peer.access_hash, 17n);
     assert.equal(calls[0][1].message, 'text');
-    assert.equal(calls[0][1].entities, undefined);
+    assert.deepEqual(calls[0][1].entities, []);
   });
   it(`compares ${style} inline start-bot requests with the actual SDK`, async () => {
     const source = buttonPage(style, ['switchInline']);

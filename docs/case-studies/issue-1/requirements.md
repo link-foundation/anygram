@@ -86,8 +86,19 @@ declaration diagnostics verify missing checked types and facade helpers. Fifteen
 actual SDK request-byte comparisons, 78 reusable-media comparisons, five selected
 routes and three independent encrypted TCP cases verify these finite contracts.
 Validation precedes upload consumption, including later invalid captions and
-exact mention failures. Complete media options, SDK defaults, schema bridges and
+exact mention failures. Complete media options, schema bridges and
 wider production criteria remain unfinished.
+
+The [SDK default-formatting follow-up](account-parser-defaults.md) adds legacy
+Markdown defaults for both account facades and bound messages while preserving
+canonical plain calls. Explicit disable and parser identity survive backend
+scopes; empty per-call modes inherit, including album entries. The 146-case
+corpus reproduces 96 failures against frozen preceding source; fifty existing
+guards remain. Twenty-four actual SDK request-byte comparisons, two actual SDK
+model comparisons, all five selected routes and four encrypted native TCP cases
+verify finite contracts. Exact mention IDs, cancellation and literal keyboard
+labels have regression coverage. Complete media options, old-schema bridges,
+controlled-account behavior and wider feature-union criteria remain unfinished.
 
 The [escaped-output allocation investigation](markup-allocations.md) reproduces
 two failures from HTML-head CI with allocation regressions and capped-heap probes.

@@ -285,7 +285,7 @@ class AccountButton {
       return owner.message.respond({
         ...options,
         message: this.text,
-        parseMode: undefined,
+        parseMode: false,
       });
     }
     if (type === 'inlineButtonTypeSwitchInline') {

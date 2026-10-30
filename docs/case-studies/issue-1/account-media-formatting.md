@@ -83,7 +83,8 @@ before consuming uploads; pinned edit helpers prepare media before parsing.
 
 The [facts inventory](data/account-media-formatting.json) preserves actual SDK
 source hashes, primary method references and regression commands. This work
-verifies explicit parsing and reusable media. SDK default Markdown selection,
-complete file inference/flags/thumbnails/upload-option parity, older-schema
+verifies explicit parsing and reusable media. The [default-formatting follow-up](account-parser-defaults.md)
+adds SDK defaults and explicit disable persistence. Complete file
+inference/flags/thumbnails/upload-option parity, older-schema
 result bridges, controlled-account scenarios and all wider acceptance criteria
 remain unfinished. The pull request remains draft and unmerged.
