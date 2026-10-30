@@ -815,7 +815,11 @@ Built-in `html` selection and the exported `HTMLParser` share independent parsin
 and escaped output, including exact mention/emoji IDs and standard character
 references. See [the typed example](examples/typed-account-html.ts) and
 [HTML comparisons and limits](docs/case-studies/issue-1/account-html.md).
-Markdown/MarkdownV2 modes, complete rich formatting/model parity, drafts, array totals,
+Built-in `md`/`markdown` and `md2`/`markdownv2` selection share independent
+`MarkdownParser`/`MarkdownV2Parser` conversion, protected code, exact links,
+quotes and context-specific escaping. See [the checked example](examples/typed-account-markdown.ts)
+and [Markdown comparisons and limits](docs/case-studies/issue-1/account-markdown.md).
+SDK default Markdown selection, file/album parsing, complete rich formatting/model parity, drafts, array totals,
 legacy big-integer methods and `instanceof Api.*` behavior remain open.
 Direct `client.invoke` keeps raw backend results.
 

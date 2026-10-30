@@ -30,6 +30,11 @@ export const delay = (ms) =>
 export { Anygram } from './client.js';
 export { Api } from './api.js';
 export { HTMLParser } from './account-html.js';
+export {
+  MarkdownParser,
+  MarkdownV2Parser,
+  DEFAULT_DELIMITERS,
+} from './account-markdown.js';
 export * as Rich from './rich-messages.js';
 export { parseTelegramLink } from './chat-links.js';
 export { createAdapter } from './adapters.js';

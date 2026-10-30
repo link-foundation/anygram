@@ -29,6 +29,22 @@
     "./extensions/html": {
       "types": "./src/account-html.d.ts",
       "import": "./src/account-html.js"
+    },
+    "./extensions/markdown": {
+      "types": "./src/account-markdown.d.ts",
+      "import": "./src/account-markdown.js"
+    },
+    "./extensions/markdown.js": {
+      "types": "./src/account-markdown.d.ts",
+      "import": "./src/account-markdown.js"
+    },
+    "./extensions/markdownv2": {
+      "types": "./src/account-markdown.d.ts",
+      "import": "./src/account-markdown.js"
+    },
+    "./extensions/markdownv2.js": {
+      "types": "./src/account-markdown.d.ts",
+      "import": "./src/account-markdown.js"
     }
   },
   "scripts": {

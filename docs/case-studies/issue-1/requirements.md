@@ -60,14 +60,29 @@ R01/R02/R05/R17/R19 with shared settings, bounded synchronous parsing, detached
 text views, exact mention inputs, explicit entity precedence and original bound
 peers. All 72 cases pass; frozen source fails 66 and frozen declarations produce
 nine diagnostics. Actual SDK send/edit bytes, five selected routes and encrypted
-TCP verify these finite contracts. Built-in markup strings, file/album parsing,
+TCP verify these finite contracts. The follow-ups below add built-in markup;
+file/album parsing,
 complete SDK models and production-account parity remain open.
 
 The [independent HTML follow-up](account-html.md) adds builtin `html` selection,
 standard character decoding, exact identifiers and escaped balanced output.
 The 94 focused cases cover all 2,231 named references, actual SDK bytes, selected
-routes and encrypted native TCP; frozen source fails 91. Markdown/MarkdownV2,
-file/album formatting, complete compatibility and production criteria remain open.
+routes and encrypted native TCP; frozen source fails 91. The Markdown follow-up
+below extends built-in selection. File/album formatting, complete compatibility
+and production criteria remain open.
+
+The [independent Markdown follow-up](account-markdown.md) adds both SDK delimiter
+families, protected code, nested formatting, exact links/dates and quote rendering.
+All 128 finite cases pass; frozen preceding source fails all 128. Real SDK request
+bytes, five selected routes, encrypted native TCP and checked extension imports
+verify these contracts. Five additional quote regressions fail before the local
+ordering correction. SDK default parsing and file/album formatting remain open.
+
+The [escaped-output allocation investigation](markup-allocations.md) reproduces
+two failures from HTML-head CI with allocation regressions and capped-heap probes.
+Shared preflight guards reject expansion before allocating escaped output.
+The existing five-second test deadlines are retained; fresh exact-head CI remains
+required before this follow-up is verified across the OS matrix.
 
 | ID  | Requirement                                                                              | Implementation / plan                                                                                                                          | Verification / current state                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
 | --- | ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

@@ -1,4 +1,9 @@
 import references from './schema/html-entities.json' with { type: 'json' };
+import { escapeBounded } from './text-escape.js';
+import {
+  markupIdentifier as identifier,
+  markupDate,
+} from './account-markup-links.js';
 import {
   MarkupOutput,
   markupText,
@@ -15,7 +20,12 @@ const escapes = {
   "'": '&#x27;',
 };
 const escapeHtml = (text) =>
-  markupText(text).replace(/[&<>"']/g, (char) => escapes[char]);
+  escapeBounded(
+    markupText(text),
+    escapes,
+    4 * 1024 * 1024,
+    'Account parser text limit exceeded'
+  );
 const replacements = new Map([
   [128, 8364],
   [130, 8218],
@@ -151,20 +161,6 @@ const dateFlags = [
 ];
 const snake = (value) => value.replaceAll('-', '_');
 
-function identifier(value) {
-  if (typeof value === 'number' && !Number.isSafeInteger(value)) {
-    throw new RangeError('HTML identifiers require exact integers');
-  }
-  if (!/^\d+$/.test(value ?? '')) {
-    throw new TypeError('HTML identifier must be decimal');
-  }
-  const number = BigInt(value);
-  if (number <= 0n || number > (1n << 63n) - 1n) {
-    throw new RangeError('HTML identifier exceeds signed 64-bit bounds');
-  }
-  return number;
-}
-
 function specialEntity(name, attrs, open) {
   if (name === 'span' && attrs.class?.split(/\s+/).includes('tg-spoiler')) {
     return { _: 'messageEntitySpoiler' };
@@ -187,6 +183,10 @@ function specialEntity(name, attrs, open) {
       ? { _: 'messageEntityMentionName', user_id: identifier(mention[1]) }
       : { _: 'messageEntityTextUrl', url: attrs.href };
   }
+  return extendedEntity(name, attrs);
+}
+
+function extendedEntity(name, attrs) {
   if (name === 'tg-emoji') {
     return {
       _: 'messageEntityCustomEmoji',
@@ -195,6 +195,9 @@ function specialEntity(name, attrs, open) {
   }
   if (name === 'tg-date') {
     return dateEntity(attrs);
+  }
+  if (name === 'tg-time') {
+    return markupDate(attrs.unix, attrs.format ?? '');
   }
   return undefined;
 }

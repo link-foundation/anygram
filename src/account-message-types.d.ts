@@ -93,6 +93,10 @@ export interface AccountParseMode {
 export type AccountParseModeInput =
   | AccountParseMode
   | 'html'
+  | 'md'
+  | 'markdown'
+  | 'md2'
+  | 'markdownv2'
   | false
   | null
   | undefined;

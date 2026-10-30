@@ -23,6 +23,11 @@ import type {
 } from './account-message-types.js';
 export type * from './account-message-types.js';
 export { HTMLParser } from './account-html.js';
+export {
+  MarkdownParser,
+  MarkdownV2Parser,
+  DEFAULT_DELIMITERS,
+} from './account-markdown.js';
 import type {
   FrameworkWebhookCallback,
   WebhookAdapter,

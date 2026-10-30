@@ -1,4 +1,5 @@
 import { canonicalValue, requestLimits } from './requests.js';
+import { escapeBounded } from './text-escape.js';
 
 const metadata = new Set([
   'originalArgs',
@@ -56,7 +57,12 @@ export function escapeRich(value, mode) {
   const text = typeof value === 'string' ? value : String(value ?? '');
   if (mode === 'html') {
     const entities = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' };
-    return checkedRichOutput(text.replace(/[&<>"]/g, (char) => entities[char]));
+    return escapeBounded(
+      text,
+      entities,
+      maxOutput,
+      'Rich message output size limit exceeded'
+    );
   }
   return mode === 'md' ? text.replace(/([\\`*_[\]|~])/g, '\\$1') : text;
 }

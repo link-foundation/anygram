@@ -97,6 +97,11 @@ primary references, limits and regression commands; the
 [SDK probe](../../../experiments/account-markup-sdk-probe.mjs) records a finite
 HTML/Markdown/MarkdownV2 comparison corpus in `ci-logs`.
 
-Markdown/MarkdownV2 builtins, SDK default Markdown selection, file/album parse
+Independent [Markdown/MarkdownV2 builtins](account-markdown.md) now share the
+account paths. The same follow-up adds current `tg-time` HTML dates; the legacy
+`tg-date` spelling remains supported. [Output preflight](markup-allocations.md)
+rejects oversized escaping before allocating the expanded string.
+
+SDK default Markdown selection, file/album parse
 integration, complete SDK model/declaration parity, current-schema bridging,
 controlled account scenarios and wider acceptance criteria remain unfinished.

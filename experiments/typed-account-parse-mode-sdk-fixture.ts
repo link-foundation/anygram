@@ -6,6 +6,8 @@ import { MarkdownV2Parser } from 'teleproto/extensions/markdownv2.js';
 import {
   Anygram,
   HTMLParser as OwnedHtml,
+  MarkdownParser as OwnedMarkdown,
+  MarkdownV2Parser as OwnedV2,
   type AccountParseMode,
   type AccountTextEntityInput,
 } from '../src/index.js';
@@ -43,4 +45,8 @@ export const render: AccountParseMode['unparse'] = MarkdownParser.unparse;
 export function ownedHtmlSdkEntities() {
   OwnedHtml.unparse(...HTMLParser.parse('<b>Ada</b>'));
   OwnedHtml.unparse(...MarkdownParser.parse('**Ada**'));
+  OwnedMarkdown.unparse(...MarkdownParser.parse('**Ada**'));
+  OwnedV2.unparse(...MarkdownV2Parser.parse('*Ada*'));
+  OwnedMarkdown.unparse(...HTMLParser.parse('<b>Ada</b>'));
+  OwnedV2.unparse(...MarkdownParser.parse('**Ada**'));
 }

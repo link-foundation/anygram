@@ -1469,8 +1469,10 @@ Account parse-mode work plan:
       current helper code, and Bot API separation already passes before the
       implementation. The two high-level-only sends also pass before; those six
       are not missing-API reproductions. Review retains plain operation options.
-- [ ] Implement independent built-in HTML, Markdown and MarkdownV2 parsing and
+- [x] Implement independent built-in HTML, Markdown and MarkdownV2 parsing and
       unparsing with official UTF-16/entity evidence and actual SDK comparisons.
+      Explicit modes are implemented; SDK defaults and file/album integration
+      remain separate unfinished work.
 - [x] Verify callback gates and review the complete atomic diff. All 3,700 core
       tests pass on Node/Bun/Deno; strict checks scan 184 production sources with
       zero clones. Actual SDK declarations, 71 framework cases per runtime and
@@ -1512,19 +1514,52 @@ Independent HTML work plan:
       cases pass on Node 20/26, Bun and Deno; 27 terminal, eight Node 20 wire,
       16 fact-parser and bounded FIFO checks pass. Packaging has 231 permitted
       entries. Main remains an ancestor and all issue/PR feedback remains empty.
-- [ ] Commit/push and verify exact-head HTML CI; continue Markdown/MarkdownV2,
-      file/album formatting, current-schema bridges and wider unfinished criteria.
+- [x] Commit/push HTML head f315c14e5e14256b8823537af2e163dfa5296c1c.
+      Exact-head run 40982579102 fails two macOS Intel/Bun output-bound tests.
+      The investigation below preserves the errors and adds failing regressions;
+      HTML's full OS matrix is unfinished until the follow-up passes fresh CI.
 
 Independent Markdown follow-up plan:
 
-- [ ] Reproduce missing Markdown/MarkdownV2 exports and checked mode aliases
+- [x] Reproduce missing Markdown/MarkdownV2 exports and checked mode aliases
       before implementation, using finite cases and actual pinned SDK oracles.
-- [ ] Implement an independent bounded scanner with protected code/fences,
+- [x] Implement an independent bounded scanner with protected code/fences,
       nested emphasis, links, exact IDs, quotes, escapes and current date syntax.
       Preserve legacy SDK delimiter conventions and document corrected defects.
-- [ ] Share entity validation and bounded rendering, with context-specific
+- [x] Share entity validation and bounded rendering, with context-specific
       escaping, balanced output, checked declarations and SDK-style imports.
-- [ ] Verify real SDK request bytes, selected routes, bound views/helpers and
+- [x] Verify real SDK request bytes, selected routes, bound views/helpers and
       encrypted native TCP. Keep frozen regression and bounded resource probes.
-- [ ] Run local checks and all runtime/integration tests, review the atomic diff,
-      commit/push and verify exact-head CI while continuing wider open criteria.
+- [x] Run local checks and all runtime/integration tests and review the atomic
+      diff. All 3,924 core cases pass on Node/Bun/Deno; all 130 focused Markdown
+      and allocation cases pass on Node 20/26, Bun and Deno. Strict checks pass
+      with 193 production sources and zero clones, plus actual SDK compilation.
+      All 71 framework cases pass on all four runtimes. The 27 terminal, eight
+      Node 20 wire, 16 fact-parser and bounded FIFO checks pass. Packaging has
+      237 permitted entries. Main remains an ancestor, issue prose is unchanged
+      and all five feedback/sub-issue endpoints remain empty. GitHub rejects the
+      full PR diff above 300 files; the complete 1,019-file inventory has no
+      removals, and the local atomic changes are reviewed directly.
+- [ ] Commit/push and verify exact-head Markdown CI while continuing wider open
+      criteria, starting with account file/album formatting and SDK defaults.
+
+Escaped-output CI investigation:
+
+- [x] List recent runs with timestamps/SHA and preserve completed failed logs.
+      Run 40982579102 was created 2026-10-30T00:54:16Z after the HTML commit at
+      00:53:58Z. Its macOS Intel/Bun job 123826028646 fails account HTML at
+      5,155.45 ms and rich HTML at 14,235.55 ms; both retain 5,000 ms deadlines.
+      Job log lines 782–783 and 2063–2064 record the actual failures.
+- [x] Reproduce expansion before rejection: two allocation tests construct
+      4,500,000 and 18,874,368 code units before failing frozen source. Separate
+      finite probes exhaust capped 64 MiB heaps, with 512 KiB stacks and core
+      dumps disabled. No unbounded host-memory experiment is used.
+- [x] Preflight output expansion through one literal-search helper before
+      replacement. Both regressions and capped probes pass; measured RSS is
+      77,112 KiB for account HTML and 79,344 KiB for rich HTML. Existing input,
+      output and test deadline limits remain unchanged.
+- [x] Add five failing-before quote-order cases found during review. Full-span
+      bold/italic/spoiler/link styles now remain inside the quote, even when
+      caller entity order is reversed. Focused Markdown/allocation tests: 130 pass.
+- [ ] Verify local gates, commit/push the fix and verify a fresh exact-head CI
+      run, preserving any new failures before further implementation.

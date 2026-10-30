@@ -1,11 +1,18 @@
 import { canonicalValue } from './requests.js';
 import { HTMLParser } from './account-html.js';
+import { MarkdownParser, MarkdownV2Parser } from './account-markdown.js';
 import {
   markupText as textSize,
   markupEntities as checkedEntities,
 } from './account-markup.js';
 
 export function accountParseMode(mode) {
+  if (mode === 'md' || mode === 'markdown') {
+    return MarkdownParser;
+  }
+  if (mode === 'md2' || mode === 'markdownv2') {
+    return MarkdownV2Parser;
+  }
   if (mode === 'html') {
     return HTMLParser;
   }

@@ -270,3 +270,9 @@ Add independent HTML parsing and escaped HTML output for account messages,
 including standard character references, exact mention/emoji IDs, date flags,
 balanced nesting and bounded input, output and entity counts. Share the `html`
 setting across canonical clients, account facades and bound message views.
+
+Add independent legacy Markdown and MarkdownV2 account modes, protected code,
+exact links/dates, complete-line quotes, checked extension imports and escaped
+output. Keep quote prefixes outside equal-span formatting independent of entity
+order. Preflight escaped output allocation across account and rich markup before
+constructing oversized strings, preserving existing limits and test deadlines.

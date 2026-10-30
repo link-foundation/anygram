@@ -80,8 +80,8 @@ passing its static parser does not establish complete output interoperability.
 The declaration retains checked parse output and a string unparse result, while
 allowing an SDK's nominal entity argument declaration at that callback boundary.
 
-Independent [builtin HTML conversion](account-html.md) is now implemented.
-Markdown and MarkdownV2 string modes, the SDK default
-Markdown choice, file/album parsing, full rich/model declarations, older-schema
+Independent [builtin HTML conversion](account-html.md) and
+[Markdown/MarkdownV2 string modes](account-markdown.md) are now implemented.
+The SDK default Markdown choice, file/album parsing, full rich/model declarations, older-schema
 bridging, production account scenarios and all wider acceptance criteria remain
 open. Bound edits correctly take `text`; `message` is the reserved ID argument.
