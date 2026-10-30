@@ -1,5 +1,7 @@
 node_modules
 coverage
+reports
+ci-logs
 dist
 *.min.js
 package-lock.json
@@ -7,3 +9,4 @@ package-lock.json
 CLAUDE.md
 # Case study raw data files (downloaded from external sources)
 docs/case-studies/*/data/
+src/schema/*.json

@@ -1,0 +1,42 @@
+{
+  "repository": "konard/telegram-community-posts",
+  "commit": "29e3fe630d3703aedded040ef4bdd554dc0f0be9",
+  "files": [
+    {
+      "path": ".gitignore",
+      "archive": "community-posts-gitignore.txt",
+      "bytes": 2063,
+      "sha256": "f7dbef1d4c862e16997ff05b4029ec48b1a16306a61f669b0a7c5d0299b2f4da"
+    },
+    {
+      "path": "LICENSE",
+      "archive": "community-posts-LICENSE.txt",
+      "bytes": 1211,
+      "sha256": "6b0382b16279f26ff69014300541967a356a666eb0b91b422f6862f6b7dad17e"
+    },
+    {
+      "path": "README.md",
+      "archive": "community-posts-README.md",
+      "bytes": 216,
+      "sha256": "20297f0d243fea877818bbc864d6dbbbc13ed9c50dd1bd2a2316e9178a34bb34"
+    },
+    {
+      "path": "index.js",
+      "archive": "community-posts-index.js",
+      "bytes": 3898,
+      "sha256": "31f085fd3efdf7007f377c5d246a068e309f1ba02036b15ad5e84ef15b9a6224"
+    },
+    {
+      "path": "package.json",
+      "archive": "community-posts-package.json",
+      "bytes": 253,
+      "sha256": "d4bb8e0657de027e3108b6005df9b9139e3732942b6eb70227612260b47e16bb"
+    },
+    {
+      "path": "package-lock.json",
+      "archive": "community-posts-package-lock.json",
+      "bytes": 65464,
+      "sha256": "a1b137ce5adba9101c8ba5b15385932fb0ca66578fa669eab766a5c0f2f07e24"
+    }
+  ]
+}

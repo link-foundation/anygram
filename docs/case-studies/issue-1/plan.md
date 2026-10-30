@@ -1,0 +1,1720 @@
+# Issue #1 execution plan
+
+Objective: implement and verify every issue requirement in PR #2, including the
+widest requested protocol, compatibility, and downstream-project scope. Keep
+unverified criteria open; passing CI alone does not establish protocol parity.
+
+1. [x] Read the entire issue, issue comments, sub-issue inventory, and all three
+       PR feedback streams. There are currently no comments or sub-issues.
+2. [x] Inspect the template, release pipeline, tests, and repository guidance.
+3. [x] Archive primary-source research on JavaScript and other-language clients,
+       top competitor issues, command-stream, and all five downstream projects.
+4. [x] Inventory every requirement and map implementation and verification.
+5. [ ] Write failing, minimal tests for unified routing, backend selection,
+       compatibility styles, native operation, and error handling.
+6. [x] Implement the shared operation pipeline and optional adapters without
+       silently replaying side effects or conflating unsupported and failed calls.
+7. [ ] Implement native Bot API and MTProto protocol coverage, authentication,
+       sessions, updates, media, and high-level operations.
+8. [ ] Implement and test migration surfaces and extended APIs, comparing actual
+       pinned competitor libraries rather than relying solely on mocks.
+9. [ ] Cover downstream use cases and high-priority competitor failures with
+       executable examples and regressions.
+10. [ ] Publish public-domain documentation, API declarations, release changeset,
+        capability matrix, and case study with evidence and remaining limits.
+11. [ ] Run focused tests then all Node/Bun/Deno tests and local CI checks; keep
+        large output in ci-logs, run memory-heavy work sequentially, and bound probes.
+12. [x] Commit useful atomic changes on issue-1-1052f45c2e5e after checks pass.
+13. [ ] Fetch/merge main, review the complete PR diff and preserve all features.
+14. [ ] Push only the prepared branch; replace PR #2 title/body and retain Fixes #1.
+15. [ ] Check recent CI timestamps/SHAs; download and read every failed run log,
+        fix root causes, and verify all checks on the latest commit.
+16. [ ] Verify requirement evidence, clean git status, and mark PR #2 ready only
+        when all requested work is implemented and verified. Keep the PR unmerged.
+
+Experiments belong in experiments/; reusable application scenarios belong in
+examples/. No live credentials or sessions may be included in research data.
+
+## Completed checkpoints
+
+- Routing/native Bot API, schema/encrypted MTProto, authentication/SRP/sessions,
+  and shared media/DC/update operations were committed independently with tests.
+- Album finalization and omitted live-update recovery have failing-before/passing-
+  after regressions derived from complete competitor discussions.
+- Bounded QR/DC login, handler failure propagation, pagination validation and
+  actual GramJS factory/session interoperability were committed and verified.
+- Email login/setup preserves challenge hashes and uses email verification
+  fields. Allowed Google/Apple proofs, cancellation, copied callback data and a
+  finite challenge count have regressions and actual GramJS wire comparisons.
+- One clock now schedules at most ten explicitly watched channels and common
+  idle recovery. It allocates no timer per channel membership.
+- Shared peer/contact/greeting/profile helpers and automatic message-origin file
+  refresh are covered by regressions, including advertised-size truncation.
+- Immutable formatted text supports runtime localized templates, UTF-16 offsets,
+  bot text/captions and MTProto translation checked with the actual GramJS schema.
+- HTTP requests validate deadlines before fetch, bound bodies, cancel body reads
+  and release readers on success, overflow and cancellation.
+- Shared bot sessions match actual grammY/Telegraf keys, initialization, deletion
+  and failure-persistence policies; bounded LRU/TTL storage uses no key timers.
+- Nested composers and Telegraf start/launch registration share bot dispatch.
+  Telegraf username/context aliases remain distinct from grammY user aliases.
+- Telegraf scene/wizard entry, persisted steps/state, expiry, reentry and leave
+  match actual middleware; a finite per-update transition guard bounds loops.
+- Native TCP implements four framing modes, bounded streams and send-only ACKs.
+  Real local encrypted sockets, actual GramJS framing and a live anonymous
+  production handshake verify the transport path.
+- SOCKS5 CONNECT resolves domains at the proxy, supports IPv4/IPv6 and optional
+  authentication, rejects downgrade/malformed replies and bounds negotiation.
+- Direct obfuscation and MTProxy compare headers/stream bytes with actual GramJS;
+  fragmented sockets verify signed test/media DC routing. A live anonymous
+  obfuscated padded handshake succeeds. Fake TLS remains open.
+- Native binary WebSocket validates upgrades, masking, continuation/control
+  frames and TLS trust/hostnames, including SOCKS5 tunnels. An independent server
+  and a live anonymous production key exchange verify interoperability.
+- Disconnect awaits asynchronous cleanup on every DC, including after failures,
+  and retains multiple failures without unhandled rejections.
+- Shared receive buffers eliminate repeated whole-packet concatenation under
+  fragmented TCP/WebSocket reads. Finite copy-budget regressions and storage
+  reuse/immutability tests verify the change.
+- In-process polling ownership and explicit membership subscriptions are tested.
+- SOCKS4/4a CONNECT supports IPv4 and proxy DNS with bounded UTF-8 user IDs.
+  Fragmented replies, rejection codes, deadlines and TLS WebSocket tunnels pass.
+- The inherited duplication configuration scanned no files. A failing-before
+  fixture now guards the detector, and shared helpers consolidate eleven actual
+  clones. The repaired gate scans all 54 production JS/TS files with zero clones.
+- The first repaired-gate CI run passed all runtime jobs but rejected a CLI flag
+  accepted by a newer Deno-created local shim. The check now invokes locked
+  jscpd 4.0.5 directly without that flag; its fixture and source scan pass locally.
+- Thirteen failing-before update lifecycle regressions cover cancellation during
+  initialization/scheduled recovery, draining accepted/reentrant handlers and
+  saved cursors, independent failures and bounded notification/error retention.
+- The channel scheduler uses the documented one-second fallback when a final
+  difference omits its timeout; a failing-before fake-clock regression covers it.
+- All 90 independently versioned secret-schema constructors round-trip. The
+  codec retains historical IDs and flag-only fields missing from primary JSON;
+  a handwritten wire vector and source-hash comparison verify serialization.
+- Node/Bun/Deno each pass 254 tests; strict lint, format, the repaired duplication
+  gate and declaration/example checks pass. Each later code change requires
+  fresh checks. The package contains 59 permitted files.
+- Refreshed issue/sub-issue and all three PR feedback streams are empty. Main is
+  an ancestor of the branch. CI for 2598e6d passed all nine runtime/OS jobs and
+  release gates in run 40791774228, including email authentication. Later heads
+  require fresh CI evidence. The locked checker repair at e87752c passed all nine
+  runtime/OS jobs and gates in run 40793885312.
+- Research includes 32 complete discussions, 26 inspected images, nineteen pinned
+  test-path inventories and all 333 Telegram-related meta-sovereign JS files.
+- The npm dry run contains only source/package/README/LICENSE entries and
+  excludes research, screenshots, experiments and optional client dependencies.
+
+## Next steps
+
+Current downstream work: preserve the verified connection and fixed-integer
+compatibility checkpoints, then complete follow's wrapper/CLI migration. The unified scope now retains all
+cleanup causes and the original work failure, including partial setup and
+cancellation. Use the immutable follow source as the migration contract; write
+reproducing tests before implementing missing behavior. Controlled-account
+validation remains blocked without credentials; independent work continues.
+
+The follow command/login checkpoint passes 480 tests on each runtime and strict checks,
+with zero clones across 73 production sources and a 78-entry package dry run.
+Pinned follow classes execute through the bridge, and a migrated command now
+covers input/cache, login prompts, portable session persistence and option aliases.
+Actual GramJS/teleproto construction/session exports and native TCP cover these
+paths. Legacy standalone constructor/session compatibility and
+controlled-account evidence remain open. Bridge head c55c44a passed all nine
+runtime/OS jobs and applicable gates in run 40829426170.
+CLI head d4b241c passed all nine runtime/OS jobs and applicable gates in run
+40832057991, created 06:54:26Z and completed 06:56:31Z on 2026-10-29.
+Eleven standalone connection regressions now pass, including actual-client and
+native TCP checks. All 491 tests pass on each runtime, together with strict
+checks and the zero-clone scan. Commit/push this checkpoint and verify fresh CI.
+Connection head 16fc829 passed all nine runtime/OS jobs and applicable gates in
+run 40833093614, created 07:04:30Z and completed 07:06:48Z on 2026-10-29.
+Constructor/environment head 527b7cd and bounded storage head 2514dbc each passed
+six Linux/macOS runtime jobs and static/release gates, but failed all three
+Windows jobs on the same nonportable read-error fixture. The shared file store
+correctly treats ENOENT as absent; Windows uses that code for a child of a regular
+file. The repaired test reads an existing directory instead. The blocked write
+and recovery assertions remain. [Native class evidence](api-classes.md) records
+exact run IDs and failure log lines.
+
+The native class checkpoint adds ten regressions and passes 524 tests on each
+runtime, strict checks, exact declaration regeneration and compilation. The
+clone scan covers 76 production sources with zero clones; 38 generated schema
+declarations are excluded as data and compiled separately. The package contains
+119 permitted entries. Head 6b3e3e0 passed all nine runtime/OS jobs and applicable
+gates in run 40837895072 (07:49:20Z–07:51:59Z, 2026-10-29), verifying the
+Windows fixture repair.
+
+The request-bound checkpoint adds eight regressions and passes all 532 tests per
+runtime plus strict checks. See [normalization evidence](request-limits.md).
+Head d5f84c0 passed all nine runtime/OS jobs and applicable gates in run
+40838745111 (07:57:15Z–08:01:17Z, 2026-10-29). Main remains an ancestor.
+
+The [peer-resolution checkpoint](peer-resolution.md) adds seventeen regressions
+for native API classes, nested requests, actual vendor argument bytes, selected
+backend routing, cancellation and late-mutation depth bounds. All 549 tests pass
+on each runtime, with strict checks and a zero-clone scan of 77 sources. The
+package contains 120 permitted entries. Commit/push and verify fresh CI. Continue remaining
+return/model and application contracts with failing-before tests.
+
+The [facade-result checkpoint](gram-results.md) adds nine return-view regressions
+and seven complete-value resource regressions. All 565 tests pass per runtime,
+with strict checks, 77 scanned production sources and 120 package entries.
+Commit/push and verify fresh CI. Next investigate nested bot update dispatch used
+by terminal restart and execute the downstream command/lifecycle scenarios.
+
+The [nested bot checkpoint](bot-reentrancy.md) adds fourteen regressions for
+awaited child dispatch and borrowed session transactions. All 579 tests pass
+per runtime, with strict checks, 78 scanned sources and 121 package entries.
+Commit/push and verify CI. Execute the complete pinned terminal
+sources next, correcting the application text-handler order and synthetic
+command entities explicitly in the migration, then verify media/lifecycle flows.
+
+The [Bot API edit/error checkpoint](bot-api-compatibility.md) adds nine
+regressions after five initial tests and a direct-context test failed on incorrect grammY arguments/missing error data.
+All 588 tests pass per runtime with strict checks, 78 scanned sources and
+121 permitted package entries. Preserve the change and verify fresh CI. Continue the
+complete pinned terminal source scenarios next; retain explicit migration
+changes for application defects rather than claiming unchanged compatibility.
+
+The [terminal source checkpoint](terminal-migration.md) reproduces and patches
+nine application failures and six upload failures. Sixteen source scenarios
+include the actual emulator, grammY comparisons and patch application; upload
+preparation reuses shared traversal guards and adds finite byte/file limits.
+The 610-test head 5a232706 passed all nine runtime/OS jobs and applicable gates
+in run 40847213870, created 09:07:50Z and completed 09:10:19Z on 2026-10-29.
+Three further failing-before regressions now verify polling drain, shared signal
+shutdown and active-animation cancellation. Three isolated Node/Linux integrations
+use real PTY children, actual canvas/GIF encoding and independent GIF decoding;
+before/after PNGs and GIFs are preserved. Verify fresh matrix and native-job CI,
+then continue keyboard/photo helpers and complete remaining lifecycle scenarios.
+Rendering/shutdown head 2b8ef53f passed all nine runtime/OS jobs, native
+integration and applicable gates in run 40848702436, created 09:19:14Z and
+completed 09:22:16Z on 2026-10-29. Six native scenarios now execute complete
+actual dotenv/pino startup and validate missing credentials, isolated paths and
+successful file-log drain. One more failing-before regression verifies log
+completion before successful exit. Head 9483b5c5 passed all nine runtime/OS jobs,
+native integration and applicable gates in run 40849679128, created 09:26:44Z
+and completed 09:29:06Z on 2026-10-29. Four additional real child-process
+regressions now verify fatal startup logs before immediate exit. Verify fresh CI
+after preserving the synchronous-destination change. Broader error recovery and
+native runtime/OS coverage remain open alongside keyboard/photo/account evidence. Preserve all broader open
+criteria and keep working independently of controlled-account credentials.
+
+Keep protocol completion (secret chats/call media/transports), complete backend
+return/event/style compatibility and actual downstream scenarios open in the
+ledger. Continue with transport resource/cancellation gaps and the shared bot
+session/scene and account scenario surfaces, each with a reproducing test.
+Update PR #2 with current implementation and evidence; keep it draft until the
+remaining requirements are genuinely implemented and verified.
+
+## Current CI investigation
+
+1. [x] List constructor/storage runs and verify head SHAs and timestamps.
+2. [x] Preserve complete failed logs under ci-logs/ and read each platform failure.
+3. [x] Identify the Windows ENOENT/ENOTDIR fixture assumption; retain actual store behavior.
+4. [x] Use an existing-directory read failure and keep blocked write/recovery checks.
+5. [x] Verify all nine OS/runtime jobs on head 6b3e3e0 in run 40837895072.
+6. [x] Verify request-bound head d5f84c0 in run 40838745111.
+7. [x] Verify peer-resolution head edb0ee7 in run 40841294344 (08:19:21Z–08:33:58Z).
+8. [x] Verify facade-result head 937d596 in run 40842257601 (08:27:27Z–08:38:10Z).
+9. [x] Verify nested bot head df05dff in run 40843982335 (08:41:38Z–08:44:06Z).
+
+## Historical CI investigations
+
+The layer-policy run 40801264105 passed eight runtime/OS jobs and all applicable
+gates, but Node on macOS failed the existing TCP cancellation test. Preserved
+logs show `TCP request timeout` at failed-job lines 1028–1045, originating in the
+successful `send()` at test line 54. The test's 30 ms default unintentionally
+bounded connection establishment as well as the intentionally idle read. Keep
+the normal connection deadline and apply 30 ms only to that read. Verify the
+focused TCP suite and fresh matrix CI; no production timeout is changed.
+
+1. [x] List recent runs with timestamps and verify b11141b's SHA.
+2. [x] Download run 40795826588 and all three failed Windows job logs.
+3. [x] Identify the source-hash failure and reproduce the exact CRLF hash locally.
+4. [x] Preserve archived bytes with Git attributes; add a checkout regression.
+5. [x] Verify the repair in fresh CI, including all Windows runtime jobs.
+
+The archive repair passes 196 local tests on each runtime and strict checks.
+
+Archive repair head c996d26 passed all nine OS/runtime jobs and applicable gates
+in run 40796417220. The sequence checkpoint adds nineteen regressions covering
+role parity, ordered acknowledgements, duplicates, immediate resend processing,
+bounded gaps/history, aborts, copied snapshots and restart recovery. Its 215
+local tests and strict checks pass; fresh CI is required after committing it.
+
+## Secret-chat implementation checklist
+
+1. [x] Authenticate bounded MTProto 2.0 envelopes and retain historical TL IDs.
+2. [x] Track ordered sequence/acknowledgement state and bounded resend caches.
+3. [x] Export/validate copied snapshots and recover unsent frames/gap requests.
+4. [x] Replace deleted unacknowledged frames with protocol deletion services.
+5. [x] Prepare initial request/accept RPCs with recoverable DH/key state and binding checks.
+6. [x] Integrate layer/cipher/sequence policy and the initial peer flow through native test peers.
+7. [x] Implement compulsory PFS rotation and simultaneous key-exchange rules.
+8. [x] Integrate encrypted RPC ordering, durable effects/cursors and file media.
+9. [x] Implement read-triggered expiry and application history effects.
+10. [ ] Verify interoperable flows with controlled Telegram accounts.
+
+The subsequent TL ownership regression exposes Buffer.slice view aliasing.
+Copied byte/fixed-integer fields pass all 216 tests on each runtime and strict
+checks. Sequence head 236e916 passed all nine CI runtime/OS jobs in 40797579548.
+
+Deleted unacknowledged messages now become self-deletion services with immutable
+original headers and a second outgoing deletion. Five regressions cover both
+roles, already-delivered and missing originals, restart state, resend content,
+invalid targets and atomic capacity failures. All 221 tests pass on each runtime
+with strict checks. TL byte-ownership head 07d27f9 passed CI run 40797847810.
+
+Strict declaration/example checking is now an explicit `npm run typecheck` gate
+in both `npm run check` and CI. The project includes every declaration and typed
+example and keeps library checking enabled. The new gate passes locally.
+
+The DH primitive now refreshes configuration before each initial exchange,
+validates safe primes/generators/public values, mixes local entropy and consumes
+private exponents on completion. Eight regressions cover bilateral and independent
+platform DH, malformed inputs, fingerprints, restart snapshots, configuration
+refresh/copying and cancellation. All 229 tests and strict checks pass on each
+runtime. Deno's independent DH API restricts generators to 2/5, so the comparison
+uses the valid RFC 3526 group with generator 2; Telegram's published generator-3
+parameters remain covered by the bilateral tests. Request/accept RPC integration,
+layer agreement and PFS remain open. Head 192d011 passed all nine runtime/OS jobs
+and applicable gates in CI run 40798442235.
+
+Outgoing layer upgrades now preserve exact old frames, including old-layer
+deletions and JSON restoration. Three failing-before regressions pass with the
+existing sequence/deletion tests. Layer notifications and cipher-version
+negotiation remain the next integration steps.
+
+The layer checkpoint passes all 232 tests on Node, Bun and Deno, strict lint,
+format, duplication and full type checking. DH head 29f274e passed all nine
+OS/runtime jobs and applicable gates in CI run 40799647031.
+
+Explicit legacy envelope support now prepares initial layer negotiation while
+keeping version 2 as the default and avoiding automatic format fallback. The
+primary v1 specification is archived with a source hash. Sequence cutover and
+downgrade policy remain integration work.
+
+Legacy-envelope checks pass all 238 tests on each runtime, strict lint, format,
+duplication and type checking. The package has 56 permitted entries. Layer
+upgrade head 2d9b3d5 passed all nine runtime/OS jobs and gates in 40800006291.
+
+Layer/version policy regressions cover notification races, sequence cutovers,
+older gaps, queued downgrade violations, ordered service interpretation, local
+upgrades and portable state. The policy is ready for integration with the
+sequence/cipher primitives; initial request/accept RPCs, durable state/effects
+and compulsory re-keying remain open.
+
+The layer-policy checkpoint passes all 244 tests on Node, Bun and Deno, strict
+lint, formatting, full declaration/example checks and the zero-clone scan of
+52 production files. The package contains 57 permitted entries. Legacy envelope
+head c465b65 passed all nine runtime/OS jobs and applicable gates in CI run 40800440156. Fresh CI is required for the policy commit.
+
+Initial request/accept helpers now use mandatory persistence before RPCs and
+before ready credentials, preserve deduplication IDs/exponents/keys through
+restart, validate participant and final key bindings and discard invalid peers.
+Ten focused tests include two native encrypted TCP clients and a real TL
+encryption update. Full runtime and static checks are the next checkpoint.
+TCP deadline repair f083ace passed all nine runtime/OS jobs and applicable gates
+in CI run 40802116364; preserved logs identify the preceding macOS test failure.
+
+The initial-handshake checkpoint passes all 254 tests on Node, Bun and Deno,
+strict ESLint, Prettier, full declaration/example checks and the zero-clone scan
+of 54 production files. The package dry run has 59 permitted entries. Main is
+an ancestor, and refreshed issue/sub-issue and all three PR feedback streams
+remain empty. Fresh CI is required after committing the handshake.
+
+Handshake head 7134040 passed all nine runtime/OS jobs and applicable gates in
+CI run 40802763164. Two new failing-before regressions isolate an incoming-layer
+bug: outgoing layer 46 serialization stripped incoming layer-144 fields and
+rejected large layer-143 document sizes. Separate receive serialization/decoding
+now preserves exact queued frames through restart without upgrading outgoing
+policy or relaxing outgoing-history validation. Focused sequence/layer tests
+pass. All 256 tests pass on Node, Bun and Deno; strict lint, formatting, full
+declaration/example checks and the zero-clone production scan also pass.
+
+Incoming-layer head 33600f9 passed all nine runtime/OS jobs and applicable gates
+in CI run 40803949654. The next checkpoint fixes generic-wrapper vector result
+decoding and adds successful native RPC receipts with bounded, copied
+`invokeAfterMsgs` dependencies. Five focused tests and a native encrypted TCP
+integration test pass, including salt retries, migration/authorization handling,
+failure preservation and finite invalid-input checks. All 262 tests pass on
+Node, Bun and Deno. Strict lint, formatting, full declaration/example checks
+and the zero-clone scan of 55 production files pass; the package dry run has
+60 permitted entries. Durable session delivery remains the next open step.
+
+RPC head 8b72c1b passed all nine runtime/OS jobs and applicable gates in
+CI run 40804675053. The active session now combines the layer/cipher/sequence
+policies, exact encrypted retransmission history, atomic message effects and
+ordered native submission. Sixteen unit regressions cover retries, restart,
+gaps, deletion, corruption, downgrade aborts, cancellation and owned snapshots.
+A bilateral native encrypted TCP test verifies saving effects and sequence
+state before the real update manager saves qts or acknowledges the queue.
+Compulsory PFS, encrypted media and controlled live peers remain open; these
+checks do not establish full secret-chat or ecosystem parity.
+
+All 279 tests pass on Node, Bun and Deno. Strict ESLint, Prettier, complete
+declaration/example checking and the zero-clone scan of 57 production files
+pass. The package dry run has 62 permitted entries. Refreshed issue comments,
+sub-issues and all three PR feedback streams remain empty. Fresh CI is required
+after committing this checkpoint.
+
+Durable session head 36f8f97 passed all nine runtime/OS jobs and applicable gates
+in CI run 40806856623. PFS action handling now has eleven regressions covering
+bilateral exchanges, signed collisions, lost commits, protected restart,
+abort restrictions, cryptographic validation, key-use/age thresholds and the
+old/new encryption boundary. A failing-before restore regression led to public
+value validation for every active phase. Automatic session invocation, the key
+ring, gap-aware erasure and visualization hashes remain the next PFS steps.
+
+The PFS action checkpoint passes all 290 tests on Node, Bun and Deno and all
+strict checks. The clone detector scans 58 production files with zero clones;
+the package dry run has 63 permitted entries. Its typed draft-planning example
+compiles. Fresh CI is required after committing the checkpoint.
+
+Automatic PFS now passes twelve additional regressions, including interrupted
+durable transitions, out-of-order candidate proof, simultaneous requests,
+snapshot migration, bounded restored key observations, stable visualization,
+corruption rejection and exact retransmission after key erasure. An older
+single-key snapshot initially bypassed authentication for unknown fingerprints;
+the failing test now requires authentication for that snapshot format.
+
+A cross-rotation deletion test initially aborted with SECRET_CHAT_KEY_DOWNGRADE:
+encrypting an old replacement under the current key moved the peer's switch
+boundary before an old-key commit. Preparing the self-deletion ciphertext at
+message creation preserves its original key without retaining that key after
+erasure. The regression also restores JSON state before deletion and verifies
+the exact prepared packet; corruption and combined byte limits have coverage.
+The native encrypted TCP integration now completes a bilateral PFS exchange
+through the actual update manager and preserves qts/effect ordering.
+
+All 309 tests and strict checks pass locally on all three runtimes. The package
+dry run contains 66 permitted entries. Fresh CI is required after this commit;
+encrypted media and production-account interoperability remain open.
+
+Key age now begins when the initial handshake derives the key, rather than
+when the application eventually opens its active session. Two failing-before
+assertions verify credential timestamps and compulsory rotation after delayed
+session creation. Protected restart preserves that time; malformed timestamps
+reject. All 310 tests pass on each runtime with strict checks. Integrated PFS
+head e793a71 passed every gate and all nine runtime/OS jobs in run 40812109787,
+created 2026-10-29T03:26:04Z and completed 2026-10-29T03:28:50Z. Fresh CI is
+required for the age repair.
+
+Encrypted file transfer adds nine regressions after three failing-before API
+checks. Uploads use independent random keys/IVs, continuous AES-IGE across
+bounded parts, ciphertext checksums and the big-file path above 10 MiB.
+Downloads validate metadata/fingerprints and declared byte limits, use the
+file's DC, reject truncated/oversized/redirected chunks and strip only final
+padding. Cancellation, early iterator closure, owned key material, Blob/path
+sources and unchanged caller buffers have coverage. An independent GramJS IGE
+decryptor verifies ciphertext. Shared cloud upload behavior remains covered.
+
+All 319 tests pass on Node, Bun and Deno; strict lint, formatting, full types
+and the zero-clone scan of 63 production files pass. The package dry run has
+68 permitted entries. Key-age head d409008 passed every applicable CI gate and
+all nine runtime/OS jobs in run 40812653369. Durable attachment submission and
+incoming gap persistence remain open, as do controlled production peers and
+the wider issue requirements.
+
+Durable attachment submission and incoming gap persistence now have nine unit
+regressions and a bilateral encrypted TCP test. The session persists uploaded
+or reusable file references with exact ciphertext before submission, validates
+returned references before saving submitted state and commits file effects
+atomically. Restored gaps retain references until ordered delivery. References
+count toward buffer limits and are removed from replacement deletions. Canonical
+reference digests reject inconsistent protected snapshots. Two failing-before
+checks caught the legacy layer's 32-bit document size and undetected incoming
+reference corruption; both now pass. Photo, video, audio, document, reusable
+and big-upload references have coverage.
+
+All 329 tests pass on Node, Bun and Deno. Strict checks pass with zero clones
+across 64 production sources; the npm dry run has 69 permitted entries. The typed
+attachment example compiles. Standalone transfer head 56cfb79 passed every
+applicable gate and all nine OS/runtime jobs in
+[run 40813667642](https://github.com/link-foundation/anygram/actions/runs/40813667642),
+created 2026-10-29T03:42:36Z and completed 2026-10-29T03:44:52Z. Fresh CI is
+required for durable attachments. Issue comments, sub-issues and all three PR
+feedback streams remain empty; current main is an ancestor of the branch.
+
+Secret-chat service/TTL behavior and controlled production peer interoperability
+remain open, along with call media, runtime, compatibility and downstream
+scenario criteria. Local peers do not establish production interoperability.
+
+Application service checkpoint: `queueService` now durably submits read, delete,
+screenshot, history-clear, typing and TTL actions. ID vectors preserve signed
+64-bit values and are copied, deduplicated and bounded. Ordered TTL settings
+survive JSON restart and failed saves leave both defaults and ciphertext
+unchanged. Omitted message TTL uses the current default; explicit zero disables
+expiry and explicit positive message values retain the TL integer range.
+Invalid incoming chat defaults follow official Android clamping to one year.
+Batch deletion and history clearing replace unacknowledged message/attachment
+frames while preserving their original sequence and encryption boundaries.
+
+Eight new service regressions, a low-level capacity regression and a bilateral
+attachment-deletion regression bring Node, Bun and Deno to 339 passing tests.
+The native encrypted TCP file scenario also exchanges TTL and read services
+through real update-manager persistence before qts acknowledgement. Strict lint,
+formatting, full types and the zero-clone scan of 65 production sources pass;
+the package dry run has 70 permitted entries. The typed service example compiles.
+Failing-before logs preserve attachment retention during deletion and rejection
+of a valid explicit message TTL above the chat-default maximum.
+
+Durable attachment head 8d9027e passed all nine OS/runtime jobs and applicable
+gates in [run 40815695308](https://github.com/link-foundation/anygram/actions/runs/40815695308),
+created 2026-10-29T04:04:46Z and completed 2026-10-29T04:06:42Z. Fresh CI is
+required for this service checkpoint. Read-triggered expiry and application
+history deletion still need implementation evidence. Controlled production
+accounts, call media, complete compatibility and downstream criteria remain open.
+
+Read-triggered expiry checkpoint: `SecretChatLifetimes` retains bounded metadata
+for expiring messages without plaintext or file keys. History reads and explicit
+content opening have separate triggers; repeated reads keep the first deadline.
+Audio/video playback duration sets a minimum lifetime. Portable state retains
+exact signed IDs and validates bounds, duplicate records and malformed clocks.
+Incoming read/delete/history services update the metadata only after ordered
+authenticated delivery. Applications delete their actual stored history in the
+same transaction as timer/session state; the typed example includes batched
+durable deletion and a single shared scheduler callback.
+
+A failing-before retention regression showed that application deletion left
+acknowledged protocol plaintext and ciphertext cached. Delete/history actions now
+prune acknowledged frames and their associated packets/file references, while
+unacknowledged originals retain self-deletion sequence positions. The explicit
+`pruneAcknowledged` method uses mandatory durable persistence and preserves all
+protocol counters. Failed saves retain the old state.
+
+Ten new tests cover exact deadlines, restart, direction, protected media,
+playback duration, complete vector validation, bounded snapshots, immutable
+metadata, read timestamp ordering and actual session save rollback. All 349 tests pass on Node, Bun and Deno. Strict lint, formatting, full
+declaration/example checks and the zero-clone scan of 67 production sources
+pass; the package dry run contains 72 permitted entries. Fresh CI is required
+for this checkpoint. Controlled production interoperability and all
+other unmet issue criteria remain open.
+
+Server-date persistence checkpoint: successful encrypted RPC saves now include
+`effects.sent` with the exact outgoing body, random ID, sequence and server date.
+Applications commit these with submitted state and history; failed saves keep
+exact ciphertext available for retry. Incoming `receive({ date })` metadata
+survives out-of-order delivery, duplicate updates and protected JSON restart.
+The first accepted date stays attached to its frame; ordered effects expose it
+before qts acknowledgement. Pending date metadata counts toward the combined
+buffer limit and snapshot digests reject mismatched frame/date tuples. Older
+snapshots without dates retain `undefined` rather than inventing history times.
+
+Six failing-before regressions cover outgoing receipts, failed persistence,
+restart, gap closure, duplicate dates, malformed snapshots and timer integration.
+The bilateral native TCP attachment scenario checks outgoing and incoming dates;
+the existing combined-budget test includes buffered dates. All 355 tests pass on
+Node, Bun and Deno, with strict lint, formatting, full types and zero clones
+across 68 production sources. The package dry run contains 73 permitted entries.
+Fresh CI is required for this checkpoint. Controlled production peer results and
+all remaining feature-union, runtime, call-media and downstream criteria stay open.
+
+Phone-code delivery checkpoint: `onCode(challenge)` receives a copied server
+challenge before phone/email prompts. Applications can continue, explicitly
+request the advertised next method, or cancel the current code remotely.
+Resends retain the current hash and subsequent sign-in uses the newly returned
+hash. They share the finite login-step bound. Callback cancellation and server
+failures propagate without replay; no session is saved for cancellation or a
+malformed authorization result. The application owns timeout-aware UI decisions.
+
+Seven failing-before regressions cover hash ownership, resend success, current
+code cancellation, email/Firebase fallback selection, malformed actions,
+challenge limits, cancellation and server errors. A separate failing-before
+regression catches session persistence before a malformed success is rejected.
+A bounded native encrypted TCP test executes both the successful and cancelled
+flows, and request bytes match actual pinned teleproto. All 364 tests pass on
+Node, Bun and Deno, with strict lint, formatting, full types and zero clones
+across 68 production sources; the npm dry run contains 73 permitted entries.
+The typed delivery example compiles. Fresh CI is required for this checkpoint.
+
+The expiry head 19a4d57 passed all nine runtime/OS jobs and applicable gates in
+run 40818522634, created 2026-10-29T04:34:36Z and completed
+2026-10-29T04:47:33Z. Date head 6514127 passed all nine runtime/OS jobs and applicable gates in
+run 40819580958, created 2026-10-29T04:46:07Z and completed
+2026-10-29T04:50:58Z. Continue with
+remaining native/downstream coverage and preserve the original scope; do not
+mark the PR ready while any requirement remains unverified.
+
+Downstream account workflow audit:
+
+- Captured and read follow's complete Telegram library, follow/join CLIs,
+  private-link/error/message/session experiments and license at immutable head.
+- Added failing-before paged-dialog tests and an ownership regression, followed
+  by the shared iterator, typed group index and actual backend/native matrix.
+- Fixed the actual teleproto inherited-constructor-tag normalization failure
+  exposed by that matrix. All 374 tests pass on Node/Bun/Deno; strict lint,
+  formatting, types, the zero-clone scan of 69 sources and the 74-entry package
+  dry run pass. Preserve the checkpoint and await its new CI run.
+- Reproduced and fixed legacy invite links, host anchoring, layer-232 nested
+  join caching and cancellation across lookup/join. All 388 tests pass on
+  Node/Bun/Deno with strict lint, formatting, types, zero clones across 70
+  sources and a 75-entry package dry run. Actual clients and native TCP cover
+  private import followed by settings; approval/verification outcomes stay explicit.
+- Added shared invite/notification inspection and the bounded follow workflow,
+  including exact private membership confirmation, existing groups, aliases,
+  approval/verification, settings, history, leave and rate-limit outcomes.
+  Nineteen regressions include batch/settings ownership failures, actual clients
+  and encrypted TCP; all 407 tests and strict checks pass on each runtime.
+- Added an owned connection scope with bounded disconnect/destroy retries,
+  original-error preservation, cancellation and shared backend ownership.
+  Eighteen regressions include actual GramJS/teleproto destruction and native
+  TCP closure. All 425 tests and strict checks pass on each runtime.
+- Next: downstream wrapper/CLI migration and controlled-account evidence.
+- Terminal fatal-exit audit: four real child-process probes reproduced a missing
+  file after immediate exit with either required credential missing. The explicit
+  migration uses a synchronous pino destination and awaits its finish event on
+  successful shutdown. Thirteen isolated native cases pass locally. Preserve
+  this atomic change after full checks, then continue downstream/media/runtime
+  implementation; this does not satisfy the broader terminal requirement.
+- Continue all other unmet protocol/runtime/compatibility/downstream criteria.
+  Controlled accounts and official-app-only passkeys remain externally blocked;
+  independent implementation work remains available. Keep PR #2 draft/unmerged.
+
+Bot file inputs: ten initial failures reproduce missing path/stream/supplier
+handling; two further failures reproduce empty-chunk bookkeeping and late-source
+leaks. Nineteen cases cover the native transport through shared readers and
+cancellation. Verify all runtimes and static gates, commit this atomic change,
+then implement optional vendor-backend/account-media conversion and continue the
+remaining downstream scenarios. Keep all unverified criteria open.
+
+Late file-source cleanup: a real bounded Linux FIFO probe failed because a
+10 ms request deadline awaited a blocked open until its delayed writer arrived.
+The request now rejects before that release and closes the eventual handle. A
+further failing-before portable test covers cancellation of a URL body returned
+after cancellation. Verify 634 portable cases, thirteen native integrations and
+the separate FIFO probe, then preserve the atomic fix and continue optional
+vendor/account InputFile integration. Every broader unmet criterion remains open.
+
+Optional vendor uploads: seventeen portable cases now exercise owned file
+conversion, actual grammY/node-telegram-bot-api multipart, existing vendor inputs,
+aggregate/structural guards, late cleanup, automatic construction, legacy formData
+and deadlines through dispatch. Actual Telegraf wire tests pass on Node 20.18.3;
+two newer-runtime attempts reproduce its original encoder stall independently of
+owned files. Preserve the finite standalone reproducer and leave that criterion
+open. Verify 651 core cases on all runtimes, strict gates, the two wire cases,
+thirteen native terminal cases and the separate FIFO probe, commit/push, inspect
+fresh CI, then continue account-media InputFile support and broader requirements.
+The preceding cleanup head c2fc60bf passed all CI jobs in run 40854061428
+(created 2026-10-29T10:00:21Z; completed 2026-10-29T10:03:02Z).
+
+Account InputFile work plan:
+
+- [x] Refresh the complete issue and all three PR feedback streams; no new comments.
+- [x] Reproduce ten failures before implementation, including secret-file native TCP.
+- [x] Share bounded readers with cloud and encrypted uploads without a module cycle.
+- [x] Route owned GramJS/teleproto files through the shared upload implementation.
+- [x] Verify actual serializer bytes, mtcute writer, albums, source forms and cleanup.
+- [x] Run all 670 tests on Node, Bun and Deno; strict checks and package audit.
+- [x] Run isolated native terminal, Telegraf Node 20 wire and FIFO probes.
+- [x] Review the complete atomic diff, merge fresh main if needed, commit and push.
+      Account checkpoint: 79d5645916e55d802b289e9a1601ca015e672893.
+- [x] Verify fresh CI by timestamp and SHA; preserve/analyze any failing logs.
+      All jobs passed in run 40858010735, completed 2026-10-29T10:37:46Z.
+- [ ] Continue all remaining criteria, including the newer-runtime vendor encoder
+      and complete downstream migrations. Keep PR #2 draft and unmerged.
+
+Account checkpoint validation: all 670 tests pass on Node, Bun and Deno; the
+nineteen new account cases also pass on Node 20.18.3. Strict lint, formatting,
+complete types and schema regeneration pass, with zero clones across 83 sources.
+The npm dry run has 126 permitted entries. Thirteen isolated native terminal
+cases, two actual Telegraf Node 20 wire cases and the separate bounded FIFO
+probe pass. Fresh main is an ancestor. Fresh CI is still required for this head;
+the preceding vendor head 0be0437 passed all gates in run 40856101337,
+created 2026-10-29T10:15:22Z. The account head passed every job in run
+40858010735, created 2026-10-29T10:29:50Z and completed 2026-10-29T10:37:46Z.
+
+Shared high-level bot operation work plan:
+
+- [x] Refresh the complete issue and all three feedback streams; no comments.
+- [x] Reproduce fourteen failures before implementation, plus grammY raw signatures.
+- [x] Share six canonical translations across all four selected bot transports.
+- [x] Verify actual automatic SDK construction and finite local HTTP requests.
+- [x] Separate request controls and preserve explicit object-message options.
+- [x] Run 685 tests on all runtimes, Node 20 focused tests and strict gates.
+- [x] Review the atomic diff, audit the package, commit/push and inspect fresh CI.
+      Bot checkpoint c3832f3 passed every job in run 40859500804.
+- [ ] Continue full backend/framework/downstream criteria; keep PR draft/unmerged.
+
+See [bot operation evidence](bot-operations.md). Node, Bun and Deno pass all 685
+cases; the focused fifteen cases also pass Node 20.18.3. Strict gates pass with
+zero clones across 84 production sources. The full Bun rerun passes after
+correcting declared gzip decoding in the independent oracle. This checkpoint
+does not close any broader open criterion.
+
+Thirteen native terminal integrations, two actual Telegraf Node 20 multipart
+cases and the bounded Linux FIFO probe pass. The package audit has 127 permitted
+entries. Fresh main is an ancestor; every atomic production change was reviewed.
+
+Community posting work plan:
+
+- [x] Verify the complete pinned source and package against current upstream.
+- [x] Execute the original to reproduce cross-user capture, reset limits,
+      missing callback acknowledgements and deletion before replacement.
+- [x] Share bot/account transports in a complete posting/lifting example.
+- [x] Persist bounded per-user limits, prompts and delivery/cleanup state before
+      side effects; retain ambiguous deliveries without automatic replay.
+- [x] Use bounded account search, preserve originals on failed replacement and
+      verify restart, concurrency, errors, cancellation and listener cleanup.
+- [x] Run focused actual-backend/native transport cases and all runtime suites:
+      724 cases per runtime, plus 39 community cases on Node 20.18.3.
+- [x] Run strict static/package gates, 13 native terminal integrations, two
+      actual Telegraf Node 20 wire cases and the bounded FIFO probe.
+- [x] Commit the reviewed atomic work, push and inspect fresh CI by SHA/time:
+      community head 1c16f5c passed all runtime/OS jobs and applicable gates in
+      run 40862796563, created 2026-10-29T11:06:27Z, completed 11:19:15Z.
+- [ ] Continue every other open requirement; retain draft/unmerged status.
+
+Bot context cancellation work plan:
+
+- [x] Compare actual grammY positional/context signals and Telegraf signatures.
+- [x] Reproduce lost signals and controls leaking into positional payloads.
+- [x] Share request-control separation with canonical bot operations and retain
+      raw Telegram parameters such as getUpdates.timeout.
+- [x] Verify context/event aliases, owned-source deadlines and selected backends.
+- [x] Update checked declarations/examples and pass all 747 tests per runtime,
+      23 Node 20 cases, strict gates, native terminal/wire cases and package audit.
+- [x] Commit the reviewed bot context-control change, push and inspect fresh CI.
+      Head f3c544e passed every applicable job in run 40864702944, created
+      2026-10-29T11:21:04Z and completed 11:29:36Z.
+- [ ] Continue the complete feature union and all other open requirements.
+
+Bot handler recovery work plan:
+
+- [x] Compare actual Telegraf error/callback context identity and return behavior.
+- [x] Reproduce event listener failures bypassing registered catchers.
+- [x] Cover async catchers, nested updates, retryable failures and queue release.
+- [x] Keep shared wrapped errors and add Telegraf's two-argument contract.
+- [x] Share catch boundaries across event and middleware dispatch without replay.
+- [x] Check declarations, all 757 cases on each runtime, strict static gates,
+      25 focused Node 20 cases, 13 native terminal cases and package contents.
+- [x] Commit the reviewed recovery change, push and verify fresh CI by SHA/time.
+      Head 2c96128 passed every applicable job in run 40866197953, created
+      2026-10-29T11:32:41Z and completed 11:35:28Z.
+- [ ] Continue every other open acceptance criterion in this single draft PR.
+
+Original terminal suite execution work plan:
+
+- [x] Read all eight original test files and five debug scripts against the
+      pinned manifest; identify assertions, diagnostics and broken debug imports.
+- [x] Execute complete verified bodies in separate bounded child processes and
+      preserve their output; reproduce any real emulator or application failures.
+- [x] Bridge the demonstrated debug import error explicitly while keeping
+      archived sources immutable. All original assertions pass without emulator
+      changes; distinguish seven diagnostics from six assertion-driven suites.
+- [x] Pass strict static gates, all 26 native checks and thirteen Node 20 scripts.
+- [x] Verify strict gates and native integration, commit and inspect fresh CI.
+      Head 6f69ce3 passed every applicable job in run 40866789779, created
+      2026-10-29T11:37:15Z and completed 11:40:16Z.
+- [ ] Continue keyboard/photo, platform/runtime and controlled Telegram criteria.
+
+Complete pinned grammY positional API work plan:
+
+- [x] Inventory every public positional signature and method/field mapping from
+      the actual pinned SDK; preserve metadata facts without copying SDK code.
+- [x] Compare every supported mapping against actual public SDK calls and first
+      reproduce positional fallthrough failures, including inline/alias methods.
+- [x] Route descriptors through shared request control and backend operations,
+      retaining raw object access, method aliases and conditional rich messages.
+- [x] Compile checked declarations/examples and verify each selected backend,
+      cancellation, upload controls, runtime suites and strict/package gates.
+- [x] Review the atomic diff, commit/push and verify fresh CI. Head ad7941a
+      passed every applicable job in run 40869702384, created
+      2026-10-29T12:00:03Z and completed 2026-10-29T12:31:24Z.
+- [ ] Continue all other requirements without presenting this set as full parity.
+
+Bot query registration work plan:
+
+- [x] Compare all six pinned grammY query registration shortcuts, trigger arrays,
+      exact string/RegExp matches and returned scoped composers before fixing.
+- [x] Share asynchronous filtering and query registration across bots/composers,
+      preserve existing action behavior and expose missing context aliases.
+- [x] Verify actual selected-backend HTTP callback acknowledgement/edit requests,
+      predicate failures, declaration examples and immutable update fields.
+- [x] Pass all 989 core tests per runtime, fifteen focused Node 20 cases,
+      strict static gates, 26 native checks, vendor wire/FIFO and package audit.
+- [x] Pass runtime/static/integration gates, review and commit/push. Head a78c071
+      passed every applicable job in run 40871737725, created
+      2026-10-29T12:15:13Z and completed 2026-10-29T12:36:54Z.
+- [ ] Continue all remaining issue criteria in this draft, unmerged PR.
+
+Complete pinned Telegraf positional API work plan:
+
+- [x] Inventory every public signature, argument/default, alias and field mapping
+      from pinned Telegraf facts; compare actual SDK calls before implementation.
+- [x] Share selected-backend dispatch for the complete positional API, retaining
+      raw-object access, option precedence, formatted text and file-link behavior.
+- [x] Verify representative HTTP requests, signals/deadlines, immutable inputs,
+      complete declaration examples and exact metadata generation.
+- [x] Pass 1,140 core cases on Node/Bun/Deno, 151 focused Node 20 cases, strict
+      gates, 26 native terminal checks, vendor wire/FIFO and the package audit.
+- [x] Commit/push the reviewed atomic change and inspect fresh CI for this head.
+      Head 5b6b1a8 passed every applicable job in run 40877995122, created
+      2026-10-29T13:00:13Z and completed 2026-10-29T13:18:26Z.
+- [ ] Continue every other open criterion in this draft, unmerged PR.
+
+The independent proxy serialization head fdb6a2a passed every applicable CI job
+in run 40874558130, created 2026-10-29T12:35:47Z and completed
+2026-10-29T12:39:07Z. The Telegraf context-file regression also preserves lazy
+middleware-only context construction, as verified by the existing composer/query
+regressions after an intermediate full-suite failure.
+
+Context update data work plan:
+
+- [x] Inventory actual pinned SDK aliases and compare every supported update,
+      source precedence, identifiers and message helper semantics.
+- [x] Reproduce 53 failures with a bounded loader for the preceding source;
+      preserve the complete assertions and original SDKs.
+- [x] Share the union of update aliases and style-specific aggregate resolution;
+      retain incoming update identity and detached Telegraf message helpers.
+- [x] Compile concrete alias/identifier declarations and a checked example;
+      exercise business/reaction HTTP requests over all four selected backends.
+- [x] Pass 1,202 tests on each runtime, 62 focused Node 20 cases, strict gates,
+      26 native terminal checks, vendor wire/FIFO and the 135-entry package audit.
+- [x] Commit/push the reviewed atomic change and verify fresh CI by SHA/time.
+      Head 0e55209 passed every applicable job in run 40879885613, created
+      2026-10-29T13:12:56Z and completed 2026-10-29T13:23:09Z.
+- [ ] Continue all remaining issue criteria in this single draft, unmerged PR.
+
+Context chat delivery work plan:
+
+- [x] Compare every pinned SDK chat send/reply helper and alias against actual
+      SDK calls before changing the implementation, including business, forum,
+      direct-message topics, inaccessible messages and caller overrides.
+- [x] Share context scope selection and reuse the complete positional APIs;
+      preserve SDK-specific dice, invoice, draft and checklist signatures.
+- [x] Verify missing-context errors, immutable inputs, signal/deadline controls,
+      selected-backend HTTP requests and concrete checked declaration examples.
+- [x] Run all runtime suites, strict static gates, native integration, vendor
+      wire/FIFO and package audit before the atomic commit and push.
+      All 1,358 core cases pass per runtime, as do 156 focused Node 20 cases,
+      26 native checks, two vendor wire cases and the bounded FIFO probe.
+      Strict checks scan 94 production sources with zero clones; the package
+      contains 137 permitted entries. Main remains an ancestor of this branch.
+- [x] Inspect fresh CI by SHA/time and continue all other open criteria without
+      presenting delivery helpers as complete context or ecosystem parity.
+      Committed and pushed as d14764f after all local gates passed.
+      Run 40882537426 was created 2026-10-29T13:30:22Z and completed successfully
+      2026-10-29T13:32:59Z for that exact head.
+
+Context chat administration work plan:
+
+- [x] Compare actual pinned chat administration, author and forum helpers before
+      implementation; cover all listed aliases and SDK-specific scope sources.
+- [x] Reuse selected positional operations and a shared context binding layer;
+      preserve scope errors, business fields, caller controls and input ownership.
+- [x] Compile checked SDK-specific signatures and examples; verify HTTP dispatch,
+      cancellation and author/topic resolution, including zero identifiers.
+      The complete 206-case suite reproduces 204 failures before the fix and now
+      passes. Its HTTP checks retain Telegraf's actual plural count endpoint.
+- [x] Pass full runtime/static/native/vendor/package gates, review and commit.
+      All 1,564 core cases pass on Node, Bun and Deno. The 206 focused Node 20
+      cases, 26 native checks, two vendor wire cases and bounded FIFO probe pass.
+      Strict checks scan 97 production sources with zero clones, compile all
+      examples and regenerate exact declarations. Package audit: 140 permitted
+      entries. Main remains an ancestor; source and local diff were reviewed.
+- [x] Inspect fresh CI and continue all other open acceptance criteria.
+      Administration head f346e4a passed run 40884889305, created
+      2026-10-29T13:45:35Z and completed 2026-10-29T13:59:05Z.
+
+Context user, query, business and configuration work plan:
+
+- [x] Compare 51 grammY and 27 Telegraf helpers against actual pinned contexts;
+      reproduce all 78 behavior cases failing before implementation.
+- [x] Bind context scope through shared positional APIs; retain SDK-specific
+      required fields, error labels, options and selected backend ownership.
+- [x] Verify realistic event shapes, immutable inputs, file selection, controls,
+      zero identifiers, custom hooks and selected-backend HTTP requests.
+      The 96 focused service cases and 207 administration cases pass. Three
+      failing override comparisons led to shared explicit optional-argument
+      padding for grammY and removal of a phantom Telegraf menu argument.
+- [x] Add checked declarations/examples and an immutable before-loader; document
+      root causes, exact inventory, evidence and remaining issue criteria.
+      The fixed preceding three modules reproduce 95 failures and 208 passes in
+      the complete 303-case suite. Full declaration regeneration passes.
+- [x] Pass all local runtime, static, native, vendor, FIFO and package gates.
+      All 1,661 cases pass on Node, Bun and Deno; the 303 focused cases also
+      pass on Node 20. Native integration passes 26 checks, vendor wire passes
+      two cases and the bounded FIFO probe leaves no owned descriptor.
+      Strict gates scan 100 production sources with zero clones, compile all
+      declarations/examples and regenerate exactly. Packaging permits 143
+      entries; main remains an ancestor.
+- [x] Finish review, commit/push and inspect fresh CI by exact SHA/time.
+      Services head d76b83c passed run 40887641230, created
+      2026-10-29T14:02:59Z and completed 2026-10-29T14:09:22Z.
+- [ ] Continue every other independent requirement without presenting a helper
+      inventory or passing CI as complete ecosystem compatibility.
+
+Context message actions work plan:
+
+- [x] Compare all 29 grammY and 14 Telegraf edit, forwarding, copy, reaction,
+      deletion and suggested-post helpers before implementation. The first
+      100 cases reproduce 98 failures; two inventory assertions pass.
+- [x] Bind message/inline, business, checklist and ephemeral scope through the
+      shared positional APIs, preserving distinct SDK signatures and errors.
+- [x] Compare argument overrides, reaction variants, caller controls, zero IDs,
+      immutable updates and actual selected-backend HTTP requests. Verify
+      persistent chat actions with finite callback/timer experiments.
+- [x] Add checked declarations/examples, immutable reproduction and evidence.
+      All 119 focused cases pass. The immutable context-entry loader reproduces
+      117 failures and two inventory passes against preceding head d76b83c.
+      Bounded persistent-action comparisons verify initial/repeated send
+      failures, callback errors and timer cleanup, with optional error tracing.
+- [x] Pass local runtime/static/native/vendor/FIFO/package gates and review.
+      All 1,780 core cases pass on Node, Bun and Deno; 119 focused cases pass
+      on Node 20. Strict gates scan 102 sources with zero clones and exact
+      declaration regeneration; packaging permits 145 entries. All 26 native
+      checks, two vendor wire cases and bounded FIFO cleanup pass. Main remains
+      an ancestor. Source, tests, declarations and atomic diff were reviewed.
+- [x] Commit/push message actions and inspect exact-head CI. Head a008885
+      passed run 40891270390, created 2026-10-29T14:25:12Z and completed
+      2026-10-29T14:27:48Z.
+- [ ] Continue all remaining independent issue requirements.
+
+Context filters and entities work plan:
+
+- [x] Inventory the pinned grammY filter keys, shortcuts and context checker
+      factories; compare Telegraf raw-update predicates, text and entities.
+- [x] Write actual-SDK oracle regressions before implementation, covering all
+      public paths, shortcut/error semantics, match state and source precedence.
+- [x] Implement an independent bounded filter compiler from archived public
+      facts, context checker factories and SDK-specific entity extraction.
+- [x] Add declarations, checked examples, immutable reproduction and evidence.
+      All 104 focused cases pass. The fixed preceding entry reproduces 102
+      failures. All 1,140 concrete filter paths and every pinned context member
+      have oracle/inventory coverage; complete type narrowing remains open.
+- [x] Pass local runtime/static/native/vendor/FIFO/package gates and review.
+      All 1,884 core cases pass on Node, Bun and Deno; 104 focused cases pass
+      on Node 20. Strict checks scan 111 production sources with zero clones,
+      compile declarations/examples and regenerate exactly. All 26 native
+      checks, two vendor wire cases and the bounded FIFO probe pass.
+      Packaging permits 154 entries, and main remains an ancestor.
+- [x] Commit/push context inspection and inspect fresh CI by exact SHA/time.
+      Head 8835d73871b4ebd1076b653b5286755890f67bb8 passed run 40894142765,
+      created 2026-10-29T14:42:19Z.
+- [ ] Continue the Composer filter/scoping and all wider issue requirements.
+
+Composer work plan:
+
+- [x] Compare registration return values, delayed nested registrations, filter
+      shortcuts, commands, reactions and all routing/concurrency/error helpers
+      with the actual pinned SDKs before implementation.
+- [x] Separate grammY scoped composition from Telegraf fluent registration,
+      retaining scene integration and the shared bot transport/dispatch path.
+- [x] Add declarations, checked examples and immutable before reproduction.
+- [x] Run focused comparisons, complete runtime/static/integration/package gates
+      and review. The 118-case suite reproduces 111 failures and seven passes
+      against frozen preceding modules, then passes on Node 20. All 2,002 tests
+      pass on Node, Bun and Deno. Strict gates scan 116 sources with zero clones;
+      exact regeneration and 159 permitted package entries pass. All 26 native
+      checks, two vendor wire cases and the bounded FIFO probe pass. Main is an
+      ancestor; the atomic diff and paginated PR file inventory were reviewed.
+- [x] Commit/push Composer changes and inspect fresh CI by exact SHA/time.
+      Head 84328a107c89a8b4cbd7eddd67dfdb2444603688 passed run 40898554327,
+      created 2026-10-29T15:08:43Z and completed 2026-10-29T15:11:43Z.
+- [ ] Continue every other open requirement in this draft, unmerged PR.
+
+Composer declaration precision work plan:
+
+- [x] Reproduce lost fluent subclass/scene registrations with a checked example
+      before implementation. The first compile also exposed an incorrectly
+      specialized static prototype on generic Composer subclasses.
+- [x] Retain polymorphic return types and generic subclass construction without
+      weakening callback context or scoped-query declarations.
+- [x] Compare valid chains with pinned Telegraf types; retain a frozen declaration
+      reproduction and negative assertions.
+- [x] Pass all local static gates, isolated declaration reproduction and actual
+      Telegraf type oracle with strict library checking. Runtime code is
+      unchanged from the 2,002-case checkpoint. The gate scans 116 sources with
+      zero clones; package audit retains 159 permitted entries. Declarations,
+      examples, immutable reproduction and the atomic diff were reviewed.
+- [x] Commit/push declaration precision and inspect exact-head CI.
+      Head baa796927da5cc69ea00040e00c3936c25e4ea60 passed run 40899892222,
+      created 2026-10-29T15:16:33Z and completed 2026-10-29T15:19:37Z.
+- [ ] Continue filter/model narrowing and all other open requirements.
+
+Bot API model declaration work plan:
+
+- [x] Reproduce unknown nested message/update fields with a checked example
+      before implementation; archive and inspect official model facts.
+- [x] Generate independently owned declarations for all 400 documented models
+      and 1,888 fields, preserving recursive arrays, unions and upload inputs.
+- [x] Trace actual SDK assignment failures. Correct plain keyboard strings and
+      structural empty markers; explicitly assert the three precision roots
+      affecting 17 models rather than treating them as successful assignments.
+- [x] Add parser/field regressions, isolated before/after compilation and
+      exact regeneration to existing automated gates.
+- [x] Complete local static/runtime/package validation and review.
+      All 2,005 core cases pass on Node, Bun and Deno. Eight parser regressions
+      include exact extraction from the archived HTML. Strict checks compile
+      all examples and 399 SDK comparisons, regenerate exactly and scan 126
+      production sources with zero clones. Packaging permits 169 entries and
+      includes all ten model files. Main remains an ancestor. The atomic diff,
+      declarations, field graph and primary archive pins were reviewed.
+- [x] Commit/push model declarations and inspect fresh CI by SHA and timestamp.
+      Head 4d6c1ca33b62a06500312a106e2638a9f80b66d0 passed run 40904346624,
+      created 2026-10-29T15:42:52Z; all runtime, native integration and static gates
+      passed.
+- [ ] Continue refined models, filter narrowing and every wider issue criterion.
+
+Filter declaration work plan:
+
+- [x] Reproduce callback and checker narrowing failures before changing types.
+- [x] Generate query grammar from reviewed filter facts, compare its complete
+      union with the pinned SDK and reject invalid literal queries.
+- [x] Narrow selected update fields, aliases, correlated alternatives and
+      implied message fields while preserving custom application contexts.
+- [x] Add scoped helper/checker predicates and portable checked examples;
+      compare valid programs against actual SDK types with strict checking.
+- [x] Preserve an immutable before reproduction, pass appropriate gates and
+      review before committing/pushing; inspect fresh CI by SHA and timestamp.
+      Local validation passes: 80 diagnostics with frozen preceding declarations,
+      isolated current compilation, complete actual-SDK grammar equality and
+      equivalent positive/negative fixture compilation. All 2,007 tests pass on
+      Node, Bun and Deno; both focused grammar cases also pass on Node 20. Strict
+      gates scan 138 production sources with zero clones. The package permits
+      181 entries. Main remains an ancestor, feedback streams remain empty and
+      the atomic implementation, generator, declarations and workflow diff were
+      reviewed. Head bebfa138ce830b9d5453fd974e3a80849fd19120 passed run
+      40908761294, created 2026-10-29T16:09:25Z, including every runtime/OS,
+      native integration and static gate.
+- [ ] Continue all remaining framework and wider acceptance criteria.
+
+Telegraf declaration work plan:
+
+- [x] Reproduce lost raw-update, message-subtype, helper and checker narrowing
+      with a portable checked fixture before implementation.
+- [x] Share refinement machinery with SDK-specific getter precedence; preserve
+      custom contexts and fluent receivers through registrations and scenes.
+- [x] Cover instance/static guard factories, command/start fields and update
+      checker predicates; compare the same valid fixture against actual Telegraf.
+- [x] Retain immutable before/after reproduction and run appropriate local checks.
+      The frozen fixture produces 69 diagnostics, all in the fixture; the current
+      fixture and actual Telegraf comparison pass. All 2,007 core tests pass on
+      Node, Bun and Deno. Strict checks scan 140 production sources with zero
+      clones; packaging permits 183 entries.
+- [x] Inspect the complete change, commit/push and verify exact-head CI.
+      Head 565d6fe616a23862ae742705d1169d4392b02029 passed run 40914468285,
+      created 2026-10-29T16:44:05Z, including every applicable runtime and gate.
+- [ ] Continue all wider unmet acceptance criteria in the same draft PR.
+
+Bot API method declaration work plan:
+
+- [x] Add a failing checked request/result fixture before implementation.
+- [x] Extract and review every official method argument and return contract from
+      the archived primary document; retain source hashes and parser regressions.
+- [x] Generate owned raw-method declarations and refine positional methods using
+      existing public signature inventories, preserving request controls and
+      upload/formatted-text extensions.
+- [x] Compare portable positive/negative fixtures with actual SDK declarations.
+- [x] Run local gates and inspect the complete atomic change. All 2,007 core
+      tests pass per runtime; eight model and eight method parser regressions
+      pass. The gate scans 151 production sources with zero clones; packaging
+      permits 194 entries. Frozen fixtures reproduce 38 diagnostics. Main is an
+      ancestor, all feedback streams remain empty and GitHub diff limits are
+      handled with the paginated file inventory and local atomic diff.
+- [x] Commit/push and verify exact-head CI; keep every wider criterion open.
+      Head 2dbc782abe55d2251a323fbc7628c93491ae7200 passed run 40918719207,
+      created 2026-10-29T17:10:13Z, including every applicable runtime and gate.
+
+Context result declaration work plan:
+
+- [x] Reproduce erased context results with portable checked examples before
+      implementation; retain an immutable preceding-declaration reproduction.
+- [x] Carry operation results through delivery, administration, services and
+      message actions while preserving existing arguments and runtime behavior.
+- [x] Compile equivalent positive/negative examples against actual pinned SDKs;
+      explicitly assert Telegraf's chat-boost declaration discrepancy and retain
+      the documented caption-result comparison limit.
+- [x] Complete local static/runtime/package gates and inspect the atomic diff.
+      All 2,007 core tests pass on each of Node, Bun and Deno; frozen fixtures
+      reproduce 49 diagnostics and both current and actual-SDK fixtures compile.
+      Strict checks scan 151 sources with zero clones; packaging permits 194
+      entries. Main is an ancestor and all four feedback streams remain empty.
+- [x] Commit/push, update PR evidence and verify fresh CI by SHA and timestamp.
+      Head 606e831242547be69e36929ee9f35af1a25987fa passed run 40920838137,
+      created 2026-10-29T17:23:19Z, including every applicable runtime and gate.
+- [ ] Continue every wider unmet criterion in the same draft PR.
+
+Delivery/edit argument declaration work plan:
+
+- [x] Reproduce unchecked media, delivery and edit arguments with portable
+      positive/negative fixtures before changing declarations.
+- [x] Reuse canonical positional tuples for scoped delivery and type the
+      manually installed media/edit methods, preserving upload extensions.
+- [x] Compare portable fixtures against actual pinned SDKs with strict checking
+      and preserve an immutable before/after reproduction.
+- [x] Run appropriate local gates and inspect the atomic change. All 2,007 core
+      tests pass per runtime; current and actual-SDK fixtures compile. Strict
+      checks scan 152 sources with zero clones and packaging permits 195 entries.
+      Main remains an ancestor and all four feedback streams remain empty.
+- [x] Commit/push the reviewed change and verify exact-head CI.
+      Head cb9f92cfdb401628e1a2f6aef392a1696427c61a passed run 40923162079,
+      created 2026-10-29T17:37:52Z, including every applicable runtime and gate.
+- [ ] Continue all wider unmet criteria in the same draft PR.
+
+Message subtype and result refinement work plan:
+
+- [x] Reproduce missing public subtype names and erased method-specific fields
+      with portable positive/negative checked examples before implementation.
+- [x] Derive subtype fields from owned official models, retain SDK names and
+      propagate result refinements through raw, positional and scoped helpers.
+- [x] Compile equivalent fixtures against both actual SDKs with strict checking.
+- [x] Run local gates and review the atomic change. Frozen declarations produce
+      27 diagnostics; current and actual-SDK examples and the complete 81-name
+      presence oracle compile. All 2,007 core tests pass per runtime; the static
+      gate scans 154 production sources with zero clones, packaging 197 entries.
+- [x] Commit/push and inspect exact-head CI. Follow-up head
+      079c19ff9709e74322300debcb5b6ef0569b13c2 passed run 40926060664,
+      created 2026-10-29T17:56:21Z. The preceding run exposed omitted source
+      examples; both are committed and all applicable jobs now pass.
+- [ ] Continue every wider unfinished acceptance criterion in the same draft PR.
+
+Terminal keyboard and static PNG work plan:
+
+- [x] Reproduce absent keyboard and regular-command PNG behavior in pinned sources.
+- [x] Add scoped controls, stale/foreign callback guards and bounded static rendering
+      through the applicable migration, preserving existing handlers and cleanup.
+- [x] Compare actual grammY command effects, decode actual PNG bytes and save a
+      reviewable rendering; verify upload failures and cancellation cleanup.
+- [x] Run local static/runtime/native checks and review the complete patch.
+      All 2,022 core tests pass per runtime; the final cancellation/coalescing
+      case also passes in the focused Deno suite. Strict checks scan 154 sources
+      with zero clones; packaging permits 197 entries. The isolated native suite
+      passes 27 checks and six Node 20 wire cases cover actual selected clients.
+      Main remains an ancestor and all four feedback streams remain empty.
+- [x] Commit/push, update the PR and verify exact-head CI by SHA and timestamp.
+      Head 2dbeff7aaa23d56e12bf9bf18e227dafb1c29d81 passed run 40928334002,
+      created 2026-10-29T18:10:45Z, including the native terminal integration job
+      and every applicable runtime/static check.
+- [ ] Continue the remaining complete application and protocol criteria.
+
+Entity and button subtype work plan:
+
+- [x] Reproduce absent names with checked examples before implementation.
+      Frozen declarations at 2dbeff7 reproduce 48 diagnostics.
+- [x] Derive all remaining entity/button namespace names from owned official
+      models and verify exact public inventory and required fields.
+- [x] Compile portable fixtures against actual SDKs and document precise
+      compatibility limits discovered through the assignment oracle.
+- [x] Complete local static/runtime/package gates and review the change.
+      All 2,022 core tests pass per runtime; frozen final examples reproduce
+      61 diagnostics. Both current and actual-SDK examples and all 37 mutual
+      assignment/presence comparisons compile. Strict checks scan 155 sources
+      with zero clones; packaging permits 198 entries. Main is an ancestor
+      and all four feedback streams remain empty.
+- [x] Commit/push the reviewed declaration change.
+- [x] Update PR evidence and verify exact-head CI before continuing wider work.
+      Head d4c76ce80b21943390dd4f762f247e0301194069 passed run 40930284379,
+      created 2026-10-29T18:23:04Z, including every applicable static, native
+      integration and runtime/OS check.
+
+Webhook response ownership work plan:
+
+- [x] Reproduce missing response envelopes against both actual SDKs before
+      implementation: 12 of 13 initial cases fail, including one-shot ownership,
+      nested/concurrent updates, policy selection and response failures.
+- [x] Preserve an immutable preceding-source reproduction and implement scoped
+      JSON replies without consuming uploads or replaying a claimed operation.
+- [x] Verify selected backends, retired scopes, errors and real HTTP responses;
+      add checked examples for the public response contracts.
+- [x] Run all appropriate static/runtime/package checks and review the change.
+      Frozen final tests reproduce 27 failures out of 31 and frozen declarations
+      produce five diagnostics. Current and actual-SDK fixtures compile. All
+      2,053 core tests pass on each of Node, Bun and Deno, as do 27 isolated native
+      checks and six Node 20 wire cases. Strict gates scan 156 production sources
+      with zero clones; packaging permits 199 entries. Main is an ancestor and
+      all four feedback streams remain empty. GitHub's 300-file diff limit is
+      preserved and handled with its paginated inventory and the local atomic
+      diff, including the new source, examples, tests and reproduction loader.
+- [x] Commit/push the reviewed response-ownership change.
+      Head b73f33041ba5ac00895d4b808ecd48947c33de4f was committed at
+      2026-10-29T18:38:05Z; run 40932709045 was created 18:38:28Z.
+- [x] Update PR evidence and verify fresh exact-head CI. Run 40932709045 passed
+      every applicable job at exact head b73f33041ba5ac00895d4b808ecd48947c33de4f.
+- [ ] Continue framework adapters and all wider unfinished acceptance criteria.
+
+Webhook framework adapter work plan:
+
+- [x] Inventory every public pinned grammY adapter and reproduce missing named
+      adapters against actual SDK callbacks before changing production code.
+- [x] Implement shared dispatch/authentication and bounded timeout ownership,
+      preserving the existing Fetch callback API and selected transports.
+- [x] Cover all named adapters and custom adapters with reply/empty/unauthorized
+      comparisons; verify errors, concurrent initialization and timeout cleanup.
+- [x] Publish checked adapter signatures and compare portable fixtures against
+      actual SDK types without adding framework runtime dependencies.
+- [x] Preserve immutable before/after evidence and review the adapter change.
+      Frozen sources reproduce 67 failures; frozen declarations produce 35
+      diagnostics. All 90 focused cases and both current/actual-SDK examples
+      pass, including real Node request/response types. Review caught timer
+      overflow; a failing regression now verifies rejection before dispatch.
+- [x] Complete final local runtime/static/package evidence. All 2,143 core tests
+      pass on Node, Bun and Deno; 27 native checks and six Node 20 wire checks
+      pass. Strict gates scan 162 sources with zero clones; packaging permits
+      205 entries. The bounded blocked-input probe also passes. Main remains an
+      ancestor and all four feedback streams are empty. GitHub's 300-file diff
+      limit is recorded; the 842-file paginated inventory has no deletions, and
+      the complete atomic source diff and every new fixture/example were reviewed.
+- [x] Commit/push the reviewed adapter change and verify exact-head CI before
+      wider unfinished work. Head 197d5a1baedf3f10c24e6005a08fad79518e68ee
+      passed every applicable job in run 40938002358, created
+      2026-10-29T19:12:44Z after its 19:12:17Z commit.
+
+Telegraf construction and webhook/server lifecycle work plan:
+
+- [x] Inventory the pinned public callback/filter/createWebhook/launch APIs and
+      construction options; compare observable behavior through actual SDKs.
+- [x] First add minimal failing regressions for accepted body forms, filtering,
+      initialization, URL/secret construction and API request normalization.
+- [x] Implement shared bounded parsing and scoped dispatch, preserving custom
+      context/error behavior and the existing polling controls.
+- [x] Exercise HTTP/TLS startup, fallback requests, shutdown, registration and
+      bind failures with real finite sockets; prevent leaked servers on failure.
+- [x] Add checked public types and immutable reproductions and review the change.
+      Frozen sources reproduce 54 failures among 55 final cases; frozen types
+      produce 18 diagnostics. The first full Deno run exposed delayed invalid-PEM
+      rejection, now reproduced in a bounded runtime probe and corrected before
+      Telegram registration. All fifteen server cases pass on Node and Deno.
+- [x] Run final local gates: all 2,198 tests pass on Node, Bun and Deno; 27
+      native and six Node 20 wire checks pass, alongside sixteen parser-fact
+      checks and the bounded blocked-file probe. Strict gates scan 165 sources
+      with zero clones; packaging permits 208 entries. Main is an ancestor,
+      feedback remains empty, and the paginated PR inventory has no deletions.
+- [x] Commit/push and verify exact-head lifecycle CI. Head
+      8874fdbc9e59261c337e3482116e7dfadd676c31 passed every applicable job in
+      run 40942419240, created 2026-10-29T19:41:56Z after its 19:41:36Z commit.
+- [ ] Continue complete installed-framework/application/protocol coverage and
+      every wider criterion still marked unfinished in the acceptance ledger.
+
+Telegraf nested transport settings work plan:
+
+- [x] Reproduce ignored nested settings and shared context metadata with actual
+      SDK comparisons before changing production code; twelve initial cases fail.
+- [x] Retain SDK relative URL, mode/environment, compacted defaults and mutable
+      update settings while preserving selected backends and owned extensions.
+- [x] Reproduce and verify endpoint polling ownership across all three bot
+      styles. Keep custom transport identities and reject unsafe mode values.
+- [x] Add immutable runtime/type reproductions and current/actual-SDK examples.
+      Frozen sources reproduce 21 failures among 25 cases and preceding types
+      produce ten diagnostics. All 61 focused cases pass. Review regressions
+      retain relative custom bases and conservative selected-backend ownership.
+- [x] Run all local runtime/static/native/package gates and review the change.
+      All 2,223 core tests pass per runtime; 27 native, six Node 20 wire and
+      sixteen parser-fact checks pass. Strict gates scan 166 production sources
+      with zero clones; packaging permits 209 entries. Main remains an ancestor
+      and feedback is empty. Current/actual-SDK declarations compile; the
+      complete atomic diff and all new sources, fixtures and examples are reviewed.
+- [x] Commit/push and verify fresh exact-head CI. Head
+      ce24156ce1d785a995036d1557fae97962df21d6 passed every applicable job in
+      run 40945592989, created 2026-10-29T20:03:26Z after its 20:02:47Z commit.
+- [ ] Continue every wider unfinished application/framework/protocol criterion;
+      HTTP agents and standalone construction are covered in the next follow-up.
+
+Telegraf agent and standalone construction work plan:
+
+- [x] Inventory SDK agent/attachment-agent and standalone Telegram contracts,
+      including metadata defaults and context copies, against actual pinned code.
+- [x] Write failing local HTTP/TLS regressions before implementing connections,
+      independent source agents and public construction; keep probes finite.
+- [x] Share native request deadlines, byte bounds, upload readers and selected
+      backend routing. Verify cancellation, failed responses and resource cleanup.
+- [x] Preserve immutable reproductions and compile portable current/actual-SDK
+      examples; archive primary API evidence and record remaining limitations.
+      Review additionally reproduced subclass method shadowing, missing `super`
+      delegation and bypassed callApi/getFile overrides. Shared prototype methods
+      retain the receiving view and its webhook scope. Final frozen comparisons
+      reproduce 34 failures among 37 cases and 21 declaration diagnostics.
+- [x] Run all relevant local/static/package/native checks and review the atomic
+      diff. All 2,260 core tests pass per runtime, with 27 native, eight Node 20
+      wire and sixteen parser-fact checks plus the bounded FIFO probe. Strict
+      gates scan 168 production sources with zero clones; packaging permits 211
+      entries. Main remains an ancestor, feedback is empty, and the 881-file
+      paginated PR inventory has no deletions. Actual SDK declarations compile.
+- [x] Commit/push only the prepared branch and verify exact-head CI. Head
+      88f3c2e4a501169cecf4a6ad8476c942104040dc passed every applicable job in
+      run 40951648982, created 2026-10-29T20:44:02Z after the 20:43:30Z commit.
+- [ ] Continue every unfinished framework, application and protocol criterion.
+
+Installed web-framework integration work plan:
+
+- [x] Review primary Express/Koa/Fastify/Hono server and routing contracts and pin
+      exact isolated test dependencies; production retains no framework dependency.
+- [x] Execute actual grammY and owned callbacks inside installed frameworks over
+      finite local HTTP servers, starting with reply/empty/unauthorized behavior.
+- [x] Reproduce and fix any integration failures before expanding to malformed
+      input, bounded bodies, concurrent responses and handler failures/deadlines.
+- [x] Verify Telegraf middleware inside applicable installed frameworks, add
+      automated CI execution and archive versions, primary sources and limits.
+      All 71 installed cases pass locally on Node 20/26, Bun and Deno. Four of 24
+      frozen cases reproduce the enhanced Node response bug. Common boundaries
+      explicitly retain known catcher/initialization differences; executable
+      Koa/Fastify/Hono bridges are verified against both actual SDKs.
+- [x] Run full runtime/static/native/wire/parser checks and review the change.
+      All 2,263 core tests pass per runtime; 71 installed-framework cases pass on
+      Node 20/26, Bun and Deno. The 27 native, eight wire and sixteen parser checks
+      pass, along with actual-SDK compilation and the bounded FIFO probe. Strict
+      gates scan 168 production sources with zero clones; packaging permits 211
+      entries. Main remains an ancestor and feedback is empty. The complete atomic
+      diff and new files are reviewed; the 899-file PR inventory has no removals.
+- [x] Commit/push the atomic checkpoint and verify fresh exact-head CI, including
+      all nine new framework runtime/OS jobs. Corrected head 67f631532971f4d38adb265948960d2a8432fa57
+      passes every applicable job in run 40957417459. Keep wider criteria open.
+
+Encrypted-upload CI follow-up work plan:
+
+- [x] Preserve failed run 40954349985 and read both failed-step log chunks;
+      distinguish three missing Deno declaration failures from the macOS Bun
+      encrypted upload timeout. Pin isolated Node declarations and verify a
+      fresh Deno 2.9.8 cache without disabling checks.
+- [x] Reproduce excessive public Buffer copies before changing AES-IGE. Two
+      independent cipher regressions fail against the immutable preceding source.
+      Reuse a mixing buffer and write the second XOR directly into the output,
+      retaining caller data and the unchanged large-file test/deadline.
+- [x] Complete checkpoint runtime/static/native/package gates and review the
+      atomic cipher change independently of unfinished media tests. All 2,265
+      checkpoint tests pass on Node/Bun/Deno, with 27 native and eight wire
+      checks. Strict gates scan 168 sources with zero clones and packaging has
+      211 entries. Main is an ancestor and all feedback streams remain empty.
+- [x] Push both corrections and verify fresh exact-head CI, including all nine
+      framework jobs and the previously failing macOS Bun core job.
+      Run 40956444029 verifies the unchanged macOS Bun test, but three Deno
+      framework jobs still fail. A clean archived npm-ci checkout reproduces the
+      root invocation failure and passes all 71 cases from the fixture directory.
+      The corrected working directory passes all nine framework and all nine core
+      jobs in run 40957417459, including the previously failing macOS Bun test.
+
+Account input-media conversion work plan:
+
+- [x] Inventory actual GramJS/teleproto request autocasts and shared media helpers;
+      compare every supported media family and record schema-version differences.
+- [x] Add minimal failing regressions for photo/document/chat-photo/media inputs,
+      including nested constructors, reusable files, empty values and invalid data.
+- [x] Implement bounded schema-aware conversion without implicit network uploads,
+      preserving specified inputs, selected backends and request cancellation.
+- [x] Verify actual-client argument bytes, selected adapters and encrypted native
+      TCP; retain immutable before/after runtime and declaration reproductions.
+- [x] Generate checked public shortcut types and add reusable migration examples;
+      archive primary SDK evidence and exact remaining limitations. All 160 focused
+      cases pass; the frozen source reproduces 129 failures in 143 new cases and
+      frozen declarations produce five diagnostics. Both actual SDK declarations
+      verify explicit helper alternatives and their omitted shortcut types. The
+      layer-232 quiz differences have independent wire regressions.
+- [x] Run all local runtime/static/package/integration gates and review the
+      atomic change. All 2,408 core tests pass
+      on Node/Bun/Deno. Static gates scan 169 sources with zero clones; package
+      contents have 212 permitted entries. Native terminal 27, Node 20 wire eight,
+      fact-parser sixteen and bounded FIFO checks pass. Main remains an ancestor;
+      refreshed feedback and sub-issues are empty, and issue prose is unchanged.
+      All 71 installed-framework checks pass on Node/Bun/Deno, and the final
+      actual SDK request-resolution comparisons pass on all three runtimes.
+- [x] Commit/push and verify fresh exact-head CI. Run 40959885595 targets
+      8a37c45d45edeea94a62ed0afbaa1f4677fea151, created 2026-10-29T21:41:21Z
+      after the 21:40:48Z commit; every applicable job passes. Continue wider criteria.
+
+Client-bound account message work plan:
+
+- [x] Inventory actual GramJS/teleproto message, chat/sender and media-view
+      contracts, including library-specific defaults and source mutation.
+- [x] Reproduce missing origin-bound respond/reply/edit/delete/forward/download
+      behavior and metadata getters before changing production code.
+- [x] Add shared message views over existing bounded operations and selected
+      adapters; preserve copied response data, cancellation and exact peer IDs.
+- [x] Compare actual SDK model calls and schema bytes, exercise independent
+      encrypted native TCP, and preserve frozen runtime/type reproductions.
+      All 101 cases pass; frozen source reproduces 94 failures. Six intermediate
+      origin-hash failures also verify request peer priority over response entities.
+      Zero-length history retains lazy peer resolution. Frozen declarations yield
+      ten diagnostics; actual entity constructors and canonical entity records
+      compile alongside five negative argument checks.
+- [x] Add checked migration examples and primary source inventories. Document
+      every remaining custom-model, formatting and button interaction difference.
+- [x] Run all local/runtime/static/integration gates and review the atomic change.
+      All 2,509 core tests pass on Node/Bun/Deno. Strict gates scan 173 production
+      sources with zero clones; packaging has 216 permitted entries. The 71
+      framework cases pass on all three runtimes; 27 native terminal, eight Node 20
+      wire, sixteen fact-parser and bounded FIFO checks pass. Main remains an
+      ancestor; refreshed issue, sub-issue and all feedback streams are unchanged.
+      The paginated PR inventory has 929 files with no removals; the complete
+      atomic diff is reviewed locally because GitHub limits diffs to 300 files.
+- [x] Commit/push and verify fresh exact-head CI. Message head 5c4de84 passes
+      every applicable job in run 40965710992, created 2026-10-29T22:25:07Z
+      after its 22:24:45Z commit. Continue wider model work.
+
+Account button and poll interaction work plan:
+
+- [x] Compare pinned SDK message/button models and official callback, vote and
+      start-bot requests, recording schema and SDK implementation differences.
+- [x] Reproduce missing buttons, count, async lookup, selectors and clicks before
+      implementing shared origin-bound models. Preserve immutable before runners.
+- [x] Implement callback/game/URL/switch-inline/text behavior and explicit phone
+      and location consent through existing selected-client operations. Reuse SRP
+      password proof; preserve cancellation and avoid replay of side effects.
+- [x] Verify poll index/text/filter selection, including actual SDK multi-index
+      defects, empty vote retraction and independent expected request bytes.
+- [x] Compare actual SDK calls, five selected routes and encrypted native TCP;
+      test detached markup/data, origin hashes, bounds and errors.
+- [x] Add checked public types/examples, primary-source facts and exact limits.
+- [x] Run local runtime/static/integration/package gates and review the atomic
+      change. All 2,585 core cases pass on Node/Bun/Deno; all 71 installed-framework
+      cases pass per runtime. Strict checks scan 174 sources with zero clones,
+      packaging has 217 permitted entries, and all 27 native terminal, eight
+      Node 20 wire, sixteen fact-parser and bounded FIFO checks pass. Both actual
+      SDK declarations compile. Main remains an ancestor and all feedback/sub-issue
+      streams remain empty; the complete issue prose is unchanged. The paginated
+      PR inventory has 943 files with no removals; GitHub's 300-file diff limit
+      requires the complete local atomic diff for review.
+- [x] Commit and push button head 1d5a564 after all local gates pass.
+- [x] Verify fresh exact-head CI. Run 40967861174, created
+      2026-10-29T22:42:13Z after the 22:41:58Z commit, passes all applicable jobs.
+
+Account peer metadata and sender recovery work plan:
+
+- [x] Compare pinned SDK forward, via-bot, action-entity, destination and sender
+      models; preserve exact source hashes and official input-peer contracts.
+- [x] Add failing regressions before implementation for missing public metadata,
+      bounded sender reloads and incomplete entity refresh; retain before runners.
+- [x] Share cached peer/input lookup and forward metadata without vendor runtime
+      dependencies, preserving detached data and private client ownership.
+- [x] Implement bounded sender recovery and complete minimal chat/sender entities,
+      preserving origin access hashes, typed failures and cancellation.
+- [x] Verify actual SDK models, selected adapters, native encrypted TCP and finite
+      missing/invalid cases; add checked public migration examples and fact data.
+- [x] Complete local runtime/static/framework/native/package checks and review.
+      All 2,716 core tests pass on Node/Bun/Deno, with 71 framework cases per
+      runtime, 27 native terminal cases, eight Node 20 wire cases, sixteen parser
+      checks and the bounded FIFO experiment. Strict checks scan 176 production
+      sources with zero clones; packaging contains 219 permitted entries. Both
+      actual SDK declaration fixtures compile. Refreshed issue, sub-issue and all
+      feedback streams remain unchanged. Main remains an ancestor. The paginated
+      PR inventory contains 954 files with no removals; the complete atomic diff
+      is reviewed locally because GitHub's diff API caps the response at 300 files.
+- [x] Commit and push peer head 8da6cd7 after all local gates pass.
+- [x] Verify fresh exact-head peer CI. Run 40971176316 targets
+      8da6cd7d11d0229bf02a3c3ba3372aebc465a544, created 2026-10-29T23:09:37Z
+      after its 23:09:15Z commit. Every applicable job passes.
+
+Account reaction and copy helper work plan:
+
+- [x] Compare pinned teleproto helpers and official reaction/list/forward RPCs,
+      preserving source hashes and explicit paid-reaction limitations.
+- [x] Add failing tests and immutable before runners for bound message helpers
+      and canonical facade/style methods before implementing them.
+- [x] Share reaction conversion, source resolution and RPC execution across all
+      selected routes; preserve exact IDs, optional flags and page cursors.
+- [x] Reuse correlated forwarding for author-free copies without duplicating
+      delivery logic. Verify cancellation, typed errors and no side-effect replay.
+- [x] Compare actual SDK helper calls and full request bytes, five selected
+      backends and independent encrypted native TCP. Add checked public types.
+      All 96 focused tests pass. Frozen source fails all cases; frozen types yield
+      eleven diagnostics. Forty SDK byte comparisons match, and two Date tests
+      retain the SDK's millisecond serialization discrepancy while verifying
+      timestamp seconds. Post-response copy cancellation has two failing-before
+      regressions. Both public and actual SDK declaration fixtures compile.
+- [x] Run complete local gates and review. All 2,812 core tests pass on
+      Node/Bun/Deno. Strict gates scan 177 production sources with zero clones;
+      packaging has 220 permitted entries. The 71 framework cases pass per
+      runtime, with 27 native terminal, eight Node 20 wire, sixteen parser checks
+      and the bounded FIFO probe. Main remains an ancestor; refreshed feedback
+      and sub-issues are empty, and issue prose is unchanged. The paginated PR
+      inventory has 967 files with no removals. GitHub's 300-file diff limit
+      requires complete local atomic diff review.
+- [x] Commit and push reaction head 85aff53 after all local gates pass.
+- [x] Verify reaction head 85aff538 in run 40973473812, created
+      2026-10-29T23:29:22Z after its commit: all 23 applicable jobs pass.
+      Continue wider model work.
+
+Rich-message factory, renderer and full-content fetch work plan:
+
+- [x] Compare every pinned SDK RichText/PageBlock rendering branch, factories,
+      custom message getters and getRichMessage. Verify current official schema
+      independently and preserve source revisions, hashes and missing-doc evidence.
+- [x] Add minimum failing factory, renderer and bound-fetch regressions before
+      implementation, with immutable prior-source and declaration runners.
+- [x] Share schema-backed rich input factories and bounded rendering across
+      canonical, owned class and actual SDK objects, retaining exact media IDs.
+- [x] Add shared getRichMessage and bound fetch/getters with exact ID/peer
+      correlation, detached views, origin hashes, cancellation and selected routes.
+- [x] Compare all supported SDK text/block cases, independent expected renderings,
+      serialized requests, five selected adapters and encrypted native TCP.
+- [x] Add checked migration examples, actual SDK type fixtures and research facts;
+      document intentional differences and every remaining rich-message limit.
+      All 816 focused cases pass; frozen source fails 806, and frozen declarations
+      produce six diagnostics. All 104 selected official schema definitions match.
+- [x] Run all local/runtime/static/integration/package gates and refresh feedback.
+      All 3,628 core cases pass per runtime; 183 production sources have zero
+      clones, and packaging contains 226 permitted entries. Actual SDK types,
+      71 framework cases per runtime/Node 20, 27 native terminal, eight Node 20 wire,
+      sixteen parser checks and the bounded FIFO probe pass. Main is an ancestor;
+      issue prose is unchanged, and feedback/sub-issue streams remain empty.
+      Review the complete atomic diff; GitHub rejects the >300-file full diff.
+- [x] Commit and push rich head 2e0eecc164df94c0af5a2c0109fba83e927916fb.
+      Run 40975815357, created 2026-10-29T23:50:28Z after its commit, passes
+      all 23 applicable jobs. Continue markup formatting and wider criteria.
+
+Account parse-mode work plan:
+
+- [x] Reproduce missing custom parse/unparse settings on canonical clients,
+      account styles and bound messages before implementation. Compare actual
+      pinned SDK parsers and preserve explicit formatting-entity precedence.
+- [x] Share bounded parsing before normalization, preserve parser receiver state,
+      detached entities, cancellation and selected transport failures.
+- [x] Carry settings through factories/backend scopes; expose checked declarations
+      and portable examples. Test origin-bound replies/edits and native TCP.
+      The 72 focused cases pass; frozen source fails 66, and preceding
+      declarations produce nine diagnostics. Three direct helper guards use
+      current helper code, and Bot API separation already passes before the
+      implementation. The two high-level-only sends also pass before; those six
+      are not missing-API reproductions. Review retains plain operation options.
+- [x] Implement independent built-in HTML, Markdown and MarkdownV2 parsing and
+      unparsing with official UTF-16/entity evidence and actual SDK comparisons.
+      Explicit modes are implemented; SDK defaults and file/album integration
+      remain separate unfinished work.
+- [x] Verify callback gates and review the complete atomic diff. All 3,700 core
+      tests pass on Node/Bun/Deno; strict checks scan 184 production sources with
+      zero clones. Actual SDK declarations, 71 framework cases per runtime and
+      Node 20, 27 native terminal, eight Node 20 wire, sixteen fact-parser checks
+      and the bounded FIFO probe pass. Packaging has 227 permitted entries.
+      Main remains an ancestor; issue prose and empty feedback are unchanged.
+      The paginated PR inventory has 992 files with no removals; GitHub's diff
+      endpoint rejects more than 300 files, so review uses the local atomic diff.
+- [x] Commit/push callback head 2c40acd5ade91284195e2363c41d28f22e96de6d.
+      Run 40979630676, created 2026-10-30T00:25:48Z after its commit, passes
+      every applicable job. Continue built-in modes and all wider criteria.
+
+Tracing confirmed bound edits correctly accept `text`, matching both SDKs;
+`message` is the reserved ID argument and is intentionally replaced. No plain
+edit fix is needed for that apparent issue.
+
+Independent HTML work plan:
+
+- [x] Compare both pinned SDK HTML sources, official Telegram entity rules and
+      standard character references. Reproduce missing builtin conversion before
+      implementation; preserve source hashes and actual SDK differences.
+- [x] Share bounded entity/text validation with callback modes and add independent
+      HTML scanning, exact IDs, character decoding and escaped balanced output.
+- [x] Exercise canonical/style sends, bound text/reply/edit paths, actual SDK bytes,
+      all five selected routes and independent encrypted native TCP.
+- [x] Add regressions before fixing malformed literal tags and attribute reference
+      handling. Cover all 2,231 references, SDK constructors, clipping, nesting,
+      finite token/output limits, cancellation and typed lookup failures.
+- [x] Verify frozen runtime/declaration cases and bounded heap/stack experiments;
+      add checked examples and research evidence with explicit remaining criteria.
+      All 94 focused cases pass on Node 20/26, Bun and Deno; frozen source fails
+      91 and frozen declarations produce five diagnostics. The finite probe passes
+      under a 192 MiB heap and 512 KiB stack; all 2,231 references match the
+      primary table and actual GramJS tokenizer.
+- [x] Run all local runtime/static/integration/package gates, refresh complete
+      issue/PR feedback and main ancestry, and review the complete atomic diff.
+      All 3,794 core cases pass on Node, Bun and Deno. Strict static/generation
+      checks pass with 187 production sources and zero clones. All 71 framework
+      cases pass on Node 20/26, Bun and Deno; 27 terminal, eight Node 20 wire,
+      16 fact-parser and bounded FIFO checks pass. Packaging has 231 permitted
+      entries. Main remains an ancestor and all issue/PR feedback remains empty.
+- [x] Commit/push HTML head f315c14e5e14256b8823537af2e163dfa5296c1c.
+      Exact-head run 40982579102 fails two macOS Intel/Bun output-bound tests.
+      The investigation below preserves the errors and adds failing regressions;
+      HTML's full OS matrix is unfinished until the follow-up passes fresh CI.
+
+Independent Markdown follow-up plan:
+
+- [x] Reproduce missing Markdown/MarkdownV2 exports and checked mode aliases
+      before implementation, using finite cases and actual pinned SDK oracles.
+- [x] Implement an independent bounded scanner with protected code/fences,
+      nested emphasis, links, exact IDs, quotes, escapes and current date syntax.
+      Preserve legacy SDK delimiter conventions and document corrected defects.
+- [x] Share entity validation and bounded rendering, with context-specific
+      escaping, balanced output, checked declarations and SDK-style imports.
+- [x] Verify real SDK request bytes, selected routes, bound views/helpers and
+      encrypted native TCP. Keep frozen regression and bounded resource probes.
+- [x] Run local checks and all runtime/integration tests and review the atomic
+      diff. All 3,924 core cases pass on Node/Bun/Deno; all 130 focused Markdown
+      and allocation cases pass on Node 20/26, Bun and Deno. Strict checks pass
+      with 193 production sources and zero clones, plus actual SDK compilation.
+      All 71 framework cases pass on all four runtimes. The 27 terminal, eight
+      Node 20 wire, 16 fact-parser and bounded FIFO checks pass. Packaging has
+      237 permitted entries. Main remains an ancestor, issue prose is unchanged
+      and all five feedback/sub-issue endpoints remain empty. GitHub rejects the
+      full PR diff above 300 files; the complete 1,019-file inventory has no
+      removals, and the local atomic changes are reviewed directly.
+- [x] Commit/push Markdown head 78df293f58eb148780f74570cee57bdebc23bfca.
+      Run 40985103031, created 2026-10-30T01:19:00Z after its 01:18:28Z
+      commit, passes all 23 applicable jobs. Continue wider open criteria.
+
+Escaped-output CI investigation:
+
+- [x] List recent runs with timestamps/SHA and preserve completed failed logs.
+      Run 40982579102 was created 2026-10-30T00:54:16Z after the HTML commit at
+      00:53:58Z. Its macOS Intel/Bun job 123826028646 fails account HTML at
+      5,155.45 ms and rich HTML at 14,235.55 ms; both retain 5,000 ms deadlines.
+      Job log lines 782–783 and 2063–2064 record the actual failures.
+- [x] Reproduce expansion before rejection: two allocation tests construct
+      4,500,000 and 18,874,368 code units before failing frozen source. Separate
+      finite probes exhaust capped 64 MiB heaps, with 512 KiB stacks and core
+      dumps disabled. No unbounded host-memory experiment is used.
+- [x] Preflight output expansion through one literal-search helper before
+      replacement. Both regressions and capped probes pass; measured RSS is
+      77,112 KiB for account HTML and 79,344 KiB for rich HTML. Existing input,
+      output and test deadline limits remain unchanged.
+- [x] Add five failing-before quote-order cases found during review. Full-span
+      bold/italic/spoiler/link styles now remain inside the quote, even when
+      caller entity order is reversed. Focused Markdown/allocation tests: 130 pass.
+- [x] Verify local gates, commit/push the fix and verify fresh exact-head CI.
+      Markdown run 40985103031 passes all 23 applicable jobs, including both
+      previously failing macOS Intel/Bun allocation cases.
+
+Account file/album formatting follow-up:
+
+- [x] Trace the actual SDK single-file/album caption and explicit-entity rules,
+      selected adapter dispatch and shared upload ordering. Preserve differences.
+- [x] Add failing tests before implementation for settings, explicit formatting,
+      every caption position, exact mentions, cancellation and error ordering.
+- [x] Share bounded caption parsing with send/edit before any upload side effect;
+      expose file/album helpers through both account facades and checked types.
+- [x] Compare actual SDK request bytes, all selected routes and independent
+      encrypted TCP. Verify ownership and no fallback after selected failures.
+- [x] Run all local gates and review the complete atomic diff. All 4,096 core
+      tests pass on Node/Bun/Deno; 172 focused cases also pass on Node 20.
+      Frozen source fails 154 and retains 18 passing guards; frozen types yield
+      ten diagnostics. All 15 SDK request-byte, 78 media-cast and three encrypted
+      TCP comparisons pass. The finite caption probe passes under a 192 MiB heap
+      and 512 KiB stack. Strict checks scan 194 production sources with zero
+      clones; actual SDK declarations compile. All 71 framework cases pass on
+      Node 20/26, Bun and Deno; 27 terminal, eight Node 20 wire, sixteen parser
+      checks and the bounded FIFO probe pass. Packaging has 238 permitted files.
+      Main remains an ancestor and refreshed feedback/sub-issue streams are
+      empty. The 1,040-file PR inventory has no removals. GitHub rejects the full
+      diff above 300 files; review uses the local atomic changes.
+- [x] Commit/push media head 86d7685503f19e647bd13e9a880f99b1d0e39c88.
+      Run 40988212318, created 2026-10-30T01:50:38Z after its commit, passes
+      all 23 applicable jobs. Continue defaults and every wider open criterion.
+
+SDK default formatting follow-up:
+
+- [x] Trace actual SDK constructor, setter, per-call inheritance and bound-view
+      defaults, retaining the canonical plain-text contract and Bot API scope.
+- [x] Reproduce missing default Markdown, explicit disable persistence and scoped
+      settings before implementation; compare actual SDK calls and message views.
+- [x] Share configuration state and operation settings across both facades,
+      bound messages and backend scopes without vendor helper defaults leaking.
+- [x] Verify selected routes, exact IDs, cancellation and encrypted TCP; document
+      intentional differences and remaining feature-union requirements.
+      All 146 focused cases pass; frozen preceding source fails 96 and retains
+      fifty existing guards. Twenty-four actual SDK request-byte comparisons,
+      two actual model comparisons and four encrypted native TCP cases pass.
+      Default settings, explicit disable, factory state, exact mentions,
+      selected errors and cancellation before consumption have regression checks.
+- [x] Run required local/runtime/integration gates and review the atomic diff.
+      All 4,242 core cases pass on Node/Bun/Deno; the 146 focused cases also
+      pass on Node 20. Strict lint, formatting, declarations, exact generation
+      and actual SDK compilation pass, with 194 production sources and zero
+      clones. All 71 installed-framework cases pass on Node 20/26, Bun and Deno;
+      27 terminal, eight Node 20 wire, sixteen parser and the bounded FIFO
+      checks pass. Packaging retains 238 permitted files. Main is an ancestor;
+      issue prose and all five empty feedback/sub-issue streams are unchanged.
+      The 1,051-file PR inventory has no removals; GitHub rejects full diffs
+      above 300 files, so the complete atomic source diff is reviewed locally.
+      The pre-commit zero-warning rule caught album settings complexity; a
+      private helper extraction passes all 318 affected cases on Node/Bun/Deno
+      and repeated static checks with an explicit zero-warning lint gate.
+- [x] Commit/push default-formatting head 5ad1af7756479e63ab6162bacb9ee6de45d1e0ad.
+      Run 40990797269, created 2026-10-30T02:17:15Z after its commit, passes
+      all 23 applicable jobs. Continue every wider unfinished requirement.
+
+Account media option follow-up:
+
+- [x] Trace both SDK upload helpers and official media constructors. Reuse the
+      existing shared extension/attribute logic rather than duplicate inference.
+- [x] Reproduce dropped media flags, image inference, thumbnails, explicit
+      attributes and upload controls before changing production code.
+- [x] Share normalized metadata and option validation across canonical sends,
+      account facades, albums, replies and replacement edits. Preserve literal
+      captions and explicit document/image choices; validate before consumption.
+- [x] Compare real SDK helper requests and independent encrypted native TCP,
+      including every selected route, exact references and failed submissions.
+      The final 153 cases reproduce 146 frozen-source failures with seven
+      existing/direct-helper guards. Thirty-two actual SDK helper byte cases,
+      all 1,173 extension facts per SDK, two thumbnail uploads, ten selected
+      routes and two encrypted TCP cases pass. Review adds failing regressions
+      for pending reads, cleanup aggregation and reused source read buffers;
+      finite batches now detach each part. The 64 MiB heap/512 KiB stack probe
+      reads seventeen half-MiB parts with sixteen workers at 113,912 KiB RSS.
+- [x] Verify public declarations/examples, bounded sources and cancellation,
+      and all local gates. All 4,395 core cases pass on Node/Bun/Deno; the 153
+      focused cases also pass on Node 20. Strict checks and actual SDK fixture
+      compilation pass, scanning 196 production sources with zero clones. All
+      71 framework cases pass on Node 20/26, Bun and Deno, plus 27 terminal,
+      eight Node 20 wire, sixteen parser and bounded FIFO checks. Packaging
+      has 241 permitted files. Main remains an ancestor; complete issue prose
+      is unchanged and all five feedback/sub-issue streams remain empty. The
+      1,059-file PR inventory has no removals; GitHub rejects the full diff
+      above 300 files, so the complete atomic change is reviewed locally.
+      Bun exposed an unsupported test registration signature; using the shared
+      two-argument harness restores all cases. Actual SDK types require legacy
+      big-integer cover IDs; the portable fixture now constructs them exactly.
+- [x] Commit/push media options head 801192fb3cea2fe4eca9c80c97ea12af9ecd6621.
+      Run 40994010627, created 2026-10-30T02:50:32Z after its commit at
+      02:49:30Z, passes all 23 applicable jobs. Continue every wider criterion.
+
+Account class identity follow-up:
+
+- [x] Reproduce failed native Api class guards on shared account views before
+      implementation, comparing actual SDK classes and independent wire data.
+- [x] Share privately branded class identity and complete class methods without
+      changing enumerable return data, plain prototypes or canonical responses.
+- [x] Verify all finite schema classes, nested messages/media, bound operations,
+      selected routes, exact IDs, serialization and checked migration examples.
+      All 22 cases pass on Node 20/26, Bun and Deno; frozen preceding source
+      fails 21 with one existing guard. All 2,627 finite schema views retain
+      guards, bytes and enumerable fields. The independent SDK corpus compares
+      1,931 compatible GramJS and 2,623 compatible teleproto definitions. Ten
+      selected routes and two encrypted TCP cases preserve origin-bound helpers.
+      Both checked examples compile against owned and actual SDK declarations.
+      The 10,000-view probe passes under a 64 MiB heap and 512 KiB stack;
+      observed RSS is 109,884 KiB, with a repeated run at 109,692 KiB.
+- [x] Run local gates and review the atomic change. All 4,417 core cases pass
+      on Node/Bun/Deno. Strict lint, formatting, declarations, exact generation
+      and actual SDK compilation pass; 196 production sources retain zero
+      clones. All 71 framework cases pass on Node 20/26, Bun and Deno, plus
+      27 terminal, eight Node 20 wire, sixteen parser and bounded FIFO checks.
+      Packaging retains 241 permitted files. Main remains an ancestor, issue
+      prose is unchanged and all five feedback/sub-issue streams remain empty.
+      The current 1,073-file PR inventory has no removals; GitHub rejects full
+      diffs above 300 files, so review uses the complete local atomic change.
+      A bare Node discovery command also collected five archived research
+      scripts and failed; the corrected repository npm test command passes.
+- [x] Commit/push class-identity head 721e68851301efad2da6d8ea2cddc55e81d8c91b.
+      Exact-head run 40995489858, created 2026-10-30T03:06:30Z, passes.
+      Historical schema negotiation, account models and wider criteria remain open.
+
+Recovery and account collection metadata plan (2026-10-30):
+
+- [x] Read issue #1, all issue/PR conversation, inline and review endpoints and
+      the empty required-sub-issue endpoint. New feedback requests continued
+      implementation after a model-capacity interruption.
+- [x] Verify prepared branch and clean tree; fetch main. Latest class-identity
+      head 721e68851301efad2da6d8ea2cddc55e81d8c91b passes exact-head run
+      40995489858, created 2026-10-30T03:06:30Z.
+- [x] Reproduce missing message/dialog totals with actual pinned SDK collection
+      calls before changing production code. Keep canonical array shapes intact.
+- [x] Retain server counts through shared page operations and detached account
+      collections, including zero-limit count requests and explicit-ID totals.
+- [x] Verify concurrency, cancellation, malformed counts, selected adapters,
+      independent encrypted TCP and checked public declarations.
+- [x] Run focused and all local tests, static/generation checks and review the
+      atomic diff. All 4,482 core cases pass on Node/Bun/Deno; all 65 collection
+      cases also pass on Node 20. Frozen sources fail 64 with one canonical guard;
+      preceding declarations yield three diagnostics. Strict checks and actual SDK
+      compilation pass, with 197 production sources and zero clones. All 71
+      framework cases pass on Node 20/26, Bun and Deno; 27 native terminal, eight
+      Node 20 wire, sixteen parser and bounded FIFO checks pass. Packaging has
+      242 permitted files. Deno auto-install changed npm dependency links; restoring
+      the npm lock graph resolves the unrelated Prettier disagreement. The first
+      framework Bun attempt raced that restoration; rerunning passes all 71.
+- [ ] Commit/push only the prepared branch, update PR evidence and verify
+      exact-head CI before continuing implementation.
+- [ ] Continue every wider open acceptance criterion. Controlled production
+      accounts remain unavailable; local evidence does not complete that work.

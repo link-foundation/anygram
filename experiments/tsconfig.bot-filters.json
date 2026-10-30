@@ -1,0 +1,56 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "noEmit": true,
+    "types": ["node", "node-fetch"],
+    "typeRoots": ["./composer-types-runtime/node_modules/@types"],
+    "paths": {
+      "node-fetch": [
+        "./composer-types-runtime/node_modules/@types/node-fetch/index.d.ts"
+      ]
+    }
+  },
+  "include": [
+    "typed-account-class-sdk-fixture.ts",
+    "typed-account-collections-sdk-fixture.ts",
+    "typed-account-media-options-sdk-fixture.ts",
+    "typed-account-default-sdk-fixture.ts",
+    "typed-account-media-sdk-fixture.ts",
+    "typed-account-parse-mode-sdk-fixture.ts",
+    "typed-rich-message-sdk-fixture.ts",
+    "typed-account-reaction-sdk-fixture.ts",
+    "typed-account-peer-sdk-fixture.ts",
+    "typed-account-button-sdk-fixture.ts",
+    "typed-media-sdk-differences.ts",
+    "typed-telegraf-node-agents.ts",
+    "typed-telegraf-agents-fixture.ts",
+    "typed-telegram-constructor-fixture.ts",
+    "typed-telegraf-options-fixture.ts",
+    "typed-telegraf-lifecycle-fixture.ts",
+    "typed-framework-differences.ts",
+    "typed-grammy-frameworks-fixture.ts",
+    "typed-webhook-response.ts",
+    "typed-grammy-webhook-fixture.ts",
+    "typed-telegraf-webhook-fixture.ts",
+    "typed-grammy-filter-oracle.ts",
+    "typed-filter-sdk-fixture.ts",
+    "typed-telegraf-sdk-fixture.ts",
+    "typed-grammy-method-fixture.ts",
+    "typed-telegraf-method-fixture.ts",
+    "typed-grammy-context-fixture.ts",
+    "typed-telegraf-context-fixture.ts",
+    "typed-grammy-delivery-fixture.ts",
+    "typed-telegraf-delivery-fixture.ts",
+    "typed-context-result-differences.ts",
+    "typed-grammy-subtypes-fixture.ts",
+    "typed-telegraf-subtypes-fixture.ts",
+    "typed-bot-subtype-oracle.ts",
+    "typed-bot-component-oracle.ts",
+    "typed-component-differences.ts",
+    "typed-grammy-components-fixture.ts",
+    "typed-telegraf-components-fixture.ts"
+  ]
+}

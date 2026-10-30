@@ -1,7 +1,7 @@
 {
-  "name": "my-package",
+  "name": "anygram",
   "version": "0.5.0",
-  "description": "A JavaScript/TypeScript package template for AI-driven development",
+  "description": "Unified Telegram APIs with selectable client backends and native protocol support",
   "type": "module",
   "main": "src/index.js",
   "types": "src/index.d.ts",
@@ -9,6 +9,42 @@
     ".": {
       "types": "./src/index.d.ts",
       "import": "./src/index.js"
+    },
+    "./mtproto": {
+      "types": "./src/mtproto.d.ts",
+      "import": "./src/mtproto.js"
+    },
+    "./tl": {
+      "types": "./src/tl.d.ts",
+      "import": "./src/tl.js"
+    },
+    "./storage": {
+      "types": "./src/storage.d.ts",
+      "import": "./src/storage.js"
+    },
+    "./extensions/html.js": {
+      "types": "./src/account-html.d.ts",
+      "import": "./src/account-html.js"
+    },
+    "./extensions/html": {
+      "types": "./src/account-html.d.ts",
+      "import": "./src/account-html.js"
+    },
+    "./extensions/markdown": {
+      "types": "./src/account-markdown.d.ts",
+      "import": "./src/account-markdown.js"
+    },
+    "./extensions/markdown.js": {
+      "types": "./src/account-markdown.d.ts",
+      "import": "./src/account-markdown.js"
+    },
+    "./extensions/markdownv2": {
+      "types": "./src/account-markdown.d.ts",
+      "import": "./src/account-markdown.js"
+    },
+    "./extensions/markdownv2.js": {
+      "types": "./src/account-markdown.d.ts",
+      "import": "./src/account-markdown.js"
     }
   },
   "scripts": {
@@ -17,39 +53,57 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check:duplication": "jscpd .",
-    "check": "npm run lint && npm run format:check && npm run check:duplication",
+    "check:duplication": "node experiments/check-duplication-gate.mjs && node --max-old-space-size=384 node_modules/jscpd/bin/jscpd src",
+    "check": "npm run lint && npm run format:check && npm run check:duplication && npm run typecheck",
     "prepare": "husky || true",
     "changeset": "changeset",
     "changeset:version": "node scripts/changeset-version.mjs",
     "changeset:publish": "changeset publish",
-    "changeset:status": "changeset status --since=origin/main"
+    "changeset:status": "changeset status --since=origin/main",
+    "schema:update": "node scripts/update-schema.mjs",
+    "schema:update:secret": "node scripts/update-secret-schema.mjs",
+    "schema:types": "node scripts/update-api-types.mjs",
+    "typecheck": "tsc --project tsconfig.json && node scripts/update-api-types.mjs --check && node experiments/generate-bot-methods.mjs --check && node experiments/generate-telegraf-methods.mjs --check && node experiments/generate-context-filter-facts.mjs --check && node experiments/generate-bot-models.mjs --check && node experiments/generate-bot-subtypes.mjs --check && node experiments/generate-bot-components.mjs --check && node experiments/generate-bot-component-oracle.mjs --check && node experiments/generate-bot-subtype-oracle.mjs --check && node experiments/generate-bot-method-types.mjs --check && node experiments/generate-method-type-oracle.mjs --check && node experiments/generate-bot-model-oracle.mjs --check && node experiments/generate-filter-type-oracle.mjs --check && node experiments/generate-telegram-constructor-types.mjs --check && node experiments/generate-file-type-facts.mjs --check"
   },
   "keywords": [
-    "template",
-    "javascript",
-    "typescript",
-    "ai-driven"
+    "telegram",
+    "mtproto",
+    "bot-api",
+    "gramjs",
+    "mtcute",
+    "teleproto"
   ],
   "author": "",
   "license": "Unlicense",
   "repository": {
     "type": "git",
-    "url": "https://github.com/link-foundation/js-ai-driven-development-pipeline-template"
+    "url": "https://github.com/link-foundation/anygram.git"
   },
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=20.18.3"
   },
   "devDependencies": {
     "@changesets/cli": "^2.29.7",
+    "@mtcute/core": "0.32.7",
+    "@mtcute/tl-runtime": "0.32.6",
+    "@mtproto/core": "6.3.0",
     "eslint": "^9.38.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
+    "grammy": "1.46.0",
     "husky": "^9.1.7",
     "jscpd": "^4.0.5",
+    "links-notation": "0.12.0",
     "lint-staged": "^16.2.6",
-    "prettier": "^3.6.2",
-    "test-anywhere": "^0.8.48"
+    "node-telegram-bot-api": "2.1.0",
+    "prettier": "3.7.4",
+    "telegraf": "4.16.3",
+    "telegram": "2.26.22",
+    "teleproto": "1.232.0",
+    "test-anywhere": "^0.8.48",
+    "typescript": "7.0.2",
+    "websocket": "1.0.35",
+    "yargs": "17.7.2"
   },
   "lint-staged": {
     "*.{js,mjs,cjs}": [
@@ -57,9 +111,14 @@
       "prettier --write",
       "prettier --check"
     ],
-    "*.md": [
+    "*.{md,ts,tsx}": [
       "prettier --write",
       "prettier --check"
     ]
-  }
+  },
+  "files": [
+    "src/",
+    "README.md",
+    "LICENSE"
+  ]
 }

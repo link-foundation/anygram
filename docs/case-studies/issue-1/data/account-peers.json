@@ -1,0 +1,239 @@
+{
+  "retrieved": "2026-10-29T22:57:41.657Z",
+  "installed": [
+    {
+      "package": "telegram",
+      "version": "2.26.22",
+      "publishedSource": "https://registry.npmjs.org/telegram/-/telegram-2.26.22.tgz",
+      "files": [
+        {
+          "path": "tl/custom/message.js",
+          "sha256": "4bd6d58c73ec23aab1f0150ff1310099287d5154f48ad83adf7f023af04681d3"
+        },
+        {
+          "path": "tl/custom/message.d.ts",
+          "sha256": "f96b3881b085b5cbeadb65aa3355163aa3ac60adedf211556ba847e2b1f00ee2"
+        },
+        {
+          "path": "tl/custom/forward.js",
+          "sha256": "a55b98b7c44de2f084c8866929cbeb7326065c31c1781c353f7891c11d4da63e"
+        },
+        {
+          "path": "tl/custom/forward.d.ts",
+          "sha256": "6b6caa8d1948acb9087caca029914fac2debeff28805beb9d3aa8b0c555531d5"
+        },
+        {
+          "path": "tl/custom/chatGetter.js",
+          "sha256": "0bb2a5e5e14b029957b1554b18d0dd78c287caa3246ef0de764109d8f26b6648"
+        },
+        {
+          "path": "tl/custom/chatGetter.d.ts",
+          "sha256": "bd155499573aec80ab2b3eb4d551e165899476c4037c40b4a4daba88c4e35020"
+        },
+        {
+          "path": "tl/custom/senderGetter.js",
+          "sha256": "6ef9663e4fb9171d7685a33dcf094b4ab336510fa0c5b689c41390de56021382"
+        },
+        {
+          "path": "tl/custom/senderGetter.d.ts",
+          "sha256": "97b2483eff407be51870c933cc0ff4e4cf25f9a24cefddf8461032dbb0981eb0"
+        },
+        {
+          "path": "Utils.js",
+          "sha256": "f00944abcb3a057c27275b0b2fc8d36b713fa8c0c0a29c5deff51e7639ff82ed"
+        }
+      ]
+    },
+    {
+      "package": "teleproto",
+      "version": "1.232.0",
+      "publishedSource": "https://registry.npmjs.org/teleproto/-/teleproto-1.232.0.tgz",
+      "files": [
+        {
+          "path": "tl/custom/message.js",
+          "sha256": "c661cb0e5709a313237d5a1b5699109b0cf2038209fb350cdde9d7d892103437"
+        },
+        {
+          "path": "tl/custom/message.d.ts",
+          "sha256": "0a6a1de2fe0836e626d58441edf55c0b48b520a18e1e8d379e8e59b49bbb42a3"
+        },
+        {
+          "path": "tl/custom/forward.js",
+          "sha256": "b406a3cd271fb687c7541c8a991d29b7d6bd24b0e130baad642b629ec84315c8"
+        },
+        {
+          "path": "tl/custom/forward.d.ts",
+          "sha256": "f235d460a3517de917af37029d7fac83ea5a211acc0a9d2a6a2ff417f85c5976"
+        },
+        {
+          "path": "tl/custom/chatGetter.js",
+          "sha256": "a424b8a32a3db3d92c7514fd73fb91803e31015fb76d0c3e72a2122170057c76"
+        },
+        {
+          "path": "tl/custom/chatGetter.d.ts",
+          "sha256": "c76d92e9f7992aab1ea2059a2eced4bac7d4136b65c94580d0ae03413255c541"
+        },
+        {
+          "path": "tl/custom/senderGetter.js",
+          "sha256": "c2d6452c7a82a8eb4e97f81e585bfadaebb188abe4619f9443f7e12a5563f11a"
+        },
+        {
+          "path": "tl/custom/senderGetter.d.ts",
+          "sha256": "a3eba12a29d8b532606c25bf32cfab9ed2094f7883a19bbe49be98d3706eb2b2"
+        },
+        {
+          "path": "Utils.js",
+          "sha256": "6b75edfd6029e9e3cc2cc070751293ab5da6600001beed6b9664769e98bdced8"
+        }
+      ]
+    }
+  ],
+  "primarySources": [
+    {
+      "url": "https://core.telegram.org/api/min.md",
+      "sha256": "6995d67ca5ddf82ed47c26050b75f3f951fc589d15649ce5b9b0fb3b0571e176"
+    },
+    {
+      "url": "https://core.telegram.org/constructor/user.md",
+      "sha256": "3e953373e62e01a8444c55e64b2f8c0012124d30ae0e8f7520c1a286f1239790"
+    },
+    {
+      "url": "https://core.telegram.org/constructor/channel.md",
+      "sha256": "5ec4946f94facdc90e70f7c42cde36b20f29fcc697a2952c17e545b5dc036aea"
+    },
+    {
+      "url": "https://core.telegram.org/constructor/messageActionChatJoinedByLink.md",
+      "sha256": "8d2e8858592172cf70ebaae763fd8d727e7cc6be574730d064ca72cc73b7b079"
+    }
+  ],
+  "constructors": [
+    {
+      "name": "inputPeerUserFromMessage",
+      "constructorId": 2826635804,
+      "fields": [
+        {
+          "name": "peer",
+          "type": "InputPeer"
+        },
+        {
+          "name": "msg_id",
+          "type": "int"
+        },
+        {
+          "name": "user_id",
+          "type": "long"
+        }
+      ],
+      "result": "InputPeer"
+    },
+    {
+      "name": "inputPeerChannelFromMessage",
+      "constructorId": 3173648448,
+      "fields": [
+        {
+          "name": "peer",
+          "type": "InputPeer"
+        },
+        {
+          "name": "msg_id",
+          "type": "int"
+        },
+        {
+          "name": "channel_id",
+          "type": "long"
+        }
+      ],
+      "result": "InputPeer"
+    },
+    {
+      "name": "inputUserFromMessage",
+      "constructorId": 497305826,
+      "fields": [
+        {
+          "name": "peer",
+          "type": "InputPeer"
+        },
+        {
+          "name": "msg_id",
+          "type": "int"
+        },
+        {
+          "name": "user_id",
+          "type": "long"
+        }
+      ],
+      "result": "InputUser"
+    },
+    {
+      "name": "inputChannelFromMessage",
+      "constructorId": 1536380829,
+      "fields": [
+        {
+          "name": "peer",
+          "type": "InputPeer"
+        },
+        {
+          "name": "msg_id",
+          "type": "int"
+        },
+        {
+          "name": "channel_id",
+          "type": "long"
+        }
+      ],
+      "result": "InputChannel"
+    },
+    {
+      "name": "messageActionChatJoinedByLink",
+      "constructorId": 51520707,
+      "fields": [
+        {
+          "name": "inviter_id",
+          "type": "long"
+        }
+      ],
+      "result": "MessageAction"
+    }
+  ],
+  "regression": {
+    "frozenRevision": "1d5a564b133afa3e33ac22200f3caa29a219fa0a",
+    "cases": 131,
+    "failuresBefore": 124,
+    "failuresAfter": 0,
+    "declarationDiagnosticsBefore": 8,
+    "actualLookupByteComparisons": 4,
+    "selectedBackends": 5,
+    "independentEncryptedTcpFamilies": 2
+  },
+  "behavior": [
+    "Forward views retain the detached original header, cached sender/chat/input peers, exact IDs and private client ownership.",
+    "Via-bot metadata, service action entities and identified self destinations share the existing canonical peer cache.",
+    "Missing senders trigger one source-message reload; concurrent lookups share it and unavailable entities retain a source-message input fallback.",
+    "Cached min users and channels refresh through the official inputUserFromMessage or inputChannelFromMessage constructor.",
+    "User min updates preserve complete identity and protected fields, respect photo/status rules and track min_access_hash independently of the min flag.",
+    "Channel min updates replace and clear only documented mutable fields, preserving complete access hashes and rights.",
+    "Message sender, forward and mention contexts are retained from account views and raw response/update containers with a separate bounded cache.",
+    "Each message prefers its own known origin hash over another message mentioning the same peer.",
+    "Channel get/delete/read operations accept source-message channel inputs; stale username aliases are removed.",
+    "Pre-aborted and post-response cancellation rejects without a follow-up request; typed RPC failures retain their selected backend."
+  ],
+  "differences": [
+    "Both pinned SDKs look up an invite-link inviter as a channel, contrary to Telegram documenting a user ID. Owned actionEntities resolves the user.",
+    "Both pinned SDK Forward declarations omit the runtime originalFwd field. Owned declarations include it and optional peer metadata.",
+    "An incoming private message has no invented toId until a self user has been identified.",
+    "Native bigint and detached data views retain the existing absence of vendor instanceof, serialization methods and legacy integer APIs."
+  ],
+  "limits": {
+    "defaultPeerEntries": 10000,
+    "defaultMessageContexts": 10000,
+    "retainedInputsPerView": 4,
+    "senderReloadsPerView": 1,
+    "inputChatDialogPagesPerLookup": 1,
+    "inputChatDialogsPerLookup": 100,
+    "botZeroHashFallbackVerified": false,
+    "userFullCacheInvalidationImplemented": false,
+    "persistentPeerDatabaseImplemented": false,
+    "productionAccountVerified": false,
+    "fullSdkParityVerified": false
+  }
+}

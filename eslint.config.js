@@ -22,6 +22,8 @@ export default [
         __filename: 'readonly',
         // Node.js 18+ globals
         fetch: 'readonly',
+        Response: 'readonly',
+        FormData: 'readonly',
         // Runtime-specific globals
         Bun: 'readonly',
         Deno: 'readonly',
@@ -83,6 +85,7 @@ export default [
     ignores: [
       'node_modules/**',
       'coverage/**',
+      'reports/**',
       'dist/**',
       '*.min.js',
       '.eslintcache',

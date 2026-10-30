@@ -1,0 +1,62 @@
+{
+  "repository": "konard/follow",
+  "commit": "af8fbb80cec26a7b5b205c93314372d1d92cec1f",
+  "capturedAt": "2026-10-29T06:30:29.462Z",
+  "sources": [
+    {
+      "file": "follow-source/telegram.lib.mjs",
+      "url": "https://github.com/konard/follow/blob/af8fbb80cec26a7b5b205c93314372d1d92cec1f/telegram.lib.mjs",
+      "sha256": "b3d585a0b57f376d705b60a9be6bbd5979a8737f7d48796d4b0b07bedd942f0f"
+    },
+    {
+      "file": "follow-source/telegram-follow.mjs",
+      "url": "https://github.com/konard/follow/blob/af8fbb80cec26a7b5b205c93314372d1d92cec1f/telegram-follow.mjs",
+      "sha256": "932ac3118b700819f33ac7a0d705169ac22cdec2fa8d9431ded382eec97fd2b3"
+    },
+    {
+      "file": "follow-source/telegram-join-group.mjs",
+      "url": "https://github.com/konard/follow/blob/af8fbb80cec26a7b5b205c93314372d1d92cec1f/telegram-join-group.mjs",
+      "sha256": "ffc3d947c2e0324a273a5d4dea6a7b8ea473a4d67594b6a329086bca54910e0f"
+    },
+    {
+      "file": "follow-source/lino.lib.mjs",
+      "url": "https://github.com/konard/follow/blob/af8fbb80cec26a7b5b205c93314372d1d92cec1f/lino.lib.mjs",
+      "sha256": "e9a4177df497e03f9d87a8b29e46b802c9cd9fba3c674de6e0ad116a244e6e50"
+    },
+    {
+      "file": "follow-source/cache-files.mjs",
+      "url": "https://github.com/konard/follow/blob/af8fbb80cec26a7b5b205c93314372d1d92cec1f/cache-files.mjs",
+      "sha256": "7d890cf5c69b2e4142d51bd0521b63571ca34107df3f3e05b5ee61caefc3b4c1"
+    },
+    {
+      "file": "follow-source/experiments/test-private-channel-link-handling.mjs",
+      "url": "https://github.com/konard/follow/blob/af8fbb80cec26a7b5b205c93314372d1d92cec1f/experiments/test-private-channel-link-handling.mjs",
+      "sha256": "da1bdce72df454d529e105e7a4ee6022a32e413b4148b89b883fe8833a37ee45"
+    },
+    {
+      "file": "follow-source/experiments/test-channel-invalid-error-fix.mjs",
+      "url": "https://github.com/konard/follow/blob/af8fbb80cec26a7b5b205c93314372d1d92cec1f/experiments/test-channel-invalid-error-fix.mjs",
+      "sha256": "342642696c9614a67ea74d29acd5f89dec6fc54b109efb020ac3e9589dfb8b9d"
+    },
+    {
+      "file": "follow-source/experiments/test-telegram-message-reading.mjs",
+      "url": "https://github.com/konard/follow/blob/af8fbb80cec26a7b5b205c93314372d1d92cec1f/experiments/test-telegram-message-reading.mjs",
+      "sha256": "6394c9b77a271fabae2c851ab559ba65e8a92acdef0637e44c0109037bde62ee"
+    },
+    {
+      "file": "follow-source/experiments/test-session.mjs",
+      "url": "https://github.com/konard/follow/blob/af8fbb80cec26a7b5b205c93314372d1d92cec1f/experiments/test-session.mjs",
+      "sha256": "61c7aeabb30834fdcb8f38c0a352a637380c1de3d82488423eafd1ef1823704a"
+    },
+    {
+      "file": "follow-source/package.json",
+      "url": "https://github.com/konard/follow/blob/af8fbb80cec26a7b5b205c93314372d1d92cec1f/package.json",
+      "sha256": "c102f23c8a9cac2ac9b89e53f7998574bbf738e875cb66b9c0f4434cc81037c6"
+    },
+    {
+      "file": "follow-source/LICENSE",
+      "url": "https://github.com/konard/follow/blob/af8fbb80cec26a7b5b205c93314372d1d92cec1f/LICENSE",
+      "sha256": "6b0382b16279f26ff69014300541967a356a666eb0b91b422f6862f6b7dad17e"
+    }
+  ]
+}

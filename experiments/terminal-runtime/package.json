@@ -1,0 +1,22 @@
+{
+  "name": "anygram-terminal-integration",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test terminal-runtime.integration.js screenshot.integration.js startup.integration.js fatal-exit.integration.js upstream-suites.integration.js"
+  },
+  "dependencies": {
+    "canvas": "3.1.2",
+    "dotenv": "16.4.5",
+    "gifencoder": "2.0.1",
+    "node-pty": "1.1.0",
+    "omggif": "1.0.10",
+    "pino": "8.19.0",
+    "pino-pretty": "10.3.1"
+  },
+  "overrides": {
+    "gifencoder": {
+      "canvas": "$canvas"
+    }
+  }
+}

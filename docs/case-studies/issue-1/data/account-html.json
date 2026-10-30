@@ -1,0 +1,123 @@
+{
+  "recordedAt": "2026-10-30T00:46:11.190Z",
+  "installed": [
+    {
+      "package": "telegram",
+      "version": "2.26.22",
+      "publishedSource": "https://registry.npmjs.org/telegram/-/telegram-2.26.22.tgz",
+      "files": [
+        {
+          "path": "extensions/html.js",
+          "sha256": "d3c45378481efe74aac562c778275c6cc6f6b5379ea60bb91721af90114be7f0"
+        },
+        {
+          "path": "extensions/html.d.ts",
+          "sha256": "7ca48ed273146e7d57eae1235c6c4b7622d58432730ffaa20c655e7223236512"
+        },
+        {
+          "path": "client/messageParse.js",
+          "sha256": "ed57cc79bda7096a3e7ef1b92b2363e43e98303ac05c3e8798fc2b3c1b2ba0ae"
+        }
+      ]
+    },
+    {
+      "package": "teleproto",
+      "version": "1.232.0",
+      "publishedSource": "https://registry.npmjs.org/teleproto/-/teleproto-1.232.0.tgz",
+      "files": [
+        {
+          "path": "extensions/html.js",
+          "sha256": "ae0290667c08fa60edfe229c15d0feb48919326f7d702b7dc9a9f8f1f55d05c2"
+        },
+        {
+          "path": "extensions/html.d.ts",
+          "sha256": "5851f6c4b496cd9515b9836b5471136085e5e35bc4ecb2f12c22f00d5a44dd5e"
+        },
+        {
+          "path": "client/methods/messageParse.js",
+          "sha256": "93f1614ce89f70f8218cbd6b11d3053bef73808f39acdd246d723f8f5ea0f33b"
+        }
+      ]
+    }
+  ],
+  "primarySources": [
+    {
+      "url": "https://core.telegram.org/api/entities",
+      "sha256": "9ff2bbbeec3168dc7c66ef288923bdc7f3b61c7174ee03e6676337b8363bca32"
+    },
+    {
+      "url": "https://core.telegram.org/bots/api#formatting-options",
+      "sha256": "9110a41e5173a849088e032854227419af3468932f06a4174f44a481733ef308"
+    },
+    {
+      "url": "https://html.spec.whatwg.org/entities.json",
+      "sha256": "d741d877ac77c4194c4ad526b5b4a19aef8dfe411ab840a466891cdbb9f362e6",
+      "entries": 2231
+    }
+  ],
+  "characterTableSha256": "d1ad7751e41c747aaa0e6f2ba6966888432f2feecc0f48ce1f0bedd79b951159",
+  "contract": {
+    "aliases": [
+      "html"
+    ],
+    "offsetUnits": "UTF-16 code units",
+    "namedReferences": 2231,
+    "tags": [
+      "b",
+      "strong",
+      "i",
+      "em",
+      "u",
+      "ins",
+      "s",
+      "del",
+      "strike",
+      "spoiler",
+      "tg-spoiler",
+      "span.tg-spoiler",
+      "code",
+      "pre",
+      "blockquote",
+      "a",
+      "tg-emoji",
+      "tg-date",
+      "br"
+    ],
+    "limits": {
+      "inputCodeUnits": 4194304,
+      "outputCodeUnits": 4194304,
+      "entities": 1000,
+      "nesting": 64,
+      "tags": 100000,
+      "outputParts": 100000,
+      "attributesPerTag": 1000
+    },
+    "output": "Owned schema entities, exact signed-64-bit identifiers, escaped text and attributes, validated balanced nesting."
+  },
+  "differences": [
+    "Pinned GramJS omits ins/strike/tg-spoiler/span.tg-spoiler tags accepted by teleproto and the owned parser.",
+    "Owned unparse accepts canonical, owned and both actual SDK entity objects, including plain text escaping and expandable quotes.",
+    "Different mailto labels preserve the original URL and visible label as TextUrl; SDKs discard one of them.",
+    "Unclosed tags are finalized and misnested closing tags close inner tags first. Every trimmed entity is clipped independently.",
+    "Named references follow the standard longest-prefix and attribute rules. Invalid Unicode numeric references become the replacement character; C1 references use the standard replacements.",
+    "Zero, malformed and oversized mention/emoji IDs fail before transport; invalid ranges, crossing entities and nested code/pre/date entities are rejected."
+  ],
+  "regression": {
+    "beforeCommit": "2c40acd5ade91284195e2363c41d28f22e96de6d",
+    "tests": [
+      "tests/account-html.test.js",
+      "tests/account-html-boundaries.test.js",
+      "tests/account-html-rpc.test.js",
+      "tests/account-html-import.test.js"
+    ],
+    "runtime": "experiments/account-html-before-loader.mjs",
+    "declarations": "node experiments/composer-fluency-check.mjs --account-html --before",
+    "finiteProbe": "node --max-old-space-size=192 --stack-size=512 experiments/account-html-bounds.mjs"
+  },
+  "remaining": [
+    "Markdown and MarkdownV2 builtins",
+    "SDK default Markdown selection",
+    "File/album parse-mode integration",
+    "Full wider issue criteria and controlled-account checks"
+  ]
+}

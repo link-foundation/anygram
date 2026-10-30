@@ -1,0 +1,522 @@
+{
+  "retrieved": "2026-10-29T21:36:27.029Z",
+  "schemaLayer": 232,
+  "schemaSource": "https://github.com/telegramdesktop/tdesktop/tree/f985723b552b30fe1c17d377d57f44e61a15a8c4/Telegram/SourceFiles/mtproto/scheme",
+  "sources": [
+    "https://github.com/gram-js/gramjs/blob/v2.26.22/gramjs/Utils.ts",
+    "https://www.npmjs.com/package/telegram/v/2.26.22",
+    "https://www.npmjs.com/package/teleproto/v/1.232.0",
+    "https://core.telegram.org/constructor/inputMediaPoll",
+    "https://core.telegram.org/constructor/pollAnswer",
+    "https://core.telegram.org/constructor/inputPollAnswer",
+    "https://core.telegram.org/api/poll"
+  ],
+  "installed": [
+    {
+      "package": "telegram",
+      "version": "2.26.22",
+      "files": [
+        {
+          "file": "node_modules/telegram/tl/api.js",
+          "sha256": "08fa5238ab58e2c8f918e0bc49fb348824d573b311c06c85c33cd8da5f4b6f0e"
+        },
+        {
+          "file": "node_modules/telegram/tl/api.d.ts",
+          "sha256": "79590ca26be6e8ddb289b688ed8ed6f0d1e261df95f99a3a0b21f14a1777e248"
+        },
+        {
+          "file": "node_modules/telegram/Utils.js",
+          "sha256": "f00944abcb3a057c27275b0b2fc8d36b713fa8c0c0a29c5deff51e7639ff82ed"
+        },
+        {
+          "file": "node_modules/telegram/Utils.d.ts",
+          "sha256": "09ec35fcf14466d47cbf8de52b69159c39ed0fbd0fa2be62502578041f228d41"
+        }
+      ],
+      "automaticTypes": [
+        "InputPeer",
+        "InputChannel",
+        "InputUser",
+        "InputDialogPeer",
+        "InputNotifyPeer",
+        "InputMedia",
+        "InputPhoto",
+        "InputMessage",
+        "InputDocument",
+        "InputChatPhoto"
+      ],
+      "namedChatIdShortcut": "chatId,int"
+    },
+    {
+      "package": "teleproto",
+      "version": "1.232.0",
+      "files": [
+        {
+          "file": "node_modules/teleproto/tl/runtime/inputCasts.js",
+          "sha256": "3b82ea990a13c3cb16dce0af3c3bb014f15eb6c4abf901dc18e839de729b2087"
+        },
+        {
+          "file": "node_modules/teleproto/tl/api.d.ts",
+          "sha256": "680f49f97ab407ec367efb01813bf2a1d8df38a524a0c0e8ddf26b2e22cf18da"
+        },
+        {
+          "file": "node_modules/teleproto/Utils.js",
+          "sha256": "6b75edfd6029e9e3cc2cc070751293ab5da6600001beed6b9664769e98bdced8"
+        },
+        {
+          "file": "node_modules/teleproto/Utils.d.ts",
+          "sha256": "988bc2fdd8dea5e5f96b8a614256b5bf5071f10703473d942faed089768e7111"
+        },
+        {
+          "file": "node_modules/teleproto/tl/generated/api.d.ts",
+          "sha256": "c643e0f414708fed5f6c03f0baf34e55afcf813205a949ffe46152e40067c1de"
+        }
+      ],
+      "automaticTypes": [
+        "InputPeer",
+        "InputChannel",
+        "InputUser",
+        "InputDialogPeer",
+        "InputNotifyPeer",
+        "InputMedia",
+        "InputPhoto",
+        "InputMessage",
+        "InputDocument",
+        "InputChatPhoto"
+      ],
+      "namedChatIdShortcut": "chatId,long"
+    }
+  ],
+  "mediaFields": [
+    {
+      "owner": "inputFileStoryDocument",
+      "name": "id",
+      "type": "InputDocument",
+      "target": "InputDocument"
+    },
+    {
+      "owner": "inputMediaUploadedPhoto",
+      "name": "stickers",
+      "type": "flags.0?Vector<InputDocument>",
+      "target": "InputDocument"
+    },
+    {
+      "owner": "inputMediaUploadedPhoto",
+      "name": "video",
+      "type": "flags.3?InputDocument",
+      "target": "InputDocument"
+    },
+    {
+      "owner": "inputMediaPhoto",
+      "name": "id",
+      "type": "InputPhoto",
+      "target": "InputPhoto"
+    },
+    {
+      "owner": "inputMediaPhoto",
+      "name": "video",
+      "type": "flags.2?InputDocument",
+      "target": "InputDocument"
+    },
+    {
+      "owner": "inputMediaUploadedDocument",
+      "name": "stickers",
+      "type": "flags.0?Vector<InputDocument>",
+      "target": "InputDocument"
+    },
+    {
+      "owner": "inputMediaUploadedDocument",
+      "name": "video_cover",
+      "type": "flags.6?InputPhoto",
+      "target": "InputPhoto"
+    },
+    {
+      "owner": "inputMediaDocument",
+      "name": "id",
+      "type": "InputDocument",
+      "target": "InputDocument"
+    },
+    {
+      "owner": "inputMediaDocument",
+      "name": "video_cover",
+      "type": "flags.3?InputPhoto",
+      "target": "InputPhoto"
+    },
+    {
+      "owner": "inputMediaDocumentExternal",
+      "name": "video_cover",
+      "type": "flags.2?InputPhoto",
+      "target": "InputPhoto"
+    },
+    {
+      "owner": "inputMediaInvoice",
+      "name": "extended_media",
+      "type": "flags.2?InputMedia",
+      "target": "InputMedia"
+    },
+    {
+      "owner": "inputMediaPoll",
+      "name": "attached_media",
+      "type": "flags.3?InputMedia",
+      "target": "InputMedia"
+    },
+    {
+      "owner": "inputMediaPoll",
+      "name": "solution_media",
+      "type": "flags.2?InputMedia",
+      "target": "InputMedia"
+    },
+    {
+      "owner": "inputMediaPaidMedia",
+      "name": "extended_media",
+      "type": "Vector<InputMedia>",
+      "target": "InputMedia"
+    },
+    {
+      "owner": "inputChatPhoto",
+      "name": "id",
+      "type": "InputPhoto",
+      "target": "InputPhoto"
+    },
+    {
+      "owner": "inputBotInlineResultPhoto",
+      "name": "photo",
+      "type": "InputPhoto",
+      "target": "InputPhoto"
+    },
+    {
+      "owner": "inputBotInlineResultDocument",
+      "name": "document",
+      "type": "InputDocument",
+      "target": "InputDocument"
+    },
+    {
+      "owner": "draftMessage",
+      "name": "media",
+      "type": "flags.5?InputMedia",
+      "target": "InputMedia"
+    },
+    {
+      "owner": "inputStickeredMediaPhoto",
+      "name": "id",
+      "type": "InputPhoto",
+      "target": "InputPhoto"
+    },
+    {
+      "owner": "inputStickeredMediaDocument",
+      "name": "id",
+      "type": "InputDocument",
+      "target": "InputDocument"
+    },
+    {
+      "owner": "inputWebFileAudioAlbumThumbLocation",
+      "name": "document",
+      "type": "flags.0?InputDocument",
+      "target": "InputDocument"
+    },
+    {
+      "owner": "inputStickerSetItem",
+      "name": "document",
+      "type": "InputDocument",
+      "target": "InputDocument"
+    },
+    {
+      "owner": "inputSingleMedia",
+      "name": "media",
+      "type": "InputMedia",
+      "target": "InputMedia"
+    },
+    {
+      "owner": "inputPollAnswer",
+      "name": "media",
+      "type": "flags.0?InputMedia",
+      "target": "InputMedia"
+    },
+    {
+      "owner": "inputBusinessIntro",
+      "name": "sticker",
+      "type": "flags.0?InputDocument",
+      "target": "InputDocument"
+    },
+    {
+      "owner": "inputRichFilePhoto",
+      "name": "photo",
+      "type": "InputPhoto",
+      "target": "InputPhoto"
+    },
+    {
+      "owner": "inputRichFileDocument",
+      "name": "document",
+      "type": "InputDocument",
+      "target": "InputDocument"
+    },
+    {
+      "owner": "inputRichMessage",
+      "name": "photos",
+      "type": "flags.2?Vector<InputPhoto>",
+      "target": "InputPhoto"
+    },
+    {
+      "owner": "inputRichMessage",
+      "name": "documents",
+      "type": "flags.3?Vector<InputDocument>",
+      "target": "InputDocument"
+    },
+    {
+      "owner": "account.createTheme",
+      "name": "document",
+      "type": "flags.2?InputDocument",
+      "target": "InputDocument"
+    },
+    {
+      "owner": "account.updateTheme",
+      "name": "document",
+      "type": "flags.2?InputDocument",
+      "target": "InputDocument"
+    },
+    {
+      "owner": "account.reportProfilePhoto",
+      "name": "photo_id",
+      "type": "InputPhoto",
+      "target": "InputPhoto"
+    },
+    {
+      "owner": "account.saveRingtone",
+      "name": "id",
+      "type": "InputDocument",
+      "target": "InputDocument"
+    },
+    {
+      "owner": "account.saveMusic",
+      "name": "id",
+      "type": "InputDocument",
+      "target": "InputDocument"
+    },
+    {
+      "owner": "account.saveMusic",
+      "name": "after_id",
+      "type": "flags.1?InputDocument",
+      "target": "InputDocument"
+    },
+    {
+      "owner": "users.getSavedMusicByID",
+      "name": "documents",
+      "type": "Vector<InputDocument>",
+      "target": "InputDocument"
+    },
+    {
+      "owner": "messages.sendMedia",
+      "name": "media",
+      "type": "InputMedia",
+      "target": "InputMedia"
+    },
+    {
+      "owner": "messages.editChatPhoto",
+      "name": "photo",
+      "type": "InputChatPhoto",
+      "target": "InputChatPhoto"
+    },
+    {
+      "owner": "messages.saveGif",
+      "name": "id",
+      "type": "InputDocument",
+      "target": "InputDocument"
+    },
+    {
+      "owner": "messages.editMessage",
+      "name": "media",
+      "type": "flags.14?InputMedia",
+      "target": "InputMedia"
+    },
+    {
+      "owner": "messages.editInlineBotMessage",
+      "name": "media",
+      "type": "flags.14?InputMedia",
+      "target": "InputMedia"
+    },
+    {
+      "owner": "messages.saveDraft",
+      "name": "media",
+      "type": "flags.5?InputMedia",
+      "target": "InputMedia"
+    },
+    {
+      "owner": "messages.saveRecentSticker",
+      "name": "id",
+      "type": "InputDocument",
+      "target": "InputDocument"
+    },
+    {
+      "owner": "messages.uploadMedia",
+      "name": "media",
+      "type": "InputMedia",
+      "target": "InputMedia"
+    },
+    {
+      "owner": "messages.faveSticker",
+      "name": "id",
+      "type": "InputDocument",
+      "target": "InputDocument"
+    },
+    {
+      "owner": "messages.uploadImportedMedia",
+      "name": "media",
+      "type": "InputMedia",
+      "target": "InputMedia"
+    },
+    {
+      "owner": "messages.reportMusicListen",
+      "name": "id",
+      "type": "InputDocument",
+      "target": "InputDocument"
+    },
+    {
+      "owner": "photos.updateProfilePhoto",
+      "name": "id",
+      "type": "InputPhoto",
+      "target": "InputPhoto"
+    },
+    {
+      "owner": "photos.deletePhotos",
+      "name": "id",
+      "type": "Vector<InputPhoto>",
+      "target": "InputPhoto"
+    },
+    {
+      "owner": "channels.editPhoto",
+      "name": "photo",
+      "type": "InputChatPhoto",
+      "target": "InputChatPhoto"
+    },
+    {
+      "owner": "bots.addPreviewMedia",
+      "name": "media",
+      "type": "InputMedia",
+      "target": "InputMedia"
+    },
+    {
+      "owner": "bots.editPreviewMedia",
+      "name": "media",
+      "type": "InputMedia",
+      "target": "InputMedia"
+    },
+    {
+      "owner": "bots.editPreviewMedia",
+      "name": "new_media",
+      "type": "InputMedia",
+      "target": "InputMedia"
+    },
+    {
+      "owner": "bots.deletePreviewMedia",
+      "name": "media",
+      "type": "Vector<InputMedia>",
+      "target": "InputMedia"
+    },
+    {
+      "owner": "bots.reorderPreviewMedias",
+      "name": "order",
+      "type": "Vector<InputMedia>",
+      "target": "InputMedia"
+    },
+    {
+      "owner": "payments.exportInvoice",
+      "name": "invoice_media",
+      "type": "InputMedia",
+      "target": "InputMedia"
+    },
+    {
+      "owner": "stickers.createStickerSet",
+      "name": "thumb",
+      "type": "flags.2?InputDocument",
+      "target": "InputDocument"
+    },
+    {
+      "owner": "stickers.removeStickerFromSet",
+      "name": "sticker",
+      "type": "InputDocument",
+      "target": "InputDocument"
+    },
+    {
+      "owner": "stickers.changeStickerPosition",
+      "name": "sticker",
+      "type": "InputDocument",
+      "target": "InputDocument"
+    },
+    {
+      "owner": "stickers.setStickerSetThumb",
+      "name": "thumb",
+      "type": "flags.0?InputDocument",
+      "target": "InputDocument"
+    },
+    {
+      "owner": "stickers.changeSticker",
+      "name": "sticker",
+      "type": "InputDocument",
+      "target": "InputDocument"
+    },
+    {
+      "owner": "stickers.replaceSticker",
+      "name": "sticker",
+      "type": "InputDocument",
+      "target": "InputDocument"
+    },
+    {
+      "owner": "stories.sendStory",
+      "name": "media",
+      "type": "InputMedia",
+      "target": "InputMedia"
+    },
+    {
+      "owner": "stories.sendStory",
+      "name": "music",
+      "type": "flags.9?InputDocument",
+      "target": "InputDocument"
+    },
+    {
+      "owner": "stories.editStory",
+      "name": "media",
+      "type": "flags.0?InputMedia",
+      "target": "InputMedia"
+    },
+    {
+      "owner": "stories.editStory",
+      "name": "music",
+      "type": "flags.4?InputDocument",
+      "target": "InputDocument"
+    },
+    {
+      "owner": "ephemeral.sendMessage",
+      "name": "media",
+      "type": "flags.2?InputMedia",
+      "target": "InputMedia"
+    },
+    {
+      "owner": "ephemeral.editMessage",
+      "name": "media",
+      "type": "flags.3?InputMedia",
+      "target": "InputMedia"
+    }
+  ],
+  "regression": {
+    "frozenRevision": "67f631532971f4d38adb265948960d2a8432fa57",
+    "tests": 143,
+    "failuresBefore": 129,
+    "focusedIncludingPeerResolution": 160,
+    "declarationDiagnosticsBefore": 5,
+    "sdkArgumentComparisons": 106,
+    "uploadedFilenameComparisons": 20
+  },
+  "differences": [
+    "The pinned declarations require explicit media helper calls despite runtime request autocasts.",
+    "Layer 232 correct_answers are indices into poll.answers. Pinned teleproto returns byte options that encode as the wrong integer.",
+    "PollAnswer.media remains MessageMedia in the pinned schema. Pinned teleproto converts it to InputMedia and mutates the source poll.",
+    "Only 28 common filename extensions have implicit MIME metadata; other extensions use application/octet-stream. Explicit InputMedia retains caller metadata."
+  ],
+  "limits": {
+    "maxDepth": 64,
+    "maxVector": 100000,
+    "implicitNetworkUploads": false,
+    "productionTelegramDeliveryVerified": false,
+    "fullMediaHelperOptionParityVerified": false
+  }
+}

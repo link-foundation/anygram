@@ -1,0 +1,4 @@
+{
+  "extends": "./tsconfig.bot-filters.json",
+  "include": ["typed-component-differences.ts"]
+}

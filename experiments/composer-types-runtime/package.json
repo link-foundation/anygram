@@ -1,0 +1,8 @@
+{
+  "private": true,
+  "description": "Pinned ambient dependencies for actual bot SDK type oracles",
+  "devDependencies": {
+    "@types/node": "22.18.3",
+    "@types/node-fetch": "2.6.13"
+  }
+}

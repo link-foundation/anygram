@@ -1,0 +1,122 @@
+{
+  "recordedAt": "2026-10-30T01:45:32.976Z",
+  "installed": [
+    {
+      "package": "telegram",
+      "version": "2.26.22",
+      "publishedSource": "https://registry.npmjs.org/telegram/-/telegram-2.26.22.tgz",
+      "files": [
+        {
+          "path": "client/uploads.js",
+          "sha256": "893ad2b6babf2c18f185c5ccbfa7bfcc10b366f1b6484c34d21d9a775b00d4dc"
+        },
+        {
+          "path": "client/uploads.d.ts",
+          "sha256": "5d8eaf893678143b71d6901631fde9c7e4eefb69e522da18bbc0f4b462cc492f"
+        },
+        {
+          "path": "client/messages.js",
+          "sha256": "0f1f8a2761d493065ea0f3c7dff27c32033045ad2a38b75c9e1ad5e2ea26ed14"
+        },
+        {
+          "path": "client/messageParse.js",
+          "sha256": "ed57cc79bda7096a3e7ef1b92b2363e43e98303ac05c3e8798fc2b3c1b2ba0ae"
+        },
+        {
+          "path": "Utils.js",
+          "sha256": "f00944abcb3a057c27275b0b2fc8d36b713fa8c0c0a29c5deff51e7639ff82ed"
+        }
+      ]
+    },
+    {
+      "package": "teleproto",
+      "version": "1.232.0",
+      "publishedSource": "https://registry.npmjs.org/teleproto/-/teleproto-1.232.0.tgz",
+      "files": [
+        {
+          "path": "client/methods/uploads.js",
+          "sha256": "63f53f2742ed6eccbded897c04eeea68460f53a413e22d858cc7ca277e95d9ff"
+        },
+        {
+          "path": "client/methods/uploads.d.ts",
+          "sha256": "35ef670b169ae301df6b5aa1d08b50696b444ec97723cd18f38e4dd67b9ce441"
+        },
+        {
+          "path": "client/methods/messages.js",
+          "sha256": "191d1f978bcab6d9558af76c7536223a2eafb30ef0dbe3c1b2f46ddc78fc126e"
+        },
+        {
+          "path": "client/methods/messageParse.js",
+          "sha256": "93f1614ce89f70f8218cbd6b11d3053bef73808f39acdd246d723f8f5ea0f33b"
+        },
+        {
+          "path": "Utils.js",
+          "sha256": "6b75edfd6029e9e3cc2cc070751293ab5da6600001beed6b9664769e98bdced8"
+        }
+      ]
+    }
+  ],
+  "primarySources": [
+    {
+      "url": "https://core.telegram.org/method/messages.sendMedia",
+      "sha256": "c2db8c0f251758a114437b803382e654baf7538440e0810449a3e7636a5734c8"
+    },
+    {
+      "url": "https://core.telegram.org/method/messages.sendMultiMedia",
+      "sha256": "99954bd42f6d463b25cd0ee17225fe79486a9e9f8934fe7a616e2eec94aa633d"
+    },
+    {
+      "url": "https://core.telegram.org/method/messages.editMessage",
+      "sha256": "e20ce8550c394d9f2f335e8f42fc278394b5a77fd93297c538ef75c7651bbfee"
+    }
+  ],
+  "contract": {
+    "shared": "Canonical, GramJS/teleproto facades and bound file replies/edits use the same caption conversion and selected RPC boundary.",
+    "captions": "Scalar captions belong to the first album item; arrays follow item order. Single files accept the first caption in an array. All used album captions validate before any source is consumed.",
+    "precedence": "FormattedText owns its entities. Explicit formattingEntities/entities skip parsing; top-level entities belong only to the first album item. Per-item caption, mode and entities override inherited settings.",
+    "ordering": "Validate captions and resolve mention users and the destination before upload. Preserve cancellation and typed lookup/submission failures without backend replay.",
+    "media": "Reuse existing shared schema casts for InputMedia, Photo, Document, MessageMedia, InputPhoto, InputDocument and uploaded InputFile values. Copy reusable media byte references before handing them to a backend.",
+    "limits": {
+      "albumItems": [
+        2,
+        10
+      ],
+      "albumCaptions": 10,
+      "textCodeUnits": 4194304,
+      "entitiesPerCaption": 1000
+    }
+  },
+  "differences": [
+    "Pinned SDK albums ignore formattingEntities; owned albums retain an explicit first-caption/per-item contract.",
+    "Owned album item options and FormattedText are extensions; pinned SDKs accept raw file arrays and caption strings.",
+    "Pinned GramJS layer 181 changes nested media/reply constructor IDs as well as method IDs. Complete bytes match when each request is serialized through the same SDK; current native bytes match teleproto and a separate current-schema translation of GramJS requests.",
+    "Validation happens before upload consumption, including invalid later captions and replacement-file edits. Pinned edit helpers prepare files before parsing text.",
+    "Top-level randomId never becomes a shared album item ID; per-item IDs remain independent.",
+    "This verifies explicit parser settings. SDK default Markdown selection and complete media-option parity remain separate unfinished criteria."
+  ],
+  "regression": {
+    "beforeCommit": "78df293f58eb148780f74570cee57bdebc23bfca",
+    "cases": 172,
+    "failingBefore": 154,
+    "passingGuardsBefore": 18,
+    "frozenDeclarationDiagnostics": 10,
+    "actualSdkRequestComparisons": 15,
+    "actualSdkMediaCastComparisons": 78,
+    "encryptedTcpCases": 3,
+    "tests": [
+      "tests/account-media-formatting.test.js",
+      "tests/account-media-formatting-boundaries.test.js",
+      "tests/account-media-formatting-rpc.test.js"
+    ],
+    "runtime": "node --loader ./experiments/account-media-before-loader.mjs --test tests/account-media-formatting*.test.js",
+    "declarations": "node experiments/composer-fluency-check.mjs --account-media --before",
+    "sdkFixture": "experiments/typed-account-media-sdk-fixture.ts",
+    "finiteProbe": "node --max-old-space-size=192 --stack-size=512 experiments/account-media-bounds.mjs"
+  },
+  "remaining": [
+    "SDK default parsing",
+    "Complete media flags, file inference, thumbnails and upload option parity",
+    "Older-schema RPC result bridges",
+    "Controlled-account and wider issue acceptance criteria"
+  ]
+}

@@ -1,0 +1,2205 @@
+{
+  "retrieved": "2026-10-29T23:46:05.154Z",
+  "installed": [
+    {
+      "package": "telegram",
+      "version": "2.26.22",
+      "publishedSource": "https://registry.npmjs.org/telegram/-/telegram-2.26.22.tgz",
+      "files": [
+        {
+          "path": "tl/custom/message.js",
+          "sha256": "4bd6d58c73ec23aab1f0150ff1310099287d5154f48ad83adf7f023af04681d3"
+        },
+        {
+          "path": "tl/custom/message.d.ts",
+          "sha256": "f96b3881b085b5cbeadb65aa3355163aa3ac60adedf211556ba847e2b1f00ee2"
+        },
+        {
+          "path": "client/messages.js",
+          "sha256": "0f1f8a2761d493065ea0f3c7dff27c32033045ad2a38b75c9e1ad5e2ea26ed14"
+        },
+        {
+          "path": "client/messages.d.ts",
+          "sha256": "6c79626468725df7fcdd3e5d7366aaeaf6a9dfd7b9d77ba647e458a88f64c7b8"
+        }
+      ]
+    },
+    {
+      "package": "teleproto",
+      "version": "1.232.0",
+      "publishedSource": "https://registry.npmjs.org/teleproto/-/teleproto-1.232.0.tgz",
+      "files": [
+        {
+          "path": "tl/custom/message.js",
+          "sha256": "c661cb0e5709a313237d5a1b5699109b0cf2038209fb350cdde9d7d892103437"
+        },
+        {
+          "path": "tl/custom/message.d.ts",
+          "sha256": "0a6a1de2fe0836e626d58441edf55c0b48b520a18e1e8d379e8e59b49bbb42a3"
+        },
+        {
+          "path": "richMessage.js",
+          "sha256": "f2ed642330e93b5240f0531ecda13146b661fc5f476bb86c13517b1dc32b68e9"
+        },
+        {
+          "path": "richMessage.d.ts",
+          "sha256": "a5efd286f57db4950b5a216db0f2d02636363299738bcaadeed2c3d05c24c683"
+        },
+        {
+          "path": "client/methods/messages.js",
+          "sha256": "191d1f978bcab6d9558af76c7536223a2eafb30ef0dbe3c1b2f46ddc78fc126e"
+        },
+        {
+          "path": "client/methods/messages.d.ts",
+          "sha256": "a061529b0e9f20553cbe367d4248b8e11212089ff0034ae3a682d98ded5fb34f"
+        }
+      ]
+    }
+  ],
+  "primarySchema": {
+    "url": "https://raw.githubusercontent.com/telegramdesktop/tdesktop/f1309a2456fb13161f8dc28984d7dec8d6cd8390/Telegram/SourceFiles/mtproto/scheme/api.tl",
+    "revision": "f1309a2456fb13161f8dc28984d7dec8d6cd8390",
+    "sha256": "76922ce265441d3f2f5188f56b69b41e1cb11354657ea547707507f8c3b93826"
+  },
+  "missingDocs": [
+    {
+      "url": "https://core.telegram.org/method/messages.getRichMessage",
+      "status": 200
+    },
+    {
+      "url": "https://core.telegram.org/constructor/richMessage",
+      "status": 200
+    },
+    {
+      "url": "https://core.telegram.org/api/rich-messages",
+      "status": 200
+    }
+  ],
+  "definitions": [
+    {
+      "name": "textEmpty",
+      "constructorId": 3695018575,
+      "fields": [],
+      "result": "RichText",
+      "officialLine": 912,
+      "officialDefinition": "textEmpty#dc3d824f = RichText;"
+    },
+    {
+      "name": "textPlain",
+      "constructorId": 1950782688,
+      "fields": [
+        {
+          "name": "text",
+          "type": "string"
+        }
+      ],
+      "result": "RichText",
+      "officialLine": 913,
+      "officialDefinition": "textPlain#744694e0 text:string = RichText;"
+    },
+    {
+      "name": "textBold",
+      "constructorId": 1730456516,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        }
+      ],
+      "result": "RichText",
+      "officialLine": 914,
+      "officialDefinition": "textBold#6724abc4 text:RichText = RichText;"
+    },
+    {
+      "name": "textItalic",
+      "constructorId": 3641877916,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        }
+      ],
+      "result": "RichText",
+      "officialLine": 915,
+      "officialDefinition": "textItalic#d912a59c text:RichText = RichText;"
+    },
+    {
+      "name": "textUnderline",
+      "constructorId": 3240501956,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        }
+      ],
+      "result": "RichText",
+      "officialLine": 916,
+      "officialDefinition": "textUnderline#c12622c4 text:RichText = RichText;"
+    },
+    {
+      "name": "textStrike",
+      "constructorId": 2616769429,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        }
+      ],
+      "result": "RichText",
+      "officialLine": 917,
+      "officialDefinition": "textStrike#9bf8bb95 text:RichText = RichText;"
+    },
+    {
+      "name": "textFixed",
+      "constructorId": 1816074681,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        }
+      ],
+      "result": "RichText",
+      "officialLine": 918,
+      "officialDefinition": "textFixed#6c3f19b9 text:RichText = RichText;"
+    },
+    {
+      "name": "textUrl",
+      "constructorId": 1009288385,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        },
+        {
+          "name": "url",
+          "type": "string"
+        },
+        {
+          "name": "webpage_id",
+          "type": "long"
+        }
+      ],
+      "result": "RichText",
+      "officialLine": 919,
+      "officialDefinition": "textUrl#3c2884c1 text:RichText url:string webpage_id:long = RichText;"
+    },
+    {
+      "name": "textEmail",
+      "constructorId": 3730443734,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        },
+        {
+          "name": "email",
+          "type": "string"
+        }
+      ],
+      "result": "RichText",
+      "officialLine": 920,
+      "officialDefinition": "textEmail#de5a0dd6 text:RichText email:string = RichText;"
+    },
+    {
+      "name": "textConcat",
+      "constructorId": 2120376535,
+      "fields": [
+        {
+          "name": "texts",
+          "type": "Vector<RichText>"
+        }
+      ],
+      "result": "RichText",
+      "officialLine": 921,
+      "officialDefinition": "textConcat#7e6260d7 texts:Vector<RichText> = RichText;"
+    },
+    {
+      "name": "textSubscript",
+      "constructorId": 3983181060,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        }
+      ],
+      "result": "RichText",
+      "officialLine": 922,
+      "officialDefinition": "textSubscript#ed6a8504 text:RichText = RichText;"
+    },
+    {
+      "name": "textSuperscript",
+      "constructorId": 3355139585,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        }
+      ],
+      "result": "RichText",
+      "officialLine": 923,
+      "officialDefinition": "textSuperscript#c7fb5e01 text:RichText = RichText;"
+    },
+    {
+      "name": "textMarked",
+      "constructorId": 55281185,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        }
+      ],
+      "result": "RichText",
+      "officialLine": 924,
+      "officialDefinition": "textMarked#34b8621 text:RichText = RichText;"
+    },
+    {
+      "name": "textPhone",
+      "constructorId": 483104362,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        },
+        {
+          "name": "phone",
+          "type": "string"
+        }
+      ],
+      "result": "RichText",
+      "officialLine": 925,
+      "officialDefinition": "textPhone#1ccb966a text:RichText phone:string = RichText;"
+    },
+    {
+      "name": "textImage",
+      "constructorId": 136105807,
+      "fields": [
+        {
+          "name": "document_id",
+          "type": "long"
+        },
+        {
+          "name": "w",
+          "type": "int"
+        },
+        {
+          "name": "h",
+          "type": "int"
+        }
+      ],
+      "result": "RichText",
+      "officialLine": 926,
+      "officialDefinition": "textImage#81ccf4f document_id:long w:int h:int = RichText;"
+    },
+    {
+      "name": "textAnchor",
+      "constructorId": 894777186,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        },
+        {
+          "name": "name",
+          "type": "string"
+        }
+      ],
+      "result": "RichText",
+      "officialLine": 927,
+      "officialDefinition": "textAnchor#35553762 text:RichText name:string = RichText;"
+    },
+    {
+      "name": "textMath",
+      "constructorId": 2637081751,
+      "fields": [
+        {
+          "name": "source",
+          "type": "string"
+        }
+      ],
+      "result": "RichText",
+      "officialLine": 928,
+      "officialDefinition": "textMath#9d2eac97 source:string = RichText;"
+    },
+    {
+      "name": "textCustomEmoji",
+      "constructorId": 2724288192,
+      "fields": [
+        {
+          "name": "document_id",
+          "type": "long"
+        },
+        {
+          "name": "alt",
+          "type": "string"
+        }
+      ],
+      "result": "RichText",
+      "officialLine": 929,
+      "officialDefinition": "textCustomEmoji#a26156c0 document_id:long alt:string = RichText;"
+    },
+    {
+      "name": "textSpoiler",
+      "constructorId": 1277844834,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        }
+      ],
+      "result": "RichText",
+      "officialLine": 930,
+      "officialDefinition": "textSpoiler#4c2a5d62 text:RichText = RichText;"
+    },
+    {
+      "name": "textMention",
+      "constructorId": 3441741636,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        }
+      ],
+      "result": "RichText",
+      "officialLine": 931,
+      "officialDefinition": "textMention#cd24cf44 text:RichText = RichText;"
+    },
+    {
+      "name": "textHashtag",
+      "constructorId": 1368728810,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        }
+      ],
+      "result": "RichText",
+      "officialLine": 932,
+      "officialDefinition": "textHashtag#519524ea text:RichText = RichText;"
+    },
+    {
+      "name": "textBotCommand",
+      "constructorId": 50276819,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        }
+      ],
+      "result": "RichText",
+      "officialLine": 933,
+      "officialDefinition": "textBotCommand#2ff29d3 text:RichText = RichText;"
+    },
+    {
+      "name": "textCashtag",
+      "constructorId": 2073958401,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        }
+      ],
+      "result": "RichText",
+      "officialLine": 934,
+      "officialDefinition": "textCashtag#7b9e1801 text:RichText = RichText;"
+    },
+    {
+      "name": "textAutoUrl",
+      "constructorId": 2892661674,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        }
+      ],
+      "result": "RichText",
+      "officialLine": 935,
+      "officialDefinition": "textAutoUrl#ac6a83aa text:RichText = RichText;"
+    },
+    {
+      "name": "textAutoEmail",
+      "constructorId": 3310789725,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        }
+      ],
+      "result": "RichText",
+      "officialLine": 936,
+      "officialDefinition": "textAutoEmail#c556a45d text:RichText = RichText;"
+    },
+    {
+      "name": "textAutoPhone",
+      "constructorId": 616720265,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        }
+      ],
+      "result": "RichText",
+      "officialLine": 937,
+      "officialDefinition": "textAutoPhone#24c26789 text:RichText = RichText;"
+    },
+    {
+      "name": "textBankCard",
+      "constructorId": 3109454125,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        }
+      ],
+      "result": "RichText",
+      "officialLine": 938,
+      "officialDefinition": "textBankCard#b956812d text:RichText = RichText;"
+    },
+    {
+      "name": "textMentionName",
+      "constructorId": 27917308,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        },
+        {
+          "name": "user_id",
+          "type": "long"
+        }
+      ],
+      "result": "RichText",
+      "officialLine": 939,
+      "officialDefinition": "textMentionName#1a9fbfc text:RichText user_id:long = RichText;"
+    },
+    {
+      "name": "textDate",
+      "constructorId": 2780061227,
+      "fields": [
+        {
+          "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "relative",
+          "type": "flags.0?true"
+        },
+        {
+          "name": "short_time",
+          "type": "flags.1?true"
+        },
+        {
+          "name": "long_time",
+          "type": "flags.2?true"
+        },
+        {
+          "name": "short_date",
+          "type": "flags.3?true"
+        },
+        {
+          "name": "long_date",
+          "type": "flags.4?true"
+        },
+        {
+          "name": "day_of_week",
+          "type": "flags.5?true"
+        },
+        {
+          "name": "text",
+          "type": "RichText"
+        },
+        {
+          "name": "date",
+          "type": "int"
+        }
+      ],
+      "result": "RichText",
+      "officialLine": 940,
+      "officialDefinition": "textDate#a5b45e2b flags:# relative:flags.0?true short_time:flags.1?true long_time:flags.2?true short_date:flags.3?true long_date:flags.4?true day_of_week:flags.5?true text:RichText date:int = RichText;"
+    },
+    {
+      "name": "textDiff",
+      "constructorId": 2525416272,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        },
+        {
+          "name": "old_text",
+          "type": "RichText"
+        }
+      ],
+      "result": "RichText",
+      "officialLine": 941,
+      "officialDefinition": "textDiff#9686cb50 text:RichText old_text:RichText = RichText;"
+    },
+    {
+      "name": "textButton",
+      "constructorId": 2949094614,
+      "fields": [
+        {
+          "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "text",
+          "type": "RichText"
+        },
+        {
+          "name": "type",
+          "type": "InlineButtonType"
+        },
+        {
+          "name": "style",
+          "type": "flags.0?RichButtonStyle"
+        }
+      ],
+      "result": "RichText",
+      "officialLine": 942,
+      "officialDefinition": "textButton#afc79cd6 flags:# text:RichText type:InlineButtonType style:flags.0?RichButtonStyle = RichText;"
+    },
+    {
+      "name": "textTonAddress",
+      "constructorId": 1020437354,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        }
+      ],
+      "result": "RichText",
+      "officialLine": 943,
+      "officialDefinition": "textTonAddress#3cd2a36a text:RichText = RichText;"
+    },
+    {
+      "name": "pageBlockUnsupported",
+      "constructorId": 324435594,
+      "fields": [],
+      "result": "PageBlock",
+      "officialLine": 945,
+      "officialDefinition": "pageBlockUnsupported#13567e8a = PageBlock;"
+    },
+    {
+      "name": "pageBlockTitle",
+      "constructorId": 1890305021,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 946,
+      "officialDefinition": "pageBlockTitle#70abc3fd text:RichText = PageBlock;"
+    },
+    {
+      "name": "pageBlockSubtitle",
+      "constructorId": 2415565343,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 947,
+      "officialDefinition": "pageBlockSubtitle#8ffa9a1f text:RichText = PageBlock;"
+    },
+    {
+      "name": "pageBlockAuthorDate",
+      "constructorId": 3132089824,
+      "fields": [
+        {
+          "name": "author",
+          "type": "RichText"
+        },
+        {
+          "name": "published_date",
+          "type": "int"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 948,
+      "officialDefinition": "pageBlockAuthorDate#baafe5e0 author:RichText published_date:int = PageBlock;"
+    },
+    {
+      "name": "pageBlockHeader",
+      "constructorId": 3218105580,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 949,
+      "officialDefinition": "pageBlockHeader#bfd064ec text:RichText = PageBlock;"
+    },
+    {
+      "name": "pageBlockSubheader",
+      "constructorId": 4046173921,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 950,
+      "officialDefinition": "pageBlockSubheader#f12bb6e1 text:RichText = PageBlock;"
+    },
+    {
+      "name": "pageBlockParagraph",
+      "constructorId": 1182402406,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 951,
+      "officialDefinition": "pageBlockParagraph#467a0766 text:RichText = PageBlock;"
+    },
+    {
+      "name": "pageBlockPreformatted",
+      "constructorId": 3228621118,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        },
+        {
+          "name": "language",
+          "type": "string"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 952,
+      "officialDefinition": "pageBlockPreformatted#c070d93e text:RichText language:string = PageBlock;"
+    },
+    {
+      "name": "pageBlockFooter",
+      "constructorId": 1216809369,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 953,
+      "officialDefinition": "pageBlockFooter#48870999 text:RichText = PageBlock;"
+    },
+    {
+      "name": "pageBlockDivider",
+      "constructorId": 3676352904,
+      "fields": [],
+      "result": "PageBlock",
+      "officialLine": 954,
+      "officialDefinition": "pageBlockDivider#db20b188 = PageBlock;"
+    },
+    {
+      "name": "pageBlockAnchor",
+      "constructorId": 3456972720,
+      "fields": [
+        {
+          "name": "name",
+          "type": "string"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 955,
+      "officialDefinition": "pageBlockAnchor#ce0d37b0 name:string = PageBlock;"
+    },
+    {
+      "name": "pageBlockList",
+      "constructorId": 3840442385,
+      "fields": [
+        {
+          "name": "items",
+          "type": "Vector<PageListItem>"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 956,
+      "officialDefinition": "pageBlockList#e4e88011 items:Vector<PageListItem> = PageBlock;"
+    },
+    {
+      "name": "pageBlockBlockquote",
+      "constructorId": 1724999435,
+      "fields": [
+        {
+          "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "collapsed",
+          "type": "flags.0?true"
+        },
+        {
+          "name": "text",
+          "type": "RichText"
+        },
+        {
+          "name": "caption",
+          "type": "RichText"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 957,
+      "officialDefinition": "pageBlockBlockquote#66d1670b flags:# collapsed:flags.0?true text:RichText caption:RichText = PageBlock;"
+    },
+    {
+      "name": "pageBlockPullquote",
+      "constructorId": 1329878739,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        },
+        {
+          "name": "caption",
+          "type": "RichText"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 958,
+      "officialDefinition": "pageBlockPullquote#4f4456d3 text:RichText caption:RichText = PageBlock;"
+    },
+    {
+      "name": "pageBlockPhoto",
+      "constructorId": 391759200,
+      "fields": [
+        {
+          "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "spoiler",
+          "type": "flags.1?true"
+        },
+        {
+          "name": "photo_id",
+          "type": "long"
+        },
+        {
+          "name": "caption",
+          "type": "PageCaption"
+        },
+        {
+          "name": "url",
+          "type": "flags.0?string"
+        },
+        {
+          "name": "webpage_id",
+          "type": "flags.0?long"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 959,
+      "officialDefinition": "pageBlockPhoto#1759c560 flags:# spoiler:flags.1?true photo_id:long caption:PageCaption url:flags.0?string webpage_id:flags.0?long = PageBlock;"
+    },
+    {
+      "name": "pageBlockVideo",
+      "constructorId": 2089805750,
+      "fields": [
+        {
+          "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "autoplay",
+          "type": "flags.0?true"
+        },
+        {
+          "name": "loop",
+          "type": "flags.1?true"
+        },
+        {
+          "name": "spoiler",
+          "type": "flags.2?true"
+        },
+        {
+          "name": "video_id",
+          "type": "long"
+        },
+        {
+          "name": "caption",
+          "type": "PageCaption"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 960,
+      "officialDefinition": "pageBlockVideo#7c8fe7b6 flags:# autoplay:flags.0?true loop:flags.1?true spoiler:flags.2?true video_id:long caption:PageCaption = PageBlock;"
+    },
+    {
+      "name": "pageBlockCover",
+      "constructorId": 972174080,
+      "fields": [
+        {
+          "name": "cover",
+          "type": "PageBlock"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 961,
+      "officialDefinition": "pageBlockCover#39f23300 cover:PageBlock = PageBlock;"
+    },
+    {
+      "name": "pageBlockEmbed",
+      "constructorId": 2826014149,
+      "fields": [
+        {
+          "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "full_width",
+          "type": "flags.0?true"
+        },
+        {
+          "name": "allow_scrolling",
+          "type": "flags.3?true"
+        },
+        {
+          "name": "url",
+          "type": "flags.1?string"
+        },
+        {
+          "name": "html",
+          "type": "flags.2?string"
+        },
+        {
+          "name": "poster_photo_id",
+          "type": "flags.4?long"
+        },
+        {
+          "name": "w",
+          "type": "flags.5?int"
+        },
+        {
+          "name": "h",
+          "type": "flags.5?int"
+        },
+        {
+          "name": "caption",
+          "type": "PageCaption"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 962,
+      "officialDefinition": "pageBlockEmbed#a8718dc5 flags:# full_width:flags.0?true allow_scrolling:flags.3?true url:flags.1?string html:flags.2?string poster_photo_id:flags.4?long w:flags.5?int h:flags.5?int caption:PageCaption = PageBlock;"
+    },
+    {
+      "name": "pageBlockEmbedPost",
+      "constructorId": 4065961995,
+      "fields": [
+        {
+          "name": "url",
+          "type": "string"
+        },
+        {
+          "name": "webpage_id",
+          "type": "long"
+        },
+        {
+          "name": "author_photo_id",
+          "type": "long"
+        },
+        {
+          "name": "author",
+          "type": "string"
+        },
+        {
+          "name": "date",
+          "type": "int"
+        },
+        {
+          "name": "blocks",
+          "type": "Vector<PageBlock>"
+        },
+        {
+          "name": "caption",
+          "type": "PageCaption"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 963,
+      "officialDefinition": "pageBlockEmbedPost#f259a80b url:string webpage_id:long author_photo_id:long author:string date:int blocks:Vector<PageBlock> caption:PageCaption = PageBlock;"
+    },
+    {
+      "name": "pageBlockCollage",
+      "constructorId": 1705048653,
+      "fields": [
+        {
+          "name": "items",
+          "type": "Vector<PageBlock>"
+        },
+        {
+          "name": "caption",
+          "type": "PageCaption"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 964,
+      "officialDefinition": "pageBlockCollage#65a0fa4d items:Vector<PageBlock> caption:PageCaption = PageBlock;"
+    },
+    {
+      "name": "pageBlockSlideshow",
+      "constructorId": 52401552,
+      "fields": [
+        {
+          "name": "items",
+          "type": "Vector<PageBlock>"
+        },
+        {
+          "name": "caption",
+          "type": "PageCaption"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 965,
+      "officialDefinition": "pageBlockSlideshow#31f9590 items:Vector<PageBlock> caption:PageCaption = PageBlock;"
+    },
+    {
+      "name": "pageBlockChannel",
+      "constructorId": 4011282869,
+      "fields": [
+        {
+          "name": "channel",
+          "type": "Chat"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 966,
+      "officialDefinition": "pageBlockChannel#ef1751b5 channel:Chat = PageBlock;"
+    },
+    {
+      "name": "pageBlockAudio",
+      "constructorId": 2151899626,
+      "fields": [
+        {
+          "name": "audio_id",
+          "type": "long"
+        },
+        {
+          "name": "caption",
+          "type": "PageCaption"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 967,
+      "officialDefinition": "pageBlockAudio#804361ea audio_id:long caption:PageCaption = PageBlock;"
+    },
+    {
+      "name": "pageBlockKicker",
+      "constructorId": 504660880,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 968,
+      "officialDefinition": "pageBlockKicker#1e148390 text:RichText = PageBlock;"
+    },
+    {
+      "name": "pageBlockTable",
+      "constructorId": 3209554562,
+      "fields": [
+        {
+          "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "bordered",
+          "type": "flags.0?true"
+        },
+        {
+          "name": "striped",
+          "type": "flags.1?true"
+        },
+        {
+          "name": "compact",
+          "type": "flags.2?true"
+        },
+        {
+          "name": "title",
+          "type": "RichText"
+        },
+        {
+          "name": "rows",
+          "type": "Vector<PageTableRow>"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 969,
+      "officialDefinition": "pageBlockTable#bf4dea82 flags:# bordered:flags.0?true striped:flags.1?true compact:flags.2?true title:RichText rows:Vector<PageTableRow> = PageBlock;"
+    },
+    {
+      "name": "pageBlockOrderedList",
+      "constructorId": 534181569,
+      "fields": [
+        {
+          "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "reversed",
+          "type": "flags.2?true"
+        },
+        {
+          "name": "items",
+          "type": "Vector<PageListOrderedItem>"
+        },
+        {
+          "name": "start",
+          "type": "flags.0?int"
+        },
+        {
+          "name": "type",
+          "type": "flags.1?string"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 970,
+      "officialDefinition": "pageBlockOrderedList#1fd6f6c1 flags:# reversed:flags.2?true items:Vector<PageListOrderedItem> start:flags.0?int type:flags.1?string = PageBlock;"
+    },
+    {
+      "name": "pageBlockDetails",
+      "constructorId": 1987480557,
+      "fields": [
+        {
+          "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "open",
+          "type": "flags.0?true"
+        },
+        {
+          "name": "blocks",
+          "type": "Vector<PageBlock>"
+        },
+        {
+          "name": "title",
+          "type": "RichText"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 971,
+      "officialDefinition": "pageBlockDetails#76768bed flags:# open:flags.0?true blocks:Vector<PageBlock> title:RichText = PageBlock;"
+    },
+    {
+      "name": "pageBlockRelatedArticles",
+      "constructorId": 370236054,
+      "fields": [
+        {
+          "name": "title",
+          "type": "RichText"
+        },
+        {
+          "name": "articles",
+          "type": "Vector<PageRelatedArticle>"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 972,
+      "officialDefinition": "pageBlockRelatedArticles#16115a96 title:RichText articles:Vector<PageRelatedArticle> = PageBlock;"
+    },
+    {
+      "name": "pageBlockMap",
+      "constructorId": 2756656886,
+      "fields": [
+        {
+          "name": "geo",
+          "type": "GeoPoint"
+        },
+        {
+          "name": "zoom",
+          "type": "int"
+        },
+        {
+          "name": "w",
+          "type": "int"
+        },
+        {
+          "name": "h",
+          "type": "int"
+        },
+        {
+          "name": "caption",
+          "type": "PageCaption"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 973,
+      "officialDefinition": "pageBlockMap#a44f3ef6 geo:GeoPoint zoom:int w:int h:int caption:PageCaption = PageBlock;"
+    },
+    {
+      "name": "pageBlockHeading1",
+      "constructorId": 3137275695,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 974,
+      "officialDefinition": "pageBlockHeading1#baff072f text:RichText = PageBlock;"
+    },
+    {
+      "name": "pageBlockHeading2",
+      "constructorId": 158018284,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 975,
+      "officialDefinition": "pageBlockHeading2#96b2aec text:RichText = PageBlock;"
+    },
+    {
+      "name": "pageBlockHeading3",
+      "constructorId": 1743204781,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 976,
+      "officialDefinition": "pageBlockHeading3#67e731ad text:RichText = PageBlock;"
+    },
+    {
+      "name": "pageBlockHeading4",
+      "constructorId": 3039983403,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 977,
+      "officialDefinition": "pageBlockHeading4#b532772b text:RichText = PageBlock;"
+    },
+    {
+      "name": "pageBlockHeading5",
+      "constructorId": 3686689898,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 978,
+      "officialDefinition": "pageBlockHeading5#dbbe6c6a text:RichText = PageBlock;"
+    },
+    {
+      "name": "pageBlockHeading6",
+      "constructorId": 1747599785,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 979,
+      "officialDefinition": "pageBlockHeading6#682a41a9 text:RichText = PageBlock;"
+    },
+    {
+      "name": "pageBlockMath",
+      "constructorId": 1493699616,
+      "fields": [
+        {
+          "name": "source",
+          "type": "string"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 980,
+      "officialDefinition": "pageBlockMath#59080c20 source:string = PageBlock;"
+    },
+    {
+      "name": "pageBlockThinking",
+      "constructorId": 1009361890,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 981,
+      "officialDefinition": "pageBlockThinking#3c29a3e2 text:RichText = PageBlock;"
+    },
+    {
+      "name": "inputPageBlockMap",
+      "constructorId": 1464557951,
+      "fields": [
+        {
+          "name": "geo",
+          "type": "InputGeoPoint"
+        },
+        {
+          "name": "zoom",
+          "type": "int"
+        },
+        {
+          "name": "w",
+          "type": "int"
+        },
+        {
+          "name": "h",
+          "type": "int"
+        },
+        {
+          "name": "caption",
+          "type": "PageCaption"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 982,
+      "officialDefinition": "inputPageBlockMap#574b617f geo:InputGeoPoint zoom:int w:int h:int caption:PageCaption = PageBlock;"
+    },
+    {
+      "name": "pageBlockBlockquoteBlocks",
+      "constructorId": 242108356,
+      "fields": [
+        {
+          "name": "blocks",
+          "type": "Vector<PageBlock>"
+        },
+        {
+          "name": "caption",
+          "type": "RichText"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 983,
+      "officialDefinition": "pageBlockBlockquoteBlocks#e6e47c4 blocks:Vector<PageBlock> caption:RichText = PageBlock;"
+    },
+    {
+      "name": "pageBlockButtonRow",
+      "constructorId": 1835270936,
+      "fields": [
+        {
+          "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "align_left",
+          "type": "flags.0?true"
+        },
+        {
+          "name": "align_center",
+          "type": "flags.1?true"
+        },
+        {
+          "name": "align_right",
+          "type": "flags.2?true"
+        },
+        {
+          "name": "buttons",
+          "type": "Vector<PageButton>"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 984,
+      "officialDefinition": "pageBlockButtonRow#6d640318 flags:# align_left:flags.0?true align_center:flags.1?true align_right:flags.2?true buttons:Vector<PageButton> = PageBlock;"
+    },
+    {
+      "name": "pageBlockDocument",
+      "constructorId": 955923363,
+      "fields": [
+        {
+          "name": "document_id",
+          "type": "long"
+        },
+        {
+          "name": "caption",
+          "type": "PageCaption"
+        }
+      ],
+      "result": "PageBlock",
+      "officialLine": 985,
+      "officialDefinition": "pageBlockDocument#38fa3ba3 document_id:long caption:PageCaption = PageBlock;"
+    },
+    {
+      "name": "pageTableCell",
+      "constructorId": 878078826,
+      "fields": [
+        {
+          "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "header",
+          "type": "flags.0?true"
+        },
+        {
+          "name": "align_center",
+          "type": "flags.3?true"
+        },
+        {
+          "name": "align_right",
+          "type": "flags.4?true"
+        },
+        {
+          "name": "valign_middle",
+          "type": "flags.5?true"
+        },
+        {
+          "name": "valign_bottom",
+          "type": "flags.6?true"
+        },
+        {
+          "name": "text",
+          "type": "flags.7?RichText"
+        },
+        {
+          "name": "colspan",
+          "type": "flags.1?int"
+        },
+        {
+          "name": "rowspan",
+          "type": "flags.2?int"
+        }
+      ],
+      "result": "PageTableCell",
+      "officialLine": 1258,
+      "officialDefinition": "pageTableCell#34566b6a flags:# header:flags.0?true align_center:flags.3?true align_right:flags.4?true valign_middle:flags.5?true valign_bottom:flags.6?true text:flags.7?RichText colspan:flags.1?int rowspan:flags.2?int = PageTableCell;"
+    },
+    {
+      "name": "pageTableRow",
+      "constructorId": 3770729957,
+      "fields": [
+        {
+          "name": "cells",
+          "type": "Vector<PageTableCell>"
+        }
+      ],
+      "result": "PageTableRow",
+      "officialLine": 1260,
+      "officialDefinition": "pageTableRow#e0c0c5e5 cells:Vector<PageTableCell> = PageTableRow;"
+    },
+    {
+      "name": "pageCaption",
+      "constructorId": 1869903447,
+      "fields": [
+        {
+          "name": "text",
+          "type": "RichText"
+        },
+        {
+          "name": "credit",
+          "type": "RichText"
+        }
+      ],
+      "result": "PageCaption",
+      "officialLine": 1262,
+      "officialDefinition": "pageCaption#6f747657 text:RichText credit:RichText = PageCaption;"
+    },
+    {
+      "name": "pageListItemText",
+      "constructorId": 794323004,
+      "fields": [
+        {
+          "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "checkbox",
+          "type": "flags.0?true"
+        },
+        {
+          "name": "checked",
+          "type": "flags.1?true"
+        },
+        {
+          "name": "text",
+          "type": "RichText"
+        }
+      ],
+      "result": "PageListItem",
+      "officialLine": 1264,
+      "officialDefinition": "pageListItemText#2f58683c flags:# checkbox:flags.0?true checked:flags.1?true text:RichText = PageListItem;"
+    },
+    {
+      "name": "pageListItemBlocks",
+      "constructorId": 1674209194,
+      "fields": [
+        {
+          "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "checkbox",
+          "type": "flags.0?true"
+        },
+        {
+          "name": "checked",
+          "type": "flags.1?true"
+        },
+        {
+          "name": "blocks",
+          "type": "Vector<PageBlock>"
+        }
+      ],
+      "result": "PageListItem",
+      "officialLine": 1265,
+      "officialDefinition": "pageListItemBlocks#63ca67aa flags:# checkbox:flags.0?true checked:flags.1?true blocks:Vector<PageBlock> = PageListItem;"
+    },
+    {
+      "name": "pageListOrderedItemText",
+      "constructorId": 352522633,
+      "fields": [
+        {
+          "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "checkbox",
+          "type": "flags.0?true"
+        },
+        {
+          "name": "checked",
+          "type": "flags.1?true"
+        },
+        {
+          "name": "num",
+          "type": "flags.2?string"
+        },
+        {
+          "name": "text",
+          "type": "RichText"
+        },
+        {
+          "name": "value",
+          "type": "flags.3?int"
+        },
+        {
+          "name": "type",
+          "type": "flags.4?string"
+        }
+      ],
+      "result": "PageListOrderedItem",
+      "officialLine": 1267,
+      "officialDefinition": "pageListOrderedItemText#15031189 flags:# checkbox:flags.0?true checked:flags.1?true num:flags.2?string text:RichText value:flags.3?int type:flags.4?string = PageListOrderedItem;"
+    },
+    {
+      "name": "pageListOrderedItemBlocks",
+      "constructorId": 2415056368,
+      "fields": [
+        {
+          "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "checkbox",
+          "type": "flags.0?true"
+        },
+        {
+          "name": "checked",
+          "type": "flags.1?true"
+        },
+        {
+          "name": "num",
+          "type": "flags.2?string"
+        },
+        {
+          "name": "blocks",
+          "type": "Vector<PageBlock>"
+        },
+        {
+          "name": "value",
+          "type": "flags.3?int"
+        },
+        {
+          "name": "type",
+          "type": "flags.4?string"
+        }
+      ],
+      "result": "PageListOrderedItem",
+      "officialLine": 1268,
+      "officialDefinition": "pageListOrderedItemBlocks#8ff2d5f0 flags:# checkbox:flags.0?true checked:flags.1?true num:flags.2?string blocks:Vector<PageBlock> value:flags.3?int type:flags.4?string = PageListOrderedItem;"
+    },
+    {
+      "name": "pageRelatedArticle",
+      "constructorId": 3012615176,
+      "fields": [
+        {
+          "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "url",
+          "type": "string"
+        },
+        {
+          "name": "webpage_id",
+          "type": "long"
+        },
+        {
+          "name": "title",
+          "type": "flags.0?string"
+        },
+        {
+          "name": "description",
+          "type": "flags.1?string"
+        },
+        {
+          "name": "photo_id",
+          "type": "flags.2?long"
+        },
+        {
+          "name": "author",
+          "type": "flags.3?string"
+        },
+        {
+          "name": "published_date",
+          "type": "flags.4?int"
+        }
+      ],
+      "result": "PageRelatedArticle",
+      "officialLine": 1270,
+      "officialDefinition": "pageRelatedArticle#b390dc08 flags:# url:string webpage_id:long title:flags.0?string description:flags.1?string photo_id:flags.2?long author:flags.3?string published_date:flags.4?int = PageRelatedArticle;"
+    },
+    {
+      "name": "inputRichFilePhoto",
+      "constructorId": 2600493611,
+      "fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "photo",
+          "type": "InputPhoto"
+        }
+      ],
+      "result": "InputRichFile",
+      "officialLine": 2228,
+      "officialDefinition": "inputRichFilePhoto#9b00622b id:string photo:InputPhoto = InputRichFile;"
+    },
+    {
+      "name": "inputRichFileDocument",
+      "constructorId": 2200444349,
+      "fields": [
+        {
+          "name": "id",
+          "type": "string"
+        },
+        {
+          "name": "document",
+          "type": "InputDocument"
+        }
+      ],
+      "result": "InputRichFile",
+      "officialLine": 2229,
+      "officialDefinition": "inputRichFileDocument#83281dbd id:string document:InputDocument = InputRichFile;"
+    },
+    {
+      "name": "inputRichMessage",
+      "constructorId": 3838069244,
+      "fields": [
+        {
+          "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "rtl",
+          "type": "flags.0?true"
+        },
+        {
+          "name": "noautolink",
+          "type": "flags.1?true"
+        },
+        {
+          "name": "blocks",
+          "type": "Vector<PageBlock>"
+        },
+        {
+          "name": "photos",
+          "type": "flags.2?Vector<InputPhoto>"
+        },
+        {
+          "name": "documents",
+          "type": "flags.3?Vector<InputDocument>"
+        },
+        {
+          "name": "users",
+          "type": "flags.4?Vector<InputUser>"
+        }
+      ],
+      "result": "InputRichMessage",
+      "officialLine": 2231,
+      "officialDefinition": "inputRichMessage#e4c449fc flags:# rtl:flags.0?true noautolink:flags.1?true blocks:Vector<PageBlock> photos:flags.2?Vector<InputPhoto> documents:flags.3?Vector<InputDocument> users:flags.4?Vector<InputUser> = InputRichMessage;"
+    },
+    {
+      "name": "inputRichMessageHTML",
+      "constructorId": 3670770538,
+      "fields": [
+        {
+          "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "rtl",
+          "type": "flags.0?true"
+        },
+        {
+          "name": "noautolink",
+          "type": "flags.1?true"
+        },
+        {
+          "name": "html",
+          "type": "string"
+        },
+        {
+          "name": "files",
+          "type": "flags.2?Vector<InputRichFile>"
+        }
+      ],
+      "result": "InputRichMessage",
+      "officialLine": 2232,
+      "officialDefinition": "inputRichMessageHTML#dacb836a flags:# rtl:flags.0?true noautolink:flags.1?true html:string files:flags.2?Vector<InputRichFile> = InputRichMessage;"
+    },
+    {
+      "name": "inputRichMessageMarkdown",
+      "constructorId": 4937516,
+      "fields": [
+        {
+          "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "rtl",
+          "type": "flags.0?true"
+        },
+        {
+          "name": "noautolink",
+          "type": "flags.1?true"
+        },
+        {
+          "name": "markdown",
+          "type": "string"
+        },
+        {
+          "name": "files",
+          "type": "flags.2?Vector<InputRichFile>"
+        }
+      ],
+      "result": "InputRichMessage",
+      "officialLine": 2233,
+      "officialDefinition": "inputRichMessageMarkdown#4b572c flags:# rtl:flags.0?true noautolink:flags.1?true markdown:string files:flags.2?Vector<InputRichFile> = InputRichMessage;"
+    },
+    {
+      "name": "richMessage",
+      "constructorId": 3136527755,
+      "fields": [
+        {
+          "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "rtl",
+          "type": "flags.0?true"
+        },
+        {
+          "name": "part",
+          "type": "flags.1?true"
+        },
+        {
+          "name": "blocks",
+          "type": "Vector<PageBlock>"
+        },
+        {
+          "name": "photos",
+          "type": "Vector<Photo>"
+        },
+        {
+          "name": "documents",
+          "type": "Vector<Document>"
+        }
+      ],
+      "result": "RichMessage",
+      "officialLine": 2235,
+      "officialDefinition": "richMessage#baf39d8b flags:# rtl:flags.0?true part:flags.1?true blocks:Vector<PageBlock> photos:Vector<Photo> documents:Vector<Document> = RichMessage;"
+    },
+    {
+      "name": "inlineButtonTypeUrl",
+      "constructorId": 3970234580,
+      "fields": [
+        {
+          "name": "url",
+          "type": "string"
+        }
+      ],
+      "result": "InlineButtonType",
+      "officialLine": 2259,
+      "officialDefinition": "inlineButtonTypeUrl#eca4f8d4 url:string = InlineButtonType;"
+    },
+    {
+      "name": "inlineButtonTypeUrlAuth",
+      "constructorId": 3218091426,
+      "fields": [
+        {
+          "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "fwd_text",
+          "type": "flags.0?string"
+        },
+        {
+          "name": "url",
+          "type": "string"
+        },
+        {
+          "name": "button_id",
+          "type": "int"
+        }
+      ],
+      "result": "InlineButtonType",
+      "officialLine": 2260,
+      "officialDefinition": "inlineButtonTypeUrlAuth#bfd02da2 flags:# fwd_text:flags.0?string url:string button_id:int = InlineButtonType;"
+    },
+    {
+      "name": "inputInlineButtonTypeUrlAuth",
+      "constructorId": 2573319348,
+      "fields": [
+        {
+          "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "request_write_access",
+          "type": "flags.0?true"
+        },
+        {
+          "name": "fwd_text",
+          "type": "flags.1?string"
+        },
+        {
+          "name": "url",
+          "type": "string"
+        },
+        {
+          "name": "bot",
+          "type": "flags.2?InputUser"
+        }
+      ],
+      "result": "InlineButtonType",
+      "officialLine": 2261,
+      "officialDefinition": "inputInlineButtonTypeUrlAuth#9961bcb4 flags:# request_write_access:flags.0?true fwd_text:flags.1?string url:string bot:flags.2?InputUser = InlineButtonType;"
+    },
+    {
+      "name": "inlineButtonTypeWebView",
+      "constructorId": 1003140532,
+      "fields": [
+        {
+          "name": "url",
+          "type": "string"
+        }
+      ],
+      "result": "InlineButtonType",
+      "officialLine": 2262,
+      "officialDefinition": "inlineButtonTypeWebView#3bcab5b4 url:string = InlineButtonType;"
+    },
+    {
+      "name": "inlineButtonTypeCallback",
+      "constructorId": 693484600,
+      "fields": [
+        {
+          "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "requires_password",
+          "type": "flags.0?true"
+        },
+        {
+          "name": "data",
+          "type": "bytes"
+        }
+      ],
+      "result": "InlineButtonType",
+      "officialLine": 2263,
+      "officialDefinition": "inlineButtonTypeCallback#2955bc38 flags:# requires_password:flags.0?true data:bytes = InlineButtonType;"
+    },
+    {
+      "name": "inlineButtonTypeGame",
+      "constructorId": 1557360797,
+      "fields": [],
+      "result": "InlineButtonType",
+      "officialLine": 2264,
+      "officialDefinition": "inlineButtonTypeGame#5cd3709d = InlineButtonType;"
+    },
+    {
+      "name": "inlineButtonTypeBuy",
+      "constructorId": 1220204453,
+      "fields": [],
+      "result": "InlineButtonType",
+      "officialLine": 2265,
+      "officialDefinition": "inlineButtonTypeBuy#48bad7a5 = InlineButtonType;"
+    },
+    {
+      "name": "inlineButtonTypeSwitchInline",
+      "constructorId": 2474065909,
+      "fields": [
+        {
+          "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "same_peer",
+          "type": "flags.0?true"
+        },
+        {
+          "name": "query",
+          "type": "string"
+        },
+        {
+          "name": "peer_types",
+          "type": "flags.1?Vector<InlineQueryPeerType>"
+        }
+      ],
+      "result": "InlineButtonType",
+      "officialLine": 2266,
+      "officialDefinition": "inlineButtonTypeSwitchInline#93773ff5 flags:# same_peer:flags.0?true query:string peer_types:flags.1?Vector<InlineQueryPeerType> = InlineButtonType;"
+    },
+    {
+      "name": "inlineButtonTypeUserProfile",
+      "constructorId": 1067663311,
+      "fields": [
+        {
+          "name": "user_id",
+          "type": "long"
+        }
+      ],
+      "result": "InlineButtonType",
+      "officialLine": 2267,
+      "officialDefinition": "inlineButtonTypeUserProfile#3fa33fcf user_id:long = InlineButtonType;"
+    },
+    {
+      "name": "inputInlineButtonTypeUserProfile",
+      "constructorId": 1408487002,
+      "fields": [
+        {
+          "name": "user_id",
+          "type": "InputUser"
+        }
+      ],
+      "result": "InlineButtonType",
+      "officialLine": 2268,
+      "officialDefinition": "inputInlineButtonTypeUserProfile#53f3ce5a user_id:InputUser = InlineButtonType;"
+    },
+    {
+      "name": "inlineButtonTypeCopy",
+      "constructorId": 3021812338,
+      "fields": [
+        {
+          "name": "copy_text",
+          "type": "string"
+        }
+      ],
+      "result": "InlineButtonType",
+      "officialLine": 2269,
+      "officialDefinition": "inlineButtonTypeCopy#b41d3272 copy_text:string = InlineButtonType;"
+    },
+    {
+      "name": "inlineButtonTypeDisabled",
+      "constructorId": 2755158429,
+      "fields": [],
+      "result": "InlineButtonType",
+      "officialLine": 2270,
+      "officialDefinition": "inlineButtonTypeDisabled#a438619d = InlineButtonType;"
+    },
+    {
+      "name": "richButtonStyle",
+      "constructorId": 63312061,
+      "fields": [
+        {
+          "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "bg_primary",
+          "type": "flags.0?true"
+        },
+        {
+          "name": "bg_danger",
+          "type": "flags.1?true"
+        },
+        {
+          "name": "bg_success",
+          "type": "flags.2?true"
+        },
+        {
+          "name": "link",
+          "type": "flags.3?true"
+        }
+      ],
+      "result": "RichButtonStyle",
+      "officialLine": 2276,
+      "officialDefinition": "richButtonStyle#3c610bd flags:# bg_primary:flags.0?true bg_danger:flags.1?true bg_success:flags.2?true link:flags.3?true = RichButtonStyle;"
+    },
+    {
+      "name": "pageButton",
+      "constructorId": 1764381832,
+      "fields": [
+        {
+          "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "text",
+          "type": "RichText"
+        },
+        {
+          "name": "type",
+          "type": "InlineButtonType"
+        },
+        {
+          "name": "style",
+          "type": "flags.0?RichButtonStyle"
+        }
+      ],
+      "result": "PageButton",
+      "officialLine": 2278,
+      "officialDefinition": "pageButton#692a5488 flags:# text:RichText type:InlineButtonType style:flags.0?RichButtonStyle = PageButton;"
+    },
+    {
+      "name": "messages.sendMessage",
+      "constructorId": 4277440354,
+      "fields": [
+        {
+          "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "no_webpage",
+          "type": "flags.1?true"
+        },
+        {
+          "name": "silent",
+          "type": "flags.5?true"
+        },
+        {
+          "name": "background",
+          "type": "flags.6?true"
+        },
+        {
+          "name": "clear_draft",
+          "type": "flags.7?true"
+        },
+        {
+          "name": "noforwards",
+          "type": "flags.14?true"
+        },
+        {
+          "name": "update_stickersets_order",
+          "type": "flags.15?true"
+        },
+        {
+          "name": "invert_media",
+          "type": "flags.16?true"
+        },
+        {
+          "name": "allow_paid_floodskip",
+          "type": "flags.19?true"
+        },
+        {
+          "name": "peer",
+          "type": "InputPeer"
+        },
+        {
+          "name": "reply_to",
+          "type": "flags.0?InputReplyTo"
+        },
+        {
+          "name": "message",
+          "type": "string"
+        },
+        {
+          "name": "random_id",
+          "type": "long"
+        },
+        {
+          "name": "reply_markup",
+          "type": "flags.2?ReplyMarkup"
+        },
+        {
+          "name": "entities",
+          "type": "flags.3?Vector<MessageEntity>"
+        },
+        {
+          "name": "schedule_date",
+          "type": "flags.10?int"
+        },
+        {
+          "name": "schedule_repeat_period",
+          "type": "flags.24?int"
+        },
+        {
+          "name": "send_as",
+          "type": "flags.13?InputPeer"
+        },
+        {
+          "name": "quick_reply_shortcut",
+          "type": "flags.17?InputQuickReplyShortcut"
+        },
+        {
+          "name": "effect",
+          "type": "flags.18?long"
+        },
+        {
+          "name": "allow_paid_stars",
+          "type": "flags.21?long"
+        },
+        {
+          "name": "suggested_post",
+          "type": "flags.22?SuggestedPost"
+        },
+        {
+          "name": "rich_message",
+          "type": "flags.23?InputRichMessage"
+        }
+      ],
+      "result": "Updates",
+      "officialLine": 2602,
+      "officialDefinition": "messages.sendMessage#fef48f62 flags:# no_webpage:flags.1?true silent:flags.5?true background:flags.6?true clear_draft:flags.7?true noforwards:flags.14?true update_stickersets_order:flags.15?true invert_media:flags.16?true allow_paid_floodskip:flags.19?true peer:InputPeer reply_to:flags.0?InputReplyTo message:string random_id:long reply_markup:flags.2?ReplyMarkup entities:flags.3?Vector<MessageEntity> schedule_date:flags.10?int schedule_repeat_period:flags.24?int send_as:flags.13?InputPeer quick_reply_shortcut:flags.17?InputQuickReplyShortcut effect:flags.18?long allow_paid_stars:flags.21?long suggested_post:flags.22?SuggestedPost rich_message:flags.23?InputRichMessage = Updates;"
+    },
+    {
+      "name": "messages.editMessage",
+      "constructorId": 2970019436,
+      "fields": [
+        {
+          "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "no_webpage",
+          "type": "flags.1?true"
+        },
+        {
+          "name": "invert_media",
+          "type": "flags.16?true"
+        },
+        {
+          "name": "peer",
+          "type": "InputPeer"
+        },
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "message",
+          "type": "flags.11?string"
+        },
+        {
+          "name": "media",
+          "type": "flags.14?InputMedia"
+        },
+        {
+          "name": "reply_markup",
+          "type": "flags.2?ReplyMarkup"
+        },
+        {
+          "name": "entities",
+          "type": "flags.3?Vector<MessageEntity>"
+        },
+        {
+          "name": "schedule_date",
+          "type": "flags.15?int"
+        },
+        {
+          "name": "schedule_repeat_period",
+          "type": "flags.18?int"
+        },
+        {
+          "name": "quick_reply_shortcut_id",
+          "type": "flags.17?int"
+        },
+        {
+          "name": "rich_message",
+          "type": "flags.23?InputRichMessage"
+        }
+      ],
+      "result": "Updates",
+      "officialLine": 2649,
+      "officialDefinition": "messages.editMessage#b106e66c flags:# no_webpage:flags.1?true invert_media:flags.16?true peer:InputPeer id:int message:flags.11?string media:flags.14?InputMedia reply_markup:flags.2?ReplyMarkup entities:flags.3?Vector<MessageEntity> schedule_date:flags.15?int schedule_repeat_period:flags.18?int quick_reply_shortcut_id:flags.17?int rich_message:flags.23?InputRichMessage = Updates;"
+    },
+    {
+      "name": "messages.getRichMessage",
+      "constructorId": 1343580623,
+      "fields": [
+        {
+          "name": "peer",
+          "type": "InputPeer"
+        },
+        {
+          "name": "id",
+          "type": "int"
+        }
+      ],
+      "result": "messages.Messages",
+      "officialLine": 2848,
+      "officialDefinition": "messages.getRichMessage#501569cf peer:InputPeer id:int = messages.Messages;"
+    }
+  ],
+  "regression": {
+    "frozenRevision": "85aff538bf61684423c831ab17b8c08bdfbac5e1",
+    "cases": 816,
+    "failuresBefore": 806,
+    "unchangedInvalidInputChecksBefore": 10,
+    "failuresAfter": 0,
+    "declarationDiagnosticsBefore": 6,
+    "richTextConstructors": 32,
+    "pageBlockConstructors": 41,
+    "inlineButtonConstructors": 12,
+    "constructorModeRepresentationComparisons": 657,
+    "additionalInlineButtonModeCases": 36,
+    "actualSdkFactoryByteComparisons": 23,
+    "actualSdkFetchSendEditByteComparisons": 8,
+    "independentExpectedStringCases": 15,
+    "selectedBackends": 5,
+    "independentEncryptedTcpRequests": 4
+  },
+  "behavior": [
+    "Rich input factories create owned schema classes, detach nested inputs and preserve exact media identifiers and case-sensitive file labels.",
+    "Shared renderers accept canonical, owned and actual SDK trees, with exact text, Markdown and HTML comparisons for every pinned RichText/PageBlock constructor.",
+    "Origin-bound full-content fetch uses only the selected transport, preserves caller replacements and rejects cancellation and typed failures without replay.",
+    "Returned rich content must match the requested message ID and exact peer family/ID; private origin hashes survive response changes.",
+    "Rich-only sends supply the required empty plain-message field; send/edit requests match actual current SDK bytes."
+  ],
+  "differences": [
+    "The pinned GramJS schema has no rich constructors or messages.getRichMessage. Its selected actual Api rejects that method before invocation; current-schema route tests use the current teleproto Api explicitly.",
+    "The pinned teleproto getRichMessage helper falls back to a message with the wrong ID. Anygram returns undefined instead.",
+    "SDK-compatible rendering includes empty output for unsupported blocks, omitted audio HTML captions and ordered HTML lists that ignore per-item numbering.",
+    "Rich.html and Rich.markdown construct server-parsed inputs; they do not parse ordinary message markup locally or download embedded media.",
+    "Owned response models use native bigint and private ownership rather than vendor instanceof or legacy integer methods."
+  ],
+  "limits": {
+    "maxNodes": 100000,
+    "maxDepth": 64,
+    "maxVector": 100000,
+    "maxInputCodeUnitsAndByteArrayBytes": 4194304,
+    "maxOutputCodeUnits": 16777216,
+    "fullyRefinedRichNodeDeclarations": false,
+    "oldSdkCurrentSchemaBridgeImplemented": false,
+    "productionAccountVerified": false,
+    "fullSdkParityVerified": false
+  }
+}

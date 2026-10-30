@@ -1,0 +1,110 @@
+{
+  "recordedAt": "2026-10-30T02:04:15.392Z",
+  "installed": [
+    {
+      "package": "telegram",
+      "version": "2.26.22",
+      "publishedSource": "https://registry.npmjs.org/telegram/-/telegram-2.26.22.tgz",
+      "files": [
+        {
+          "path": "client/telegramBaseClient.js",
+          "sha256": "6b7b910e066878d3c52ee280fc894870f4014a9b7ea78c955ba4ff93a30486fd"
+        },
+        {
+          "path": "client/TelegramClient.js",
+          "sha256": "c8832626f8a1c4d07f891b2d0b7b955b75c9a7e49f4afc2bdee0abecaa094af1"
+        },
+        {
+          "path": "client/messageParse.js",
+          "sha256": "ed57cc79bda7096a3e7ef1b92b2363e43e98303ac05c3e8798fc2b3c1b2ba0ae"
+        },
+        {
+          "path": "client/messages.js",
+          "sha256": "0f1f8a2761d493065ea0f3c7dff27c32033045ad2a38b75c9e1ad5e2ea26ed14"
+        },
+        {
+          "path": "client/uploads.js",
+          "sha256": "893ad2b6babf2c18f185c5ccbfa7bfcc10b366f1b6484c34d21d9a775b00d4dc"
+        },
+        {
+          "path": "tl/custom/message.js",
+          "sha256": "4bd6d58c73ec23aab1f0150ff1310099287d5154f48ad83adf7f023af04681d3"
+        }
+      ]
+    },
+    {
+      "package": "teleproto",
+      "version": "1.232.0",
+      "publishedSource": "https://registry.npmjs.org/teleproto/-/teleproto-1.232.0.tgz",
+      "files": [
+        {
+          "path": "client/TelegramBaseClient.js",
+          "sha256": "6cb3e234af1636282b7d7d3a3b5fa39e6b12b5688f62c05de628f315c6370d4f"
+        },
+        {
+          "path": "client/TelegramClient.js",
+          "sha256": "0941e50f59b1fca496a2cc06957df22191ac318e7f2f420d6ff76fe962e895eb"
+        },
+        {
+          "path": "client/methods/messageParse.js",
+          "sha256": "93f1614ce89f70f8218cbd6b11d3053bef73808f39acdd246d723f8f5ea0f33b"
+        },
+        {
+          "path": "client/methods/messages.js",
+          "sha256": "191d1f978bcab6d9558af76c7536223a2eafb30ef0dbe3c1b2f46ddc78fc126e"
+        },
+        {
+          "path": "client/methods/uploads.js",
+          "sha256": "63f53f2742ed6eccbded897c04eeea68460f53a413e22d858cc7ca277e95d9ff"
+        },
+        {
+          "path": "tl/custom/message.js",
+          "sha256": "c661cb0e5709a313237d5a1b5699109b0cf2038209fb350cdde9d7d892103437"
+        }
+      ]
+    }
+  ],
+  "primarySources": [
+    {
+      "url": "https://gram.js.org/beta/classes/TelegramClient.html#parseMode",
+      "sha256": "3804fc79088f89319ef9e2bd99b2ed527d6d841030b9ab7c563a3549b203f9f3"
+    },
+    {
+      "url": "https://core.telegram.org/api/entities",
+      "sha256": "ae98ed25ca121bde89bf9a017cf001006f47c76a5fcf5fe1577b5d2a76a111aa"
+    }
+  ],
+  "contract": {
+    "unconfigured": "Both account facades and their bound messages use independent legacy Markdown by default. Canonical methods remain plain across selected backends.",
+    "configured": "Explicit parser configuration is shared by canonical methods, both styles and bound views. Per-call undefined/null inherit; false disables one call.",
+    "disabled": "Constructor false/null disable. Constructor undefined leaves defaults unconfigured. Calling setParseMode or assigning parseMode with false/null/undefined explicitly disables globally.",
+    "scopes": "withBackend copies both parser identity and whether configuration exists, including explicit disable. Later parent/child settings remain independent.",
+    "precedence": "FormattedText and explicit entities bypass default parsing. Empty per-item album modes inherit, false disables. Keyboard text labels remain literal even with custom parsers.",
+    "boundary": "High-level-only GramJS/teleproto receive explicit canonical disable or the owned facade parser; vendor defaults cannot determine canonical message interpretation."
+  },
+  "regression": {
+    "beforeCommit": "86d7685503f19e647bd13e9a880f99b1d0e39c88",
+    "cases": 146,
+    "failingBefore": 96,
+    "passingGuardsBefore": 50,
+    "actualSdkRequestComparisons": 24,
+    "actualSdkModelComparisons": 2,
+    "encryptedTcpCases": 4,
+    "runtime": "node --loader ./experiments/account-default-before-loader.mjs --test tests/account-parser-defaults*.test.js",
+    "tests": [
+      "tests/account-parser-defaults.test.js",
+      "tests/account-parser-defaults-rpc.test.js"
+    ]
+  },
+  "differences": [
+    "Canonical defaults intentionally remain plain; SDK-style defaults match each pinned SDK constructor.",
+    "Native request bytes match the current schema; old GramJS request bytes match through its own serializer and through a separately translated current-schema request. This does not implement the old-schema result bridge.",
+    "The pinned GramJS model patch loses the text setter; the comparison invokes its original CustomMessage setter directly. Owned setters remain available.",
+    "Owned callbacks retain finite input/output/entity bounds and validation before upload consumption."
+  ],
+  "remaining": [
+    "Complete media options and file inference",
+    "Older-schema result bridges and refined SDK models",
+    "Controlled-account and all wider unfinished issue criteria"
+  ]
+}

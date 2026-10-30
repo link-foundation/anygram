@@ -1,0 +1,239 @@
+[
+  {
+    "url": "https://user-images.githubusercontent.com/30718335/234210451-143e0e90-3c77-4ed1-b4f4-50d03e86e96b.png",
+    "source": "https://github.com/alik0211/mtproto-core/issues/279",
+    "file": "docs/case-studies/issue-1/data/issues/images/cc73dd1da2db4fa5",
+    "validImage": false,
+    "error": "download failed"
+  },
+  {
+    "url": "https://user-images.githubusercontent.com/30718335/234208815-c2243782-c635-4b68-9544-7146ac78c33e.png",
+    "source": "https://github.com/alik0211/mtproto-core/issues/279",
+    "file": "docs/case-studies/issue-1/data/issues/images/a0660e4ab53141f9",
+    "validImage": false,
+    "error": "download failed"
+  },
+  {
+    "url": "https://user-images.githubusercontent.com/30718335/234208850-4888835d-f7ae-4f0e-8666-a0e3d86ab86e.png",
+    "source": "https://github.com/alik0211/mtproto-core/issues/279",
+    "file": "docs/case-studies/issue-1/data/issues/images/9f7b83d166b63565",
+    "validImage": false,
+    "error": "download failed"
+  },
+  {
+    "url": "https://github.com/user-attachments/assets/0d9075ad-8627-482b-b0ea-bf6e049c6ecb",
+    "source": "https://github.com/danog/MadelineProto/issues/1661",
+    "file": "docs/case-studies/issue-1/data/issues/images/096730dc58ac1044",
+    "type": "image/png",
+    "validImage": true
+  },
+  {
+    "url": "https://github.com/mtcute/mtcute/assets/86301490/b0be4e47-e7b4-4e2d-8c62-e399bf2d4c3f",
+    "source": "https://github.com/mtcute/mtcute/issues/54#issuecomment-2090396853",
+    "file": "docs/case-studies/issue-1/data/issues/images/a69b23918a4cffc5",
+    "type": "image/png",
+    "validImage": true
+  },
+  {
+    "url": "https://user-images.githubusercontent.com/60250743/73048530-24113700-3e82-11ea-82a7-cb3228e13d0c.jpg",
+    "source": "https://github.com/tdlib/td/issues/902",
+    "file": "docs/case-studies/issue-1/data/issues/images/6e3331d31151eee9",
+    "validImage": false,
+    "error": "download failed"
+  },
+  {
+    "url": "https://user-images.githubusercontent.com/60250743/73049796-49a03f80-3e86-11ea-8ac0-84dddbf91828.png",
+    "source": "https://github.com/tdlib/td/issues/902",
+    "file": "docs/case-studies/issue-1/data/issues/images/abfec8da74c612a1",
+    "validImage": false,
+    "error": "download failed"
+  },
+  {
+    "url": "https://user-images.githubusercontent.com/60276164/73111222-f29c7800-3f22-11ea-84ff-cfd05780200c.jpg",
+    "source": "https://github.com/tdlib/td/issues/902#issuecomment-578339572",
+    "file": "docs/case-studies/issue-1/data/issues/images/a51f927e78182301",
+    "validImage": false,
+    "error": "download failed"
+  },
+  {
+    "url": "https://user-images.githubusercontent.com/62807617/77829136-af5ab300-70e5-11ea-944d-cbaaad7f52f3.png",
+    "source": "https://github.com/tdlib/td/issues/902#issuecomment-605491173",
+    "file": "docs/case-studies/issue-1/data/issues/images/f072563e7abac5c6",
+    "validImage": false,
+    "error": "download failed"
+  },
+  {
+    "url": "https://github.com/telegraf/telegraf/assets/53531665/6fee0d1a-e3d9-49d0-98eb-0895010e43cb",
+    "source": "https://github.com/telegraf/telegraf/issues/1914#issuecomment-1868051683",
+    "file": "docs/case-studies/issue-1/data/issues/images/a1800fab32f885d4",
+    "type": "image/png",
+    "validImage": true
+  },
+  {
+    "url": "https://github.com/telegraf/telegraf/assets/19621208/724596fe-9298-4d2f-8a24-fead659edc4f",
+    "source": "https://github.com/telegraf/telegraf/issues/1914#issuecomment-1871753359",
+    "file": "docs/case-studies/issue-1/data/issues/images/f880f93c09a8e681",
+    "type": "image/png",
+    "validImage": true
+  },
+  {
+    "url": "https://github.com/telegraf/telegraf/assets/54382007/8082006a-e75e-4799-a6bd-808887f47889",
+    "source": "https://github.com/telegraf/telegraf/issues/1961#issuecomment-1975026271",
+    "file": "docs/case-studies/issue-1/data/issues/images/7d5e1e1c6a9e8bd5",
+    "type": "image/png",
+    "validImage": true
+  },
+  {
+    "url": "https://github.com/telegraf/telegraf/assets/54382007/29389503-4f45-46e6-b52a-197eca6e447b",
+    "source": "https://github.com/telegraf/telegraf/issues/1961#issuecomment-1975380472",
+    "validImage": false,
+    "omitted": "Image contains a third-party bot token"
+  },
+  {
+    "url": "https://github.com/telegraf/telegraf/assets/86838048/5f416ee3-8d1d-4026-9824-202b7d254beb",
+    "source": "https://github.com/telegraf/telegraf/issues/1961#issuecomment-2028884469",
+    "file": "docs/case-studies/issue-1/data/issues/images/218d2628ae7c4168",
+    "type": "image/png",
+    "validImage": true
+  },
+  {
+    "url": "https://github.com/telegraf/telegraf/assets/86838048/bada3df7-b986-43c6-884d-6af1deb80805",
+    "source": "https://github.com/telegraf/telegraf/issues/1961#issuecomment-2028884469",
+    "file": "docs/case-studies/issue-1/data/issues/images/5c52670f93519af4",
+    "type": "image/png",
+    "validImage": true
+  },
+  {
+    "url": "https://github.com/telegraf/telegraf/assets/86838048/5fa0e497-dcbb-4acc-91ae-919a15f42343",
+    "source": "https://github.com/telegraf/telegraf/issues/1961#issuecomment-2028885371",
+    "file": "docs/case-studies/issue-1/data/issues/images/518f120e95e46003",
+    "type": "image/png",
+    "validImage": true
+  },
+  {
+    "url": "https://github.com/telegraf/telegraf/assets/59336998/34716577-03b3-40d4-be72-463b18860b6a",
+    "source": "https://github.com/telegraf/telegraf/issues/1961#issuecomment-2151553185",
+    "file": "docs/case-studies/issue-1/data/issues/images/3841b8c0554bec9e",
+    "type": "image/png",
+    "validImage": true
+  },
+  {
+    "url": "https://github.com/telegraf/telegraf/assets/59336998/49d32e7f-3d76-4a54-b3f4-e768265b336f",
+    "source": "https://github.com/telegraf/telegraf/issues/1961#issuecomment-2151553185",
+    "file": "docs/case-studies/issue-1/data/issues/images/8eb90c57bfbedbd4",
+    "type": "image/png",
+    "validImage": true
+  },
+  {
+    "url": "https://github.com/yagop/node-telegram-bot-api/assets/10388515/1b551264-fdf5-4cf7-acf7-2b0119fb2d4a",
+    "source": "https://github.com/yagop/node-telegram-bot-api/issues/1161#issuecomment-1897030728",
+    "file": "docs/case-studies/issue-1/data/issues/images/203a3e7781d90ce2",
+    "type": "image/jpeg",
+    "validImage": true
+  },
+  {
+    "url": "https://github.com/yagop/node-telegram-bot-api/assets/53531688/23db57ce-312c-4d66-a818-690eab99d261",
+    "source": "https://github.com/yagop/node-telegram-bot-api/issues/1161#issuecomment-1897113019",
+    "file": "docs/case-studies/issue-1/data/issues/images/d490e3e08e34a43e",
+    "type": "image/png",
+    "validImage": true
+  },
+  {
+    "url": "https://github.com/yagop/node-telegram-bot-api/assets/53531688/7e607a80-c340-4f82-a763-6ccc0afcce67",
+    "source": "https://github.com/yagop/node-telegram-bot-api/issues/1161#issuecomment-1897113019",
+    "file": "docs/case-studies/issue-1/data/issues/images/de34d4e240328c0c",
+    "type": "image/png",
+    "validImage": true
+  },
+  {
+    "url": "https://github.com/link-foundation/meta-sovereign/blob/issue-27-05348a151c4d/docs/case-studies/issue-27/screenshots/final-connections-telegram-detail.png?raw=true",
+    "source": "https://github.com/link-foundation/meta-sovereign/pull/28",
+    "file": "docs/case-studies/issue-1/data/issues/images/7ee9312174988504",
+    "type": "image/png",
+    "validImage": true
+  },
+  {
+    "url": "https://github.com/link-foundation/meta-sovereign/blob/issue-31-5ccfae6dabce/docs/case-studies/issue-31/screenshots/chat-automation-menu.png?raw=true",
+    "source": "https://github.com/link-foundation/meta-sovereign/pull/34",
+    "file": "docs/case-studies/issue-1/data/issues/images/501f2744aef9f7dd",
+    "type": "image/png",
+    "validImage": true
+  },
+  {
+    "url": "https://github.com/link-foundation/meta-sovereign/blob/issue-31-5ccfae6dabce/docs/case-studies/issue-31/screenshots/chat-reply-suggestions.png?raw=true",
+    "source": "https://github.com/link-foundation/meta-sovereign/pull/34",
+    "file": "docs/case-studies/issue-1/data/issues/images/f09a65f44fc84a21",
+    "type": "image/png",
+    "validImage": true
+  },
+  {
+    "url": "https://github.com/link-foundation/meta-sovereign/blob/issue-31-5ccfae6dabce/docs/case-studies/issue-31/screenshots/chat-word-suggestions.png?raw=true",
+    "source": "https://github.com/link-foundation/meta-sovereign/pull/34",
+    "file": "docs/case-studies/issue-1/data/issues/images/cc68a6c61891fd31",
+    "type": "image/png",
+    "validImage": true
+  },
+  {
+    "url": "https://github.com/link-foundation/meta-sovereign/blob/issue-31-5ccfae6dabce/docs/case-studies/issue-31/screenshots/automations-editor-preview.png?raw=true",
+    "source": "https://github.com/link-foundation/meta-sovereign/pull/34",
+    "file": "docs/case-studies/issue-1/data/issues/images/caee1318e88bbd73",
+    "type": "image/png",
+    "validImage": true
+  },
+  {
+    "url": "https://github.com/link-foundation/meta-sovereign/blob/issue-31-5ccfae6dabce/docs/case-studies/issue-31/screenshots/settings-appearance.png?raw=true",
+    "source": "https://github.com/link-foundation/meta-sovereign/pull/34",
+    "file": "docs/case-studies/issue-1/data/issues/images/43b867a8114fa3a5",
+    "type": "image/png",
+    "validImage": true
+  },
+  {
+    "url": "https://github.com/link-foundation/meta-sovereign/blob/issue-31-5ccfae6dabce/docs/case-studies/issue-31/screenshots/phone-chat-list.png?raw=true",
+    "source": "https://github.com/link-foundation/meta-sovereign/pull/34",
+    "file": "docs/case-studies/issue-1/data/issues/images/d135f273fc46f52c",
+    "type": "image/png",
+    "validImage": true
+  },
+  {
+    "url": "https://github.com/link-foundation/meta-sovereign/blob/issue-31-5ccfae6dabce/docs/case-studies/issue-31/screenshots/phone-chat-draft.png?raw=true",
+    "source": "https://github.com/link-foundation/meta-sovereign/pull/34",
+    "file": "docs/case-studies/issue-1/data/issues/images/78c7b56ad922224e",
+    "type": "image/png",
+    "validImage": true
+  },
+  {
+    "url": "https://github.com/link-foundation/meta-sovereign/blob/issue-31-5ccfae6dabce/docs/case-studies/issue-31/screenshots/phone-contacts.png?raw=true",
+    "source": "https://github.com/link-foundation/meta-sovereign/pull/34",
+    "file": "docs/case-studies/issue-1/data/issues/images/c87387c972c6eea5",
+    "type": "image/png",
+    "validImage": true
+  },
+  {
+    "url": "https://github.com/link-foundation/meta-sovereign/blob/issue-31-5ccfae6dabce/docs/case-studies/issue-31/screenshots/phone-more-sheet.png?raw=true",
+    "source": "https://github.com/link-foundation/meta-sovereign/pull/34",
+    "file": "docs/case-studies/issue-1/data/issues/images/b23c3191a57941a7",
+    "type": "image/png",
+    "validImage": true
+  },
+  {
+    "url": "https://github.com/link-foundation/meta-sovereign/blob/issue-31-5ccfae6dabce/docs/case-studies/issue-31/screenshots/phone-automation-ru.png?raw=true",
+    "source": "https://github.com/link-foundation/meta-sovereign/pull/34",
+    "file": "docs/case-studies/issue-1/data/issues/images/f62626aad33f78ed",
+    "type": "image/png",
+    "validImage": true
+  },
+  {
+    "url": "https://github.com/link-foundation/meta-sovereign/blob/issue-31-5ccfae6dabce/docs/case-studies/issue-31/screenshots/tablet-chat-rail-ru.png?raw=true",
+    "source": "https://github.com/link-foundation/meta-sovereign/pull/34",
+    "file": "docs/case-studies/issue-1/data/issues/images/63703db03a9c8d3f",
+    "type": "image/png",
+    "validImage": true
+  },
+  {
+    "url": "https://github.com/link-foundation/meta-sovereign/blob/issue-35-9b770690b2d5/docs/screenshots/issue-35/greetings.png?raw=true",
+    "source": "https://github.com/link-foundation/meta-sovereign/pull/36",
+    "file": "docs/case-studies/issue-1/data/issues/images/0c9c3dc4e95bb31b",
+    "type": "image/png",
+    "validImage": true
+  }
+]

@@ -1,0 +1,13 @@
+{
+  "before": {
+    "photoCalls": 0
+  },
+  "after": {
+    "photoCalls": 1,
+    "width": 537,
+    "height": 614,
+    "foregroundPixels": 1377,
+    "bytes": 9453,
+    "sha256": "5e71b32a0d60eb8578883d1cfcb03429f8f71a43a00627a1f7263a46c576eadf"
+  }
+}

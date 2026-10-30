@@ -1,0 +1,135 @@
+{
+  "recordedAt": "2026-10-30T01:11:41.652Z",
+  "installed": [
+    {
+      "package": "telegram",
+      "version": "2.26.22",
+      "publishedSource": "https://registry.npmjs.org/telegram/-/telegram-2.26.22.tgz",
+      "files": [
+        {
+          "path": "extensions/markdown.js",
+          "sha256": "4ea46765e983ccbcfd1579be5505f8dfebf67b9ef30b133a68ceafe8d69913cf"
+        },
+        {
+          "path": "extensions/markdown.d.ts",
+          "sha256": "88a92e02aa303a089490dea6bd52fbe66f04136d7584839b24f039545b884b95"
+        },
+        {
+          "path": "extensions/markdownv2.js",
+          "sha256": "c8405774dc012f073650d8863519d73f033751c563bb74e8748e2ad30bc92a05"
+        },
+        {
+          "path": "extensions/markdownv2.d.ts",
+          "sha256": "6081a9362a64ee2632cdcbcc930af98374de9e58130d8f236a28a45adab5dcb3"
+        },
+        {
+          "path": "client/messageParse.js",
+          "sha256": "ed57cc79bda7096a3e7ef1b92b2363e43e98303ac05c3e8798fc2b3c1b2ba0ae"
+        }
+      ]
+    },
+    {
+      "package": "teleproto",
+      "version": "1.232.0",
+      "publishedSource": "https://registry.npmjs.org/teleproto/-/teleproto-1.232.0.tgz",
+      "files": [
+        {
+          "path": "extensions/markdown.js",
+          "sha256": "c9d6d0b00997948dc32dc8d230ec95c3c9952509ca3fa1daaa8fafa4c20b478a"
+        },
+        {
+          "path": "extensions/markdown.d.ts",
+          "sha256": "926061108553395b323e71dd7aa383df8bce044867536240e4fba030d3c78f54"
+        },
+        {
+          "path": "extensions/markdownv2.js",
+          "sha256": "03356fdf37d143ea58aa3ba73d0d618272a47023c73c22d6462dd29577d8377e"
+        },
+        {
+          "path": "extensions/markdownv2.d.ts",
+          "sha256": "00bb5a2588796864fbbb8a6ea44c9d1f44d062e5c4c215e680193a9b3cc956bf"
+        },
+        {
+          "path": "client/methods/messageParse.js",
+          "sha256": "93f1614ce89f70f8218cbd6b11d3053bef73808f39acdd246d723f8f5ea0f33b"
+        }
+      ]
+    }
+  ],
+  "primarySources": [
+    {
+      "url": "https://core.telegram.org/api/entities",
+      "sha256": "ad48f5f359fbb9dc38e4a7de1be147c90d0be3376f990f3d887c5bc47e2fb571"
+    },
+    {
+      "url": "https://core.telegram.org/bots/api#markdownv2-style",
+      "sha256": "ffa17b5aa7e263663fe2e30ce1595b24c1d55f340badaf243533500ea0af96bb"
+    }
+  ],
+  "contract": {
+    "aliases": {
+      "markdown": [
+        "md",
+        "markdown"
+      ],
+      "markdownv2": [
+        "md2",
+        "markdownv2"
+      ]
+    },
+    "legacyDelimiters": [
+      "**",
+      "__",
+      "~~",
+      "`",
+      "```"
+    ],
+    "modernDelimiters": [
+      "*",
+      "_",
+      "__",
+      "~",
+      "||",
+      "`",
+      "```"
+    ],
+    "dates": "tg://time?unix=<seconds>&format=<r|w?[dD]?[tT]?>, plus HTML tg-time",
+    "offsetUnits": "UTF-16 code units",
+    "limits": {
+      "inputCodeUnits": 4194304,
+      "outputCodeUnits": 4194304,
+      "entities": 1000,
+      "nesting": 64,
+      "tokens": 100000,
+      "outputParts": 100000,
+      "quoteLines": 100000
+    },
+    "validation": "Exact signed-64-bit IDs; bounded spans; crossing and isolated nested entities rejected; blockquotes render only as complete unnested lines."
+  },
+  "differences": [
+    "Pinned legacy SDKs split triple fences into inline code and parse emphasis inside code. Owned scanning protects both code forms and extracts fence languages.",
+    "Owned legacy mode retains unmatched delimiters, honors escapes and supports exact links, emoji and dates. Plain outer whitespace is retained; individual entity ends follow official trimming rules.",
+    "Pinned GramJS MarkdownV2 uses hyphens for italics and omits standard underscore semantics. Current teleproto is the modern comparison oracle; GramJS differences remain explicit.",
+    "MarkdownV2 outer whitespace is trimmed, matching the teleproto HTML-based parser. Plain output and code/URL contexts use distinct escaping.",
+    "Owned conversion validates malformed ranges and forbidden nesting rather than silently discarding entities. Unrepresentable date flag combinations and inline/nested blockquote rendering fail explicitly."
+  ],
+  "regression": {
+    "beforeCommit": "f315c14e5e14256b8823537af2e163dfa5296c1c",
+    "tests": [
+      "tests/account-markdown.test.js",
+      "tests/account-markdown-boundaries.test.js",
+      "tests/account-markdown-rpc.test.js"
+    ],
+    "frozenCases": 128,
+    "frozenFailures": 128,
+    "runtime": "node --loader ./experiments/account-markdown-before-loader.mjs --test tests/account-markdown*.test.js",
+    "declarations": "node experiments/composer-fluency-check.mjs --account-markdown --before",
+    "finiteProbe": "node --max-old-space-size=192 --stack-size=512 experiments/account-markdown-bounds.mjs"
+  },
+  "remaining": [
+    "SDK default Markdown selection",
+    "File/album parsing",
+    "Current-schema bridges",
+    "Full wider issue criteria and controlled-account checks"
+  ]
+}

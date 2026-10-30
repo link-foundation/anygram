@@ -1,0 +1,184 @@
+{
+  "retrieved": "2026-10-29T22:35:03.733Z",
+  "installed": [
+    {
+      "package": "telegram",
+      "version": "2.26.22",
+      "publishedSource": "https://registry.npmjs.org/telegram/-/telegram-2.26.22.tgz",
+      "files": [
+        {
+          "path": "tl/custom/message.js",
+          "sha256": "4bd6d58c73ec23aab1f0150ff1310099287d5154f48ad83adf7f023af04681d3"
+        },
+        {
+          "path": "tl/custom/message.d.ts",
+          "sha256": "f96b3881b085b5cbeadb65aa3355163aa3ac60adedf211556ba847e2b1f00ee2"
+        },
+        {
+          "path": "tl/custom/messageButton.js",
+          "sha256": "3ca03cd750e2d835d348dee39358bb97bacdd9e9ef4aeba8605fe4cb3fbd8152"
+        },
+        {
+          "path": "tl/custom/messageButton.d.ts",
+          "sha256": "193ed722446e8f3f40da707833de2a5479138f8785090cc2c26f1081db0ec27d"
+        },
+        {
+          "path": "Password.js",
+          "sha256": "b8e0713e5929e4cd29e0021462cde8c9165fb6dc0065cca9e2009f283c318b62"
+        },
+        {
+          "path": "Utils.js",
+          "sha256": "f00944abcb3a057c27275b0b2fc8d36b713fa8c0c0a29c5deff51e7639ff82ed"
+        }
+      ]
+    },
+    {
+      "package": "teleproto",
+      "version": "1.232.0",
+      "publishedSource": "https://registry.npmjs.org/teleproto/-/teleproto-1.232.0.tgz",
+      "files": [
+        {
+          "path": "tl/custom/message.js",
+          "sha256": "c661cb0e5709a313237d5a1b5699109b0cf2038209fb350cdde9d7d892103437"
+        },
+        {
+          "path": "tl/custom/message.d.ts",
+          "sha256": "0a6a1de2fe0836e626d58441edf55c0b48b520a18e1e8d379e8e59b49bbb42a3"
+        },
+        {
+          "path": "tl/custom/messageButton.js",
+          "sha256": "dca07acce93c124ada28a960d6496a51ae0eb099675d53e6107df207980d1078"
+        },
+        {
+          "path": "tl/custom/messageButton.d.ts",
+          "sha256": "2eaa8805aac6603362654d83a6cc98d6f64cf421971e41f271f355a590b68b61"
+        },
+        {
+          "path": "Password.js",
+          "sha256": "1d8ef7bc6321e555c8b1457aa208c8feed030af44f4fa3303be1273ea17546e8"
+        },
+        {
+          "path": "Utils.js",
+          "sha256": "6b75edfd6029e9e3cc2cc070751293ab5da6600001beed6b9664769e98bdced8"
+        }
+      ]
+    }
+  ],
+  "methods": [
+    {
+      "name": "messages.getBotCallbackAnswer",
+      "source": "https://core.telegram.org/method/messages.getBotCallbackAnswer",
+      "constructorId": 2470627847,
+      "result": "messages.BotCallbackAnswer",
+      "fields": [
+        {
+          "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "game",
+          "type": "flags.1?true"
+        },
+        {
+          "name": "peer",
+          "type": "InputPeer"
+        },
+        {
+          "name": "msg_id",
+          "type": "int"
+        },
+        {
+          "name": "data",
+          "type": "flags.0?bytes"
+        },
+        {
+          "name": "password",
+          "type": "flags.2?InputCheckPasswordSRP"
+        }
+      ]
+    },
+    {
+      "name": "messages.sendVote",
+      "source": "https://core.telegram.org/method/messages.sendVote",
+      "constructorId": 283795844,
+      "result": "Updates",
+      "fields": [
+        {
+          "name": "peer",
+          "type": "InputPeer"
+        },
+        {
+          "name": "msg_id",
+          "type": "int"
+        },
+        {
+          "name": "options",
+          "type": "Vector<bytes>"
+        }
+      ]
+    },
+    {
+      "name": "messages.startBot",
+      "source": "https://core.telegram.org/method/messages.startBot",
+      "constructorId": 3873403768,
+      "result": "Updates",
+      "fields": [
+        {
+          "name": "bot",
+          "type": "InputUser"
+        },
+        {
+          "name": "peer",
+          "type": "InputPeer"
+        },
+        {
+          "name": "random_id",
+          "type": "long"
+        },
+        {
+          "name": "start_param",
+          "type": "string"
+        }
+      ]
+    }
+  ],
+  "regression": {
+    "frozenRevision": "5c4de84dd8440c39e36e8954d5ab0630a9360148",
+    "cases": 76,
+    "failuresBefore": 76,
+    "failuresAfter": 0,
+    "declarationDiagnosticsBefore": 12,
+    "selectedBackends": 5,
+    "actualCallbackAndVoteByteComparisons": 16,
+    "actualResolvedStartBotByteComparisons": 2,
+    "independentlyVerifiedSrpProofs": 4,
+    "localEncryptedTcp": true
+  },
+  "behavior": [
+    "Legacy GramJS button constructors and layer-232 teleproto button types share one owned message button model.",
+    "Each button retains private ownership of its client, source peer and appropriate bot input peer.",
+    "Button rows, count, async lookup, flat/row/text/filter selection and direct callback bytes are available.",
+    "Callback, game, URL, switch-inline, text, explicit contact and explicit location interactions use selected shared operations.",
+    "Only BOT_RESPONSE_TIMEOUT becomes null; all other callback errors retain their backend and are not replayed.",
+    "Password callbacks reuse the bounded SRP proof implementation, with cancellation before and after derivation.",
+    "Poll indices select their requested option bytes; unmatched text/filter and an absent selector retract a vote.",
+    "Closed polls, invalid/duplicate indices, multiple single-choice answers and invalid coordinates are rejected before mutations.",
+    "Direct callback data is copied before asynchronous peer lookup and personal data requires explicit consent."
+  ],
+  "differences": [
+    "Both actual SDK poll helpers use answers[0..length] instead of the requested index list. Owned [2,0] selects options[2] then options[0].",
+    "Pinned GramJS phone clicks throw Not supported for now and its geo branch checks an unrelated constructor. Owned explicit sharing matches teleproto media arguments.",
+    "Explicit InputGeoPoint values are wrapped as InputMediaGeoPoint; both documented tuple and object forms are validated.",
+    "Owned button models use native bigint and detached Uint8Array data rather than vendor instanceof and legacy big-integer methods."
+  ],
+  "limits": {
+    "missingBotMessageReloadsPerAttempt": 1,
+    "maxInputChatDialogPages": 1,
+    "maxInputChatDialogs": 100,
+    "srpCandidateLimit": 64,
+    "unsupportedButtonKinds": "Metadata is retained; click returns undefined, matching the pinned custom models.",
+    "pollSubscriberAndCountryEligibility": "Server RPC errors are preserved; complete client-side eligibility checks remain open.",
+    "controlledProductionAccountVerified": false,
+    "fullSdkParityVerified": false
+  }
+}

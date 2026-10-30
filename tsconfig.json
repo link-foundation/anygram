@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": false,
+    "types": []
+  },
+  "include": [
+    "src/**/*.d.ts",
+    "examples/**/*.ts",
+    "experiments/typed-bot-model-oracle.ts"
+  ]
+}

@@ -1,0 +1,301 @@
+{
+  "retrieved": "2026-10-29T23:19:42.749Z",
+  "installed": [
+    {
+      "package": "telegram",
+      "version": "2.26.22",
+      "publishedSource": "https://registry.npmjs.org/telegram/-/telegram-2.26.22.tgz",
+      "files": [
+        {
+          "path": "tl/custom/message.js",
+          "sha256": "4bd6d58c73ec23aab1f0150ff1310099287d5154f48ad83adf7f023af04681d3"
+        },
+        {
+          "path": "tl/custom/message.d.ts",
+          "sha256": "f96b3881b085b5cbeadb65aa3355163aa3ac60adedf211556ba847e2b1f00ee2"
+        },
+        {
+          "path": "client/messages.js",
+          "sha256": "0f1f8a2761d493065ea0f3c7dff27c32033045ad2a38b75c9e1ad5e2ea26ed14"
+        },
+        {
+          "path": "client/messages.d.ts",
+          "sha256": "6c79626468725df7fcdd3e5d7366aaeaf6a9dfd7b9d77ba647e458a88f64c7b8"
+        }
+      ]
+    },
+    {
+      "package": "teleproto",
+      "version": "1.232.0",
+      "publishedSource": "https://registry.npmjs.org/teleproto/-/teleproto-1.232.0.tgz",
+      "files": [
+        {
+          "path": "tl/custom/message.js",
+          "sha256": "c661cb0e5709a313237d5a1b5699109b0cf2038209fb350cdde9d7d892103437"
+        },
+        {
+          "path": "tl/custom/message.d.ts",
+          "sha256": "0a6a1de2fe0836e626d58441edf55c0b48b520a18e1e8d379e8e59b49bbb42a3"
+        },
+        {
+          "path": "client/methods/messages.js",
+          "sha256": "191d1f978bcab6d9558af76c7536223a2eafb30ef0dbe3c1b2f46ddc78fc126e"
+        },
+        {
+          "path": "client/methods/messages.d.ts",
+          "sha256": "a061529b0e9f20553cbe367d4248b8e11212089ff0034ae3a682d98ded5fb34f"
+        },
+        {
+          "path": "tl/runtime/fieldCodec.js",
+          "sha256": "46bdc6c79e6fe65cb1007ead965eaf2ba6139f87afb372b77bd7dbe58bd359c4"
+        }
+      ]
+    }
+  ],
+  "primarySources": [
+    {
+      "url": "https://core.telegram.org/method/messages.sendReaction.md",
+      "sha256": "886ed2eeff082df2c4c597f9e899fd7c1b37053b32cffb63306e4c7d72fb012c"
+    },
+    {
+      "url": "https://core.telegram.org/method/messages.getMessageReactionsList.md",
+      "sha256": "3b5dd51559be3965a1083d84f1dddcbd922a87558fb5e345ef3108cb719aa938"
+    },
+    {
+      "url": "https://core.telegram.org/method/messages.forwardMessages.md",
+      "sha256": "efe654aeadd1c6e1a1ca9c2d019991c317c796f4b092014f18115e97c7fa686b"
+    }
+  ],
+  "definitions": [
+    {
+      "name": "messages.forwardMessages",
+      "constructorId": 326126204,
+      "fields": [
+        {
+          "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "silent",
+          "type": "flags.5?true"
+        },
+        {
+          "name": "background",
+          "type": "flags.6?true"
+        },
+        {
+          "name": "with_my_score",
+          "type": "flags.8?true"
+        },
+        {
+          "name": "drop_author",
+          "type": "flags.11?true"
+        },
+        {
+          "name": "drop_media_captions",
+          "type": "flags.12?true"
+        },
+        {
+          "name": "noforwards",
+          "type": "flags.14?true"
+        },
+        {
+          "name": "allow_paid_floodskip",
+          "type": "flags.19?true"
+        },
+        {
+          "name": "from_ephemeral",
+          "type": "flags.25?true"
+        },
+        {
+          "name": "from_peer",
+          "type": "InputPeer"
+        },
+        {
+          "name": "id",
+          "type": "Vector<int>"
+        },
+        {
+          "name": "random_id",
+          "type": "Vector<long>"
+        },
+        {
+          "name": "to_peer",
+          "type": "InputPeer"
+        },
+        {
+          "name": "top_msg_id",
+          "type": "flags.9?int"
+        },
+        {
+          "name": "reply_to",
+          "type": "flags.22?InputReplyTo"
+        },
+        {
+          "name": "schedule_date",
+          "type": "flags.10?int"
+        },
+        {
+          "name": "schedule_repeat_period",
+          "type": "flags.24?int"
+        },
+        {
+          "name": "send_as",
+          "type": "flags.13?InputPeer"
+        },
+        {
+          "name": "quick_reply_shortcut",
+          "type": "flags.17?InputQuickReplyShortcut"
+        },
+        {
+          "name": "effect",
+          "type": "flags.18?long"
+        },
+        {
+          "name": "video_timestamp",
+          "type": "flags.20?int"
+        },
+        {
+          "name": "allow_paid_stars",
+          "type": "flags.21?long"
+        },
+        {
+          "name": "suggested_post",
+          "type": "flags.23?SuggestedPost"
+        }
+      ],
+      "result": "Updates"
+    },
+    {
+      "name": "messages.sendReaction",
+      "constructorId": 3540875476,
+      "fields": [
+        {
+          "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "big",
+          "type": "flags.1?true"
+        },
+        {
+          "name": "add_to_recent",
+          "type": "flags.2?true"
+        },
+        {
+          "name": "peer",
+          "type": "InputPeer"
+        },
+        {
+          "name": "msg_id",
+          "type": "int"
+        },
+        {
+          "name": "reaction",
+          "type": "flags.0?Vector<Reaction>"
+        }
+      ],
+      "result": "Updates"
+    },
+    {
+      "name": "messages.getMessageReactionsList",
+      "constructorId": 1176190792,
+      "fields": [
+        {
+          "name": "flags",
+          "type": "#"
+        },
+        {
+          "name": "peer",
+          "type": "InputPeer"
+        },
+        {
+          "name": "id",
+          "type": "int"
+        },
+        {
+          "name": "reaction",
+          "type": "flags.0?Reaction"
+        },
+        {
+          "name": "offset",
+          "type": "flags.1?string"
+        },
+        {
+          "name": "limit",
+          "type": "int"
+        }
+      ],
+      "result": "messages.MessageReactionsList"
+    },
+    {
+      "name": "reactionEmpty",
+      "constructorId": 2046153753,
+      "fields": [],
+      "result": "Reaction"
+    },
+    {
+      "name": "reactionEmoji",
+      "constructorId": 455247544,
+      "fields": [
+        {
+          "name": "emoticon",
+          "type": "string"
+        }
+      ],
+      "result": "Reaction"
+    },
+    {
+      "name": "reactionCustomEmoji",
+      "constructorId": 2302016627,
+      "fields": [
+        {
+          "name": "document_id",
+          "type": "long"
+        }
+      ],
+      "result": "Reaction"
+    },
+    {
+      "name": "reactionPaid",
+      "constructorId": 1379771627,
+      "fields": [],
+      "result": "Reaction"
+    }
+  ],
+  "regression": {
+    "frozenRevision": "8da6cd7d11d0229bf02a3c3ba3372aebc465a544",
+    "cases": 96,
+    "failuresBefore": 96,
+    "failuresAfter": 0,
+    "declarationDiagnosticsBefore": 11,
+    "actualSdkRequestByteComparisons": 40,
+    "sdkDateMillisecondsDifferences": 2,
+    "postResponseCopyCancellationFailuresBefore": 2,
+    "dateScheduleFailuresBefore": 2,
+    "selectedBackends": 5,
+    "independentEncryptedTcpRequests": 4
+  },
+  "behavior": [
+    "Both account styles expose bound react, getReactions and copy methods; client/style sendReaction and getReactionUsers share canonical operations.",
+    "Reaction strings remain emoji, including numeric strings; exact bigint, safe integer and SDK integer custom IDs retain all bits.",
+    "Empty vectors retract ordinary reactions. Constructor inputs and caller arrays remain detached and unmodified.",
+    "Reaction list requests preserve zero limits and empty offsets, with SDK-compatible defaults of 100 and an empty offset.",
+    "Copy forces drop_author, uses the original message and peer, and correlates the first destination message with its random ID.",
+    "Copy scheduling accepts integer seconds or JavaScript Dates, converting Dates to whole seconds before canonical normalization.",
+    "Pre-aborted and post-response cancellation rejects; typed failures preserve the selected backend without replay."
+  ],
+  "differences": [
+    "The pinned teleproto SDK provides these high-level reaction and copy helpers; the pinned GramJS SDK does not. Owned styles expose their union.",
+    "Paid constructors pass through the ordinary reaction RPC like teleproto, retaining Telegram errors. No automatic paid-reaction RPC or Stars charge occurs.",
+    "Unsafe numeric custom emoji IDs and malformed reaction values reject instead of silently rounding or coercing.",
+    "The pinned teleproto forwarding serializer writes Date milliseconds for the schema int field. Owned forwarding converts them to Telegram timestamp seconds.",
+    "Owned response views retain native bigint, detached fields and private client ownership rather than vendor instanceof or legacy integer APIs."
+  ],
+  "limits": {
+    "automaticPaidReactionImplemented": false,
+    "reactionListBroadcastPrivacyBypassImplemented": false,
+    "productionAccountVerified": false,
+    "fullSdkParityVerified": false
+  }
+}
